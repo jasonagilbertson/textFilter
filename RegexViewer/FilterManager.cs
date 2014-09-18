@@ -4,6 +4,8 @@ namespace RegexViewer
 {
     internal class FilterManager
     {
+        #region Internal Methods
+
         internal object GetFilters()
         {
             throw new NotImplementedException();
@@ -13,5 +15,7 @@ namespace RegexViewer
         {
             throw new NotImplementedException();
         }
+
+        #endregion Internal Methods
     }
 }

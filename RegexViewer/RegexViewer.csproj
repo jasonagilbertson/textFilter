@@ -60,7 +60,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AsynchronousCommand.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="TabItemViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
     <Compile Include="RegexViewModel.cs" />
     <Page Include="MainWindow.xaml">

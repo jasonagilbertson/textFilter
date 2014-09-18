@@ -9,30 +9,19 @@ namespace RegexViewer
 {
     public class RegexViewModel : INotifyPropertyChanged
     {
+        #region Private Fields
+
         private static TraceSource ts = new TraceSource("RegexViewer");
-        private FilterManager _FilterManager = new FilterManager();
-        private LogManager _LogManager = new LogManager();
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         private RegexViewerSettings _Settings;
-
-        //   OnPropertyChanged("FirstName");
         private Command closeCommand;
+        private FilterManager filterManager;
+        private ObservableCollection<ItemViewModel> logFileTabs;
+        private LogManager logManager;
+        private Command openCommand;
 
-        public Command CloseCommand
-        {
-            get
-            {
-                if (closeCommand == null)
-                    closeCommand = new Command(() => { CloseLog(); });
-                return closeCommand;
-            }
-            set
-            {
-                closeCommand = value;
-            }
-        }
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RegexViewModel()
         {
@@ -43,41 +32,74 @@ namespace RegexViewer
             //_Settings.BackgroundColor = Color.Black;
             //_Settings.FontColor = Color.White;
             //_Settings.Save();
-            this.LogFileTabs = new ObservableCollection<TabItem>();
+            this.logFileTabs = new ObservableCollection<ItemViewModel>();
+            this.filterManager = new FilterManager();
+            this.logManager = new LogManager();
+
             closeCommand = new Command(CloseLog);
-            closeCommand.Enabled = true;
+            closeCommand.CanExecute = true;
         }
 
-        public ObservableCollection<TabItem> LogFileTabs
-        {
-            get;
-            set;
-        }
+        #endregion Public Constructors
 
-        public bool SaveFilter(string filterName)
-        {
-            return _FilterManager.Save(filterName);
-        }
+        #region Public Events
 
-        public bool OpenLog(string LogName)
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Public Events
+
+        #region Public Properties
+
+        public Command CloseCommand
         {
-            LogProperties logProperties = new LogProperties();
-            if (String.IsNullOrEmpty((logProperties = _LogManager.OpenLog(LogName)).Name))
+            get
             {
-                return false;
+                if (closeCommand == null)
+                    closeCommand = new Command(CloseLog);
+                return closeCommand;
             }
-
-            // make new tab
-            AddLogFileTab(logProperties);
-
-            return true;
+            set
+            {
+                closeCommand = value;
+            }
         }
+
+        public ObservableCollection<ItemViewModel> LogFileTabs
+        {
+            get
+            {
+                return this.logFileTabs;
+            }
+            set
+            {
+                logFileTabs = value;
+                OnPropertyChanged("LogFileTabs");
+            }
+        }
+
+        public Command OpenCommand
+        {
+            get
+            {
+                if (openCommand == null)
+                    openCommand = new Command(OpenLog);
+                return openCommand;
+            }
+            set
+            {
+                openCommand = value;
+            }
+        }
+
+        #endregion Public Properties
+
+        #region Public Methods
 
         //public bool CloseLog(TabItem tabItem)
-        public void CloseLog()
+        public void CloseLog(object sender)
         {
-            TabItem tabItem = new TabItem();
-            if (!_LogManager.CloseLog(tabItem.Name))
+            ItemViewModel tabItem = new ItemViewModel();
+            if (!logManager.CloseLog(tabItem.Name))
             {
                 //return false;
             }
@@ -88,26 +110,85 @@ namespace RegexViewer
             //return true;
         }
 
-        private void AddLogFileTab(LogProperties logProperties)
+        //    set
+        //    {
+        //        _Settings.RecentFiles = string.Join(",", value);
+        //    }
+        //}
+        public void OnPropertyChanged(string name)
         {
-            if (!LogFileTabs.Any(x => String.Compare(x.Name, logProperties.FileName, true) == 0))
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
             {
-                TabItem tabItem = new TabItem();
-                // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
-                tabItem.Content = logProperties.TextBlocks;
-                tabItem.Name = logProperties.FileName;
-                tabItem.Header = logProperties.Name;
-                LogFileTabs.Add(tabItem);
+                handler(this, new PropertyChangedEventArgs(name));
             }
         }
 
-        private void RemoveLogFileTab(TabItem tabItem)
+        public void OpenLog(object sender)
         {
-            if (LogFileTabs.Any(x => String.Compare(x.Name, tabItem.Name, true) == 0))
+            string logName = string.Empty;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.FileName = ""; // Default file name
+            dlg.DefaultExt = ".csv"; // Default file extension
+            //dlg.Filter = "Text Files (*.txt)|*.txt|Csv Files (*.csv)|*.csv|All Files (*.*)|*.*"; // Filter files by extension
+            dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"; // Filter files by extension
+
+            // Show open file dialog box
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Process open file dialog box results
+            if (result == true)
             {
-                LogFileTabs.Remove(tabItem);
+                // Open document
+                logName = dlg.FileName;
+            }
+
+            LogProperties logProperties = new LogProperties();
+            if (String.IsNullOrEmpty((logProperties = logManager.OpenLog(logName)).Tag))
+            {
+                return;
+            }
+
+            // make new tab
+            AddLogFileTab(logProperties);
+        }
+
+        public bool SaveFilter(string filterName)
+        {
+            return filterManager.Save(filterName);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void AddLogFileTab(LogProperties logProperties)
+        {
+            if (!logFileTabs.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
+            {
+                ItemViewModel tabItem = new ItemViewModel();
+                // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
+                //ListBox listbox = new ListBox();
+                //listbox.ItemsSource = logProperties.TextBlocks;
+                //tabItem.Content = listbox;
+                tabItem.Content = "testcontent";// logProperties.TextBlocks;
+                //tabItem.Content = logProperties.TextBlocks;
+                tabItem.ContentList = logProperties.TextBlocks;
+                tabItem.Tag = logProperties.Tag;
+                tabItem.Header = logProperties.Tag;
+                logFileTabs.Add(tabItem);
             }
         }
+
+        private void RemoveLogFileTab(ItemViewModel tabItem)
+        {
+            if (logFileTabs.Any(x => String.Compare((string)x.Tag, tabItem.Name, true) == 0))
+            {
+                logFileTabs.Remove(tabItem);
+            }
+        }
+
+        #endregion Private Methods
 
         //public Color BackgroundColor
         //{
@@ -128,19 +209,5 @@ namespace RegexViewer
         //    {
         //        return _Settings.RecentFiles.Split(new string[] { "," } , StringSplitOptions.RemoveEmptyEntries).ToList();
         //    }
-
-        //    set
-        //    {
-        //        _Settings.RecentFiles = string.Join(",", value);
-        //    }
-        //}
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
     }
 }

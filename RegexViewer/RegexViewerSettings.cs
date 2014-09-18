@@ -9,22 +9,15 @@ namespace RegexViewer
 {
     internal class RegexViewerSettings
     {
-        private ExeConfigurationFileMap _ConfigFileMap;
-        private Configuration _Config;
-        private KeyValueConfigurationCollection _appSettings;
+        #region Private Fields
 
-        private enum AppSettingNames
-        {
-            BackgroundColor,
-            FileHistoryCount,
-            FilterDirectory,
-            FontColor,
-            FontSize,
-            CurrentFilterFiles,
-            CurrentLogFiles,
-            RecentFilterFiles,
-            RecentLogFiles
-        }
+        private KeyValueConfigurationCollection _appSettings;
+        private Configuration _Config;
+        private ExeConfigurationFileMap _ConfigFileMap;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         public RegexViewerSettings()
         {
@@ -52,10 +45,26 @@ namespace RegexViewer
             //RecentLogFiles = test;
         }
 
-        public void Save()
+        #endregion Public Constructors
+
+        #region Private Enums
+
+        private enum AppSettingNames
         {
-            _Config.Save(ConfigurationSaveMode.Full);
+            BackgroundColor,
+            FileHistoryCount,
+            FilterDirectory,
+            FontColor,
+            FontSize,
+            CurrentFilterFiles,
+            CurrentLogFiles,
+            RecentFilterFiles,
+            RecentLogFiles
         }
+
+        #endregion Private Enums
+
+        #region Public Properties
 
         public Color BackgroundColor
         {
@@ -66,6 +75,32 @@ namespace RegexViewer
             set
             {
                 _appSettings["BackgroundColor"].Value = value.Name;
+            }
+        }
+
+        public List<string> CurrentFilterFiles
+        {
+            get
+            {
+                return _appSettings["CurrentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
+            set
+            {
+                _appSettings["CurrentFilterFiles"].Value = string.Join(",", value);
+            }
+        }
+
+        public List<string> CurrentLogFiles
+        {
+            get
+            {
+                return _appSettings["CurrentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
+            set
+            {
+                _appSettings["CurrentLogFiles"].Value = string.Join(",", value);
             }
         }
 
@@ -105,32 +140,6 @@ namespace RegexViewer
             }
         }
 
-        public List<string> CurrentFilterFiles
-        {
-            get
-            {
-                return _appSettings["CurrentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
-
-            set
-            {
-                _appSettings["CurrentFilterFiles"].Value = string.Join(",", value);
-            }
-        }
-
-        public List<string> CurrentLogFiles
-        {
-            get
-            {
-                return _appSettings["CurrentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
-
-            set
-            {
-                _appSettings["CurrentLogFiles"].Value = string.Join(",", value);
-            }
-        }
-
         public List<string> RecentFilterFiles
         {
             get
@@ -156,6 +165,19 @@ namespace RegexViewer
                 _appSettings["RecentLogFiles"].Value = string.Join(",", value);
             }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void Save()
+        {
+            _Config.Save(ConfigurationSaveMode.Full);
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private void VerifyAppSettings()
         {
@@ -202,6 +224,8 @@ namespace RegexViewer
                 }
             }
         }
+
+        #endregion Private Methods
 
         //public string RecentFiles
         //{
