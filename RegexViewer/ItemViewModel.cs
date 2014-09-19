@@ -14,7 +14,8 @@ namespace RegexViewer
         private string header;
         private string content;
         private string tag;
-        List<TextBlock> contentList;
+        private List<TextBlock> contentList;
+        //private int selectedIndex;
 
         public List<TextBlock> ContentList
         {
@@ -32,6 +33,23 @@ namespace RegexViewer
             
             List<TextBlock> ContentList = new List<TextBlock>();
         }
+
+        //public int SelectedIndex
+        //{
+        //    get
+        //    {
+        //        return selectedIndex;
+        //    }
+
+        //    set
+        //    {
+        //        if (selectedIndex != value)
+        //        {
+        //            selectedIndex = value;
+        //            OnPropertyChanged("Name");
+        //        }
+        //    }
+        //}
 
         public string Name
         {

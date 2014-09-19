@@ -62,7 +62,9 @@
     </ApplicationDefinition>
     <Compile Include="AsynchronousCommand.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="TabItemViewModel.cs" />
+    <Compile Include="FilterViewModel.cs" />
+    <Compile Include="IViewModel.cs" />
+    <Compile Include="ItemViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
     <Compile Include="RegexViewModel.cs" />
     <Page Include="MainWindow.xaml">

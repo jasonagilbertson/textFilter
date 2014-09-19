@@ -7,7 +7,7 @@ using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class RegexViewModel : INotifyPropertyChanged
+    public class RegexViewModel : INotifyPropertyChanged, RegexViewer.IViewModel
     {
         #region Private Fields
 
@@ -15,10 +15,10 @@ namespace RegexViewer
         private RegexViewerSettings _Settings;
         private Command closeCommand;
         private FilterManager filterManager;
-        private ObservableCollection<ItemViewModel> logFileTabs;
+        private ObservableCollection<ItemViewModel> tabItems;
         private LogManager logManager;
         private Command openCommand;
-
+        private int selectedIndex;
         #endregion Private Fields
 
         #region Public Constructors
@@ -32,11 +32,11 @@ namespace RegexViewer
             //_Settings.BackgroundColor = Color.Black;
             //_Settings.FontColor = Color.White;
             //_Settings.Save();
-            this.logFileTabs = new ObservableCollection<ItemViewModel>();
+            this.tabItems = new ObservableCollection<ItemViewModel>();
             this.filterManager = new FilterManager();
             this.logManager = new LogManager();
 
-            closeCommand = new Command(CloseLog);
+            closeCommand = new Command(CloseFile);
             closeCommand.CanExecute = true;
         }
 
@@ -55,7 +55,7 @@ namespace RegexViewer
             get
             {
                 if (closeCommand == null)
-                    closeCommand = new Command(CloseLog);
+                    closeCommand = new Command(CloseFile);
                 return closeCommand;
             }
             set
@@ -64,16 +64,33 @@ namespace RegexViewer
             }
         }
 
-        public ObservableCollection<ItemViewModel> LogFileTabs
+        public int SelectedIndex
         {
             get
             {
-                return this.logFileTabs;
+                return selectedIndex;
+            }
+
+            set
+            {
+                if (selectedIndex != value)
+                {
+                    selectedIndex = value;
+                    OnPropertyChanged("Name");
+                }
+            }
+        }
+
+        public ObservableCollection<ItemViewModel> TabItems
+        {
+            get
+            {
+                return this.tabItems;
             }
             set
             {
-                logFileTabs = value;
-                OnPropertyChanged("LogFileTabs");
+                tabItems = value;
+                OnPropertyChanged("TabItems");
             }
         }
 
@@ -82,7 +99,7 @@ namespace RegexViewer
             get
             {
                 if (openCommand == null)
-                    openCommand = new Command(OpenLog);
+                    openCommand = new Command(OpenFile);
                 return openCommand;
             }
             set
@@ -96,25 +113,17 @@ namespace RegexViewer
         #region Public Methods
 
         //public bool CloseLog(TabItem tabItem)
-        public void CloseLog(object sender)
+        public void CloseFile(object sender)
         {
-            ItemViewModel tabItem = new ItemViewModel();
-            if (!logManager.CloseLog(tabItem.Name))
+            ItemViewModel tabItem = tabItems[selectedIndex];
+            if (!logManager.CloseLog(tabItem.Tag))
             {
-                //return false;
+                return;
             }
 
-            // remove tab
-            RemoveLogFileTab(tabItem);
-
-            //return true;
+            RemoveTabItem(tabItem);
         }
 
-        //    set
-        //    {
-        //        _Settings.RecentFiles = string.Join(",", value);
-        //    }
-        //}
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -124,7 +133,7 @@ namespace RegexViewer
             }
         }
 
-        public void OpenLog(object sender)
+        public void OpenFile(object sender)
         {
             string logName = string.Empty;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
@@ -150,64 +159,38 @@ namespace RegexViewer
             }
 
             // make new tab
-            AddLogFileTab(logProperties);
-        }
-
-        public bool SaveFilter(string filterName)
-        {
-            return filterManager.Save(filterName);
+            AddTabItem(logProperties);
         }
 
         #endregion Public Methods
 
         #region Private Methods
 
-        private void AddLogFileTab(LogProperties logProperties)
+        private void AddTabItem(LogProperties logProperties)
         {
-            if (!logFileTabs.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
+            if (!tabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
             {
                 ItemViewModel tabItem = new ItemViewModel();
                 // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
-                //ListBox listbox = new ListBox();
-                //listbox.ItemsSource = logProperties.TextBlocks;
-                //tabItem.Content = listbox;
-                tabItem.Content = "testcontent";// logProperties.TextBlocks;
-                //tabItem.Content = logProperties.TextBlocks;
+                tabItem.Name = tabItems.Count.ToString();
                 tabItem.ContentList = logProperties.TextBlocks;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.Tag;
-                logFileTabs.Add(tabItem);
+                tabItems.Add(tabItem);
             }
         }
 
-        private void RemoveLogFileTab(ItemViewModel tabItem)
+        private void RemoveTabItem(ItemViewModel tabItem)
+            
         {
-            if (logFileTabs.Any(x => String.Compare((string)x.Tag, tabItem.Name, true) == 0))
+            
+            if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
-                logFileTabs.Remove(tabItem);
+                tabItems.Remove(tabItem);
             }
         }
 
         #endregion Private Methods
 
-        //public Color BackgroundColor
-        //{
-        //    get
-        //    {
-        //        return Color.FromName(_Settings.BackgroundColor);
-        //    }
-
-        //    set
-        //    {
-        //        _Settings.BackgroundColor = value.ToString();
-        //    }
-        //}
-
-        //public List<string> RecentFiles
-        //{
-        //    get
-        //    {
-        //        return _Settings.RecentFiles.Split(new string[] { "," } , StringSplitOptions.RemoveEmptyEntries).ToList();
-        //    }
     }
 }

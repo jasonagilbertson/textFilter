@@ -6,6 +6,7 @@
         Title="RegexViewer" Height="350" Width="525">
     <Window.Resources>
         <local:RegexViewModel x:Key="regexViewModel" />
+        <local:FilterViewModel x:Key="filterViewModel" />
     </Window.Resources>
     <DockPanel DataContext="{StaticResource regexViewModel}">
 
@@ -33,14 +34,15 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TabControl Name="tabFilters" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
+            <TabControl x:Name="tabFilters" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
 
                 <DataGrid Name="dataGridFilter" Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch">
                 </DataGrid>
             </TabControl>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
             </GridSplitter>
-            <TabControl Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch" Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=LogFileTabs}">
+            <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
+                        Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=TabItems}" SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
                     <!-- this is the header template-->
                     <DataTemplate>
@@ -50,7 +52,7 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <ListBox ItemsSource="{Binding Path=ContentList}"/>
+                        <ListBox Name="logFileData" ItemsSource="{Binding Path=ContentList}"/>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
                 <!--<TabControl.CommandBindings>
@@ -60,7 +62,9 @@
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />
-                        <MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding}" CommandTarget="{Binding ElementName=logFileData}" />
+                        <!--<MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding Path=Header}" CommandTarget="{Binding ElementName=logFileData}" />-->
+                        <!--<MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}" />-->
+                        <MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}},Path=SelectedIndex}"/>
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
