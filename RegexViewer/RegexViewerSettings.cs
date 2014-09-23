@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Windows.Media;
 
 namespace RegexViewer
 {
-    internal class RegexViewerSettings
+    public class RegexViewerSettings : INotifyPropertyChanged
     {
         #region Private Fields
-
+        public event PropertyChangedEventHandler PropertyChanged;
+        private static RegexViewerSettings settings;
         private KeyValueConfigurationCollection _appSettings;
         private Configuration _Config;
         private ExeConfigurationFileMap _ConfigFileMap;
@@ -19,6 +22,22 @@ namespace RegexViewer
 
         #region Public Constructors
 
+        static RegexViewerSettings()
+        {
+            if (settings == null)
+            {
+                settings = new RegexViewerSettings();
+            }
+        }
+
+        public void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
         public RegexViewerSettings()
         {
             _ConfigFileMap = new ExeConfigurationFileMap();
@@ -66,15 +85,27 @@ namespace RegexViewer
 
         #region Public Properties
 
-        public Color BackgroundColor
+        public static RegexViewerSettings Settings
+        {
+            get { return RegexViewerSettings.settings; }
+            set { RegexViewerSettings.settings = value; }
+        }
+
+        public SolidColorBrush BackgroundColor
         {
             get
             {
-                return (Color.FromName(_appSettings["BackgroundColor"].Value));
+                
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["BackgroundColor"].Value));
             }
             set
             {
-                _appSettings["BackgroundColor"].Value = value.Name;
+                if (value.ToString() != _appSettings["BackgroundColor"].Value.ToString())
+                {
+                    _appSettings["BackgroundColor"].Value = value.ToString();
+                    OnPropertyChanged("BackgroundColor");
+                }
+                
             }
         }
 
@@ -116,15 +147,15 @@ namespace RegexViewer
             }
         }
 
-        public Color FontColor
+        public SolidColorBrush FontColor
         {
             get
             {
-                return (Color.FromName(_appSettings["FontColor"].Value));
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["FontColor"].Value));
             }
             set
             {
-                _appSettings["FontColor"].Value = value.Name;
+                _appSettings["FontColor"].Value = value.ToString();
             }
         }
 
@@ -140,32 +171,78 @@ namespace RegexViewer
             }
         }
 
-        public List<string> RecentFilterFiles
+        public string[] RecentFilterFiles
         {
             get
             {
-                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);//.ToList();
             }
 
-            set
+            private set
             {
                 _appSettings["RecentFilterFiles"].Value = string.Join(",", value);
             }
         }
 
-        public List<string> RecentLogFiles
+        //public List<string> RecentLogFiles
+        public string[] RecentLogFiles
         {
             get
             {
-                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);//.ToList();
             }
 
-            set
+            private set
             {
                 _appSettings["RecentLogFiles"].Value = string.Join(",", value);
             }
         }
 
+        public void AddLogFile(string logFile)
+        {
+            List<string> logFiles = new List<string>(CurrentLogFiles);
+            if(!logFiles.Contains(logFile))
+            {
+                logFiles.Add(logFile);
+                CurrentLogFiles = logFiles;
+                ManageRecentFiles(logFile);
+            }
+        }
+
+        private void ManageRecentFiles(string logFile)
+        {
+            string[] recentLogFiles = RecentLogFiles;
+            List<string> newList = new List<string>();
+          
+            // return if already in list
+            if(recentLogFiles.ToList().Contains(logFile))
+            {
+                return;
+            }
+
+            
+            int i = Math.Min(recentLogFiles.Length, this.FileHistoryCount - 1) - 1;
+            for (; i >= 0 ; i--)
+            {
+                Debug.Print("Removing RecentFile:" + recentLogFiles[i]);
+                newList.Add(recentLogFiles[i]);
+            }
+
+            newList.Add(logFile);
+            RecentLogFiles = newList.ToArray();
+
+        }
+
+        public void RemoveLogFile(string logFile)
+        {
+            List<string> logFiles = new List<string>(CurrentLogFiles);
+            if (logFiles.Contains(logFile))
+            {
+                Debug.Print("Removing LogFile:" + logFile);
+                logFiles.Remove(logFile);
+                CurrentLogFiles = logFiles;
+            }
+        }
         #endregion Public Properties
 
         #region Public Methods

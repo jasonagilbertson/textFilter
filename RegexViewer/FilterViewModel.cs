@@ -1,15 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegexViewer
 {
-    class FilterViewModel : INotifyPropertyChanged, RegexViewer.IViewModel
+    //public class FilterViewModel : MainViewModel, INotifyPropertyChanged, RegexViewer.IViewModel
+    public class FilterViewModel : INotifyPropertyChanged, RegexViewer.IViewModel
     {
+        #region Public Events
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        event PropertyChangedEventHandler IViewModel.PropertyChanged
+        {
+            add { throw new NotImplementedException(); }
+            remove { throw new NotImplementedException(); }
+        }
+
+        #endregion Public Events
+
+        #region Public Properties
+
         Command IViewModel.CloseCommand
         {
             get
@@ -19,20 +29,6 @@ namespace RegexViewer
             set
             {
                 throw new NotImplementedException();
-            }
-        }
-
-        void IViewModel.CloseFile(object sender)
-        {
-            throw new NotImplementedException();
-        }
-
-        void IViewModel.OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
             }
         }
 
@@ -48,15 +44,16 @@ namespace RegexViewer
             }
         }
 
-        void IViewModel.OpenFile(object sender)
+        int IViewModel.SelectedIndex
         {
-            throw new NotImplementedException();
-        }
-
-        event PropertyChangedEventHandler IViewModel.PropertyChanged
-        {
-            add { throw new NotImplementedException(); }
-            remove { throw new NotImplementedException(); }
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
         }
 
         System.Collections.ObjectModel.ObservableCollection<ItemViewModel> IViewModel.TabItems
@@ -70,5 +67,30 @@ namespace RegexViewer
                 throw new NotImplementedException();
             }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        void IViewModel.CloseFile(object sender)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IViewModel.OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        void IViewModel.OpenFile(object sender)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Public Methods
     }
 }

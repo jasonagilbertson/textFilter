@@ -2,22 +2,34 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+
         xmlns:local="clr-namespace:RegexViewer"
+
         Title="RegexViewer" Height="350" Width="525">
+
     <Window.Resources>
-        <local:RegexViewModel x:Key="regexViewModel" />
-        <local:FilterViewModel x:Key="filterViewModel" />
+        <!--<local:RegexViewModel x:Key="regexViewModel" />
+        <local:FilterViewModel x:Key="filterViewModel" />-->
+        <local:MainViewModel x:Key="mainViewModel" />
+        <local:RegexViewerSettings x:Key="settings" />
     </Window.Resources>
-    <DockPanel DataContext="{StaticResource regexViewModel}">
+    
+    <!--<i:Interaction.Triggers>
+            <i:EventTrigger EventName="Closing">
+                <command:EventToCommand Command="{Binding WindowClosing}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>-->
+    <!--xmlns:i="clr-namespace:Microsoft.Expression.Interactivity;assembly=Microsoft.Expression.Interactions"-->
+    <DockPanel DataContext="{StaticResource mainViewModel}">
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Command="{Binding OpenCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Close" />
+                <MenuItem Header="_Open" Command="{Binding RegexViewModel.OpenCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_Close" Command="{Binding RegexViewModel.CloseCommand}" CommandParameter="{Binding}" />
             </MenuItem>
             <MenuItem Header="_Filter">
-                <MenuItem Header="_Open" Command="{Binding OpenCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Close" />
+                <MenuItem Header="_Open" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_Close" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Save" />
             </MenuItem>
             <MenuItem Header="_Options">
@@ -42,7 +54,7 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
             </GridSplitter>
             <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=TabItems}" SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay}">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=RegexViewModel.TabItems}" SelectedIndex="{Binding Path=RegexViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
                     <!-- this is the header template-->
                     <DataTemplate>
@@ -52,7 +64,8 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <ListBox Name="logFileData" ItemsSource="{Binding Path=ContentList}"/>
+                        <ListBox Name="logFileData" ItemsSource="{Binding Path=ContentList}" Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+                        </ListBox> 
                     </DataTemplate>
                 </TabControl.ContentTemplate>
                 <!--<TabControl.CommandBindings>
@@ -62,9 +75,7 @@
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />
-                        <!--<MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding Path=Header}" CommandTarget="{Binding ElementName=logFileData}" />-->
-                        <!--<MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}" />-->
-                        <MenuItem Header="Close" Command="{Binding CloseCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}},Path=SelectedIndex}"/>
+                        <MenuItem Header="Close" Command="{Binding RegexViewModel.CloseCommand}" />
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>

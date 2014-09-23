@@ -9,8 +9,9 @@ namespace RegexViewer
     {
         #region Private Fields
 
-        private RegexViewModel regexViewModel;
-        private FilterViewModel filterViewModel;
+        //private FilterViewModel filterViewModel;
+        //private RegexViewModel regexViewModel;
+        private MainViewModel mainViewModel;
 
         #endregion Private Fields
 
@@ -20,8 +21,11 @@ namespace RegexViewer
         {
             InitializeComponent();
             // Initialize the View Model Objects
-            this.regexViewModel = (RegexViewModel)this.FindResource("regexViewModel");
-            this.filterViewModel = (FilterViewModel)this.FindResource("filterViewModel");
+            this.mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
+            //this.regexViewModel = (RegexViewModel)this.FindResource("regexViewModel");
+            //this.filterViewModel = (FilterViewModel)this.FindResource("filterViewModel");
+
+            Closing += mainViewModel.OnWindowClosing;
         }
 
         #endregion Public Constructors

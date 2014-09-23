@@ -1,37 +1,83 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace RegexViewer
 {
     public class ItemViewModel : INotifyPropertyChanged
     {
-        private string name;
-        private string header;
+        #region Private Fields
+
         private string content;
+        private List<ListBoxItem> contentList;
+        private string header;
+        private string name;
         private string tag;
-        private List<TextBlock> contentList;
+        private string background;
+
+        #endregion Private Fields
+
         //private int selectedIndex;
 
-        public List<TextBlock> ContentList
-        {
-            get { return contentList; }
-            set 
-            {
+        #region Public Constructors
 
-                    contentList = value;
-                    OnPropertyChanged("ContentList");
-                
-            }
-        }
         public ItemViewModel()
         {
-            
-            List<TextBlock> ContentList = new List<TextBlock>();
+            List<ListBoxItem> ContentList = new List<ListBoxItem>();
+        }
+
+        #endregion Public Constructors
+
+        #region Public Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Public Events
+
+        #region Public Properties
+
+        public string Content
+        {
+            get
+            {
+                return content;
+            }
+
+            set
+            {
+                if (content != value)
+                {
+                    content = value;
+                    OnPropertyChanged("Content");
+                }
+            }
+        }
+
+        public string Background
+        {
+            get
+            {
+                return background;
+            }
+
+            set
+            {
+                if (background != value)
+                {
+                    background = value;
+                    OnPropertyChanged("Background");
+                }
+            }
+        }
+
+        public List<ListBoxItem> ContentList
+        {
+            get { return contentList; }
+            set
+            {
+                contentList = value;
+                OnPropertyChanged("ContentList");
+            }
         }
 
         //public int SelectedIndex
@@ -50,6 +96,23 @@ namespace RegexViewer
         //        }
         //    }
         //}
+
+        public string Header
+        {
+            get
+            {
+                return header;
+            }
+
+            set
+            {
+                if (header != value)
+                {
+                    header = value;
+                    OnPropertyChanged("Header");
+                }
+            }
+        }
 
         public string Name
         {
@@ -84,39 +147,11 @@ namespace RegexViewer
                 }
             }
         }
-        public string Header
-        {
-            get
-            {
-                return header;
-            }
 
-            set
-            {
-                if (header != value)
-                {
-                    header = value;
-                    OnPropertyChanged("Header");
-                }
-            }
-        }
-        public string Content
-        {
-            get
-            {
-                return content;
-            }
+        #endregion Public Properties
 
-            set
-            {
-                if (content != value)
-                {
-                    content = value;
-                    OnPropertyChanged("Content");
-                }
-            }
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
+        #region Public Methods
+
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -125,6 +160,7 @@ namespace RegexViewer
                 handler(this, new PropertyChangedEventArgs(name));
             }
         }
-    }
 
+        #endregion Public Methods
+    }
 }

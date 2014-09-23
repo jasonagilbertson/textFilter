@@ -10,7 +10,7 @@ namespace RegexViewer
         public LogProperties()
         {
             this.Dirty = false;
-            this.TextBlocks = new List<TextBlock>();
+            this.TextBlocks = new List<ListBoxItem>();
         }
 
         #endregion Public Constructors
@@ -23,7 +23,7 @@ namespace RegexViewer
 
         public string Tag { get; set; }
 
-        public List<TextBlock> TextBlocks { get; set; }
+        public List<ListBoxItem> TextBlocks { get; set; }
 
         #endregion Public Properties
     }

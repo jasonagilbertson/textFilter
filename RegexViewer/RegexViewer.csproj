@@ -65,8 +65,9 @@
     <Compile Include="FilterViewModel.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="ItemViewModel.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
-    <Compile Include="RegexViewModel.cs" />
+    <Compile Include="LogViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

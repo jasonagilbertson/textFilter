@@ -3,41 +3,40 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class RegexViewModel : INotifyPropertyChanged, RegexViewer.IViewModel
+    //public class RegexViewModel : MainViewModel, INotifyPropertyChanged, RegexViewer.IViewModel
+    public class LogViewModel : INotifyPropertyChanged, RegexViewer.IViewModel
     {
         #region Private Fields
 
-        private static TraceSource ts = new TraceSource("RegexViewer");
-        private RegexViewerSettings _Settings;
+        // private RegexViewerSettings _Settings;
         private Command closeCommand;
-        private FilterManager filterManager;
-        private ObservableCollection<ItemViewModel> tabItems;
+
+        // private FilterManager filterManager;
         private LogManager logManager;
+
         private Command openCommand;
         private int selectedIndex;
+        private ObservableCollection<ItemViewModel> tabItems;
+        private TraceSource ts = new TraceSource("RegexViewer:RegexViewModel");
+        private RegexViewerSettings settings = RegexViewerSettings.Settings;
         #endregion Private Fields
 
         #region Public Constructors
 
-        public RegexViewModel()
+        public LogViewModel()
         {
-            // LogCollection = _LogManager.GetLogs();
-            // FilterCollection = _FilterManager.GetFilters();
-            _Settings = new RegexViewerSettings();
-            //   BackgroundColor = Color.Black;
-            //_Settings.BackgroundColor = Color.Black;
-            //_Settings.FontColor = Color.White;
-            //_Settings.Save();
             this.tabItems = new ObservableCollection<ItemViewModel>();
-            this.filterManager = new FilterManager();
+            //    this.filterManager = new FilterManager();
             this.logManager = new LogManager();
 
-            closeCommand = new Command(CloseFile);
-            closeCommand.CanExecute = true;
+            // load tabs from last session
+            foreach(LogProperties logProperty in logManager.OpenLogFiles(settings.CurrentLogFiles.ToArray()))
+            {
+                AddTabItem(logProperty);
+            }
         }
 
         #endregion Public Constructors
@@ -52,16 +51,14 @@ namespace RegexViewer
 
         public Command CloseCommand
         {
-            get
-            {
-                if (closeCommand == null)
-                    closeCommand = new Command(CloseFile);
-                return closeCommand;
-            }
-            set
-            {
-                closeCommand = value;
-            }
+            get { return closeCommand ?? new Command(CloseFile); }
+            set { openCommand = value; }
+        }
+
+        public Command OpenCommand
+        {
+            get { return openCommand ?? new Command(OpenFile); }
+            set { openCommand = value; }
         }
 
         public int SelectedIndex
@@ -76,7 +73,7 @@ namespace RegexViewer
                 if (selectedIndex != value)
                 {
                     selectedIndex = value;
-                    OnPropertyChanged("Name");
+                    OnPropertyChanged("SelectedIndex");
                 }
             }
         }
@@ -91,20 +88,6 @@ namespace RegexViewer
             {
                 tabItems = value;
                 OnPropertyChanged("TabItems");
-            }
-        }
-
-        public Command OpenCommand
-        {
-            get
-            {
-                if (openCommand == null)
-                    openCommand = new Command(OpenFile);
-                return openCommand;
-            }
-            set
-            {
-                openCommand = value;
             }
         }
 
@@ -172,18 +155,18 @@ namespace RegexViewer
             {
                 ItemViewModel tabItem = new ItemViewModel();
                 // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
-                tabItem.Name = tabItems.Count.ToString();
+                tabItem.Name = this.tabItems.Count.ToString();
                 tabItem.ContentList = logProperties.TextBlocks;
                 tabItem.Tag = logProperties.Tag;
-                tabItem.Header = logProperties.Tag;
+                tabItem.Header = logProperties.FileName;
+                // todo: fix this background binding for dynamic
+               // tabItem.Background = settings.BackgroundColor.ToString();
                 tabItems.Add(tabItem);
             }
         }
 
         private void RemoveTabItem(ItemViewModel tabItem)
-            
         {
-            
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
                 tabItems.Remove(tabItem);
@@ -191,6 +174,5 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
-
     }
 }
