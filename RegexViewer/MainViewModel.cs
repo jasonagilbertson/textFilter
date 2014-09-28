@@ -8,7 +8,7 @@ namespace RegexViewer
         #region Private Fields
 
         private FilterViewModel filterViewModel;
-        private LogViewModel regexViewModel;
+        private LogViewModel logViewModel;
         private RegexViewerSettings settings;
         private TraceSource ts = new TraceSource("RegexViewer:MainViewModel");
 
@@ -26,7 +26,7 @@ namespace RegexViewer
             //_Settings.FontColor = Color.White;
             settings = RegexViewerSettings.Settings;
 
-            regexViewModel = new LogViewModel();
+            logViewModel = new LogViewModel();
             filterViewModel = new FilterViewModel();
         }
 
@@ -46,10 +46,10 @@ namespace RegexViewer
             set { filterViewModel = value; }
         }
 
-        public LogViewModel RegexViewModel
+        public LogViewModel LogViewModel
         {
-            get { return regexViewModel; }
-            set { regexViewModel = value; }
+            get { return logViewModel; }
+            set { logViewModel = value; }
         }
 
         public RegexViewerSettings Settings

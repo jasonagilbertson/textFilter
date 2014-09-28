@@ -8,12 +8,18 @@
         Title="RegexViewer" Height="350" Width="525">
 
     <Window.Resources>
-        <!--<local:RegexViewModel x:Key="regexViewModel" />
-        <local:FilterViewModel x:Key="filterViewModel" />-->
+        <local:LogViewModel x:Key="logViewModel" />
+        <local:FilterViewModel x:Key="filterViewModel" />
         <local:MainViewModel x:Key="mainViewModel" />
         <local:RegexViewerSettings x:Key="settings" />
+        <local:ItemViewModel x:Key="itemViewModel" />
     </Window.Resources>
-    
+    <!--<Window.CommandBindings>
+
+        <CommandBinding Command="{StaticResource logViewModel.CopyCmdCanExecute}"
+                  Executed="{Binding Executed}"
+                  CanExecute="{Binding CanExecute}"/>
+    </Window.CommandBindings>-->
     <!--<i:Interaction.Triggers>
             <i:EventTrigger EventName="Closing">
                 <command:EventToCommand Command="{Binding WindowClosing}" />
@@ -21,11 +27,11 @@
         </i:Interaction.Triggers>-->
     <!--xmlns:i="clr-namespace:Microsoft.Expression.Interactivity;assembly=Microsoft.Expression.Interactions"-->
     <DockPanel DataContext="{StaticResource mainViewModel}">
-
+       
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Command="{Binding RegexViewModel.OpenCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Close" Command="{Binding RegexViewModel.CloseCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_Open" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_Close" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" />
             </MenuItem>
             <MenuItem Header="_Filter">
                 <MenuItem Header="_Open" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" />
@@ -40,6 +46,7 @@
             </MenuItem>
         </Menu>
         <Grid>
+
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
@@ -54,7 +61,7 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
             </GridSplitter>
             <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=RegexViewModel.TabItems}" SelectedIndex="{Binding Path=RegexViewModel.SelectedIndex, Mode=TwoWay}">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch" ItemsSource="{Binding Path=LogViewModel.TabItems}" SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
                     <!-- this is the header template-->
                     <DataTemplate>
@@ -64,18 +71,42 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <ListBox Name="logFileData" ItemsSource="{Binding Path=ContentList}" Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+                        <ListBox Name="logFileData" 
+                                 ItemsSource="{Binding Path=ContentList}"  
+                                 AllowDrop="True" 
+                                 SelectionMode="Extended" 
+                                 Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+                            <!--<ListBox.SelectedItems>
+                                --><!--<ListBox.SelectedItem SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}" />--><!--
+                                <Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                            </Style>
+                            </ListBox.SelectedItems>-->
+                                 
+                            <!--<ListBox.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="{Binding CtrlCCopyCmdCanExecute}" Executed="{Binding CtrlCCopyCmdExecuted}" />
+                            </ListBox.CommandBindings>-->
+                            <ListBox.ContextMenu>
+                                <ContextMenu HasDropShadow="True">
+                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}"/>-->
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
+                                    <MenuItem Command="ApplicationCommands.SelectAll"/>
+                                   
+                                </ContextMenu>
+                            </ListBox.ContextMenu>
+                            <!--<ListBox.SelectedItems>
+                            <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource {x:Type ListBox}}">
+                                <Setter Property="SelectedItems" Value="{Binding SelectedItems, Mode=TwoWay}" />
+                            </Style>
+                            </ListBox.SelectedItems>-->
                         </ListBox> 
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-                <!--<TabControl.CommandBindings>
-                    <CommandBinding Command="ApplicationCommands.Copy" CanExecute="{Binding CanExecuteCustomCommand}" Executed="{Binding ExecutedCustomCommand}" />
-                </TabControl.CommandBindings>-->
-
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-                        <MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />
-                        <MenuItem Header="Close" Command="{Binding RegexViewModel.CloseCommand}" />
+                        <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
+                        <MenuItem Header="Close" Command="{Binding LogViewModel.CloseCommand}" />
+                        <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}"/>-->
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>

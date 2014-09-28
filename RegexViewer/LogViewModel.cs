@@ -3,6 +3,9 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
@@ -13,7 +16,7 @@ namespace RegexViewer
 
         // private RegexViewerSettings _Settings;
         private Command closeCommand;
-
+        
         // private FilterManager filterManager;
         private LogManager logManager;
 
@@ -25,7 +28,7 @@ namespace RegexViewer
         #endregion Private Fields
 
         #region Public Constructors
-
+      
         public LogViewModel()
         {
             this.tabItems = new ObservableCollection<ItemViewModel>();
@@ -52,9 +55,12 @@ namespace RegexViewer
         public Command CloseCommand
         {
             get { return closeCommand ?? new Command(CloseFile); }
-            set { openCommand = value; }
+            set { closeCommand = value; }
         }
 
+      
+
+      
         public Command OpenCommand
         {
             get { return openCommand ?? new Command(OpenFile); }
@@ -106,6 +112,12 @@ namespace RegexViewer
 
             RemoveTabItem(tabItem);
         }
+
+        public void CopyItems(object sender)
+        {
+            
+        }
+
 
         public void OnPropertyChanged(string name)
         {
@@ -159,8 +171,6 @@ namespace RegexViewer
                 tabItem.ContentList = logProperties.TextBlocks;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
-                // todo: fix this background binding for dynamic
-               // tabItem.Background = settings.BackgroundColor.ToString();
                 tabItems.Add(tabItem);
             }
         }

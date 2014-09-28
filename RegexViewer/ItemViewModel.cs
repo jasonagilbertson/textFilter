@@ -1,6 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Text;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace RegexViewer
 {
@@ -10,6 +15,7 @@ namespace RegexViewer
 
         private string content;
         private List<ListBoxItem> contentList;
+//        private List<ListBoxItem> selectedItems;
         private string header;
         private string name;
         private string tag;
@@ -24,6 +30,8 @@ namespace RegexViewer
         public ItemViewModel()
         {
             List<ListBoxItem> ContentList = new List<ListBoxItem>();
+            //copyCommand = new Command(CopyExecuted);
+  //          List<ListBoxItem> SelectedItems = new List<ListBoxItem>();
         }
 
         #endregion Public Constructors
@@ -34,7 +42,7 @@ namespace RegexViewer
 
         #endregion Public Events
 
-        #region Public Properties
+    
 
         public string Content
         {
@@ -70,6 +78,55 @@ namespace RegexViewer
             }
         }
 
+        
+        public void CopyExecuted(object target)
+        {
+            try
+            {
+                Clipboard.Clear();
+                StringBuilder copyContent = new StringBuilder();
+                HtmlFragment htmlFragment = new HtmlFragment();
+                //foreach (ListBoxItem lbi in SelectedItems)
+                foreach (ListBoxItem lbi in ContentList)
+                {
+                    if (lbi != null && lbi.IsSelected
+                        && copyContent.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
+                    {
+                       // copyContent.AppendLine(lbi.Content.ToString());
+                        //string test = HtmlConverter.ToHtml(lbi.Content.ToString());
+                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
+                        //copyContent.AppendLine(test);
+                    }
+                }
+
+                //Clipboard.SetText(copyContent.ToString());
+                //Clipboard.SetText(copyContent.ToString(),TextDataFormat.Html);
+               // Clipboard.SetData("HTML Format", copyContent);
+                htmlFragment.CopyToClipboard();
+                
+            }
+            catch (Exception ex)
+            {
+                Debug.Print("Exception:CopyCmdExecute:" + ex.ToString());
+            }
+        }
+
+        private Command copyCommand;
+        public Command CopyCommand
+        {
+            get
+            {
+                if (copyCommand == null)
+                {
+                    copyCommand = new Command(CopyExecuted);
+
+                }
+                copyCommand.CanExecute = true;
+
+                return copyCommand;
+            }
+            set { copyCommand = value; }
+        }
         public List<ListBoxItem> ContentList
         {
             get { return contentList; }
@@ -80,22 +137,17 @@ namespace RegexViewer
             }
         }
 
-        //public int SelectedIndex
+        //public List<ListBoxItem> SelectedItems
         //{
-        //    get
-        //    {
-        //        return selectedIndex;
-        //    }
-
+        //    get { return selectedItems; }
         //    set
         //    {
-        //        if (selectedIndex != value)
-        //        {
-        //            selectedIndex = value;
-        //            OnPropertyChanged("Name");
-        //        }
+        //        selectedItems = value;
+        //        OnPropertyChanged("SelectedItems");
         //    }
         //}
+
+        
 
         public string Header
         {
@@ -148,7 +200,7 @@ namespace RegexViewer
             }
         }
 
-        #endregion Public Properties
+        
 
         #region Public Methods
 

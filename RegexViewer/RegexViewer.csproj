@@ -63,6 +63,7 @@
     <Compile Include="AsynchronousCommand.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="FilterViewModel.cs" />
+    <Compile Include="HtmlFragment.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="ItemViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
