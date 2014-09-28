@@ -64,8 +64,15 @@
     <Compile Include="Command.cs" />
     <Compile Include="FilterViewModel.cs" />
     <Compile Include="HtmlFragment.cs" />
+    <Compile Include="BaseTabViewModel.cs" />
+    <Compile Include="IFileManager.cs" />
+    <Compile Include="IFileProperties.cs" />
+    <Compile Include="ITabViewModel.cs" />
     <Compile Include="IViewModel.cs" />
-    <Compile Include="ItemViewModel.cs" />
+    <Compile Include="BaseFileProperties.cs" />
+    <Compile Include="BaseFileManager.cs" />
+    <Compile Include="LogTabViewModel.cs" />
+    <Compile Include="BaseViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
     <Compile Include="LogViewModel.cs" />
@@ -77,10 +84,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FilterManager.cs" />
-    <Compile Include="FilterProperties.cs" />
-    <Compile Include="LogManager.cs" />
-    <Compile Include="LogProperties.cs" />
+    <Compile Include="FilterFileManager.cs" />
+    <Compile Include="FilterFileProperties.cs" />
+    <Compile Include="LogFileManager.cs" />
+    <Compile Include="LogFileProperties.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -112,6 +119,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="issues.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

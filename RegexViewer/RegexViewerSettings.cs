@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
 using System.Windows.Media;
 
@@ -12,10 +11,13 @@ namespace RegexViewer
     public class RegexViewerSettings : INotifyPropertyChanged
     {
         #region Private Fields
-        public event PropertyChangedEventHandler PropertyChanged;
+
         private static RegexViewerSettings settings;
+
         private KeyValueConfigurationCollection _appSettings;
+
         private Configuration _Config;
+
         private ExeConfigurationFileMap _ConfigFileMap;
 
         #endregion Private Fields
@@ -30,14 +32,6 @@ namespace RegexViewer
             }
         }
 
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
         public RegexViewerSettings()
         {
             _ConfigFileMap = new ExeConfigurationFileMap();
@@ -65,6 +59,12 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
+
+        #region Public Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Public Events
 
         #region Private Enums
 
@@ -95,7 +95,6 @@ namespace RegexViewer
         {
             get
             {
-                
                 return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["BackgroundColor"].Value));
             }
             set
@@ -105,7 +104,6 @@ namespace RegexViewer
                     _appSettings["BackgroundColor"].Value = value.ToString();
                     OnPropertyChanged("BackgroundColor");
                 }
-                
             }
         }
 
@@ -198,10 +196,14 @@ namespace RegexViewer
             }
         }
 
+        #endregion Public Properties
+
+        #region Public Methods
+
         public void AddLogFile(string logFile)
         {
             List<string> logFiles = new List<string>(CurrentLogFiles);
-            if(!logFiles.Contains(logFile))
+            if (!logFiles.Contains(logFile))
             {
                 logFiles.Add(logFile);
                 CurrentLogFiles = logFiles;
@@ -209,28 +211,13 @@ namespace RegexViewer
             }
         }
 
-        private void ManageRecentFiles(string logFile)
+        public void OnPropertyChanged(string name)
         {
-            string[] recentLogFiles = RecentLogFiles;
-            List<string> newList = new List<string>();
-          
-            // return if already in list
-            if(recentLogFiles.ToList().Contains(logFile))
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
             {
-                return;
+                handler(this, new PropertyChangedEventArgs(name));
             }
-
-            
-            int i = Math.Min(recentLogFiles.Length, this.FileHistoryCount - 1) - 1;
-            for (; i >= 0 ; i--)
-            {
-                Debug.Print("Removing RecentFile:" + recentLogFiles[i]);
-                newList.Add(recentLogFiles[i]);
-            }
-
-            newList.Add(logFile);
-            RecentLogFiles = newList.ToArray();
-
         }
 
         public void RemoveLogFile(string logFile)
@@ -243,9 +230,6 @@ namespace RegexViewer
                 CurrentLogFiles = logFiles;
             }
         }
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Save()
         {
@@ -255,6 +239,28 @@ namespace RegexViewer
         #endregion Public Methods
 
         #region Private Methods
+
+        private void ManageRecentFiles(string logFile)
+        {
+            string[] recentLogFiles = RecentLogFiles;
+            List<string> newList = new List<string>();
+
+            // return if already in list
+            if (recentLogFiles.ToList().Contains(logFile))
+            {
+                return;
+            }
+
+            int i = Math.Min(recentLogFiles.Length, this.FileHistoryCount - 1) - 1;
+            for (; i >= 0; i--)
+            {
+                Debug.Print("Removing RecentFile:" + recentLogFiles[i]);
+                newList.Add(recentLogFiles[i]);
+            }
+
+            newList.Add(logFile);
+            RecentLogFiles = newList.ToArray();
+        }
 
         private void VerifyAppSettings()
         {
