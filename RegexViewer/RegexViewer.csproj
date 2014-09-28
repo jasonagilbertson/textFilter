@@ -61,7 +61,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AsynchronousCommand.cs" />
+    <Compile Include="BaseFileProperties.cs" />
+    <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterViewModel.cs" />
     <Compile Include="HtmlFragment.cs" />
     <Compile Include="BaseTabViewModel.cs" />
@@ -69,10 +72,8 @@
     <Compile Include="IFileProperties.cs" />
     <Compile Include="ITabViewModel.cs" />
     <Compile Include="IViewModel.cs" />
-    <Compile Include="BaseFileProperties.cs" />
     <Compile Include="BaseFileManager.cs" />
     <Compile Include="LogTabViewModel.cs" />
-    <Compile Include="BaseViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
     <Compile Include="LogViewModel.cs" />
@@ -84,7 +85,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterFileProperties.cs" />
     <Compile Include="LogFileManager.cs" />
     <Compile Include="LogFileProperties.cs" />
