@@ -1,0 +1,2 @@
+﻿140928 - issue - pasting from a config file (xml) clipboard fails to paste. need to escape data in add function before adding to list
+140928 - issue - copy to clipboard works as html to onenote, but then breaks pasting text only to notepad++
