@@ -45,19 +45,22 @@ namespace RegexViewer
             try
             {
                 Clipboard.Clear();
-                StringBuilder copyContent = new StringBuilder();
+                //StringBuilder copyContent = new StringBuilder();
                 HtmlFragment htmlFragment = new HtmlFragment();
                 foreach (ListBoxItem lbi in ContentList)
                 {
-                    if (lbi != null && lbi.IsSelected
-                        && copyContent.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
+                    if (lbi != null && lbi.IsSelected)
+                        //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
                     {
+                        //copyContent.AppendLine(lbi.Content.ToString());
                         htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
                     }
                 }
-                //Clipboard.SetText(copyContent.ToString(), TextDataFormat.Text);
 
+              //  Clipboard.SetText(copyContent.ToString(), TextDataFormat.Text);
                 htmlFragment.CopyToClipboard();
+              //  HtmlFragment.CopyToClipboard(copyContent.ToString());
+                
             }
             catch (Exception ex)
             {

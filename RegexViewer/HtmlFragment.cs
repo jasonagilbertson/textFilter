@@ -6,9 +6,9 @@
     //
     using System;
     using System.Text;
-
     //using System.Windows.Forms;
     using System.Text.RegularExpressions;
+    using System.Web;
     using System.Windows;
     using System.Windows.Media;
 
@@ -20,7 +20,8 @@
     {
         #region Private Fields
 
-        private StringBuilder clipBuilder;
+        private StringBuilder htmlClipBuilder;
+        private StringBuilder textClipBuilder;
 
         private string m_fragment;
 
@@ -37,7 +38,8 @@
 
         public HtmlFragment()
         {
-            clipBuilder = new StringBuilder();
+            htmlClipBuilder = new StringBuilder();
+            textClipBuilder = new StringBuilder();
         }
 
         /// <summary>
@@ -47,6 +49,7 @@
         /// <param name="rawClipboardText">raw html text, with header.</param>
         public HtmlFragment(string rawClipboardText)
         {
+            
             ProcessFragment(rawClipboardText);
         }
 
@@ -98,9 +101,9 @@
         /// <example>
         ///    HtmlFragment.CopyToClipboard("<b>Hello!</b>");
         /// </example>
-        public static void CopyToClipboard(string htmlFragment)
+        public static void CopyToClipboard(string htmlFragment, string textFragment)
         {
-            CopyToClipboard(htmlFragment, null, null);
+            CopyToClipboard(htmlFragment, textFragment, null, null);
         }
 
         /// <summary>
@@ -109,7 +112,7 @@
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
         /// <param name="sourceUrl">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-        public static void CopyToClipboard(string htmlFragment, string title, Uri sourceUrl)
+        public static void CopyToClipboard(string htmlFragment, string textFragment, string title, Uri sourceUrl)
         {
             if (title == null) title = "From Clipboard";
 
@@ -162,7 +165,13 @@
             // Finally copy to clipboard.
             string data = sb.ToString();
             Clipboard.Clear();
-            Clipboard.SetText(data, TextDataFormat.Html);
+
+            DataObject dataObject = new DataObject();
+            dataObject.SetData(DataFormats.Html, data);
+            dataObject.SetData(DataFormats.Text, textFragment);
+            dataObject.SetData(DataFormats.UnicodeText, textFragment);
+            Clipboard.SetDataObject(dataObject);
+            //Clipboard.SetText(data, TextDataFormat.Html);
         }
 
         /// <summary>
@@ -181,22 +190,29 @@
             return h;
         }
 
-        public void AddClipToList(string htmlFragment, Brush backgroundColor, Brush foregroundColor)
+        public void AddClipToList(string fragment, Brush backgroundColor, Brush foregroundColor)
         {
+            
+
             // convert 8 digit hex a,r,g,b to 6 digit hex r,g,b
             string bColor = backgroundColor.ToString();
             string fColor = foregroundColor.ToString();
             fColor = string.Format("#{0}", fColor.Substring(fColor.Length - 6));
             bColor = string.Format("#{0}", bColor.Substring(bColor.Length - 6));
 
-            string colorText = string.Format("<p><span style=\"background-color:{0};color:{1}\">{2}</span></p>", bColor, fColor, htmlFragment);
-            this.clipBuilder.AppendLine(colorText);
+            string colorText = HttpUtility.HtmlEncode(fragment);
+            colorText = string.Format("<p><span style=\"background-color:{0};color:{1}\">{2}</span></p>", bColor, fColor, colorText);
+            
+            this.htmlClipBuilder.AppendLine(colorText);
+            this.textClipBuilder.AppendLine(fragment);
         }
 
         public void CopyToClipboard()
         {
-            CopyToClipboard(clipBuilder.ToString());
-            this.clipBuilder.Clear();
+           // ProcessFragment(htmlClipBuilder.ToString());
+            CopyToClipboard(htmlClipBuilder.ToString(),textClipBuilder.ToString());
+            this.htmlClipBuilder.Clear();
+            this.textClipBuilder.Clear();
         }
 
         #endregion Public Methods
@@ -212,6 +228,8 @@
 
         private void ProcessFragment(string rawClipboardText)
         {
+
+            rawClipboardText = HttpUtility.HtmlEncode(rawClipboardText);
             // This decodes CF_HTML, which is an entirely text format using UTF-8.
             // Format of this header is described at:
             // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
