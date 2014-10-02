@@ -211,6 +211,17 @@ namespace RegexViewer
             }
         }
 
+        public void AddFilterFile(string filterFile)
+        {
+            List<string> filterFiles = new List<string>(CurrentFilterFiles);
+            if (!filterFiles.Contains(filterFile))
+            {
+                filterFiles.Add(filterFile);
+                CurrentFilterFiles = filterFiles;
+                ManageRecentFiles(filterFile);
+            }
+        }
+
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

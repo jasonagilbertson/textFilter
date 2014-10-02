@@ -34,7 +34,23 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public abstract bool CloseLog(string FileName);
+        //public abstract bool CloseLog(string FileName);
+
+        public bool CloseLog(string FileName)
+        {
+            if (Files.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
+            {
+                Files.Remove(Files.Find(x => String.Compare(x.Tag, FileName, true) == 0));
+                this.Settings.RemoveLogFile(FileName);
+                return true;
+            }
+            else
+            {
+                ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
+                return false;
+            }
+        }
+
 
         public abstract IFileProperties<T> OpenFile(string LogName);
 

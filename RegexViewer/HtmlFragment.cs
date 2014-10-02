@@ -207,7 +207,7 @@
             this.textClipBuilder.AppendLine(fragment);
         }
 
-        public void CopyToClipboard()
+        public void CopyListToClipboard()
         {
            // ProcessFragment(htmlClipBuilder.ToString());
             CopyToClipboard(htmlClipBuilder.ToString(),textClipBuilder.ToString());
