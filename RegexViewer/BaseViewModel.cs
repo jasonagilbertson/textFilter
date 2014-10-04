@@ -11,13 +11,14 @@ namespace RegexViewer
         #region Private Fields
 
         private Command closeCommand;
-        public IFileManager<T> FileManager { get; set; }
-
         private Command openCommand;
+        private Command saveCommand;
+
         private int selectedIndex;
+
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
 
-        private ObservableCollection<ITabViewModel> tabItems;
+        private ObservableCollection<ITabViewModel<T>> tabItems;
 
         private TraceSource ts = new TraceSource("RegexViewer:BaseViewModel");
 
@@ -44,10 +45,18 @@ namespace RegexViewer
             set { closeCommand = value; }
         }
 
+        public IFileManager<T> FileManager { get; set; }
+
         public Command OpenCommand
         {
             get { return openCommand ?? new Command(OpenFile); }
             set { openCommand = value; }
+        }
+
+        public Command SaveCommand
+        {
+            get { return saveCommand ?? new Command(SaveFile); }
+            set { saveCommand = value; }
         }
 
         public int SelectedIndex
@@ -73,7 +82,7 @@ namespace RegexViewer
             set { settings = value; }
         }
 
-        public ObservableCollection<ITabViewModel> TabItems
+        public ObservableCollection<ITabViewModel<T>> TabItems
         {
             get
             {
@@ -95,8 +104,8 @@ namespace RegexViewer
         //public bool CloseLog(TabItem tabItem)
         public void CloseFile(object sender)
         {
-            ITabViewModel tabItem = tabItems[selectedIndex];
-            if (!this.FileManager.CloseLog(tabItem.Tag))
+            ITabViewModel<T> tabItem = tabItems[selectedIndex];
+            if (!this.FileManager.CloseFile(tabItem.Tag))
             {
                 return;
             }
@@ -115,12 +124,18 @@ namespace RegexViewer
 
         public abstract void OpenFile(object sender);
 
-        public void RemoveTabItem(ITabViewModel tabItem)
+        public void RemoveTabItem(ITabViewModel<T> tabItem)
         {
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
                 tabItems.Remove(tabItem);
             }
+        }
+
+        public void SaveFile(object sender)
+        {
+            ITabViewModel<T> tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
+            this.FileManager.SaveFile(tabItem.Tag, tabItem.ContentList);
         }
 
         #endregion Public Methods

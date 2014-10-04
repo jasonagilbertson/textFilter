@@ -1,6 +1,8 @@
-﻿namespace RegexViewer
+﻿using System.Collections.Generic;
+
+namespace RegexViewer
 {
-    public interface ITabViewModel
+    public interface ITabViewModel<T>
     {
         #region Public Events
 
@@ -12,7 +14,7 @@
 
         string Background { get; set; }
 
-        string Content { get; set; }
+        List<T> ContentList { get; set; }
 
         Command CopyCommand { get; set; }
 

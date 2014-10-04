@@ -1,23 +1,25 @@
-﻿namespace RegexViewer
+﻿using System.Collections.Generic;
+
+namespace RegexViewer
 {
     public interface IFileManager<T>
     {
         #region Public Properties
 
-        System.Collections.Generic.List<IFileProperties<T>> Files { get; set; }
+        List<IFileProperties<T>> Files { get; set; }
 
         #endregion Public Properties
 
         #region Public Methods
 
-        bool CloseLog(string LogName);
+        bool CloseFile(string LogName);
 
         IFileProperties<T> OpenFile(string LogName);
 
-        System.Collections.Generic.List<IFileProperties<T>> OpenFiles(string[] files);
+        List<IFileProperties<T>> OpenFiles(string[] files);
+
+        bool SaveFile(string LogName, List<T> list);
 
         #endregion Public Methods
-
-       
     }
 }

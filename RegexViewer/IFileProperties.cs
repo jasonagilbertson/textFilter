@@ -6,13 +6,13 @@ namespace RegexViewer
     {
         #region Public Properties
 
+        List<T> ContentItems { get; set; }
+
         bool Dirty { get; set; }
 
         string FileName { get; set; }
 
         string Tag { get; set; }
-
-        List<T> ContentItems { get; set; }
 
         #endregion Public Properties
     }

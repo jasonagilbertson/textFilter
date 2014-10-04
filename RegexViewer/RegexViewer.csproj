@@ -64,6 +64,7 @@
     <Compile Include="BaseFileProperties.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="FilterFileItems.cs" />
     <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterTabViewModel.cs" />
     <Compile Include="FilterViewModel.cs" />

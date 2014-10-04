@@ -1,19 +1,23 @@
 ﻿using System.Collections.Generic;
-using System.Data;
+
 namespace RegexViewer
 {
-    public class FilterFileProperties: BaseFileProperties<DataRow>
+    public class FilterFileProperties : BaseFileProperties<FilterFileItems>
     {
-          public FilterFileProperties()
+        #region Public Constructors
+
+        public FilterFileProperties()
         {
             this.Dirty = false;
-            this.ContentItems = new List<DataRow>();
+            this.ContentItems = new List<FilterFileItems>();
         }
 
-        
-        
+        #endregion Public Constructors
 
-        public override List<DataRow> ContentItems { get; set; }
+        #region Public Properties
 
+        public override List<FilterFileItems> ContentItems { get; set; }
+
+        #endregion Public Properties
     }
 }

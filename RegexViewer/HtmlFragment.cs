@@ -6,6 +6,7 @@
     //
     using System;
     using System.Text;
+
     //using System.Windows.Forms;
     using System.Text.RegularExpressions;
     using System.Web;
@@ -21,16 +22,14 @@
         #region Private Fields
 
         private StringBuilder htmlClipBuilder;
-        private StringBuilder textClipBuilder;
-
         private string m_fragment;
-
         private string m_fullText;
-
         private System.Uri m_source;
 
         // Data. See properties for descriptions.
         private string m_version;
+
+        private StringBuilder textClipBuilder;
 
         #endregion Private Fields
 
@@ -49,7 +48,6 @@
         /// <param name="rawClipboardText">raw html text, with header.</param>
         public HtmlFragment(string rawClipboardText)
         {
-            
             ProcessFragment(rawClipboardText);
         }
 
@@ -192,8 +190,6 @@
 
         public void AddClipToList(string fragment, Brush backgroundColor, Brush foregroundColor)
         {
-            
-
             // convert 8 digit hex a,r,g,b to 6 digit hex r,g,b
             string bColor = backgroundColor.ToString();
             string fColor = foregroundColor.ToString();
@@ -202,15 +198,15 @@
 
             string colorText = HttpUtility.HtmlEncode(fragment);
             colorText = string.Format("<p><span style=\"background-color:{0};color:{1}\">{2}</span></p>", bColor, fColor, colorText);
-            
+
             this.htmlClipBuilder.AppendLine(colorText);
             this.textClipBuilder.AppendLine(fragment);
         }
 
         public void CopyListToClipboard()
         {
-           // ProcessFragment(htmlClipBuilder.ToString());
-            CopyToClipboard(htmlClipBuilder.ToString(),textClipBuilder.ToString());
+            // ProcessFragment(htmlClipBuilder.ToString());
+            CopyToClipboard(htmlClipBuilder.ToString(), textClipBuilder.ToString());
             this.htmlClipBuilder.Clear();
             this.textClipBuilder.Clear();
         }
@@ -228,7 +224,6 @@
 
         private void ProcessFragment(string rawClipboardText)
         {
-
             rawClipboardText = HttpUtility.HtmlEncode(rawClipboardText);
             // This decodes CF_HTML, which is an entirely text format using UTF-8.
             // Format of this header is described at:

@@ -8,11 +8,11 @@ namespace RegexViewer
     //public class RegexViewModel : MainViewModel, INotifyPropertyChanged, RegexViewer.IViewModel
     public class LogViewModel : BaseViewModel<ListBoxItem>
     {
-             #region Public Constructors
+        #region Public Constructors
 
         public LogViewModel()
         {
-            this.TabItems = new ObservableCollection<ITabViewModel>();
+            this.TabItems = new ObservableCollection<ITabViewModel<ListBoxItem>>();
             this.FileManager = new LogFileManager();
 
             // load tabs from last session
@@ -24,7 +24,6 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-     
         #region Public Methods
 
         public override void AddTabItem(IFileProperties<ListBoxItem> logProperties)

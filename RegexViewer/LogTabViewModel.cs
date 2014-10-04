@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class LogTabViewModel : BaseTabViewModel
+    public class LogTabViewModel : BaseTabViewModel<ListBoxItem>
     {
         #region Private Fields
 
@@ -24,19 +23,15 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        #region Public Properties
-
-        public List<ListBoxItem> ContentList
-        {
-            get { return contentList; }
-            set
-            {
-                contentList = value;
-                OnPropertyChanged("ContentList");
-            }
-        }
-
-        #endregion Public Properties
+        //public List<ListBoxItem> ContentList
+        //{
+        //    get { return contentList; }
+        //    set
+        //    {
+        //        contentList = value;
+        //        OnPropertyChanged("ContentList");
+        //    }
+        //}
 
         #region Public Methods
 
@@ -49,7 +44,7 @@ namespace RegexViewer
                 foreach (ListBoxItem lbi in ContentList)
                 {
                     if (lbi != null && lbi.IsSelected)
-                        //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
+                    //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
                     {
                         htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
                     }

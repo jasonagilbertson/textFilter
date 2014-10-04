@@ -15,10 +15,12 @@
         <local:LogTabViewModel x:Key="logTabViewModel" />
     </Window.Resources>
     <Window.InputBindings>
-        <KeyBinding Command="{Binding OpenCommand, Source=LogViewModel}"
-              CommandParameter="{Binding}"
-              Gesture="CTRL+O" />
-        <!--CommandParameter="{Binding,ElementName=browserControl,Mode=Self}"-->
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+O" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+O" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+S" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+C" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="CTRL+H" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+S" />
     </Window.InputBindings>
     <DockPanel DataContext="{StaticResource mainViewModel}">
 
@@ -48,7 +50,7 @@
             </Grid.ColumnDefinitions>
 
             <TabControl x:Name="tabFilters" Grid.Column="0" HorizontalAlignment="Stretch"
-                        ItemsSource="{Binding Path=FilterViewModel.TabItems}" 
+                        ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
                         Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <TabControl.ItemTemplate>
@@ -60,12 +62,12 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <DataGrid Name="dataGridFilter" 
-                          ItemsSource="{Binding Path=ContentList}"
+                        <DataGrid Name="dataGridFilter"
+                          ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="True"
-                          Grid.Column="0" 
-                          HorizontalAlignment="Stretch" 
-                          Margin="0,0,0,0" 
+                          Grid.Column="0"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,0"
                           VerticalAlignment="Stretch">
 
                             <DataGrid.ContextMenu>
@@ -79,14 +81,20 @@
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
-
-               
+                <TabControl.ContextMenu>
+                    <ContextMenu HasDropShadow="True">
+                        <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
+                        <MenuItem Header="Close" Command="{Binding FilterViewModel.CloseCommand}" />
+                        <MenuItem Header="Save" Command="{Binding FilterViewModel.SaveCommand}" />
+                        <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
+                    </ContextMenu>
+                </TabControl.ContextMenu>
             </TabControl>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
             </GridSplitter>
             <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch" 
-                        ItemsSource="{Binding Path=LogViewModel.TabItems}" 
+                        Margin="0,0,0,0" VerticalAlignment="Stretch"
+                        ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
                     <!-- this is the header template-->
@@ -101,11 +109,15 @@
                                  ItemsSource="{Binding Path=ContentList}"
                                  AllowDrop="True"
                                  SelectionMode="Extended"
-                                 VerticalContentAlignment="Stretch"
-                                 HorizontalContentAlignment="Stretch"
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
                             <ListBox.ContextMenu>
+
                                 <ContextMenu HasDropShadow="True">
+                                    <!--<Style TargetType="MenuItem">
+                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                        <Setter Property="VerticalContentAlignment" Value="Center" />
+                                    </Style>-->
+
                                     <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />

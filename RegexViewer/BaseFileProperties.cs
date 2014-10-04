@@ -5,6 +5,7 @@ namespace RegexViewer
     public abstract class BaseFileProperties<T> : RegexViewer.IFileProperties<T>
     {
         //
+
         #region Public Constructors
 
         public BaseFileProperties()

@@ -1,14 +1,15 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace RegexViewer
 {
-    public abstract class BaseTabViewModel : INotifyPropertyChanged, ITabViewModel
+    public abstract class BaseTabViewModel<T> : INotifyPropertyChanged, ITabViewModel<T>
     {
         #region Private Fields
 
         private string background;
 
-        private string content;
+        private List<T> contentList = new List<T>();
 
         private Command copyCommand;
 
@@ -53,20 +54,13 @@ namespace RegexViewer
             }
         }
 
-        public string Content
+        public List<T> ContentList
         {
-            get
-            {
-                return content;
-            }
-
+            get { return contentList; }
             set
             {
-                if (content != value)
-                {
-                    content = value;
-                    OnPropertyChanged("Content");
-                }
+                contentList = value;
+                OnPropertyChanged("ContentList");
             }
         }
 

@@ -8,12 +8,6 @@ namespace RegexViewer
 {
     public class LogFileManager : BaseFileManager<ListBoxItem>
     {
-        #region Private Fields
-
-        
-
-        #endregion Private Fields
-
         #region Public Constructors
 
         public LogFileManager()
@@ -23,28 +17,7 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        #region Public Properties
-
-     //   public List<IFileProperties<ListBoxItem>> Files { get; set; }
-
-        #endregion Public Properties
-
         #region Public Methods
-
-        //public override bool CloseLog(string FileName)
-        //{
-        //    if (Files.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
-        //    {
-        //        Files.Remove(Files.Find(x => String.Compare(x.Tag, FileName, true) == 0));
-        //        this.Settings.RemoveLogFile(FileName);
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
-        //        return false;
-        //    }
-        //}
 
         public override IFileProperties<ListBoxItem> OpenFile(string LogName)
         {
@@ -86,6 +59,20 @@ namespace RegexViewer
             return logProperties;
         }
 
+        //public override bool CloseLog(string FileName)
+        //{
+        //    if (Files.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
+        //    {
+        //        Files.Remove(Files.Find(x => String.Compare(x.Tag, FileName, true) == 0));
+        //        this.Settings.RemoveLogFile(FileName);
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
+        //        return false;
+        //    }
+        //}
         public override List<IFileProperties<ListBoxItem>> OpenFiles(string[] files)
         {
             List<IFileProperties<ListBoxItem>> textBlockItems = new List<IFileProperties<ListBoxItem>>();
@@ -104,6 +91,13 @@ namespace RegexViewer
             return textBlockItems;
         }
 
+        public override bool SaveFile(string FileName, List<ListBoxItem> list)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion Public Methods
+
+        //   public List<IFileProperties<ListBoxItem>> Files { get; set; }
     }
 }

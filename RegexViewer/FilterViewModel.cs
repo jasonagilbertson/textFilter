@@ -1,24 +1,31 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    
-    public class FilterViewModel : BaseViewModel<DataRow>
+    public class FilterViewModel : BaseViewModel<FilterFileItems>
     {
-        #region Public Methods
+        #region Public Constructors
 
         public FilterViewModel()
         {
-            this.TabItems = new ObservableCollection<ITabViewModel>();
+            this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItems>>();
             this.FileManager = new FilterFileManager();
-        }
-        public override void AddTabItem(IFileProperties<DataRow> logProperties)
-        {
 
+            // load tabs from last session
+            foreach (FilterFileProperties logProperty in this.FileManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
+            {
+                AddTabItem(logProperty);
+            }
+        }
+
+        #endregion Public Constructors
+
+        #region Public Methods
+
+        public override void AddTabItem(IFileProperties<FilterFileItems> logProperties)
+        {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
             {
                 FilterTabViewModel tabItem = new FilterTabViewModel();
@@ -31,6 +38,12 @@ namespace RegexViewer
             }
         }
 
+        //public override void SaveFile(object sender)
+        // {
+        //         FilterTabViewModel tabItem = (FilterTabViewModel)this.TabItems[this.SelectedIndex];
+        //         this.FileManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+
+        // }
         public override void OpenFile(object sender)
         {
             string logName = string.Empty;

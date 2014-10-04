@@ -200,17 +200,6 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public void AddLogFile(string logFile)
-        {
-            List<string> logFiles = new List<string>(CurrentLogFiles);
-            if (!logFiles.Contains(logFile))
-            {
-                logFiles.Add(logFile);
-                CurrentLogFiles = logFiles;
-                ManageRecentFiles(logFile);
-            }
-        }
-
         public void AddFilterFile(string filterFile)
         {
             List<string> filterFiles = new List<string>(CurrentFilterFiles);
@@ -219,6 +208,17 @@ namespace RegexViewer
                 filterFiles.Add(filterFile);
                 CurrentFilterFiles = filterFiles;
                 ManageRecentFiles(filterFile);
+            }
+        }
+
+        public void AddLogFile(string logFile)
+        {
+            List<string> logFiles = new List<string>(CurrentLogFiles);
+            if (!logFiles.Contains(logFile))
+            {
+                logFiles.Add(logFile);
+                CurrentLogFiles = logFiles;
+                ManageRecentFiles(logFile);
             }
         }
 

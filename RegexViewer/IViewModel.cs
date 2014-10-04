@@ -10,7 +10,9 @@
 
         void OpenFile(object sender);
 
-        void RemoveTabItem(ITabViewModel tabItem);
+        void RemoveTabItem(ITabViewModel<T> tabItem);
+
+        void SaveFile(object sender);
 
         #endregion Public Methods
 
@@ -24,11 +26,13 @@
 
         Command CloseCommand { get; set; }
 
+        IFileManager<T> FileManager { get; set; }
+
         Command OpenCommand { get; set; }
 
         int SelectedIndex { get; set; }
-        IFileManager<T> FileManager { get; set; }
-        System.Collections.ObjectModel.ObservableCollection<ITabViewModel> TabItems { get; set; }
+
+        System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         #endregion Public Properties
 
