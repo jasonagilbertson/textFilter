@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
@@ -14,9 +15,10 @@ namespace RegexViewer
 
         string Background { get; set; }
 
-        List<T> ContentList { get; set; }
+        ObservableCollection<T> ContentList { get; set; }
 
         Command CopyCommand { get; set; }
+        Command PasteCommand { get; set; }
 
         string Header { get; set; }
 
@@ -27,8 +29,9 @@ namespace RegexViewer
         #endregion Public Properties
 
         #region Public Methods
-
-        void CopyExecuted(object target);
+        void PasteText();
+        
+       // void CopyExecuted(object target);
 
         void OnPropertyChanged(string name);
 

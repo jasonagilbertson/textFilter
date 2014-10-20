@@ -39,6 +39,7 @@
         {
             htmlClipBuilder = new StringBuilder();
             textClipBuilder = new StringBuilder();
+            Clipboard.Clear();
         }
 
         /// <summary>

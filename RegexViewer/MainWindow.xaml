@@ -8,21 +8,23 @@
         Title="RegexViewer" Height="350" Width="525">
 
     <Window.Resources>
-        <local:LogViewModel x:Key="logViewModel" />
-        <local:FilterViewModel x:Key="filterViewModel" />
         <local:MainViewModel x:Key="mainViewModel" />
         <local:RegexViewerSettings x:Key="settings" />
         <local:LogTabViewModel x:Key="logTabViewModel" />
+        <local:FilterTabViewModel x:Key="filterTabViewModel" />
+        <BooleanToVisibilityConverter x:Key="boolToVis" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+S" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+C" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" CommandParameter="{Binding}" Gesture="CTRL+ALT+N" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="CTRL+H" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+S" />
     </Window.InputBindings>
     <DockPanel DataContext="{StaticResource mainViewModel}">
+        <!--<my:ErrorControl Visibility="{Binding Path=ThereWasAnError, Mode=TwoWay, Converter={StaticResource booltoVis}, UpdateSourceTrigger=PropertyChanged}" />-->
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
@@ -41,6 +43,14 @@
                 <MenuItem Header="_Help" />
             </MenuItem>
         </Menu>
+        <Canvas
+                Name="canvasOpenDialog"
+                Width="200"
+                Height="200"
+                Visibility="{Binding Path=LogViewModel.OpenDialogVisible, Converter={StaticResource boolToVis}, FallbackValue=Collapsed}">
+            <TextBox Text="this is a test" />
+        </Canvas>
+        <!--<Canvas Name="canvasOpenDialog" Width="200" Height="200" Visibility="Collapsed" />-->
         <Grid>
 
             <Grid.ColumnDefinitions>
@@ -52,7 +62,7 @@
             <TabControl x:Name="tabFilters" Grid.Column="0" HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch">
+                        Margin="0,0,0,25" VerticalAlignment="Stretch">
                 <TabControl.ItemTemplate>
                     <!-- this is the header template-->
                     <DataTemplate>
@@ -64,18 +74,49 @@
                     <DataTemplate>
                         <DataGrid Name="dataGridFilter"
                           ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
-                          AutoGenerateColumns="True"
+                          AutoGenerateColumns="False"
                           Grid.Column="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
                           VerticalAlignment="Stretch">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
+                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
+                                <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
+                                <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
+                                <!--<DataGridTextColumn Header="Background Color" Binding="{Binding Path=BackgroundColor}" />-->
+                                <!--ItemsSource="{Binding Path=ColorArray}" SelectedItemBinding="{Binding Path=BackgroundColor}"-->
+                                <DataGridTemplateColumn Header="Background Color">
 
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <local:ColorControl  x:Name="superCombo" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <DataGridTemplateColumn Header="Foreground Color">
+
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <local:ColorControl  x:Name="superCombo" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
+                                <!--<StackPanel Grid.Row="1"  Orientation="Horizontal">
+                                    <TextBlock FontWeight="ExtraBlack"  Text="You selected" Height="20" Width="91"></TextBlock>
+                                    <TextBlock Width="100" Height="100" Background="{Binding ElementName=superCombo, Path=SelectedColor}" ></TextBlock>
+                                </StackPanel>-->
+                                <!--<DataGridComboBoxColumn Header="Foreground Color" ItemsSource="{Binding Path=ColorArray}" SelectedItemBinding="{Binding Path=ForegroundColor}" />-->
+                                <DataGridTextColumn Header="Filterpattern" Binding="{Binding Path=Filterpattern}" />
+                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
+                            </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
-                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                                    <MenuItem Header="Find" Command="{Binding FindCommand}" />
+                                    <MenuItem Header="Copy" Command="{Binding FilterViewModel.CopyCommand}" />
+                                    <MenuItem Header="Paste" Command="{Binding FilterViewModel.PasteCommand}" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
@@ -93,7 +134,7 @@
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
             </GridSplitter>
             <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch"
+                        Margin="0,0,0,25" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
@@ -113,15 +154,9 @@
                             <ListBox.ContextMenu>
 
                                 <ContextMenu HasDropShadow="True">
-                                    <!--<Style TargetType="MenuItem">
-                                        <Setter Property="HorizontalContentAlignment" Value="Left" />
-                                        <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    </Style>-->
-
-                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                                    <MenuItem Header="Find" Command="{Binding FindCommand}" />
+                                    <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </ListBox.ContextMenu>
                         </ListBox>
@@ -135,6 +170,22 @@
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
+            <Label Name="labelQuickFind" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
+            <TextBox Name="textboxQuickFind" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="75,0,0,0" Height="25" />
+            <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50" />
+            <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                     Margin="50,0,0,0"
+                     SelectionMode="Extended"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     Height="25"
+                     ItemsSource="{Binding Path=Status}">
+                <ListBox.ContextMenu>
+                    <ContextMenu HasDropShadow="True">
+                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
+                        <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
         </Grid>
     </DockPanel>
 </Window>

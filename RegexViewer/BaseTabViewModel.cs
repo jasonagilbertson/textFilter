@@ -1,39 +1,33 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
-    public abstract class BaseTabViewModel<T> : INotifyPropertyChanged, ITabViewModel<T>
+    public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>
     {
         #region Private Fields
 
         private string background;
 
-        private List<T> contentList = new List<T>();
+        private ObservableCollection<T> contentList = new ObservableCollection<T>();
 
         private Command copyCommand;
-
         private string header;
-
         private string name;
-
+        private Command pasteCommand;
         private string tag;
 
         #endregion Private Fields
+
+        //  IMainViewModel MainModel;
 
         #region Public Constructors
 
         public BaseTabViewModel()
         {
+            // MainModel = mainModel;
         }
 
         #endregion Public Constructors
-
-        #region Public Events
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
 
         #region Public Properties
 
@@ -54,7 +48,8 @@ namespace RegexViewer
             }
         }
 
-        public List<T> ContentList
+        //  public event PropertyChangedEventHandler PropertyChanged;
+        public ObservableCollection<T> ContentList
         {
             get { return contentList; }
             set
@@ -113,6 +108,21 @@ namespace RegexViewer
             }
         }
 
+        public Command PasteCommand
+        {
+            get
+            {
+                if (pasteCommand == null)
+                {
+                    pasteCommand = new Command(PasteText);
+                }
+                pasteCommand.CanExecute = true;
+
+                return pasteCommand;
+            }
+            set { pasteCommand = value; }
+        }
+
         public string Tag
         {
             get
@@ -136,13 +146,8 @@ namespace RegexViewer
 
         public abstract void CopyExecuted(object sender);
 
-        public void OnPropertyChanged(string name)
+        public void PasteText()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
         }
 
         #endregion Public Methods

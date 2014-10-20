@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
-    public interface IFileManager<T>
+    public interface IFileManager<T> 
     {
         #region Public Properties
 
@@ -18,7 +19,7 @@ namespace RegexViewer
 
         List<IFileProperties<T>> OpenFiles(string[] files);
 
-        bool SaveFile(string LogName, List<T> list);
+        bool SaveFile(string LogName, ObservableCollection<T> list);
 
         #endregion Public Methods
     }

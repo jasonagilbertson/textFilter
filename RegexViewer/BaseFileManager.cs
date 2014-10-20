@@ -1,25 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace RegexViewer
 {
-    public abstract class BaseFileManager<T> : RegexViewer.IFileManager<T>
+    public abstract class BaseFileManager<T> : Base, IFileManager<T>
     {
         #region Public Fields
 
-        public static TraceSource ts = new TraceSource("RegexViewer.LogManager");
+       // public static TraceSource ts = new TraceSource("RegexViewer.LogManager");
         public RegexViewerSettings Settings = RegexViewerSettings.Settings;
-
+       // public IMainViewModel MainModel;
         #endregion Public Fields
-
-        #region Public Constructors
 
         public BaseFileManager()
         {
+          //  MainModel = mainModel;
         }
 
-        #endregion Public Constructors
+        
 
         #region Public Properties
 
@@ -35,22 +35,25 @@ namespace RegexViewer
         {
             if (Files.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
             {
+                MainModel.SetStatus("file not open:" + FileName);
                 Files.Remove(Files.Find(x => String.Compare(x.Tag, FileName, true) == 0));
                 this.Settings.RemoveLogFile(FileName);
                 return true;
             }
             else
             {
-                ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
+                //ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
+                MainModel.SetStatus("file not open:" + FileName);
+                
                 return false;
             }
         }
-
+      
         public abstract IFileProperties<T> OpenFile(string LogName);
 
         public abstract List<IFileProperties<T>> OpenFiles(string[] files);
 
-        public abstract bool SaveFile(string FileName, List<T> list);
+        public abstract bool SaveFile(string FileName, ObservableCollection<T> list);
 
         #endregion Public Methods
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -8,7 +7,7 @@ using System.Windows.Media;
 
 namespace RegexViewer
 {
-    public class RegexViewerSettings : INotifyPropertyChanged
+    public class RegexViewerSettings : Base
     {
         #region Private Fields
 
@@ -60,11 +59,7 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        #region Public Events
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
+        //  public event PropertyChangedEventHandler PropertyChanged;
 
         #region Private Enums
 
@@ -73,7 +68,7 @@ namespace RegexViewer
             BackgroundColor,
             FileHistoryCount,
             FilterDirectory,
-            FontColor,
+            ForegroundColor,
             FontSize,
             CurrentFilterFiles,
             CurrentLogFiles,
@@ -145,18 +140,6 @@ namespace RegexViewer
             }
         }
 
-        public SolidColorBrush FontColor
-        {
-            get
-            {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["FontColor"].Value));
-            }
-            set
-            {
-                _appSettings["FontColor"].Value = value.ToString();
-            }
-        }
-
         public int FontSize
         {
             get
@@ -166,6 +149,18 @@ namespace RegexViewer
             set
             {
                 _appSettings["FontSize"].Value = value.ToString();
+            }
+        }
+
+        public SolidColorBrush ForegroundColor
+        {
+            get
+            {
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["ForegroundColor"].Value));
+            }
+            set
+            {
+                _appSettings["ForegroundColor"].Value = value.ToString();
             }
         }
 
@@ -207,7 +202,7 @@ namespace RegexViewer
             {
                 filterFiles.Add(filterFile);
                 CurrentFilterFiles = filterFiles;
-                ManageRecentFiles(filterFile);
+                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
             }
         }
 
@@ -218,18 +213,18 @@ namespace RegexViewer
             {
                 logFiles.Add(logFile);
                 CurrentLogFiles = logFiles;
-                ManageRecentFiles(logFile);
+                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
             }
         }
 
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
+        //public void OnPropertyChanged(string name)
+        //{
+        //    PropertyChangedEventHandler handler = PropertyChanged;
+        //    if (handler != null)
+        //    {
+        //        handler(this, new PropertyChangedEventArgs(name));
+        //    }
+        //}
 
         public void RemoveLogFile(string logFile)
         {
@@ -251,15 +246,15 @@ namespace RegexViewer
 
         #region Private Methods
 
-        private void ManageRecentFiles(string logFile)
+        private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
-            string[] recentLogFiles = RecentLogFiles;
+            //string[] recentLogFiles = RecentLogFiles;
             List<string> newList = new List<string>();
 
             // return if already in list
             if (recentLogFiles.ToList().Contains(logFile))
             {
-                return;
+                return newList.ToArray();
             }
 
             int i = Math.Min(recentLogFiles.Length, this.FileHistoryCount - 1) - 1;
@@ -270,7 +265,7 @@ namespace RegexViewer
             }
 
             newList.Add(logFile);
-            RecentLogFiles = newList.ToArray();
+            return newList.ToArray();
         }
 
         private void VerifyAppSettings()
@@ -305,7 +300,7 @@ namespace RegexViewer
                             _appSettings[name].Value = "10";
                             break;
                         }
-                    case AppSettingNames.FontColor:
+                    case AppSettingNames.ForegroundColor:
                         {
                             _appSettings[name].Value = "Black";
                             break;

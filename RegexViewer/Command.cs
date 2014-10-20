@@ -37,7 +37,7 @@ namespace RegexViewer
         /// <summary>
         /// The action (or parameterized action) that will be called when the command is invoked.
         /// </summary>
-        protected Action action = null;
+        protected Action _action = null;
 
         protected Action<object> parameterizedAction = null;
 
@@ -62,7 +62,7 @@ namespace RegexViewer
         public Command(Action action, bool canExecute = true)
         {
             //  Set the action.
-            this.action = action;
+            this._action = action;
             this.canExecute = canExecute;
         }
 
@@ -174,7 +174,7 @@ namespace RegexViewer
 
         protected void InvokeAction(object param)
         {
-            Action theAction = action;
+            Action theAction = _action;
             Action<object> theParameterizedAction = parameterizedAction;
             if (theAction != null)
                 theAction();

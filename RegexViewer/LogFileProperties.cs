@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class LogFileProperties : BaseFileProperties<ListBoxItem>
+    public class LogFileProperties : BaseFileProperties<LogFileItem>
     {
         #region Public Constructors
 
         public LogFileProperties()
         {
             this.Dirty = false;
-            this.ContentItems = new List<ListBoxItem>();
+            this.ContentItems = new ObservableCollection<LogFileItem>();
         }
 
         #endregion Public Constructors
 
         #region Public Properties
 
-        public override List<ListBoxItem> ContentItems { get; set; }
+        public override ObservableCollection<LogFileItem> ContentItems { get; set; }
 
         #endregion Public Properties
     }

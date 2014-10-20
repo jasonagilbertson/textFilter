@@ -1,29 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Windows;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class LogTabViewModel : BaseTabViewModel<ListBoxItem>
+    public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
-        #region Private Fields
-
-        private List<ListBoxItem> contentList;
-
-        #endregion Private Fields
-
         #region Public Constructors
 
         public LogTabViewModel()
         {
-            List<ListBoxItem> ContentList = new List<ListBoxItem>();
+            List<LogFileItem> ContentList = new List<LogFileItem>();
         }
 
         #endregion Public Constructors
 
-        //public List<ListBoxItem> ContentList
+        //public List<LogFileItem> ContentList
         //{
         //    get { return contentList; }
         //    set
@@ -33,15 +24,33 @@ namespace RegexViewer
         //    }
         //}
 
+        //private Command copyCommand;
+        //public Command CopyCommand
+        //{
+        //    get
+        //    {
+        //        if (copyCommand == null)
+        //        {
+        //            copyCommand = new Command(CopyExecuted);
+        //        }
+        //        copyCommand.CanExecute = true;
+
+        //        return copyCommand;
+        //    }
+        //    set { copyCommand = value; }
+        //}
+
         #region Public Methods
 
-        public override void CopyExecuted(object target)
+        //public void CopyExecuted(List<ListBoxItem> ContentList)
+        public override void CopyExecuted(object contentList)
         {
             try
             {
-                Clipboard.Clear();
+                List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
+
                 HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (ListBoxItem lbi in ContentList)
+                foreach (LogFileItem lbi in ContentList)
                 {
                     if (lbi != null && lbi.IsSelected)
                     //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
@@ -54,7 +63,7 @@ namespace RegexViewer
             }
             catch (Exception ex)
             {
-                Debug.Print("Exception:CopyCmdExecute:" + ex.ToString());
+                MainModel.SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
             }
         }
 

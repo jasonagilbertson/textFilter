@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
-    public abstract class BaseFileProperties<T> : RegexViewer.IFileProperties<T>
+    public abstract class BaseFileProperties<T> : Base, IFileProperties<T>
     {
         //
 
@@ -17,7 +18,7 @@ namespace RegexViewer
 
         #region Public Properties
 
-        public abstract List<T> ContentItems { get; set; }
+        public abstract ObservableCollection<T> ContentItems { get; set; }
 
         public bool Dirty { get; set; }
 

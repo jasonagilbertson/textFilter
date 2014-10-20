@@ -1,30 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class LogFileManager : BaseFileManager<ListBoxItem>
+    public class LogFileManager : BaseFileManager<LogFileItem>
     {
         #region Public Constructors
 
         public LogFileManager()
         {
-            this.Files = new List<IFileProperties<ListBoxItem>>();
+            this.Files = new List<IFileProperties<LogFileItem>>();
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public override IFileProperties<ListBoxItem> OpenFile(string LogName)
+        public override IFileProperties<LogFileItem> OpenFile(string LogName)
         {
-            IFileProperties<ListBoxItem> logProperties = new LogFileProperties();
+            IFileProperties<LogFileItem> logProperties = new LogFileProperties();
             if (Files.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
             {
-                ts.TraceEvent(TraceEventType.Error, 1, "file already open:" + LogName);
+                // ts.TraceEvent(TraceEventType.Error, 1, "file already open:" + LogName);
+                MainModel.SetStatus("file already open:" + LogName);
                 return logProperties;
             }
 
@@ -37,10 +37,10 @@ namespace RegexViewer
                     string line;
                     while ((line = sr.ReadLine()) != null)
                     {
-                        ListBoxItem textBlock = new ListBoxItem();
+                        LogFileItem textBlock = new LogFileItem();
                         textBlock.Content = line;
                         textBlock.Background = Settings.BackgroundColor;
-                        textBlock.Foreground = Settings.FontColor;
+                        textBlock.Foreground = Settings.ForegroundColor;
                         textBlock.FontSize = Settings.FontSize;
                         textBlock.FontFamily = new System.Windows.Media.FontFamily("Courier");
                         logProperties.ContentItems.Add(textBlock);
@@ -52,30 +52,17 @@ namespace RegexViewer
             }
             else
             {
-                ts.TraceEvent(TraceEventType.Error, 2, "log file does not exist:" + LogName);
+                // ts.TraceEvent(TraceEventType.Error, 2, "log file does not exist:" + LogName);
+                MainModel.SetStatus("log file does not exist:" + LogName);
                 this.Settings.RemoveLogFile(LogName);
             }
 
             return logProperties;
         }
 
-        //public override bool CloseLog(string FileName)
-        //{
-        //    if (Files.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
-        //    {
-        //        Files.Remove(Files.Find(x => String.Compare(x.Tag, FileName, true) == 0));
-        //        this.Settings.RemoveLogFile(FileName);
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
-        //        return false;
-        //    }
-        //}
-        public override List<IFileProperties<ListBoxItem>> OpenFiles(string[] files)
+        public override List<IFileProperties<LogFileItem>> OpenFiles(string[] files)
         {
-            List<IFileProperties<ListBoxItem>> textBlockItems = new List<IFileProperties<ListBoxItem>>();
+            List<IFileProperties<LogFileItem>> textBlockItems = new List<IFileProperties<LogFileItem>>();
 
             foreach (string file in files)
             {
@@ -91,13 +78,11 @@ namespace RegexViewer
             return textBlockItems;
         }
 
-        public override bool SaveFile(string FileName, List<ListBoxItem> list)
+        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
         {
             throw new NotImplementedException();
         }
 
         #endregion Public Methods
-
-        //   public List<IFileProperties<ListBoxItem>> Files { get; set; }
     }
 }

@@ -61,10 +61,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AsynchronousCommand.cs" />
+    <Compile Include="Base.cs" />
+    <Compile Include="BaseFileItem.cs" />
     <Compile Include="BaseFileProperties.cs" />
     <Compile Include="BaseViewModel.cs" />
+    <Compile Include="ColorControl.xaml.cs">
+      <DependentUpon>ColorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Command.cs" />
-    <Compile Include="FilterFileItems.cs" />
+    <Compile Include="FilterFileItem.cs" />
     <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterTabViewModel.cs" />
     <Compile Include="FilterViewModel.cs" />
@@ -72,13 +77,22 @@
     <Compile Include="BaseTabViewModel.cs" />
     <Compile Include="IFileManager.cs" />
     <Compile Include="IFileProperties.cs" />
+    <Compile Include="IMainViewModel.cs" />
     <Compile Include="ITabViewModel.cs" />
     <Compile Include="IViewModel.cs" />
     <Compile Include="BaseFileManager.cs" />
+    <Compile Include="LogFileItem.cs" />
     <Compile Include="LogTabViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
     <Compile Include="LogViewModel.cs" />
+    <Compile Include="TimedSaveDialog.xaml.cs">
+      <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
+    </Compile>
+    <Page Include="ColorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -94,6 +108,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="TimedSaveDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -124,9 +142,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="issues.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="basefilter.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

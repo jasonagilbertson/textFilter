@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
@@ -6,7 +6,7 @@ namespace RegexViewer
     {
         #region Public Properties
 
-        List<T> ContentItems { get; set; }
+        ObservableCollection<T> ContentItems { get; set; }
 
         bool Dirty { get; set; }
 
