@@ -113,9 +113,11 @@ namespace RegexViewer
                     if (lbi != null && lbi.IsSelected)
                     //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
                     {
+                        // todo: use BackgroundColorBrush?
                         htmlFragment.AddClipToList(lbi.Content.ToString(),
                             ((SolidColorBrush)new BrushConverter().ConvertFromString(lbi.BackgroundColor)),
                             ((SolidColorBrush)new BrushConverter().ConvertFromString(lbi.ForegroundColor)));
+                        
                     }
                 }
 

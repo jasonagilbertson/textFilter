@@ -1,2 +1,16 @@
-﻿140928 - resolved - pasting from a config file (xml) clipboard fails to paste. need to escape data in add function before adding to list
+﻿System.Windows.Markup.XamlParseException occurred
+  _HResult=-2146233087
+  _message=A 'Binding' cannot be set on the 'SelectedColor' property of type 'ColorControl'. A 'Binding' can only be set on a DependencyProperty of a DependencyObject.
+  HResult=-2146233087
+  IsTransient=false
+  Message=A 'Binding' cannot be set on the 'SelectedColor' property of type 'ColorControl'. A 'Binding' can only be set on a DependencyProperty of a DependencyObject.
+  Source=PresentationFramework
+  LineNumber=0
+  LinePosition=0
+  StackTrace:
+       at MS.Internal.Helper.CheckCanReceiveMarkupExtension(MarkupExtension markupExtension, IServiceProvider serviceProvider, DependencyObject& targetDependencyObject, DependencyProperty& targetDependencyProperty)
+  InnerException: 
+
+
+140928 - resolved - pasting from a config file (xml) clipboard fails to paste. need to escape data in add function before adding to list
 140928 - resolved - copy to clipboard works as html to onenote, but then breaks pasting text only to notepad++

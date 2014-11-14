@@ -14,7 +14,6 @@ namespace RegexViewer
         private FilterViewModel filterViewModel;
         private LogViewModel logViewModel;
         private RegexViewerSettings settings;
-
         private ObservableCollection<string> status = new ObservableCollection<string>();
 
         #endregion Private Fields
@@ -28,7 +27,6 @@ namespace RegexViewer
             settings = RegexViewerSettings.Settings;
 
             logViewModel = new LogViewModel();
-
             filterViewModel = new FilterViewModel();
         }
 

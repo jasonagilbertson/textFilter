@@ -65,9 +65,6 @@
     <Compile Include="BaseFileItem.cs" />
     <Compile Include="BaseFileProperties.cs" />
     <Compile Include="BaseViewModel.cs" />
-    <Compile Include="ColorControl.xaml.cs">
-      <DependentUpon>ColorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Command.cs" />
     <Compile Include="FilterFileItem.cs" />
     <Compile Include="FilterFileManager.cs" />
@@ -89,10 +86,6 @@
     <Compile Include="TimedSaveDialog.xaml.cs">
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="ColorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

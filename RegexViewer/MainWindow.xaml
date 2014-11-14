@@ -13,6 +13,15 @@
         <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
         <BooleanToVisibilityConverter x:Key="boolToVis" />
+
+                <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
+                    <ObjectDataProvider.MethodParameters>
+                        <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
+                    </ObjectDataProvider.MethodParameters>
+                </ObjectDataProvider>
+                <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp"/>
+
+            
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+O" />
@@ -78,38 +87,113 @@
                           Grid.Column="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
-                          VerticalAlignment="Stretch">
+                          VerticalAlignment="Stretch"
+                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Setters>
+                                        <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                        <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                    </Style.Setters>
+                                </Style>
+                            </DataGrid.CellStyle>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
                                 <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
                                 <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
-                                <!--<DataGridTextColumn Header="Background Color" Binding="{Binding Path=BackgroundColor}" />-->
-                                <!--ItemsSource="{Binding Path=ColorArray}" SelectedItemBinding="{Binding Path=BackgroundColor}"-->
                                 <DataGridTemplateColumn Header="Background Color">
-
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <local:ColorControl  x:Name="superCombo" />
+                                            <ComboBox Name="backgroundColorCombo"
+                                                  IsEditable="False"
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
+                                                  SelectedValuePath="Name"  
+                                                  SelectedValue="{Binding Path=BackgroundColor}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Width="20" Height="15" Margin="0" Background="{Binding Name}" />
+                                                            <TextBlock  Text="{Binding Name}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+                                            
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <ComboBox Name="backgroundColorComboEdit"
+                                                  IsEditable="False"
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
+                                                  SelectedValuePath="Name"  
+                                                  SelectedValue="{Binding Path=BackgroundColor, Mode=TwoWay}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Width="20" Height="15" Margin="0" Background="{Binding Name}" />
+                                                            <TextBlock  Text="{Binding Name}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
                                 </DataGridTemplateColumn>
 
                                 <DataGridTemplateColumn Header="Foreground Color">
-
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <local:ColorControl  x:Name="superCombo" />
+                                            <ComboBox Name="foregroundColorCombo"
+                                                  IsEditable="False"
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
+                                                  SelectedValuePath="Name"  
+                                                  SelectedValue="{Binding Path=ForegroundColor}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Width="20" Height="15" Margin="0" Background="{Binding Name}" />
+                                                            <TextBlock  Text="{Binding Name}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
+
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn.CellEditingTemplate>
+                                        <DataTemplate>
+                                            <ComboBox Name="foregroundColorComboEdit"
+                                                  IsEditable="False"
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
+                                                  SelectedValuePath="Name"  
+                                                  SelectedValue="{Binding Path=ForegroundColor, Mode=TwoWay}">
+                                                <ComboBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Width="20" Height="15" Margin="0" Background="{Binding Name}" />
+                                                            <TextBlock  Text="{Binding Name}" />
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </ComboBox.ItemTemplate>
+                                            </ComboBox>
 
-                                <!--<StackPanel Grid.Row="1"  Orientation="Horizontal">
-                                    <TextBlock FontWeight="ExtraBlack"  Text="You selected" Height="20" Width="91"></TextBlock>
-                                    <TextBlock Width="100" Height="100" Background="{Binding ElementName=superCombo, Path=SelectedColor}" ></TextBlock>
-                                </StackPanel>-->
-                                <!--<DataGridComboBoxColumn Header="Foreground Color" ItemsSource="{Binding Path=ColorArray}" SelectedItemBinding="{Binding Path=ForegroundColor}" />-->
-                                <DataGridTextColumn Header="Filterpattern" Binding="{Binding Path=Filterpattern}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellEditingTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Header="Filterpattern" Binding="{Binding Path=Filterpattern}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Setters>
+                                                <Setter Property="Background" Value="{Binding Path=BackgroundColor}" />
+                                                <Setter Property="Foreground" Value="{Binding Path=ForegroundColor}" />
+                                            </Style.Setters>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
