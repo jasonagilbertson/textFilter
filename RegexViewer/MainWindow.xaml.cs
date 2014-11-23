@@ -41,24 +41,24 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
-        private void backgroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if(sender is ComboBox)
-            {
-                _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor));
-        //        _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
-                ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor = (sender as ComboBox).SelectedValue.ToString();
-            }
-        }
-        private void foregroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        {
-            if(sender is ComboBox)
-            {
-            _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor));
-         //   _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
-            ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor = (sender as ComboBox).SelectedValue.ToString();
-            }
-        }
+        //private void backgroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    if(sender is ComboBox)
+        //    {
+        //        _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor));
+        ////        _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
+        //     //   ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor = (sender as ComboBox).SelectedValue.ToString();
+        //    }
+        //}
+        //private void foregroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    if(sender is ComboBox)
+        //    {
+        //    _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor));
+        // //   _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
+        //  //  ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor = (sender as ComboBox).SelectedValue.ToString();
+        //    }
+        //}
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (sender is ComboBox)

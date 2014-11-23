@@ -110,7 +110,8 @@
                                     <DataGridTemplateColumn.CellTemplate >
                                         
                                         <DataTemplate>
-                                                <ComboBox Name="backgroundColorCombo"
+                                            <!--http://stackoverflow.com/questions/18473674/mvvm-wpf-combobox-selecteditem-binding-not-activated-inside-datagrid-->
+                                                <!--<ComboBox Name="backgroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
                                                   
                                                   SelectedValuePath="Name"  
@@ -118,7 +119,14 @@
                                                   GotFocus="colorCombo_Selected"
                                                   KeyDown="colorCombo_KeyDown" 
                                                   LostFocus="backgroundColorCombo_LostFocus" 
-                                                  Tag="{Binding}">
+                                                  Tag="{Binding}">-->
+                                            <ComboBox Name="backgroundColorCombo"
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
+                                                  
+                                                  SelectedValuePath="Name"  
+                                                  SelectedValue="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                                  GotFocus="colorCombo_Selected"
+                                                  KeyDown="colorCombo_KeyDown" >
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal" >
@@ -138,11 +146,9 @@
                                             <ComboBox Name="foregroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
                                                   SelectedValuePath="Name"  
-                                                  SelectedValue="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True,NotifyOnTargetUpdated=True}"
+                                                  SelectedValue="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown" 
-                                                  LostFocus="foregroundColorCombo_LostFocus" 
-                                                  Tag="{Binding}">
+                                                  KeyDown="colorCombo_KeyDown" >
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal" >
