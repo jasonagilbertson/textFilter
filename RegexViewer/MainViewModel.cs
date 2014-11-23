@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
@@ -10,24 +12,24 @@ namespace RegexViewer
     {
         #region Private Fields
 
-        private Command copyCommand;
-        private FilterViewModel filterViewModel;
-        private LogViewModel logViewModel;
-        private RegexViewerSettings settings;
-        private ObservableCollection<string> status = new ObservableCollection<string>();
-
+        private Command _copyCommand;
+        private FilterViewModel _filterViewModel;
+        private LogViewModel _logViewModel;
+        private RegexViewerSettings _settings = RegexViewerSettings.Settings;
+        private ObservableCollection<string> _status = new ObservableCollection<string>();
+        private WorkerManager _workerManager = WorkerManager.Instance;
         #endregion Private Fields
 
+      
         #region Public Constructors
 
         public MainViewModel()
         {
             //SetStatusHandler = SetStatus;
             Base.MainModel = this;
-            settings = RegexViewerSettings.Settings;
-
-            logViewModel = new LogViewModel();
-            filterViewModel = new FilterViewModel();
+           
+            _logViewModel = new LogViewModel();
+            _filterViewModel = new FilterViewModel();
         }
 
         #endregion Public Constructors
@@ -38,41 +40,41 @@ namespace RegexViewer
         {
             get
             {
-                if (copyCommand == null)
+                if (_copyCommand == null)
                 {
-                    copyCommand = new Command(CopyExecuted);
+                    _copyCommand = new Command(CopyExecuted);
                 }
-                copyCommand.CanExecute = true;
+                _copyCommand.CanExecute = true;
 
-                return copyCommand;
+                return _copyCommand;
             }
-            set { copyCommand = value; }
+            set { _copyCommand = value; }
         }
 
         public FilterViewModel FilterViewModel
         {
-            get { return filterViewModel; }
-            set { filterViewModel = value; }
+            get { return _filterViewModel; }
+            set { _filterViewModel = value; }
         }
 
         //   public event PropertyChangedEventHandler PropertyChanged;
         public LogViewModel LogViewModel
         {
-            get { return logViewModel; }
-            set { logViewModel = value; }
+            get { return _logViewModel; }
+            set { _logViewModel = value; }
         }
 
         public RegexViewerSettings Settings
         {
-            get { return settings; }
-            set { settings = value; }
+            get { return _settings; }
+            set { _settings = value; }
         }
 
         public ObservableCollection<string> Status
         {
             get
             {
-                return status;
+                return _status;
             }
             //private set
             //{
@@ -111,16 +113,17 @@ namespace RegexViewer
 
         public void SetStatus(string statusData)
         {
-            Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
-            {
-                while (this.status.Count > 1000)
+        //    Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
+        //    {
+                while (this._status.Count > 1000)
                 {
-                    this.status.RemoveAt(0);
+                    this._status.RemoveAt(0);
                 }
 
-                this.status.Add(statusData);
+                this._status.Add(statusData);
+                Debug.Print(statusData);
                 OnPropertyChanged("Status");
-            }));
+        //    }));
         }
 
         #endregion Public Methods
@@ -138,7 +141,7 @@ namespace RegexViewer
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            settings.Save();
+            _settings.Save();
         }
 
         #endregion Internal Methods

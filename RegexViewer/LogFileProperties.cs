@@ -10,7 +10,7 @@ namespace RegexViewer
 
         public LogFileProperties()
         {
-            this.Dirty = false;
+            this.Modified = false;
             this.ContentItems = new ObservableCollection<LogFileItem>();
         }
 

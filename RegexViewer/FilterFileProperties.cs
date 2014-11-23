@@ -9,7 +9,7 @@ namespace RegexViewer
 
         public FilterFileProperties()
         {
-            this.Dirty = false;
+            this.Modified = false;
             this.ContentItems = new ObservableCollection<FilterFileItem>();
         }
 

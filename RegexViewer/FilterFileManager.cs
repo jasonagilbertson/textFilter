@@ -47,7 +47,7 @@ namespace RegexViewer
                     for (int i = 0; i < root.ChildNodes.Count; i++)
                     {
                         FilterFileItem filterFileItems = new FilterFileItem();
-
+                        filterFileItems.Count = 0;
                         filterFileItems.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
                         filterFileItems.Enabled = ReadBoolNodeItem(root, "enabled", i);
                         filterFileItems.Exclude = ReadBoolNodeItem(root, "exclude", i);

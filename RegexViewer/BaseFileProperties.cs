@@ -11,7 +11,7 @@ namespace RegexViewer
 
         public BaseFileProperties()
         {
-            this.Dirty = false;
+            this.Modified = false;
         }
 
         #endregion Public Constructors
@@ -20,7 +20,7 @@ namespace RegexViewer
 
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
-        public bool Dirty { get; set; }
+        public bool Modified { get; set; }
 
         public string FileName { get; set; }
 
