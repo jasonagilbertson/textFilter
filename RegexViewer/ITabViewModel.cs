@@ -18,20 +18,23 @@ namespace RegexViewer
         ObservableCollection<T> ContentList { get; set; }
 
         Command CopyCommand { get; set; }
+        // Command SelectionChanged { get; set; }
         Command PasteCommand { get; set; }
 
         string Header { get; set; }
 
         string Name { get; set; }
-
+        bool Modified { get; set; }
         string Tag { get; set; }
+        string ActiveTab { get; set; }
 
         #endregion Public Properties
 
         #region Public Methods
         void PasteText();
         
-       // void CopyExecuted(object target);
+        void CopyExecuted(object target);
+        void SelectionChangedExecuted(object target);
 
         void OnPropertyChanged(string name);
 

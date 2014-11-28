@@ -97,6 +97,7 @@ namespace RegexViewer
         //    }
         //    set { copyCommand = value; }
         //}
+       
 
         #region Public Methods
 
@@ -125,7 +126,7 @@ namespace RegexViewer
             }
             catch (Exception ex)
             {
-                MainModel.SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
+                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
             }
         }
 

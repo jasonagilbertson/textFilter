@@ -7,7 +7,7 @@ namespace RegexViewer
     {
         #region Public Properties
 
-        List<IFileProperties<T>> Files { get; set; }
+        List<IFileItems<T>> ListFileItems { get; set; }
 
         #endregion Public Properties
 
@@ -15,12 +15,12 @@ namespace RegexViewer
 
         bool CloseFile(string LogName);
 
-        IFileProperties<T> OpenFile(string LogName);
+        IFileItems<T> OpenFile(string LogName);
 
-        List<IFileProperties<T>> OpenFiles(string[] files);
+        List<IFileItems<T>> OpenFiles(string[] files);
 
         bool SaveFile(string LogName, ObservableCollection<T> list);
-
+        
         #endregion Public Methods
     }
 }

@@ -3,13 +3,13 @@ using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
-    public class FilterFileProperties : BaseFileProperties<FilterFileItem>
+    public class FilterFileItems : BaseFileItems<FilterFileItem>
     {
         #region Public Constructors
 
-        public FilterFileProperties()
+        public FilterFileItems()
         {
-            this.Modified = false;
+
             this.ContentItems = new ObservableCollection<FilterFileItem>();
         }
 

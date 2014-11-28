@@ -132,6 +132,27 @@ namespace RegexViewer
             
         }
 
+        private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FilterCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            Debug.Print("here");
+        }
+        private void LogCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void LogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+
+            Debug.Print("here");
+        }
+
 
     }
 }

@@ -2,7 +2,7 @@
 
 namespace RegexViewer
 {
-    public interface IFileProperties<T>
+    public interface IFileItems<T>
     {
         #region Public Properties
 

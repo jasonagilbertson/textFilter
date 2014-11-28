@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Windows.Media;
 
 namespace RegexViewer
 {
-    public class RegexViewerSettings : Base
+    public class RegexViewerSettings
     {
         #region Private Fields
 
@@ -59,7 +60,26 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        //  public event PropertyChangedEventHandler PropertyChanged;
+        #region Public Events
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Public Events
+
+
+        #region Public Methods
+
+        public void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        #endregion Public Methods
+
 
         #region Private Enums
 

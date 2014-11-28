@@ -47,25 +47,30 @@ namespace RegexViewer
         {
             try
             {
-                List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
+             //   List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
+                
 
                 HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (LogFileItem lbi in ContentList)
+                foreach (LogFileItem lbi in SelectedContent)
                 {
-                    if (lbi != null && lbi.IsSelected)
+                    //if (lbi != null && lbi.IsSelected)
+                       // if (lbi != null && lbi.IsFocused)
                     //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
-                    {
-                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
-                    }
+                    //{
+                    //    htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
+                        htmlFragment.AddClipToList(lbi.Text, lbi.Background, lbi.Foreground);
+                    //}
                 }
 
                 htmlFragment.CopyListToClipboard();
             }
             catch (Exception ex)
             {
-                MainModel.SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
+                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
             }
         }
+
+     
 
         #endregion Public Methods
     }

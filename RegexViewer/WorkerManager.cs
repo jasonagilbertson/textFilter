@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace RegexViewer
 {
-    public class WorkerManager: Base
+    public class WorkerManager:Base
     {
+
         private static WorkerManager _workerManager;
         private WorkerManager() {}
         public static WorkerManager Instance
@@ -62,11 +63,11 @@ namespace RegexViewer
             // This event handler is called when the background thread finishes. 
             // This method runs on the main thread. 
             if (e.Error != null)
-                MainModel.SetStatus("Error: " + e.Error.Message);
+                SetStatus("Error: " + e.Error.Message);
             else if (e.Cancelled)
-                MainModel.SetStatus("Word counting canceled.");
+                SetStatus("Word counting canceled.");
             else
-                MainModel.SetStatus("Finished counting words.");
+                SetStatus("Finished counting words.");
         }
 
         private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)

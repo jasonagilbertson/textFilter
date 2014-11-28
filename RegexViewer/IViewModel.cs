@@ -44,6 +44,6 @@
 
         #endregion Public Properties
 
-        void AddTabItem(IFileProperties<T> fileProperties);
+        void AddTabItem(IFileItems<T> fileProperties);
     }
 }

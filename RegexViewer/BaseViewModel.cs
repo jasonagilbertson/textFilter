@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public abstract class BaseViewModel<T> : Base, IViewModel<T>
+    public abstract class BaseViewModel<T> : Base,INotifyPropertyChanged, IViewModel<T>
     {
         #region Private Fields
 
@@ -19,12 +21,6 @@ namespace RegexViewer
         private ObservableCollection<ITabViewModel<T>> tabItems;
 
         #endregion Private Fields
-
-        //private TraceSource ts = new TraceSource("RegexViewer:BaseViewModel");
-        //public static StatusDelegate SetStatusHandler;
-        //public delegate void StatusDelegate(string status);
-
-        // public IMainViewModel MainModel;
 
         #region Public Constructors
 
@@ -124,7 +120,7 @@ namespace RegexViewer
             set
             {
                 tabItems = value;
-                OnPropertyChanged("TabItems");
+             //   OnPropertyChanged("TabItems");
             }
         }
 
@@ -132,7 +128,7 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public abstract void AddTabItem(IFileProperties<T> fileProperties);
+        public abstract void AddTabItem(IFileItems<T> fileProperties);
 
         //public bool CloseLog(TabItem tabItem)
         public void CloseFile(object sender)
@@ -169,10 +165,22 @@ namespace RegexViewer
 
         public void SaveFile(object sender)
         {
-            ITabViewModel<T> tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
+            ITabViewModel<T> tabItem;
+
+            if(sender is TabItem)
+            {
+                tabItem = (ITabViewModel<T>)(sender as TabItem);
+            }
+            else
+            {
+                tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
+            }
+            
             this.FileManager.SaveFile(tabItem.Tag, tabItem.ContentList);
         }
 
         #endregion Public Methods
+   
+
     }
 }

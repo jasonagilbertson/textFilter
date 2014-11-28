@@ -8,7 +8,7 @@ using System.Windows.Threading;
 
 namespace RegexViewer
 {
-    public class MainViewModel : Base, IMainViewModel
+    public class MainViewModel:Base,IMainViewModel
     {
         #region Private Fields
 
@@ -25,12 +25,16 @@ namespace RegexViewer
 
         public MainViewModel()
         {
-            //SetStatusHandler = SetStatus;
-            Base.MainModel = this;
-           
-            _logViewModel = new LogViewModel();
+            //Base.MainModel = this;
+            Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
+            _logViewModel = new LogViewModel(_filterViewModel);
         }
+
+     private void HandleNewStatus(object sender, string status)
+     {
+         SetViewStatus(status);
+     }
 
         #endregion Public Constructors
 
@@ -76,11 +80,6 @@ namespace RegexViewer
             {
                 return _status;
             }
-            //private set
-            //{
-            //        status = value;
-            //        OnPropertyChanged("Status");
-            //}
         }
 
         #endregion Public Properties
@@ -107,11 +106,12 @@ namespace RegexViewer
             }
             catch (Exception ex)
             {
-                MainModel.SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
+                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
             }
         }
 
-        public void SetStatus(string statusData)
+     
+        public void SetViewStatus(string statusData)
         {
         //    Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
         //    {
@@ -128,20 +128,16 @@ namespace RegexViewer
 
         #endregion Public Methods
 
-        //public void OnPropertyChanged(string name)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (handler != null)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(name));
-        //    }
-        //}
+        
+        
+
 
         #region Internal Methods
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _settings.Save();
+            _filterViewModel.SaveModifiedFiles(sender);
         }
 
         #endregion Internal Methods

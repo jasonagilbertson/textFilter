@@ -4,13 +4,13 @@ using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class LogFileProperties : BaseFileProperties<LogFileItem>
+    public class LogFileItems : BaseFileItems<LogFileItem>
     {
         #region Public Constructors
 
-        public LogFileProperties()
+        public LogFileItems()
         {
-            this.Modified = false;
+
             this.ContentItems = new ObservableCollection<LogFileItem>();
         }
 

@@ -13,7 +13,7 @@ namespace RegexViewer
 
         public FilterFileManager()
         {
-            this.Files = new List<IFileProperties<FilterFileItem>>();
+            this.ListFileItems = new List<IFileItems<FilterFileItem>>();
         }
 
         #endregion Public Constructors
@@ -24,16 +24,16 @@ namespace RegexViewer
         {
         }
 
-        public override IFileProperties<FilterFileItem> OpenFile(string LogName)
+        public override IFileItems<FilterFileItem> OpenFile(string LogName)
         {
-            IFileProperties<FilterFileItem> filterProperties = new FilterFileProperties();
+            IFileItems<FilterFileItem> filterProperties = new FilterFileItems();
 
             try
             {
-                if (Files.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
+                if (ListFileItems.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
                 {
-                    // ts.TraceEvent(TraceEventType.Error, 1, "file already open:" + LogName);
-                    MainModel.SetStatus("file already open:" + LogName);
+                    
+                    SetStatus("file already open:" + LogName);
                     return filterProperties;
                 }
 
@@ -63,13 +63,12 @@ namespace RegexViewer
                     filterProperties.FileName = Path.GetFileName(LogName);
                     filterProperties.Tag = LogName;
 
-                    Files.Add(filterProperties);
+                    ListFileItems.Add(filterProperties);
                     this.Settings.AddFilterFile(LogName);
                 }
                 else
                 {
-                    //ts.TraceEvent(TraceEventType.Error, 2, "filter file does not exist:" + LogName);
-                    MainModel.SetStatus("filter file does not exist:" + LogName);
+                    SetStatus("filter file does not exist:" + LogName);
                     this.Settings.RemoveLogFile(LogName);
                 }
 
@@ -77,20 +76,19 @@ namespace RegexViewer
             }
             catch (Exception e)
             {
-                //ts.TraceEvent(TraceEventType.Error, 2, string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
-                MainModel.SetStatus(string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
+                SetStatus(string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
                 return filterProperties;
             }
         }
 
-        public override List<IFileProperties<FilterFileItem>> OpenFiles(string[] files)
+        public override List<IFileItems<FilterFileItem>> OpenFiles(string[] files)
         {
-            List<IFileProperties<FilterFileItem>> textBlockItems = new List<IFileProperties<FilterFileItem>>();
+            List<IFileItems<FilterFileItem>> textBlockItems = new List<IFileItems<FilterFileItem>>();
 
             foreach (string file in files)
             {
-                FilterFileProperties logProperties = new FilterFileProperties();
-                if (String.IsNullOrEmpty((logProperties = (FilterFileProperties)OpenFile(file)).Tag))
+                FilterFileItems logProperties = new FilterFileItems();
+                if (String.IsNullOrEmpty((logProperties = (FilterFileItems)OpenFile(file)).Tag))
                 {
                     continue;
                 }
@@ -108,7 +106,7 @@ namespace RegexViewer
                 File.Delete(FileName);
             }
 
-            MainModel.SetStatus("saving file:" + FileName);
+            SetStatus("saving file:" + FileName);
 
             XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
             xmlw.Formatting = Formatting.Indented;

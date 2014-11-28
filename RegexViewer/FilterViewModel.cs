@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -14,8 +15,9 @@ namespace RegexViewer
             this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
             this.FileManager = new FilterFileManager();
 
+
             // load tabs from last session
-            foreach (FilterFileProperties logProperty in this.FileManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
+            foreach (FilterFileItems logProperty in this.FileManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
             {
                 AddTabItem(logProperty);
             }
@@ -25,15 +27,15 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public override void AddTabItem(IFileProperties<FilterFileItem> logProperties)
+        public override void AddTabItem(IFileItems<FilterFileItem> logProperties)
         {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
             {
-                MainModel.SetStatus("adding tab:" + logProperties.Tag);
+                SetStatus("adding tab:" + logProperties.Tag);
                 FilterTabViewModel tabItem = new FilterTabViewModel();
                 // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
                 tabItem.Name = this.TabItems.Count.ToString();
-                tabItem.ContentList = ((FilterFileProperties)logProperties).ContentItems;
+                tabItem.ContentList = ((FilterFileItems)logProperties).ContentItems;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
                 TabItems.Add(tabItem);
@@ -45,12 +47,43 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        //public override void SaveFile(object sender)
-        // {
-        //         FilterTabViewModel tabItem = (FilterTabViewModel)this.TabItems[this.SelectedIndex];
-        //         this.FileManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+        public void SaveModifiedFiles(object sender)
+        {
+            foreach(ITabViewModel<FilterFileItem> item in this.TabItems.Where(x => x.Modified == true))
+            {
+                // todo: prompt for saving?
+                
+                TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
+                dialog.Enable();
 
-        // }
+                switch (dialog.WaitForResult())
+                {
+                    case TimedSaveDialog.Results.Disable:
+                        throw new NotImplementedException();
+                 //       _etwMonitor.Config.AppSettings.Annoyance = false;
+                   //     Save_Click(null, null);
+                        break;
+
+                    case TimedSaveDialog.Results.DontSave:
+                        break;
+
+                    case TimedSaveDialog.Results.Save:
+                        this.SaveFile(item);
+                        break;
+
+                    case TimedSaveDialog.Results.SaveAs:
+                        //SaveAs_Click(null, null);
+                        throw new NotImplementedException();
+                        break;
+
+                    case TimedSaveDialog.Results.Unknown:
+                        // dont worry about errors since we are closing.
+                        break;
+                }
+                
+            }
+        }
+
         /// <summary>
         /// Open File Dialog
         /// To test specify valid file for object sender
@@ -90,9 +123,9 @@ namespace RegexViewer
                 // Open document
 
                 //SetStatusHandler(string.Format("opening file:{0}", logName));
-                MainModel.SetStatus(string.Format("opening file:{0}", logName));
-                FilterFileProperties logProperties = new FilterFileProperties();
-                if (String.IsNullOrEmpty((logProperties = (FilterFileProperties)this.FileManager.OpenFile(logName)).Tag))
+                SetStatus(string.Format("opening file:{0}", logName));
+                FilterFileItems logProperties = new FilterFileItems();
+                if (String.IsNullOrEmpty((logProperties = (FilterFileItems)this.FileManager.OpenFile(logName)).Tag))
                 {
                     return;
                 }

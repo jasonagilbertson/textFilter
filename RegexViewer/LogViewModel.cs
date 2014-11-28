@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -11,38 +13,48 @@ namespace RegexViewer
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
         #region Public Constructors
-
-        public LogViewModel()
+        FilterViewModel _filterViewModel;
+        public LogViewModel(FilterViewModel filterViewModel)
         {
+            _filterViewModel = filterViewModel;
+            _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
             this.TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             this.FileManager = new LogFileManager();
 
             // load tabs from last session
-            foreach (LogFileProperties logProperty in this.FileManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
+            foreach (LogFileItems logProperty in this.FileManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
             {
                 AddTabItem(logProperty);
             }
         }
 
+           void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // reparse log files
+            SetStatus("_filterViewModel.PropertyChanged" + sender.ToString());
+            //todo: prompt to save filter file(s) if listening for changes
+            // todo: make handler for selected index?
+            throw new NotImplementedException();
+        }
      
         #endregion Public Constructors
 
         #region Public Methods
         public override void NewFile(object sender)
         {
-            //SetStatusHandler("new file not implemented");
-            MainModel.SetStatus("new file not implemented");
+            
+            SetStatus("new file not implemented");
             throw new NotImplementedException();
         }
-        public override void AddTabItem(IFileProperties<LogFileItem> logProperties)
+        public override void AddTabItem(IFileItems<LogFileItem> logProperties)
         {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
             {
-                MainModel.SetStatus("adding tab:" + logProperties.Tag);
+                SetStatus("adding tab:" + logProperties.Tag);
                 LogTabViewModel tabItem = new LogTabViewModel();
                 // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
                 tabItem.Name = this.TabItems.Count.ToString();
-                tabItem.ContentList = ((LogFileProperties)logProperties).ContentItems;
+                tabItem.ContentList = ((LogFileItems)logProperties).ContentItems;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
                 TabItems.Add(tabItem);
@@ -56,9 +68,7 @@ namespace RegexViewer
         /// <param name="sender"></param>
         public override void OpenFile(object sender)
         {
-         //   this.OpenDialogVisible = true;
-            //SetStatusHandler("opening file");
-            MainModel.SetStatus("opening file");
+            SetStatus("opening file");
             bool test = false;
             if(sender is string && !String.IsNullOrEmpty(sender as string))
             {
@@ -90,16 +100,15 @@ namespace RegexViewer
             {
                 // Open document
                 
-                // SetStatusHandler(string.Format("opening file:{0}", logName));
-                MainModel.SetStatus(string.Format("opening file:{0}", logName));
-                LogFileProperties logProperties = new LogFileProperties();
-                if (String.IsNullOrEmpty((logProperties = (LogFileProperties)this.FileManager.OpenFile(logName)).Tag))
+                SetStatus(string.Format("opening file:{0}", logName));
+                LogFileItems logFileItems = new LogFileItems();
+                if (String.IsNullOrEmpty((logFileItems = (LogFileItems)this.FileManager.OpenFile(logName)).Tag))
                 {
                     return;
                 }
 
                 // make new tab
-                AddTabItem(logProperties);
+                AddTabItem(logFileItems);
             }
             else
             {
@@ -108,5 +117,6 @@ namespace RegexViewer
         }
 
         #endregion Public Methods
+
     }
 }

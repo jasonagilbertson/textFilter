@@ -3,26 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-
         xmlns:local="clr-namespace:RegexViewer"
-
         Title="RegexViewer" Height="350" Width="525">
-
     <Window.Resources>
         <local:MainViewModel x:Key="mainViewModel" />
         <local:RegexViewerSettings x:Key="settings" />
         <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
         <BooleanToVisibilityConverter x:Key="boolToVis" />
-
-                <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
-                    <ObjectDataProvider.MethodParameters>
-                        <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
-                    </ObjectDataProvider.MethodParameters>
-                </ObjectDataProvider>
-                <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp"/>
-
-            
+        <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
+            <ObjectDataProvider.MethodParameters>
+                <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp"/>
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+O" />
@@ -33,6 +27,10 @@
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="CTRL+H" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+S" />
     </Window.InputBindings>
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="ApplicationCommands.Copy" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed" />
+    </Window.CommandBindings>-->
+    <!--http://www.codeproject.com/Articles/768427/The-big-MVVM-Template-->
     <DockPanel DataContext="{StaticResource mainViewModel}">
         <!--<my:ErrorControl Visibility="{Binding Path=ThereWasAnError, Mode=TwoWay, Converter={StaticResource booltoVis}, UpdateSourceTrigger=PropertyChanged}" />-->
 
@@ -110,21 +108,11 @@
                                     <DataGridTemplateColumn.CellTemplate >
                                         
                                         <DataTemplate>
-                                            <!--http://stackoverflow.com/questions/18473674/mvvm-wpf-combobox-selecteditem-binding-not-activated-inside-datagrid-->
-                                                <!--<ComboBox Name="backgroundColorCombo"
-                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
-                                                  
-                                                  SelectedValuePath="Name"  
-                                                  SelectedValue="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                                                  GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown" 
-                                                  LostFocus="backgroundColorCombo_LostFocus" 
-                                                  Tag="{Binding}">-->
                                             <ComboBox Name="backgroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
                                                   
                                                   SelectedValuePath="Name"  
-                                                  SelectedValue="{Binding BackgroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
                                                   KeyDown="colorCombo_KeyDown" >
                                                 <ComboBox.ItemTemplate>
@@ -146,7 +134,7 @@
                                             <ComboBox Name="foregroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
                                                   SelectedValuePath="Name"  
-                                                  SelectedValue="{Binding ForegroundColor, UpdateSourceTrigger=PropertyChanged}"
+                                                  SelectedValue="{Binding ForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
                                                   KeyDown="colorCombo_KeyDown" >
                                                 <ComboBox.ItemTemplate>
@@ -163,8 +151,6 @@
                                 </DataGridTemplateColumn>
                                 <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern}" >
                                     <DataGridTextColumn.CellStyle >
-                                        <!--http://techiethings.blogspot.in/2010/05/get-wpf-datagrid-row-and-cell.html-->
-                                        <!--http://stackoverflow.com/questions/19841649/binding-wpf-datagrid-cell-background-colour-with-trigger-->
                                         <Style TargetType="DataGridCell" >
                                             <Style.Setters>
                                                 <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
@@ -210,16 +196,31 @@
                 <TabControl.ContentTemplate>
                     <!-- this is the body of the TabItem template-->
                     <DataTemplate>
-                        <ListBox Name="logFileData"
+                        <ListBox x:Name="logFileData"
                                  ItemsSource="{Binding Path=ContentList}"
                                  AllowDrop="True"
                                  SelectionMode="Extended"
+                                 
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <!--<ListBox.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
+                            </ListBox.CommandBindings>-->
+                            <ListBox.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                            </ListBox.InputBindings>
                             <ListBox.ContextMenu>
 
                                 <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
-                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
+                                    <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" />-->
+                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Source={x:Reference logFileData},Path=SelectedItems}" />-->
+                                    <MenuItem Header="Copy2" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
+                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" />-->
+                                    <MenuItem Header="Select All Test" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </ListBox.ContextMenu>

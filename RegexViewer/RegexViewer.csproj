@@ -15,7 +15,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -63,8 +63,7 @@
     </ApplicationDefinition>
     <Compile Include="AsynchronousCommand.cs" />
     <Compile Include="Base.cs" />
-    <Compile Include="BaseFileItem.cs" />
-    <Compile Include="BaseFileProperties.cs" />
+    <Compile Include="BaseFileItems.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="FilterFileItem.cs" />
@@ -74,7 +73,7 @@
     <Compile Include="HtmlFragment.cs" />
     <Compile Include="BaseTabViewModel.cs" />
     <Compile Include="IFileManager.cs" />
-    <Compile Include="IFileProperties.cs" />
+    <Compile Include="IFileItems.cs" />
     <Compile Include="IMainViewModel.cs" />
     <Compile Include="ITabViewModel.cs" />
     <Compile Include="IViewModel.cs" />
@@ -97,9 +96,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FilterFileProperties.cs" />
+    <Compile Include="FilterFileItems.cs" />
     <Compile Include="LogFileManager.cs" />
-    <Compile Include="LogFileProperties.cs" />
+    <Compile Include="LogFileItems.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

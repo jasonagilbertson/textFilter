@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RegexViewer
 {
-    public abstract class BaseFileProperties<T> : Base, IFileProperties<T>
+    public abstract class BaseFileItems<T> : Base, IFileItems<T>, INotifyPropertyChanged
     {
         //
-
+     
+        
         #region Public Constructors
 
-        public BaseFileProperties()
+        public BaseFileItems()
         {
             this.Modified = false;
         }

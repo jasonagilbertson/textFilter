@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RegexViewer
 {
-    class Worker: Base
+    class Worker
     {
             // Object to store the current state, for passing to the caller. 
             public class CurrentState
