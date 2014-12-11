@@ -22,7 +22,7 @@ namespace RegexViewer
 
         #region Public Properties
 
-        public List<IFileItems<T>> ListFileItems { get; set; }
+        public List<IFile<T>> FileManager { get; set; }
         
         #endregion Public Properties
 
@@ -32,10 +32,10 @@ namespace RegexViewer
 
         public bool CloseFile(string FileName)
         {
-            if (ListFileItems.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
+            if (FileManager.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
             {
                 SetStatus("file not open:" + FileName);
-                ListFileItems.Remove(ListFileItems.Find(x => String.Compare(x.Tag, FileName, true) == 0));
+                FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
                 this.Settings.RemoveLogFile(FileName);
                 return true;
             }
@@ -48,9 +48,9 @@ namespace RegexViewer
             }
         }
       
-        public abstract IFileItems<T> OpenFile(string LogName);
+        public abstract IFile<T> OpenFile(string LogName);
 
-        public abstract List<IFileItems<T>> OpenFiles(string[] files);
+        public abstract List<IFile<T>> OpenFiles(string[] files);
 
         public abstract bool SaveFile(string FileName, ObservableCollection<T> list);
 

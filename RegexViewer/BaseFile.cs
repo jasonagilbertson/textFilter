@@ -4,14 +4,14 @@ using System.ComponentModel;
 
 namespace RegexViewer
 {
-    public abstract class BaseFileItems<T> : Base, IFileItems<T>, INotifyPropertyChanged
+    public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
         //
      
         
         #region Public Constructors
 
-        public BaseFileItems()
+        public BaseFile()
         {
             this.Modified = false;
         }

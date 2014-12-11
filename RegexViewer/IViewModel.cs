@@ -13,7 +13,7 @@
         void OpenFile(object sender);
 
         void RemoveTabItem(ITabViewModel<T> tabItem);
-
+        //ITabViewModel<T> ActiveTab { get; set; }
         void SaveFile(object sender);
 
         #endregion Public Methods
@@ -28,7 +28,7 @@
 
         Command CloseCommand { get; set; }
 
-        IFileManager<T> FileManager { get; set; }
+        IFileManager<T> ViewManager { get; set; }
 
         Command OpenCommand { get; set; }
 
@@ -44,6 +44,6 @@
 
         #endregion Public Properties
 
-        void AddTabItem(IFileItems<T> fileProperties);
+        void AddTabItem(IFile<T> fileProperties);
     }
 }

@@ -13,7 +13,7 @@ namespace RegexViewer
 
         public FilterFileManager()
         {
-            this.ListFileItems = new List<IFileItems<FilterFileItem>>();
+            this.FileManager = new List<IFile<FilterFileItem>>();
         }
 
         #endregion Public Constructors
@@ -24,17 +24,17 @@ namespace RegexViewer
         {
         }
 
-        public override IFileItems<FilterFileItem> OpenFile(string LogName)
+        public override IFile<FilterFileItem> OpenFile(string LogName)
         {
-            IFileItems<FilterFileItem> filterProperties = new FilterFileItems();
-
+            FilterFile filterFile = new FilterFile();
+            
             try
             {
-                if (ListFileItems.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
+                if (FileManager.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
                 {
                     
                     SetStatus("file already open:" + LogName);
-                    return filterProperties;
+                    return filterFile;
                 }
 
                 if (File.Exists(LogName))
@@ -46,24 +46,27 @@ namespace RegexViewer
 
                     for (int i = 0; i < root.ChildNodes.Count; i++)
                     {
-                        FilterFileItem filterFileItems = new FilterFileItem();
-                        filterFileItems.Count = 0;
-                        filterFileItems.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
-                        filterFileItems.Enabled = ReadBoolNodeItem(root, "enabled", i);
-                        filterFileItems.Exclude = ReadBoolNodeItem(root, "exclude", i);
-                        filterFileItems.Regex = ReadBoolNodeItem(root, "regex", i);
-                        filterFileItems.Filterpattern = ReadStringNodeItem(root, "filterpattern", i);
-                        filterFileItems.ForegroundColor = ReadStringNodeItem(root, "foregroundcolor", i);
-                        filterFileItems.Index = ReadIntNodeItem(root, "index", i);
-                        filterFileItems.Notes = ReadStringNodeItem(root, "notes", i);
+                        FilterFileItem fileItem = new FilterFileItem();
+                        fileItem.Count = 0;
+                        fileItem.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
+                        fileItem.Enabled = ReadBoolNodeItem(root, "enabled", i);
+                        fileItem.Exclude = ReadBoolNodeItem(root, "exclude", i);
+                        fileItem.Regex = ReadBoolNodeItem(root, "regex", i);
+                        fileItem.Filterpattern = ReadStringNodeItem(root, "filterpattern", i);
+                        fileItem.ForegroundColor = ReadStringNodeItem(root, "foregroundcolor", i);
+                        fileItem.Index = ReadIntNodeItem(root, "index", i);
+                        fileItem.Notes = ReadStringNodeItem(root, "notes", i);
 
-                        filterProperties.ContentItems.Add(filterFileItems);
+                        filterFile.ContentItems.Add(fileItem);
                     }
 
-                    filterProperties.FileName = Path.GetFileName(LogName);
-                    filterProperties.Tag = LogName;
-
-                    ListFileItems.Add(filterProperties);
+                    
+                    filterFile.FileName = Path.GetFileName(LogName);
+                    filterFile.Tag = LogName;
+                    filterFile.EnablePatternNotifications(true);
+                    filterFile.RebuildRegex();
+                    filterFile.PropertyChanged += filterFile_PropertyChanged;
+                    FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);
                 }
                 else
@@ -72,31 +75,36 @@ namespace RegexViewer
                     this.Settings.RemoveLogFile(LogName);
                 }
 
-                return filterProperties;
+                return filterFile;
             }
             catch (Exception e)
             {
                 SetStatus(string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
-                return filterProperties;
+                return filterFile;
             }
         }
 
-        public override List<IFileItems<FilterFileItem>> OpenFiles(string[] files)
+        public override List<IFile<FilterFileItem>> OpenFiles(string[] files)
         {
-            List<IFileItems<FilterFileItem>> textBlockItems = new List<IFileItems<FilterFileItem>>();
+            List<IFile<FilterFileItem>> filterFileItems = new List<IFile<FilterFileItem>>();
 
             foreach (string file in files)
             {
-                FilterFileItems logProperties = new FilterFileItems();
-                if (String.IsNullOrEmpty((logProperties = (FilterFileItems)OpenFile(file)).Tag))
+                FilterFile filterFile = new FilterFile();
+                if (String.IsNullOrEmpty((filterFile = (FilterFile)OpenFile(file)).Tag))
                 {
                     continue;
                 }
-
-                textBlockItems.Add(logProperties);
+                filterFile.PropertyChanged += filterFile_PropertyChanged;
+                filterFileItems.Add(filterFile);
             }
 
-            return textBlockItems;
+            return filterFileItems;
+        }
+
+        void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged("ContentList");
         }
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)

@@ -13,21 +13,33 @@ namespace RegexViewer
         public FilterViewModel()
         {
             this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
-            this.FileManager = new FilterFileManager();
-
-
+            this.TabItems.CollectionChanged += TabItems_CollectionChanged;
+            this.ViewManager = new FilterFileManager();
+            this.ViewManager.PropertyChanged += ViewManager_PropertyChanged;
+            
+            
             // load tabs from last session
-            foreach (FilterFileItems logProperty in this.FileManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
+            foreach (FilterFile logProperty in this.ViewManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
             {
                 AddTabItem(logProperty);
             }
+        }
+
+        void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("TabItems");
+        }
+
+        void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged("ContentList");
         }
 
         #endregion Public Constructors
 
         #region Public Methods
 
-        public override void AddTabItem(IFileItems<FilterFileItem> logProperties)
+        public override void AddTabItem(IFile<FilterFileItem> logProperties)
         {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
             {
@@ -35,11 +47,18 @@ namespace RegexViewer
                 FilterTabViewModel tabItem = new FilterTabViewModel();
                 // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
                 tabItem.Name = this.TabItems.Count.ToString();
-                tabItem.ContentList = ((FilterFileItems)logProperties).ContentItems;
+                tabItem.ContentList = ((FilterFile)logProperties).ContentItems;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
+                tabItem.Modified = false;
+                tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
             }
+        }
+
+        void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged("ContentList");
         }
 
         public override void NewFile(object sender)
@@ -49,38 +68,47 @@ namespace RegexViewer
 
         public void SaveModifiedFiles(object sender)
         {
-            foreach(ITabViewModel<FilterFileItem> item in this.TabItems.Where(x => x.Modified == true))
+            foreach(IFile<FilterFileItem> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
             {
                 // todo: prompt for saving?
-                
-                TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
-                dialog.Enable();
-
-                switch (dialog.WaitForResult())
+                if (!RegexViewerSettings.Settings.AutoSaveFilters)
                 {
-                    case TimedSaveDialog.Results.Disable:
-                        throw new NotImplementedException();
-                 //       _etwMonitor.Config.AppSettings.Annoyance = false;
-                   //     Save_Click(null, null);
-                        break;
+                    TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
+                    dialog.Enable();
 
-                    case TimedSaveDialog.Results.DontSave:
-                        break;
 
-                    case TimedSaveDialog.Results.Save:
-                        this.SaveFile(item);
-                        break;
+                    switch (dialog.WaitForResult())
+                    {
+                        case TimedSaveDialog.Results.Disable:
+                            //throw new NotImplementedException();
+                            RegexViewerSettings.Settings.AutoSaveFilters = true;
+                            //     Save_Click(null, null);
+                            break;
 
-                    case TimedSaveDialog.Results.SaveAs:
-                        //SaveAs_Click(null, null);
-                        throw new NotImplementedException();
-                        break;
+                        case TimedSaveDialog.Results.DontSave:
+                            item.Modified = false;
+                            break;
 
-                    case TimedSaveDialog.Results.Unknown:
-                        // dont worry about errors since we are closing.
-                        break;
+                        case TimedSaveDialog.Results.Save:
+                            this.SaveFile(item);
+                            item.Modified = false;
+                            break;
+
+                        case TimedSaveDialog.Results.SaveAs:
+                            //SaveAs_Click(null, null);
+                            throw new NotImplementedException();
+                            break;
+
+                        case TimedSaveDialog.Results.Unknown:
+                            // dont worry about errors since we are closing.
+                            break;
+                    }
                 }
-                
+                else
+                {
+                    this.SaveFile(item);
+                    item.Modified = false;
+                }
             }
         }
 
@@ -124,8 +152,8 @@ namespace RegexViewer
 
                 //SetStatusHandler(string.Format("opening file:{0}", logName));
                 SetStatus(string.Format("opening file:{0}", logName));
-                FilterFileItems logProperties = new FilterFileItems();
-                if (String.IsNullOrEmpty((logProperties = (FilterFileItems)this.FileManager.OpenFile(logName)).Tag))
+                FilterFile logProperties = new FilterFile();
+                if (String.IsNullOrEmpty((logProperties = (FilterFile)this.ViewManager.OpenFile(logName)).Tag))
                 {
                     return;
                 }

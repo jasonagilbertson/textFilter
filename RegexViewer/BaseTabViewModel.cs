@@ -15,7 +15,7 @@ namespace RegexViewer
         private string background;
 
         private ObservableCollection<T> contentList = new ObservableCollection<T>();
-        private string activeTab;
+//         private string activeTab;
         private Command copyCommand;
         private Command selectionChangedCommand;
         private string header;
@@ -77,23 +77,23 @@ namespace RegexViewer
                 }
             }
         }
-        public string ActiveTab
-        {
-            get
-            {
-                return activeTab;
-            }
+        //public string ActiveTab
+        //{
+        //    get
+        //    {
+        //        return activeTab;
+        //    }
 
-            set
-            {
-                if (activeTab != value)
-                {
-                    activeTab = value;
-                    OnPropertyChanged("ActiveTab");
-                    //OnTabChanged("ActiveTab");
-                }
-            }
-        }
+        //    set
+        //    {
+        //        if (activeTab != value)
+        //        {
+        //            activeTab = value;
+        //            OnPropertyChanged("ActiveTab");
+        //            //OnTabChanged("ActiveTab");
+        //        }
+        //    }
+        //}
 
         //  public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<T> ContentList
@@ -101,12 +101,16 @@ namespace RegexViewer
             get { return contentList; }
             set
             {
-                contentList = value;
-                //   OnPropertyChanged("ContentList");
-                //   Modified = true;
+                if (contentList != value)
+                {
+                    contentList = value;
+                    OnPropertyChanged("ContentList");
+                    Modified = true;
+                }
             }
         }
 
+     //   public List<T> UnFilteredContentList { get; set; }
         public List<T> SelectedContent
         {
             get { return selectedContent; }
@@ -215,16 +219,41 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public abstract void CopyExecuted(object sender);
+        //public abstract void CopyExecuted(object sender);
+        public void CopyExecuted(object contentList)
+        {
+            try
+            {
+                //   List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
+
+
+                HtmlFragment htmlFragment = new HtmlFragment();
+                foreach (IFileItem lbi in SelectedContent)
+                {
+                    //if (lbi != null && lbi.IsSelected)
+                    // if (lbi != null && lbi.IsFocused)
+                    //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
+                    //{
+                    //    htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
+                    htmlFragment.AddClipToList(lbi.Content, lbi.Background, lbi.Foreground);
+                    //}
+                }
+
+                htmlFragment.CopyListToClipboard();
+            }
+            catch (Exception ex)
+            {
+                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
+            }
+        }
+
+
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
-                //List<T> items = (sender as IList).Cast<T>().ToList();
                 selectedContent = (sender as IList).Cast<T>().ToList();
-                //var collection = items;
-              //  selectedContent = (sender as List<T>);
             }
         }
 

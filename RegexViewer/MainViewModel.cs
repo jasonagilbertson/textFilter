@@ -18,6 +18,7 @@ namespace RegexViewer
         private RegexViewerSettings _settings = RegexViewerSettings.Settings;
         private ObservableCollection<string> _status = new ObservableCollection<string>();
         private WorkerManager _workerManager = WorkerManager.Instance;
+        private Int32 _statusIndex;
         #endregion Private Fields
 
       
@@ -121,11 +122,27 @@ namespace RegexViewer
                 }
 
                 this._status.Add(statusData);
+                this.StatusIndex = _status.Count;
                 Debug.Print(statusData);
                 OnPropertyChanged("Status");
         //    }));
         }
 
+        public int StatusIndex
+        {
+            get
+            {
+                return _statusIndex;
+            }
+            set
+            {
+                if(_statusIndex != value)
+                {
+                    _statusIndex = value;
+                    OnPropertyChanged("StatusIndex");
+                }
+            }
+        }
         #endregion Public Methods
 
         
@@ -136,8 +153,9 @@ namespace RegexViewer
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _settings.Save();
+
             _filterViewModel.SaveModifiedFiles(sender);
+            _settings.Save();
         }
 
         #endregion Internal Methods

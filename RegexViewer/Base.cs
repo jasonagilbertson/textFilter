@@ -12,7 +12,6 @@ namespace RegexViewer
      //public static IMainViewModel MainModel;
         #region Public Events
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public static event EventHandler<string> NewStatus;
         #endregion Public Events
         public void OnNewStatus(string status)
@@ -28,6 +27,8 @@ namespace RegexViewer
             //MainModel.SetViewStatus(status);
             OnNewStatus(status);
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

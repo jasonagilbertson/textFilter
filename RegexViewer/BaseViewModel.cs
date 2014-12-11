@@ -9,7 +9,7 @@ namespace RegexViewer
     public abstract class BaseViewModel<T> : Base,INotifyPropertyChanged, IViewModel<T>
     {
         #region Private Fields
-
+        // private ITabViewModel<T> activeTab;
         private Command closeCommand;
         private Command newCommand;
         private Command openCommand;
@@ -42,7 +42,24 @@ namespace RegexViewer
         }
 
         //   public event PropertyChangedEventHandler PropertyChanged;
-        public IFileManager<T> FileManager { get; set; }
+        public IFileManager<T> ViewManager { get; set; }
+        //public ITabViewModel<T> ActiveTab
+        //{
+        //    get
+        //    {
+        //        return activeTab;
+        //    }
+
+        //    set
+        //    {
+        //        if (activeTab != value)
+        //        {
+        //            activeTab = value;
+        //            OnPropertyChanged("ActiveTab");
+        //            //OnTabChanged("ActiveTab");
+        //        }
+        //    }
+        //}
 
         public Command NewCommand
         {
@@ -128,13 +145,13 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public abstract void AddTabItem(IFileItems<T> fileProperties);
+        public abstract void AddTabItem(IFile<T> fileProperties);
 
         //public bool CloseLog(TabItem tabItem)
         public void CloseFile(object sender)
         {
             ITabViewModel<T> tabItem = tabItems[selectedIndex];
-            if (!this.FileManager.CloseFile(tabItem.Tag))
+            if (!this.ViewManager.CloseFile(tabItem.Tag))
             {
                 return;
             }
@@ -176,7 +193,7 @@ namespace RegexViewer
                 tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
             }
             
-            this.FileManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+            this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
         }
 
         #endregion Public Methods

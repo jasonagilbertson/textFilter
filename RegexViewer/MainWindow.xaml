@@ -87,6 +87,7 @@
                           Grid.Column="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
+                                  
                           VerticalAlignment="Stretch"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}" >
@@ -95,10 +96,24 @@
                                     <Style.Setters>
                                         <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                         <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
+                            <!--<ListBox.CommandBindings>
+                                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
+                            </ListBox.CommandBindings>-->
+                            <DataGrid.InputBindings>
+                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                            </DataGrid.InputBindings>
+                            <DataGrid.ContextMenu>
 
+                                <ContextMenu HasDropShadow="True">
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
+                                    <MenuItem Header="Select All Test" Command="{Binding SelectAllCommand}" />
+                                    <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
@@ -149,7 +164,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern}" >
+                                <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" >
                                     <DataGridTextColumn.CellStyle >
                                         <Style TargetType="DataGridCell" >
                                             <Style.Setters>
@@ -162,13 +177,13 @@
                                 <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True"/>
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
                             </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
+                            <!--<DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
-                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
+                                    --><!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />--><!--
                                     <MenuItem Header="Copy" Command="{Binding FilterViewModel.CopyCommand}" />
                                     <MenuItem Header="Paste" Command="{Binding FilterViewModel.PasteCommand}" />
                                 </ContextMenu>
-                            </DataGrid.ContextMenu>
+                            </DataGrid.ContextMenu>-->
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
@@ -200,7 +215,6 @@
                                  ItemsSource="{Binding Path=ContentList}"
                                  AllowDrop="True"
                                  SelectionMode="Extended"
-                                 
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
@@ -210,17 +224,25 @@
                             <!--<ListBox.CommandBindings>
                                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
                             </ListBox.CommandBindings>-->
+                            <!--<ListBox.ItemContainerStyle>
+                                
+                                        <Style TargetType="ListBoxItem">
+                                            <Style.Setters>
+                                                <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                                <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                                <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                            </Style.Setters>
+                                        </Style>
+                            </ListBox.ItemContainerStyle>-->
+
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
                             </ListBox.InputBindings>
                             <ListBox.ContextMenu>
 
                                 <ContextMenu HasDropShadow="True">
-                                    <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" />-->
-                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Source={x:Reference logFileData},Path=SelectedItems}" />-->
-                                    <MenuItem Header="Copy2" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
-                                    <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" />-->
-                                    <MenuItem Header="Select All Test" Command="{Binding SelectAllCommand}" />
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
+                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </ListBox.ContextMenu>
@@ -242,6 +264,7 @@
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     SelectedIndex="{Binding Path=MainViewModel.StatusIndex, Mode=TwoWay}"
                      Height="25"
                      ItemsSource="{Binding Path=Status}">
                 <ListBox.ContextMenu>

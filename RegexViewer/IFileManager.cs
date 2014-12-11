@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RegexViewer
 {
@@ -7,7 +8,7 @@ namespace RegexViewer
     {
         #region Public Properties
 
-        List<IFileItems<T>> ListFileItems { get; set; }
+        List<IFile<T>> FileManager { get; set; }
 
         #endregion Public Properties
 
@@ -15,10 +16,10 @@ namespace RegexViewer
 
         bool CloseFile(string LogName);
 
-        IFileItems<T> OpenFile(string LogName);
+        IFile<T> OpenFile(string LogName);
 
-        List<IFileItems<T>> OpenFiles(string[] files);
-
+        List<IFile<T>> OpenFiles(string[] files);
+        event PropertyChangedEventHandler PropertyChanged;
         bool SaveFile(string LogName, ObservableCollection<T> list);
         
         #endregion Public Methods

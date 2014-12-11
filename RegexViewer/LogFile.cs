@@ -1,23 +1,24 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public class FilterFileItems : BaseFileItems<FilterFileItem>
+    public class LogFile : BaseFile<LogFileItem>
     {
         #region Public Constructors
 
-        public FilterFileItems()
+        public LogFile()
         {
 
-            this.ContentItems = new ObservableCollection<FilterFileItem>();
+            this.ContentItems = new ObservableCollection<LogFileItem>();
         }
 
         #endregion Public Constructors
 
         #region Public Properties
 
-        public override ObservableCollection<FilterFileItem> ContentItems { get; set; }
+        public override ObservableCollection<LogFileItem> ContentItems { get; set; }
 
         #endregion Public Properties
     }

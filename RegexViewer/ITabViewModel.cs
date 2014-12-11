@@ -14,9 +14,9 @@ namespace RegexViewer
         #region Public Properties
 
         string Background { get; set; }
-
+        //public string ActiveTab { get; set; }
         ObservableCollection<T> ContentList { get; set; }
-
+        //List<T> UnFilteredContentList { get; set; }
         Command CopyCommand { get; set; }
         // Command SelectionChanged { get; set; }
         Command PasteCommand { get; set; }
@@ -26,7 +26,7 @@ namespace RegexViewer
         string Name { get; set; }
         bool Modified { get; set; }
         string Tag { get; set; }
-        string ActiveTab { get; set; }
+     //   string ActiveTab { get; set; }
 
         #endregion Public Properties
 

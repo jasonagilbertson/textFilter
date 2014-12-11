@@ -85,6 +85,7 @@ namespace RegexViewer
 
         private enum AppSettingNames
         {
+            AutoSaveFilters,
             BackgroundColor,
             FileHistoryCount,
             FilterDirectory,
@@ -145,6 +146,18 @@ namespace RegexViewer
             set
             {
                 _appSettings["CurrentLogFiles"].Value = string.Join(",", value);
+            }
+        }
+
+        public bool AutoSaveFilters
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings["AutoSaveFilters"].Value));
+            }
+            set
+            {
+                _appSettings["AutoSaveFilters"].Value = value.ToString();
             }
         }
 
@@ -325,7 +338,11 @@ namespace RegexViewer
                             _appSettings[name].Value = "Black";
                             break;
                         }
-
+                    case AppSettingNames.AutoSaveFilters:
+                        {
+                            _appSettings[name].Value = "False";
+                            break;
+                        }
                     default:
                         {
                             break;

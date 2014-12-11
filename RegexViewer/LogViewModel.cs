@@ -17,26 +17,33 @@ namespace RegexViewer
         public LogViewModel(FilterViewModel filterViewModel)
         {
             _filterViewModel = filterViewModel;
+            //_filterViewModel.TabItems.CollectionChanged += TabItems_CollectionChanged;
             _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
+            
             this.TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
-            this.FileManager = new LogFileManager();
+            this.ViewManager = new LogFileManager();
 
             // load tabs from last session
-            foreach (LogFileItems logProperty in this.FileManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
+            foreach (LogFile logFile in this.ViewManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
             {
-                AddTabItem(logProperty);
+                AddTabItem(logFile);
             }
         }
 
-           void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // reparse log files
             SetStatus("_filterViewModel.PropertyChanged" + sender.ToString());
-            //todo: prompt to save filter file(s) if listening for changes
-            // todo: make handler for selected index?
-            throw new NotImplementedException();
+            FilterActiveTabItem();
         }
-     
+
+        void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            // reparse log files
+            SetStatus("_filterViewModel.CollectionChanged" + sender.ToString());
+            FilterActiveTabItem();
+        }
+
         #endregion Public Constructors
 
         #region Public Methods
@@ -46,19 +53,37 @@ namespace RegexViewer
             SetStatus("new file not implemented");
             throw new NotImplementedException();
         }
-        public override void AddTabItem(IFileItems<LogFileItem> logProperties)
+        public override void AddTabItem(IFile<LogFileItem> logFile)
         {
-            if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
+            if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logFile.Tag, true) == 0))
             {
-                SetStatus("adding tab:" + logProperties.Tag);
+                SetStatus("adding tab:" + logFile.Tag);
                 LogTabViewModel tabItem = new LogTabViewModel();
-                // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
                 tabItem.Name = this.TabItems.Count.ToString();
-                tabItem.ContentList = ((LogFileItems)logProperties).ContentItems;
-                tabItem.Tag = logProperties.Tag;
-                tabItem.Header = logProperties.FileName;
+
+                tabItem.ContentList = FilterTabItem(logFile);
+  
+                //tabItem.ContentList = ((LogFile)logFile).ContentItems;
+                tabItem.Tag = logFile.Tag;
+                tabItem.Header = logFile.FileName;
                 TabItems.Add(tabItem);
             }
+        }
+
+        private void FilterActiveTabItem()
+        {
+            
+            LogFile activeLogFile = (LogFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+            //LogFile activeLogFile = (LogFile)this.TabItems[SelectedIndex];
+            this.TabItems[SelectedIndex].ContentList = FilterTabItem(activeLogFile);
+        }
+
+        private ObservableCollection<LogFileItem> FilterTabItem(IFile<LogFileItem> logFile)
+        {
+
+            FilterFile filterFile = (FilterFile)_filterViewModel.ViewManager.FileManager.First(x => x.Tag == _filterViewModel.TabItems[SelectedIndex].Tag);
+           // FilterFile filterFile = (FilterFile)_filterViewModel.TabItems[SelectedIndex];
+            return ((LogFileManager)this.ViewManager).ApplyFilter(logFile.ContentItems, filterFile);
         }
 
         /// <summary>
@@ -101,8 +126,8 @@ namespace RegexViewer
                 // Open document
                 
                 SetStatus(string.Format("opening file:{0}", logName));
-                LogFileItems logFileItems = new LogFileItems();
-                if (String.IsNullOrEmpty((logFileItems = (LogFileItems)this.FileManager.OpenFile(logName)).Tag))
+                LogFile logFileItems = new LogFile();
+                if (String.IsNullOrEmpty((logFileItems = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
                 {
                     return;
                 }
