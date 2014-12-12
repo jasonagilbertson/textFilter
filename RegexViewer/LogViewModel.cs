@@ -19,7 +19,7 @@ namespace RegexViewer
             _filterViewModel = filterViewModel;
             //_filterViewModel.TabItems.CollectionChanged += TabItems_CollectionChanged;
             _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
-            
+            this.PropertyChanged += LogViewModel_PropertyChanged;
             this.TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             this.ViewManager = new LogFileManager();
 
@@ -28,6 +28,12 @@ namespace RegexViewer
             {
                 AddTabItem(logFile);
             }
+        }
+
+        void LogViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SetStatus("LogViewModel.PropertyChanged" + sender.ToString());
+            FilterActiveTabItem();
         }
 
         void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -81,8 +87,9 @@ namespace RegexViewer
         private ObservableCollection<LogFileItem> FilterTabItem(IFile<LogFileItem> logFile)
         {
 
-            FilterFile filterFile = (FilterFile)_filterViewModel.ViewManager.FileManager.First(x => x.Tag == _filterViewModel.TabItems[SelectedIndex].Tag);
-           // FilterFile filterFile = (FilterFile)_filterViewModel.TabItems[SelectedIndex];
+           // FilterFile filterFile = (FilterFile)_filterViewModel.ViewManager.FileManager.First(x => x.Tag == _filterViewModel.TabItems[SelectedIndex].Tag);
+            FilterFile filterFile = (FilterFile)_filterViewModel.ViewManager.FileManager.First(x => x.Tag == _filterViewModel.TabItems[_filterViewModel.SelectedIndex].Tag);
+           
             return ((LogFileManager)this.ViewManager).ApplyFilter(logFile.ContentItems, filterFile);
         }
 

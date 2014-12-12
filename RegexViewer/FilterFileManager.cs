@@ -64,7 +64,7 @@ namespace RegexViewer
                     filterFile.FileName = Path.GetFileName(LogName);
                     filterFile.Tag = LogName;
                     filterFile.EnablePatternNotifications(true);
-                    filterFile.RebuildRegex();
+                   // filterFile.RebuildRegex();
                     filterFile.PropertyChanged += filterFile_PropertyChanged;
                     FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);

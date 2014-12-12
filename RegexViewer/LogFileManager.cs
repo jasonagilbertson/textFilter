@@ -16,6 +16,7 @@ namespace RegexViewer
         public LogFileManager()
         {
             this.FileManager = new List<IFile<LogFileItem>>();
+            
         }
 
         #endregion Public Constructors
@@ -26,84 +27,144 @@ namespace RegexViewer
         {
 
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
+            
+            SetStatus("ApplyFilter:" + filterFile.Tag);
+            List<FilterFileItem> fileItems = new List<FilterFileItem>();
 
-
-            if(string.IsNullOrEmpty(filterFile.RegexPattern))
+            // clean up list
+            foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
-                return logFileItems;
-            }
-            
-            SetStatus("ApplyFilter:" + filterFile.RegexPattern);
-            Regex regex = new Regex(filterFile.RegexPattern, RegexOptions.IgnoreCase | RegexOptions.Singleline| RegexOptions.Compiled);
-
-            //object[,] filterObject = new object[filterFile.ContentItems.Count,4];
-            //int i = 0;
-            List<FilterFileItem> fileItems = filterFile.ContentItems.OrderBy(x => x.Index).ToList();
-            //foreach(FilterFileItem filterItem in filterFile.ContentItems.OrderBy(x => x.Index))
-            //{
-            //    filterObject[i, 0] = filterItem.Foreground;
-            //    filterObject[i, 1] = filterItem.Background;
-            //    filterObject[i, 2] = filterItem.Enabled;
-            //    filterObject[i++, 3] = filterItem.Exclude;
-            
-            //}
-
-                try
+                if(!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
                 {
-                    foreach (LogFileItem logItem in logFileItems)
+                    continue;
+                }
+
+                fileItems.Add(fileItem);
+
+                if(!fileItem.Regex)
+                {
+                    fileItems[fileItems.Count - 1].Filterpattern = Regex.Escape(fileItem.Filterpattern);
+                }
+            }
+
+            try
+            {
+                foreach (LogFileItem logItem in logFileItems)
+                {
+                    if (string.IsNullOrEmpty(logItem.Text))
                     {
-                        if (string.IsNullOrEmpty(logItem.Text))
+                        continue;
+                    }
+                        
+                    Debug.Print(logItem.Text);
+
+                    for (int c = 0; c < fileItems.Count; c++)
+                    {
+                        FilterFileItem fileItem = fileItems[c];
+
+                        if(!Regex.IsMatch(logItem.Text,fileItem.Filterpattern,RegexOptions.IgnoreCase))
                         {
                             continue;
                         }
 
-                        if (regex.IsMatch(logItem.Text))
+                        if(fileItem.Exclude)
                         {
-                            // loop though matches starting at index 0
-                            Debug.Print(logItem.Text);
-
-                            MatchCollection matches = regex.Matches(logItem.Text);
-                            for (int c = 0; c < filterFile.ContentItems.Count; c++)
-                            {
-                                // todo: make sure this doesnt affect user pattern grouping which currently it does.
-                                // maybe check group name???
-                                if (matches[0].Groups[c + 1].Success) // (bool)filterObject[c,2] && !(bool)filterObject[c,3])
-                                {
-                                    
-                                    if (fileItems[c].Enabled && !fileItems[c].Exclude)
-                                    {
-                                        Debug.Print("matches count:" + matches.Count);
-                                        //matches[0].Groups[5].Success
-                                        LogFileItem item = new LogFileItem()
-                                        {
-                                            Text = logItem.Text,
-                                            Foreground = fileItems[c].Foreground, //(Brush)filterObject[c,0],
-                                            Background = fileItems[c].Background, //(Brush)filterObject[c,1]
-                                            FontSize = RegexViewerSettings.Settings.FontSize //fileItems[c].FontSize
-                                        };
-
-                                        // todo : fix recursive propertychanged
-                                        //fileItems[c].Count++;
-                                        filteredItems.Add(item);
-                                        break;
-                                    }
-                                    else if (fileItems[c].Enabled && fileItems[c].Exclude)
-                                    {
-                                        break;
-                                    }
-
-                                }
-                            }
+                            break;
                         }
+                                    
+                        LogFileItem item = new LogFileItem()
+                        {
+                            Text = logItem.Text,
+                            Foreground = fileItem.Foreground, 
+                            Background = fileItem.Background, 
+                            FontSize = RegexViewerSettings.Settings.FontSize 
+                        };
+
+                        filteredItems.Add(item);
+                        break;
+                    }
+                }
+
+                return filteredItems;
+
+            }
+            catch (Exception e)
+            {
+                SetStatus("ApplyFilter:exception" + e.ToString());
+                return filteredItems;
+            }
+        }
+
+        public ObservableCollection<LogFileItem> ApplyFilterMappedFile(string logFile, FilterFile filterFile)
+        {
+            // http://blogs.msdn.com/b/salvapatuel/archive/2009/06/08/working-with-memory-mapped-files-in-net-4.aspx
+            ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
+
+            SetStatus("ApplyFilter:" + filterFile.Tag);
+            List<FilterFileItem> fileItems = new List<FilterFileItem>();
+
+            // clean up list
+            foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
+            {
+                if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
+                {
+                    continue;
+                }
+
+                fileItems.Add(fileItem);
+
+                if (!fileItem.Regex)
+                {
+                    fileItems[fileItems.Count - 1].Filterpattern = Regex.Escape(fileItem.Filterpattern);
+                }
+            }
+
+            try
+            {
+                foreach (LogFileItem logItem in logFileItems)
+                {
+                    if (string.IsNullOrEmpty(logItem.Text))
+                    {
+                        continue;
                     }
 
-                    return filteredItems;
+                    Debug.Print(logItem.Text);
+
+                    for (int c = 0; c < fileItems.Count; c++)
+                    {
+                        FilterFileItem fileItem = fileItems[c];
+
+                        if (!Regex.IsMatch(logItem.Text, fileItem.Filterpattern, RegexOptions.IgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        if (fileItem.Exclude)
+                        {
+                            break;
+                        }
+
+                        LogFileItem item = new LogFileItem()
+                        {
+                            Text = logItem.Text,
+                            Foreground = fileItem.Foreground,
+                            Background = fileItem.Background,
+                            FontSize = RegexViewerSettings.Settings.FontSize
+                        };
+
+                        filteredItems.Add(item);
+                        break;
+                    }
                 }
-                catch (Exception e)
-                {
-                    SetStatus("ApplyFilter:exception" + e.ToString());
-                    return filteredItems;
-                }
+
+                return filteredItems;
+
+            }
+            catch (Exception e)
+            {
+                SetStatus("ApplyFilter:exception" + e.ToString());
+                return filteredItems;
+            }
         }
         public override IFile<LogFileItem> OpenFile(string LogName)
         {
