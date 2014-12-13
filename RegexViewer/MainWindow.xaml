@@ -87,7 +87,7 @@
                           Grid.Column="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
-                                  
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"  
                           VerticalAlignment="Stretch"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}" >
@@ -264,12 +264,23 @@
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     SelectedIndex="{Binding Path=MainViewModel.StatusIndex, Mode=TwoWay}"
+                     SelectedIndex="{Binding Path=StatusIndex}"
                      Height="25"
+                     
                      ItemsSource="{Binding Path=Status}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <i:InvokeCommandAction Command="{Binding StatusChangedCommand}"  CommandParameter="{Binding ElementName=listboxStatus}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <ListBox.InputBindings>
+                    <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                </ListBox.InputBindings>
+
                 <ListBox.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" />
+
+                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+C"/>
                         <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                     </ContextMenu>
                 </ListBox.ContextMenu>

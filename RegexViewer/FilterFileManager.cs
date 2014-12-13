@@ -104,7 +104,7 @@ namespace RegexViewer
 
         void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            OnPropertyChanged("ContentList");
+            OnPropertyChanged(e.PropertyName);
         }
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)

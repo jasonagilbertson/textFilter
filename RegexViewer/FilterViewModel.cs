@@ -32,7 +32,7 @@ namespace RegexViewer
 
         void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            OnPropertyChanged("ContentList");
+            OnPropertyChanged(e.PropertyName);
         }
 
         #endregion Public Constructors

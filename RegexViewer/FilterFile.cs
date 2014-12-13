@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,7 +29,7 @@ namespace RegexViewer
                         item.PropertyChanged += item_PropertyChanged;
                     }
 
-                    item_PropertyChanged(null, null);
+                    item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
                 }
                 else if(!enable & _patternNotifications)
                 {
@@ -46,7 +47,7 @@ namespace RegexViewer
         void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Modified = true;
-            OnPropertyChanged("ContentList");
+            OnPropertyChanged(e.PropertyName);
             
         }
         void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)

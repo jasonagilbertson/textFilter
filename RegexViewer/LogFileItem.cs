@@ -10,8 +10,11 @@ namespace RegexViewer
 {
     public class LogFileItem : TextBlock, IFileItem
     {
-       
-         
+
+        public IFileItem ShallowCopy()
+        {
+            return (LogFileItem)this.MemberwiseClone();
+        }
         public string Content
         {
             get

@@ -38,6 +38,11 @@ namespace RegexViewer
 
         #region Public Methods
 
+        public IFileItem ShallowCopy()
+        {
+            return (FilterFileItem)this.MemberwiseClone();
+        }
+
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;

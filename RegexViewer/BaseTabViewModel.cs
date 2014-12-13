@@ -147,7 +147,7 @@ namespace RegexViewer
 
                 return selectionChangedCommand;
             }
-            set { copyCommand = value; }
+            set { selectionChangedCommand = value; }
         }
         public string Header
         {

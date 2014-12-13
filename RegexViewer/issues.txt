@@ -1,4 +1,6 @@
-﻿- index not dynamically sorting
+﻿- closing tab without selecting tab first closes wrong one because of selectedindex not being updated
+
+- index not dynamically sorting
 
 - when reading in filter xml that has been escaped for xml : (?&lt;test&gt;.*) is the filter pattern
 

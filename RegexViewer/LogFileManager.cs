@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.IO.MemoryMappedFiles;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
@@ -20,33 +21,22 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
-
+        List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
         #region Public Methods
 
-        public ObservableCollection<LogFileItem> ApplyFilter(ObservableCollection<LogFileItem> logFileItems, FilterFile filterFile)
+        public ObservableCollection<LogFileItem> ApplyFilter(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems)
         {
+            
 
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
             
-            SetStatus("ApplyFilter:" + filterFile.Tag);
-            List<FilterFileItem> fileItems = new List<FilterFileItem>();
+            //SetStatus("ApplyFilter:" + filterFile.Tag);
 
-            // clean up list
-            foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
-            {
-                if(!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
-                {
-                    continue;
-                }
 
-                fileItems.Add(fileItem);
+            
 
-                if(!fileItem.Regex)
-                {
-                    fileItems[fileItems.Count - 1].Filterpattern = Regex.Escape(fileItem.Filterpattern);
-                }
-            }
-
+            int[] countTotals = new int[filterFileItems.Count];
+            
             try
             {
                 foreach (LogFileItem logItem in logFileItems)
@@ -56,11 +46,11 @@ namespace RegexViewer
                         continue;
                     }
                         
-                    Debug.Print(logItem.Text);
+                    //Debug.Print(logItem.Text);
 
-                    for (int c = 0; c < fileItems.Count; c++)
+                    for (int c = 0; c < filterFileItems.Count; c++)
                     {
-                        FilterFileItem fileItem = fileItems[c];
+                        FilterFileItem fileItem = filterFileItems[c];
 
                         if(!Regex.IsMatch(logItem.Text,fileItem.Filterpattern,RegexOptions.IgnoreCase))
                         {
@@ -78,11 +68,19 @@ namespace RegexViewer
                             Foreground = fileItem.Foreground, 
                             Background = fileItem.Background, 
                             FontSize = RegexViewerSettings.Settings.FontSize 
+                            
                         };
 
+                        countTotals[c] += 1;
                         filteredItems.Add(item);
                         break;
                     }
+                }
+
+                // write totals
+                for (int i = 0; i < countTotals.Length; i++)
+                {
+                    filterFileItems[i].Count = countTotals[i];
                 }
 
                 return filteredItems;
@@ -95,8 +93,68 @@ namespace RegexViewer
             }
         }
 
+        public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
+        {
+            List<FilterFileItem> fileItems = new List<FilterFileItem>();
+            // clean up list
+            foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
+            {
+                if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
+                {
+                    continue;
+                }
+
+                fileItems.Add(fileItem);
+
+                if (!fileItem.Regex)
+                {
+                    fileItems[fileItems.Count - 1].Filterpattern = Regex.Escape(fileItem.Filterpattern);
+                }
+            }
+
+            
+            return fileItems;
+        }
+
+        public bool CompareFilterList(List<FilterFileItem> filterFileItems)
+        {
+            bool retval = false;
+            if (_previousFilterFileItems.Count > 0 
+                && filterFileItems.Count > 0 
+                && _previousFilterFileItems.Count == filterFileItems.Count)
+            {
+                int i = 0;
+                foreach (FilterFileItem fileItem in filterFileItems.OrderBy(x => x.Index))
+                {
+                    FilterFileItem previousItem = _previousFilterFileItems[i++];
+                    if (previousItem.BackgroundColor != fileItem.BackgroundColor
+                        || previousItem.ForegroundColor != fileItem.ForegroundColor
+                        || previousItem.Enabled != fileItem.Enabled
+                        || previousItem.Exclude != fileItem.Exclude
+                        || previousItem.Regex != fileItem.Regex
+                        || previousItem.Filterpattern != fileItem.Filterpattern)
+                    {
+                        retval = false;
+                        Debug.Print("returning false");
+                        break;
+                    }
+
+                    retval = true;
+                }
+            }
+
+            _previousFilterFileItems.Clear();
+            foreach(FilterFileItem item in filterFileItems)
+            {
+                _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
+            }
+            
+            Debug.Print("CompareFilterList:returning:" + retval.ToString());
+            return retval;
+        }
         public ObservableCollection<LogFileItem> ApplyFilterMappedFile(string logFile, FilterFile filterFile)
         {
+
             // http://blogs.msdn.com/b/salvapatuel/archive/2009/06/08/working-with-memory-mapped-files-in-net-4.aspx
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
 
@@ -119,6 +177,9 @@ namespace RegexViewer
                 }
             }
 
+            List<LogFileItem> logFileItems = new List<LogFileItem>();
+
+
             try
             {
                 foreach (LogFileItem logItem in logFileItems)
@@ -128,7 +189,7 @@ namespace RegexViewer
                         continue;
                     }
 
-                    Debug.Print(logItem.Text);
+                    //Debug.Print(logItem.Text);
 
                     for (int c = 0; c < fileItems.Count; c++)
                     {

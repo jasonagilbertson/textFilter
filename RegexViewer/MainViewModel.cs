@@ -21,7 +21,7 @@ namespace RegexViewer
         private Int32 _statusIndex;
         #endregion Private Fields
 
-      
+        private Command selectionChangedCommand;
         #region Public Constructors
 
         public MainViewModel()
@@ -30,6 +30,7 @@ namespace RegexViewer
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
             _logViewModel = new LogViewModel(_filterViewModel);
+            SetStatus("loaded");
         }
 
      private void HandleNewStatus(object sender, string status)
@@ -81,6 +82,14 @@ namespace RegexViewer
             {
                 return _status;
             }
+            set
+            {
+                if(_status != value)
+                {
+                    _status = value;
+                    OnPropertyChanged("Status");
+                }
+            }
         }
 
         #endregion Public Properties
@@ -89,12 +98,26 @@ namespace RegexViewer
 
         public void CopyExecuted(object contentList)
         {
+            List<ListBoxItem> c_contentList = new List<ListBoxItem>();
+
             try
             {
-                List<ListBoxItem> ContentList = (List<ListBoxItem>)contentList;
+                if (contentList is List<ListBoxItem>)
+                {
+                    c_contentList = (List<ListBoxItem>)contentList;
+
+                }
+                else if(contentList is ObservableCollection<ListBoxItem>)
+                {
+                    c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
+                }
+                else
+                {
+                    return;
+                }
 
                 HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (ListBoxItem lbi in ContentList)
+                foreach (ListBoxItem lbi in c_contentList)
                 {
                     if (lbi != null && lbi.IsSelected)
                     //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
@@ -116,13 +139,15 @@ namespace RegexViewer
         {
         //    Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
         //    {
-                while (this._status.Count > 1000)
+                while (this.Status.Count > 1000)
                 {
-                    this._status.RemoveAt(0);
+                    this.Status.RemoveAt(0);
                 }
 
-                this._status.Add(statusData);
-                this.StatusIndex = _status.Count;
+                this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
+                this.StatusIndex = Status.Count - 1;
+            
+            
                 Debug.Print(statusData);
                 OnPropertyChanged("Status");
         //    }));
@@ -140,14 +165,37 @@ namespace RegexViewer
                 {
                     _statusIndex = value;
                     OnPropertyChanged("StatusIndex");
+                    
                 }
             }
         }
         #endregion Public Methods
 
-        
-        
+        public Command StatusChangedCommand
+        {
+            get
+            {
+                if (selectionChangedCommand == null)
+                {
+                    selectionChangedCommand = new Command(SelectionChangedExecuted);
+                }
+                selectionChangedCommand.CanExecute = true;
 
+                return selectionChangedCommand;
+            }
+            set { selectionChangedCommand = value; }
+        }
+
+        public void SelectionChangedExecuted(object sender)
+        {
+            //SetStatus("SelectionChangeExecuted:enter");
+            if (sender is ListBox)
+            {
+                ListBox listBox = (sender as ListBox);
+                //listBox.Items.MoveCurrentToLast();
+                listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
+            }
+        }
 
         #region Internal Methods
 
