@@ -6,11 +6,13 @@ using System.Windows.Controls;
 
 namespace RegexViewer
 {
-    public abstract class BaseViewModel<T> : Base,INotifyPropertyChanged, IViewModel<T>
+    public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
         #region Private Fields
+
         // private ITabViewModel<T> activeTab;
         private Command closeCommand;
+
         private Command newCommand;
         private Command openCommand;
         private bool openDialogVisible;
@@ -41,26 +43,6 @@ namespace RegexViewer
             set { closeCommand = value; }
         }
 
-        //   public event PropertyChangedEventHandler PropertyChanged;
-        public IFileManager<T> ViewManager { get; set; }
-        //public ITabViewModel<T> ActiveTab
-        //{
-        //    get
-        //    {
-        //        return activeTab;
-        //    }
-
-        //    set
-        //    {
-        //        if (activeTab != value)
-        //        {
-        //            activeTab = value;
-        //            OnPropertyChanged("ActiveTab");
-        //            //OnTabChanged("ActiveTab");
-        //        }
-        //    }
-        //}
-
         public Command NewCommand
         {
             get
@@ -76,12 +58,28 @@ namespace RegexViewer
             set { newCommand = value; }
         }
 
+        //    set
+        //    {
+        //        if (activeTab != value)
+        //        {
+        //            activeTab = value;
+        //            OnPropertyChanged("ActiveTab");
+        //            //OnTabChanged("ActiveTab");
+        //        }
+        //    }
+        //}
         public Command OpenCommand
         {
             get { return openCommand ?? new Command(OpenFile); }
             set { openCommand = value; }
         }
 
+        //public ITabViewModel<T> ActiveTab
+        //{
+        //    get
+        //    {
+        //        return activeTab;
+        //    }
         public bool OpenDialogVisible
         {
             get
@@ -137,9 +135,12 @@ namespace RegexViewer
             set
             {
                 tabItems = value;
-             //   OnPropertyChanged("TabItems");
+                // OnPropertyChanged("TabItems");
             }
         }
+
+        // public event PropertyChangedEventHandler PropertyChanged;
+        public IFileManager<T> ViewManager { get; set; }
 
         #endregion Public Properties
 
@@ -184,7 +185,7 @@ namespace RegexViewer
         {
             ITabViewModel<T> tabItem;
 
-            if(sender is TabItem)
+            if (sender is TabItem)
             {
                 tabItem = (ITabViewModel<T>)(sender as TabItem);
             }
@@ -192,12 +193,10 @@ namespace RegexViewer
             {
                 tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
             }
-            
+
             this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
         }
 
         #endregion Public Methods
-   
-
     }
 }

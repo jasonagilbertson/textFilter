@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Windows.Media;
 using System.Xml;
 
 namespace RegexViewer
@@ -20,19 +19,14 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public void NewFile()
-        {
-        }
-
         public override IFile<FilterFileItem> OpenFile(string LogName)
         {
             FilterFile filterFile = new FilterFile();
-            
+
             try
             {
                 if (FileManager.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
                 {
-                    
                     SetStatus("file already open:" + LogName);
                     return filterFile;
                 }
@@ -60,11 +54,10 @@ namespace RegexViewer
                         filterFile.ContentItems.Add(fileItem);
                     }
 
-                    
                     filterFile.FileName = Path.GetFileName(LogName);
                     filterFile.Tag = LogName;
                     filterFile.EnablePatternNotifications(true);
-                   // filterFile.RebuildRegex();
+                    // filterFile.RebuildRegex();
                     filterFile.PropertyChanged += filterFile_PropertyChanged;
                     FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);
@@ -102,9 +95,9 @@ namespace RegexViewer
             return filterFileItems;
         }
 
-        void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        public override List<FilterFileItem> ReadFile(string LogName)
         {
-            OnPropertyChanged(e.PropertyName);
+            throw new NotImplementedException();
         }
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
@@ -171,6 +164,11 @@ namespace RegexViewer
         #endregion Public Methods
 
         #region Private Methods
+
+        private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
+        }
 
         private bool ReadBoolNodeItem(XmlNode node, string nodeName, int item)
         {

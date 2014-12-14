@@ -1,34 +1,30 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegexViewer
 {
-    public class Base: INotifyPropertyChanged
+    public class Base : INotifyPropertyChanged
     {
-     //public static IMainViewModel MainModel;
         #region Public Events
 
         public static event EventHandler<string> NewStatus;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         #endregion Public Events
+
+        #region Public Methods
+
+        //public static IMainViewModel MainModel;
         public void OnNewStatus(string status)
         {
             EventHandler<string> newStatus = NewStatus;
-            if(newStatus != null)
+            if (newStatus != null)
             {
                 newStatus(this, status);
             }
         }
-        public void SetStatus(string status)
-        {
-            //MainModel.SetViewStatus(status);
-            OnNewStatus(status);
-        }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -38,6 +34,12 @@ namespace RegexViewer
             }
         }
 
+        public void SetStatus(string status)
+        {
+            //MainModel.SetViewStatus(status);
+            OnNewStatus(status);
+        }
 
+        #endregion Public Methods
     }
 }

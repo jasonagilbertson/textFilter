@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Linq;
-using System.Text.RegularExpressions;
-using System.Text;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace RegexViewer
 {
@@ -19,13 +19,15 @@ namespace RegexViewer
     {
         #region Private Fields
 
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
+
         //private FilterViewModel filterViewModel;
         //private RegexViewModel regexViewModel;
         private MainViewModel _mainViewModel;
-        private StringBuilder _color = new StringBuilder();
-        private List<string> _colorNames = new List<string>();
+
         #endregion Private Fields
-        
 
         #region Public Constructors
 
@@ -41,6 +43,29 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
+
+        #region Public Methods
+
+        public List<string> GetColorNames()
+        {
+            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+            List<string> list = new List<string>();
+            foreach (var prop in typeof(Colors).GetProperties(flags))
+            {
+                if (prop.PropertyType.FullName == "System.Windows.Media.Color")
+                {
+                    Debug.Print(prop.PropertyType.FullName);
+                    list.Add(prop.Name);
+                }
+            }
+            return list;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
         //private void backgroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
         //{
         //    if(sender is ComboBox)
@@ -68,20 +93,19 @@ namespace RegexViewer
                     case Key.Enter:
                     case Key.Tab:
                     case Key.Back:
-                    {
-                       // _color.Remove(_color.Length - 1, 1);
-                        _color.Clear();
-                        return;
-                        
-                    }
+                        {
+                            // _color.Remove(_color.Length - 1, 1);
+                            _color.Clear();
+                            return;
+                        }
                     default:
-                    {
-                        break;
-                    }
+                        {
+                            break;
+                        }
                 }
 
                 // dont add if not alpha character
-                if(!Regex.IsMatch(e.Key.ToString(),"[a-zA-Z]{1}",RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(e.Key.ToString(), "[a-zA-Z]{1}", RegexOptions.IgnoreCase))
                 {
                     return;
                 }
@@ -89,13 +113,13 @@ namespace RegexViewer
                 _color.Append(e.Key.ToString());
                 //((SolidColorBrush)new BrushConverter().ConvertFromString(lbi.BackgroundColor)),
                 ComboBox comboBox = (sender as ComboBox);
-                
-                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(),RegexOptions.IgnoreCase));
+
+                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
                 if (String.IsNullOrEmpty(color))
                 {
                     color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
                 }
-                if(!String.IsNullOrEmpty(color))
+                if (!String.IsNullOrEmpty(color))
                 {
                     comboBox.SelectedValue = color;
                 }
@@ -103,33 +127,15 @@ namespace RegexViewer
                 {
                     comboBox.SelectedIndex = 0;
                 }
-                
             }
-        }
-
-        public List<string> GetColorNames()
-        {
-            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-
-            List<string> list = new List<string>();
-            foreach (var prop in typeof(Colors).GetProperties(flags))
-            {
-                if(prop.PropertyType.FullName == "System.Windows.Media.Color")
-                {
-                    Debug.Print(prop.PropertyType.FullName);
-                    list.Add(prop.Name);
-                }
-            }
-            return list;
         }
 
         private void colorCombo_Selected(object sender, RoutedEventArgs e)
         {
             _color.Clear();
             //(sender as ComboBox).UpdateLayout();
-          //  (sender as mboBox).droppe
+            //  (sender as mboBox).droppe
             //(sender as ComboBox).SelectedIndex = 1;
-            
         }
 
         private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -139,9 +145,9 @@ namespace RegexViewer
 
         private void FilterCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
             Debug.Print("here");
         }
+
         private void LogCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
@@ -149,10 +155,9 @@ namespace RegexViewer
 
         private void LogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-
             Debug.Print("here");
         }
 
-
+        #endregion Private Methods
     }
 }

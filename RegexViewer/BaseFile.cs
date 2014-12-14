@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 
 namespace RegexViewer
@@ -7,8 +6,7 @@ namespace RegexViewer
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
         //
-     
-        
+
         #region Public Constructors
 
         public BaseFile()
@@ -22,9 +20,9 @@ namespace RegexViewer
 
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
-        public bool Modified { get; set; }
-
         public string FileName { get; set; }
+
+        public bool Modified { get; set; }
 
         public string Tag { get; set; }
 

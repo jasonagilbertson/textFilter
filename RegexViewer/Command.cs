@@ -14,17 +14,17 @@ namespace RegexViewer
     public delegate void CommandEventHandler(object sender, CommandEventArgs args);
 
     /// <summary>
-    /// CancelCommandEventArgs - just like above but allows the event to
-    /// be cancelled.
+    /// CancelCommandEventArgs - just like above but allows the event to be cancelled.
     /// </summary>
     public class CancelCommandEventArgs : CommandEventArgs
     {
         #region Public Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="CancelCommandEventArgs"/> command should be cancelled.
+        /// Gets or sets a value indicating whether this <see cref="CancelCommandEventArgs"/>
+        /// command should be cancelled.
         /// </summary>
-        /// <value><c>true</c> if cancel; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if cancel; otherwise, <c>false</c> .</value>
         public bool Cancel { get; set; }
 
         #endregion Public Properties
@@ -61,7 +61,7 @@ namespace RegexViewer
         /// <param name="canExecute">if set to <c>true</c> [can execute].</param>
         public Command(Action action, bool canExecute = true)
         {
-            //  Set the action.
+            // Set the action.
             this._action = action;
             this.canExecute = canExecute;
         }
@@ -73,7 +73,7 @@ namespace RegexViewer
         /// <param name="canExecute">if set to <c>true</c> [can execute].</param>
         public Command(Action<object> parameterizedAction, bool canExecute = true)
         {
-            //  Set the action.
+            // Set the action.
             this.parameterizedAction = parameterizedAction;
             this.canExecute = canExecute;
         }
@@ -104,9 +104,7 @@ namespace RegexViewer
         /// <summary>
         /// Gets or sets a value indicating whether this instance can execute.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance can execute; otherwise, <c>false</c>.
-        /// </value>
+        /// <value><c>true</c> if this instance can execute; otherwise, <c>false</c> .</value>
         public bool CanExecute
         {
             get { return canExecute; }
@@ -132,28 +130,29 @@ namespace RegexViewer
         /// <param name="param">The param.</param>
         public virtual void DoExecute(object param)
         {
-            //  Invoke the executing command, allowing the command to be cancelled.
+            // Invoke the executing command, allowing the command to be cancelled.
             CancelCommandEventArgs args = new CancelCommandEventArgs() { Parameter = param, Cancel = false };
             InvokeExecuting(args);
 
-            //  If the event has been cancelled, bail now.
+            // If the event has been cancelled, bail now.
             if (args.Cancel)
                 return;
 
-            //  Call the action or the parameterized action, whichever has been set.
+            // Call the action or the parameterized action, whichever has been set.
             InvokeAction(param);
 
-            //  Call the executed function.
+            // Call the executed function.
             InvokeExecuted(new CommandEventArgs() { Parameter = param });
         }
 
         /// <summary>
         /// Defines the method that determines whether the command can execute in its current state.
         /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-        /// <returns>
-        /// true if this command can be executed; otherwise, false.
-        /// </returns>
+        /// <param name="parameter">
+        /// Data used by the command. If the command does not require data to be passed, this object
+        /// can be set to null.
+        /// </param>
+        /// <returns>true if this command can be executed; otherwise, false.</returns>
         bool ICommand.CanExecute(object parameter)
         {
             return canExecute;
@@ -162,7 +161,10 @@ namespace RegexViewer
         /// <summary>
         /// Defines the method to be called when the command is invoked.
         /// </summary>
-        /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
+        /// <param name="parameter">
+        /// Data used by the command. If the command does not require data to be passed, this object
+        /// can be set to null.
+        /// </param>
         void ICommand.Execute(object parameter)
         {
             this.DoExecute(parameter);
@@ -186,7 +188,7 @@ namespace RegexViewer
         {
             CommandEventHandler executed = Executed;
 
-            //  Call the executed event.
+            // Call the executed event.
             if (executed != null)
                 executed(this, args);
         }
@@ -195,7 +197,7 @@ namespace RegexViewer
         {
             CancelCommandEventHandler executing = Executing;
 
-            //  Call the executed event.
+            // Call the executed event.
             if (executing != null)
                 executing(this, args);
         }

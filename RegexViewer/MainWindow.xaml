@@ -16,7 +16,7 @@
                 <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp"/>
+        <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp" />
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="CTRL+O" />
@@ -42,6 +42,7 @@
             <MenuItem Header="_Filter">
                 <MenuItem Header="_Open" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Close" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_New" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Save" />
             </MenuItem>
             <MenuItem Header="_Options">
@@ -87,10 +88,10 @@
                           Grid.Column="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"  
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Tag="{Binding}" >
+                          Tag="{Binding}">
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
@@ -100,17 +101,16 @@
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
-                            <!--<ListBox.CommandBindings>
-                                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
-                            </ListBox.CommandBindings>-->
                             <DataGrid.InputBindings>
-                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
+                                <KeyBinding Key="N" Modifiers="Control+Alt" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
 
                                 <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
-                                    <MenuItem Header="Select All Test" Command="{Binding SelectAllCommand}" />
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
+                                    <MenuItem Header="New" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+Alt+N" />
+                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
@@ -119,20 +119,20 @@
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
                                 <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
                                 <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
-                                <DataGridTemplateColumn Header="Background Color" >
-                                    <DataGridTemplateColumn.CellTemplate >
-                                        
+                                <DataGridTemplateColumn Header="Background Color">
+                                    <DataGridTemplateColumn.CellTemplate>
+
                                         <DataTemplate>
                                             <ComboBox Name="backgroundColorCombo"
-                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
-                                                  
-                                                  SelectedValuePath="Name"  
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
+
+                                                  SelectedValuePath="Name"
                                                   SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown" >
+                                                  KeyDown="colorCombo_KeyDown">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" >
+                                                        <StackPanel Orientation="Horizontal">
                                                             <TextBlock Width="20" Height="15" Margin="0,0,5,0" Background="{Binding Name}" />
                                                             <TextBlock Name="backgroundColorText" Text="{Binding Name}" />
                                                         </StackPanel>
@@ -147,14 +147,14 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox Name="foregroundColorCombo"
-                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}" 
-                                                  SelectedValuePath="Name"  
+                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
+                                                  SelectedValuePath="Name"
                                                   SelectedValue="{Binding ForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown" >
+                                                  KeyDown="colorCombo_KeyDown">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" >
+                                                        <StackPanel Orientation="Horizontal">
                                                             <TextBlock Width="20" Height="15" Margin="0,0,5,0" Background="{Binding Name}" />
                                                             <TextBlock  Text="{Binding Name}" />
                                                         </StackPanel>
@@ -164,9 +164,9 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" >
-                                    <DataGridTextColumn.CellStyle >
-                                        <Style TargetType="DataGridCell" >
+                                <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
                                             <Style.Setters>
                                                 <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
                                                 <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
@@ -174,12 +174,14 @@
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True"/>
+                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
                             </DataGrid.Columns>
                             <!--<DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
-                                    --><!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />--><!--
+                                    -->
+                            <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
+                            <!--
                                     <MenuItem Header="Copy" Command="{Binding FilterViewModel.CopyCommand}" />
                                     <MenuItem Header="Paste" Command="{Binding FilterViewModel.PasteCommand}" />
                                 </ContextMenu>
@@ -225,7 +227,7 @@
                                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
                             </ListBox.CommandBindings>-->
                             <!--<ListBox.ItemContainerStyle>
-                                
+
                                         <Style TargetType="ListBoxItem">
                                             <Style.Setters>
                                                 <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
@@ -241,7 +243,7 @@
                             <ListBox.ContextMenu>
 
                                 <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C"/>
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
@@ -258,7 +260,20 @@
                 </TabControl.ContextMenu>
             </TabControl>
             <Label Name="labelQuickFind" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
-            <TextBox Name="textboxQuickFind" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Margin="75,0,0,0" Height="25" />
+            <TextBox Name="textboxQuickFind" 
+                     Grid.Column="2" 
+                     HorizontalAlignment="Stretch" 
+                     VerticalAlignment="Bottom" 
+                     Margin="75,0,0,0" 
+                     Height="25" 
+                     
+                     Text="{Binding Path=QuickFindText}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TextChanged">
+                        <i:InvokeCommandAction Command="{Binding QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
             <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50" />
             <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                      Margin="50,0,0,0"
@@ -266,7 +281,7 @@
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      SelectedIndex="{Binding Path=StatusIndex}"
                      Height="25"
-                     
+
                      ItemsSource="{Binding Path=Status}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
@@ -274,13 +289,13 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <ListBox.InputBindings>
-                    <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                    <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"  CommandParameter="{Binding Path=Status}" />
                 </ListBox.InputBindings>
 
                 <ListBox.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-
-                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+C"/>
+                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />
+                        <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />-->
                         <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                     </ContextMenu>
                 </ListBox.ContextMenu>

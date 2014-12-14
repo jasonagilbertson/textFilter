@@ -4,8 +4,14 @@ using System.ComponentModel;
 
 namespace RegexViewer
 {
-    public interface IFileManager<T> 
+    public interface IFileManager<T>
     {
+        #region Public Events
+
+        event PropertyChangedEventHandler PropertyChanged;
+
+        #endregion Public Events
+
         #region Public Properties
 
         List<IFile<T>> FileManager { get; set; }
@@ -19,9 +25,11 @@ namespace RegexViewer
         IFile<T> OpenFile(string LogName);
 
         List<IFile<T>> OpenFiles(string[] files);
-        event PropertyChangedEventHandler PropertyChanged;
+
+        List<T> ReadFile(string LogName);
+
         bool SaveFile(string LogName, ObservableCollection<T> list);
-        
+
         #endregion Public Methods
     }
 }

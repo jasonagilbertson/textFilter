@@ -66,21 +66,6 @@ namespace RegexViewer
 
         #endregion Public Events
 
-
-        #region Public Methods
-
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        #endregion Public Methods
-
-
         #region Private Enums
 
         private enum AppSettingNames
@@ -105,6 +90,18 @@ namespace RegexViewer
         {
             get { return RegexViewerSettings.settings; }
             set { RegexViewerSettings.settings = value; }
+        }
+
+        public bool AutoSaveFilters
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings["AutoSaveFilters"].Value));
+            }
+            set
+            {
+                _appSettings["AutoSaveFilters"].Value = value.ToString();
+            }
         }
 
         public SolidColorBrush BackgroundColor
@@ -146,18 +143,6 @@ namespace RegexViewer
             set
             {
                 _appSettings["CurrentLogFiles"].Value = string.Join(",", value);
-            }
-        }
-
-        public bool AutoSaveFilters
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings["AutoSaveFilters"].Value));
-            }
-            set
-            {
-                _appSettings["AutoSaveFilters"].Value = value.ToString();
             }
         }
 
@@ -250,6 +235,15 @@ namespace RegexViewer
             }
         }
 
+        public void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
         //public void OnPropertyChanged(string name)
         //{
         //    PropertyChangedEventHandler handler = PropertyChanged;
@@ -310,7 +304,7 @@ namespace RegexViewer
                     _appSettings.Add(name, string.Empty);
                 }
 
-                // set default  settings
+                // set default settings
                 if (!string.IsNullOrEmpty(_appSettings[name].Value))
                 {
                     continue;

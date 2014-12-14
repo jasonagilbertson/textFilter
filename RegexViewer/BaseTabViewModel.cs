@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Controls;
 using System.Linq;
 
 namespace RegexViewer
@@ -15,18 +14,19 @@ namespace RegexViewer
         private string background;
 
         private ObservableCollection<T> contentList = new ObservableCollection<T>();
-//         private string activeTab;
+
+        // private string activeTab;
         private Command copyCommand;
-        private Command selectionChangedCommand;
+
         private string header;
+        private bool modified;
         private string name;
         private Command pasteCommand;
-        private string tag;
         private List<T> selectedContent = new List<T>();
+        private Command selectionChangedCommand;
+        private string tag;
 
         #endregion Private Fields
-
-        
 
         #region Public Constructors
 
@@ -36,10 +36,6 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
-        #region Public Events
-
-    
-        #endregion Public Methods
 
         #region Public Properties
 
@@ -60,42 +56,7 @@ namespace RegexViewer
             }
         }
 
-        private bool modified;
-        public bool Modified
-        {
-            get
-            {
-                return modified;
-            }
-
-            set
-            {
-                if (modified != value)
-                {
-                    modified = value;
-                    OnPropertyChanged("Modified");
-                }
-            }
-        }
-        //public string ActiveTab
-        //{
-        //    get
-        //    {
-        //        return activeTab;
-        //    }
-
-        //    set
-        //    {
-        //        if (activeTab != value)
-        //        {
-        //            activeTab = value;
-        //            OnPropertyChanged("ActiveTab");
-        //            //OnTabChanged("ActiveTab");
-        //        }
-        //    }
-        //}
-
-        //  public event PropertyChangedEventHandler PropertyChanged;
+        // public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<T> ContentList
         {
             get { return contentList; }
@@ -107,16 +68,6 @@ namespace RegexViewer
                     OnPropertyChanged("ContentList");
                     Modified = true;
                 }
-            }
-        }
-
-     //   public List<T> UnFilteredContentList { get; set; }
-        public List<T> SelectedContent
-        {
-            get { return selectedContent; }
-            set
-            {
-                selectedContent = value;
             }
         }
 
@@ -135,20 +86,6 @@ namespace RegexViewer
             set { copyCommand = value; }
         }
 
-        public Command SelectionChangedCommand
-        {
-            get
-            {
-                if (selectionChangedCommand == null)
-                {
-                    selectionChangedCommand = new Command(SelectionChangedExecuted);
-                }
-                selectionChangedCommand.CanExecute = true;
-
-                return selectionChangedCommand;
-            }
-            set { selectionChangedCommand = value; }
-        }
         public string Header
         {
             get
@@ -165,6 +102,30 @@ namespace RegexViewer
                 }
             }
         }
+
+        public bool Modified
+        {
+            get
+            {
+                return modified;
+            }
+
+            set
+            {
+                if (modified != value)
+                {
+                    modified = value;
+                    OnPropertyChanged("Modified");
+                }
+            }
+        }
+
+        //public string ActiveTab
+        //{
+        //    get
+        //    {
+        //        return activeTab;
+        //    }
 
         public string Name
         {
@@ -198,6 +159,41 @@ namespace RegexViewer
             set { pasteCommand = value; }
         }
 
+        //    set
+        //    {
+        //        if (activeTab != value)
+        //        {
+        //            activeTab = value;
+        //            OnPropertyChanged("ActiveTab");
+        //            //OnTabChanged("ActiveTab");
+        //        }
+        //    }
+        //}
+        //   public List<T> UnFilteredContentList { get; set; }
+        public List<T> SelectedContent
+        {
+            get { return selectedContent; }
+            set
+            {
+                selectedContent = value;
+            }
+        }
+
+        public Command SelectionChangedCommand
+        {
+            get
+            {
+                if (selectionChangedCommand == null)
+                {
+                    selectionChangedCommand = new Command(SelectionChangedExecuted);
+                }
+                selectionChangedCommand.CanExecute = true;
+
+                return selectionChangedCommand;
+            }
+            set { selectionChangedCommand = value; }
+        }
+
         public string Tag
         {
             get
@@ -224,8 +220,7 @@ namespace RegexViewer
         {
             try
             {
-                //   List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
-
+                // List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
 
                 HtmlFragment htmlFragment = new HtmlFragment();
                 foreach (IFileItem lbi in SelectedContent)
@@ -247,6 +242,9 @@ namespace RegexViewer
             }
         }
 
+        public void PasteText()
+        {
+        }
 
         public void SelectionChangedExecuted(object sender)
         {
@@ -255,10 +253,6 @@ namespace RegexViewer
             {
                 selectedContent = (sender as IList).Cast<T>().ToList();
             }
-        }
-
-        public void PasteText()
-        {
         }
 
         #endregion Public Methods

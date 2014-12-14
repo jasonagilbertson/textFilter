@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Windows.Controls;
+﻿using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
@@ -10,7 +8,6 @@ namespace RegexViewer
 
         public LogFile()
         {
-
             this.ContentItems = new ObservableCollection<LogFileItem>();
         }
 

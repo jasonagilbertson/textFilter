@@ -8,9 +8,9 @@ namespace RegexViewer
 
         ObservableCollection<T> ContentItems { get; set; }
 
-        bool Modified { get; set; }
-
         string FileName { get; set; }
+
+        bool Modified { get; set; }
 
         string Tag { get; set; }
 

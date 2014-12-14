@@ -1,27 +1,70 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
-using System.Windows.Threading;
 
 namespace RegexViewer
 {
-    public class MainViewModel:Base,IMainViewModel
+    public class MainViewModel : Base, IMainViewModel
     {
         #region Private Fields
-
+        private Command _quickFindChangedCommand;
         private Command _copyCommand;
         private FilterViewModel _filterViewModel;
         private LogViewModel _logViewModel;
+        private string _quickFindText = string.Empty;
         private RegexViewerSettings _settings = RegexViewerSettings.Settings;
-        private ObservableCollection<string> _status = new ObservableCollection<string>();
-        private WorkerManager _workerManager = WorkerManager.Instance;
+        private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
         private Int32 _statusIndex;
+        private WorkerManager _workerManager = WorkerManager.Instance;
+        private Command _selectionChangedCommand;
+
         #endregion Private Fields
 
-        private Command selectionChangedCommand;
+        #region Public Methods
+
+        public void SetViewStatus(string statusData)
+        {
+            // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
+            while (this.Status.Count > 1000)
+            {
+                this.Status.RemoveAt(0);
+            }
+
+            //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
+            ListBoxItem listBoxItem = new ListBoxItem();
+            listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
+            this.Status.Add(listBoxItem);
+            this.StatusIndex = Status.Count - 1;
+
+            Debug.Print(statusData);
+            OnPropertyChanged("Status");
+            // }));
+        }
+
+        #endregion Public Methods
+
+        #region Internal Methods
+
+        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _filterViewModel.SaveModifiedFiles(sender);
+            _settings.Save();
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private void HandleNewStatus(object sender, string status)
+        {
+            SetViewStatus(status);
+        }
+
+        #endregion Private Methods
+
         #region Public Constructors
 
         public MainViewModel()
@@ -33,14 +76,24 @@ namespace RegexViewer
             SetStatus("loaded");
         }
 
-     private void HandleNewStatus(object sender, string status)
-     {
-         SetViewStatus(status);
-     }
-
         #endregion Public Constructors
 
         #region Public Properties
+        public string QuickFindText
+        {
+            get
+            {
+                return _quickFindText;
+            }
+            set
+            {
+                if(_quickFindText != value)
+                {
+                    _quickFindText = value;
+                    //OnPropertyChanged("QuickFindText");
+                }
+            }
+        }
 
         public Command CopyCommand
         {
@@ -63,7 +116,7 @@ namespace RegexViewer
             set { _filterViewModel = value; }
         }
 
-        //   public event PropertyChangedEventHandler PropertyChanged;
+        // public event PropertyChangedEventHandler PropertyChanged;
         public LogViewModel LogViewModel
         {
             get { return _logViewModel; }
@@ -76,7 +129,7 @@ namespace RegexViewer
             set { _settings = value; }
         }
 
-        public ObservableCollection<string> Status
+        public ObservableCollection<ListBoxItem> Status
         {
             get
             {
@@ -84,7 +137,7 @@ namespace RegexViewer
             }
             set
             {
-                if(_status != value)
+                if (_status != value)
                 {
                     _status = value;
                     OnPropertyChanged("Status");
@@ -92,9 +145,53 @@ namespace RegexViewer
             }
         }
 
-        #endregion Public Properties
+        public Command StatusChangedCommand
+        {
+            get
+            {
+                if (_selectionChangedCommand == null)
+                {
+                    _selectionChangedCommand = new Command(SelectionChangedExecuted);
+                }
+                _selectionChangedCommand.CanExecute = true;
 
-        #region Public Methods
+                return _selectionChangedCommand;
+            }
+            set { _selectionChangedCommand = value; }
+        }
+
+        public Command QuickFindChangedCommand
+        {
+            get
+            {
+                if (_quickFindChangedCommand == null)
+                {
+                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
+                }
+                _quickFindChangedCommand.CanExecute = true;
+
+                return _quickFindChangedCommand;
+            }
+            set { _quickFindChangedCommand = value; }
+        }
+
+        public int StatusIndex
+        {
+            get
+            {
+                return _statusIndex;
+            }
+            set
+            {
+                if (_statusIndex != value)
+                {
+                    _statusIndex = value;
+                    OnPropertyChanged("StatusIndex");
+                }
+            }
+        }
+
+        #endregion Public Properties
 
         public void CopyExecuted(object contentList)
         {
@@ -105,9 +202,12 @@ namespace RegexViewer
                 if (contentList is List<ListBoxItem>)
                 {
                     c_contentList = (List<ListBoxItem>)contentList;
-
                 }
-                else if(contentList is ObservableCollection<ListBoxItem>)
+                //else if (contentList is ObservableCollection<string>)
+                //{
+                //    c_contentList = new List<ListBoxItem>((ObservableCollection<string>)contentList);
+                //}
+                else if (contentList is ObservableCollection<ListBoxItem>)
                 {
                     c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
                 }
@@ -134,78 +234,33 @@ namespace RegexViewer
             }
         }
 
-     
-        public void SetViewStatus(string statusData)
-        {
-        //    Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() =>
-        //    {
-                while (this.Status.Count > 1000)
-                {
-                    this.Status.RemoveAt(0);
-                }
-
-                this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
-                this.StatusIndex = Status.Count - 1;
-            
-            
-                Debug.Print(statusData);
-                OnPropertyChanged("Status");
-        //    }));
-        }
-
-        public int StatusIndex
-        {
-            get
-            {
-                return _statusIndex;
-            }
-            set
-            {
-                if(_statusIndex != value)
-                {
-                    _statusIndex = value;
-                    OnPropertyChanged("StatusIndex");
-                    
-                }
-            }
-        }
-        #endregion Public Methods
-
-        public Command StatusChangedCommand
-        {
-            get
-            {
-                if (selectionChangedCommand == null)
-                {
-                    selectionChangedCommand = new Command(SelectionChangedExecuted);
-                }
-                selectionChangedCommand.CanExecute = true;
-
-                return selectionChangedCommand;
-            }
-            set { selectionChangedCommand = value; }
-        }
-
         public void SelectionChangedExecuted(object sender)
         {
-            //SetStatus("SelectionChangeExecuted:enter");
             if (sender is ListBox)
             {
                 ListBox listBox = (sender as ListBox);
-                //listBox.Items.MoveCurrentToLast();
                 listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
             }
         }
 
-        #region Internal Methods
-
-        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        public void QuickFindChangedExecuted(object sender)
         {
-
-            _filterViewModel.SaveModifiedFiles(sender);
-            _settings.Save();
+            if (sender is string)
+            {
+                FilterFileItem fileItem = new FilterFileItem() { Filterpattern = (sender as string) };
+                try
+                {
+                    Regex test = new Regex(fileItem.Filterpattern);
+                    fileItem.Regex = true;
+                }
+                catch 
+                {
+                    SetStatus("quick find not a regex:" + fileItem.Filterpattern);
+                    fileItem.Regex = false;
+                }
+                
+                _logViewModel.FilterActiveTabItem(fileItem);
+            }
         }
-
-        #endregion Internal Methods
     }
 }

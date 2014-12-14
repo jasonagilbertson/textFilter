@@ -14,8 +14,8 @@
     using System.Windows.Media;
 
     /// <summary>
-    /// Helper class to decode HTML from the clipboard.
-    /// See http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
+    /// Helper class to decode HTML from the clipboard. See
+    /// http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
     /// </summary>
     internal class HtmlFragment
     {
@@ -43,8 +43,8 @@
         }
 
         /// <summary>
-        /// Create an HTML fragment decoder around raw HTML text from the clipboard.
-        /// This text should have the header.
+        /// Create an HTML fragment decoder around raw HTML text from the clipboard. This text
+        /// should have the header.
         /// </summary>
         /// <param name="rawClipboardText">raw html text, with header.</param>
         public HtmlFragment(string rawClipboardText)
@@ -57,8 +57,8 @@
         #region Public Properties
 
         /// <summary>
-        /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is enclosed in.
-        /// May be null if context is not specified.
+        /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is
+        /// enclosed in. May be null if context is not specified.
         /// </summary>
         public string Context
         {
@@ -74,7 +74,8 @@
         }
 
         /// <summary>
-        /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful for resolving relative urls.
+        /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful
+        /// for resolving relative urls.
         /// </summary>
         public System.Uri SourceUrl
         {
@@ -97,9 +98,7 @@
         /// Clears clipboard and copy a HTML fragment to the clipboard. This generates the header.
         /// </summary>
         /// <param name="htmlFragment">A html fragment.</param>
-        /// <example>
-        ///    HtmlFragment.CopyToClipboard("<b>Hello!</b>");
-        /// </example>
+        /// <example>HtmlFragment.CopyToClipboard(" <b>Hello!</b> ");</example>
         public static void CopyToClipboard(string htmlFragment, string textFragment)
         {
             CopyToClipboard(htmlFragment, textFragment, null, null);
@@ -110,7 +109,9 @@
         /// </summary>
         /// <param name="htmlFragment">a html fragment</param>
         /// <param name="title">optional title of the HTML document (can be null)</param>
-        /// <param name="sourceUrl">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
+        /// <param name="sourceUrl">
+        /// optional Source URL of the HTML document, for resolving relative links (can be null)
+        /// </param>
         public static void CopyToClipboard(string htmlFragment, string textFragment, string title, Uri sourceUrl)
         {
             if (title == null) title = "From Clipboard";
@@ -118,12 +119,13 @@
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
             // Builds the CF_HTML header. See format specification here:
-            // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
+            // http: //msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
 
-            // The string contains index references to other spots in the string, so we need placeholders so we can compute the offsets.
-            // The <<<<<<<_ strings are just placeholders. We'll backpatch them actual values afterwards.
-            // The string layout (<<<) also ensures that it can't appear in the body of the html because the <
-            // character must be escaped.
+            // The string contains index references to other spots in the string, so we need
+            // placeholders so we can compute the offsets. The <<<<<<<_ strings are just
+            // placeholders. We'll backpatch them actual values afterwards. The string layout (<<<)
+            // also ensures that it can't appear in the body of the html because the < character
+            // must be escaped.
             string header = @"Format:HTML Format
                                 Version:1.0
                                 StartHTML:<<<<<<<1
@@ -177,10 +179,8 @@
         /// Get a HTML fragment from the clipboard.
         /// </summary>
         /// <example>
-        ///    string html = "<b>Hello!</b>";
-        ///    HtmlFragment.CopyToClipboard(html);
-        ///    HtmlFragment html2 = HtmlFragment.FromClipboard();
-        ///    Debug.Assert(html2.Fragment == html);
+        /// string html = " <b>Hello!</b> "; HtmlFragment.CopyToClipboard(html); HtmlFragment html2
+        /// = HtmlFragment.FromClipboard(); Debug.Assert(html2.Fragment == html);
         /// </example>
         static public HtmlFragment FromClipboard()
         {
@@ -216,8 +216,8 @@
 
         #region Private Methods
 
-        // Helper to convert an integer into an 8 digit string.
-        // String must be 8 characters, because it will be used to replace an 8 character string within a larger string.
+        // Helper to convert an integer into an 8 digit string. String must be 8 characters, because
+        // it will be used to replace an 8 character string within a larger string.
         private static string To8DigitString(int x)
         {
             return String.Format("{0,8}", x);
@@ -226,14 +226,14 @@
         private void ProcessFragment(string rawClipboardText)
         {
             rawClipboardText = HttpUtility.HtmlEncode(rawClipboardText);
-            // This decodes CF_HTML, which is an entirely text format using UTF-8.
-            // Format of this header is described at:
-            // http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
+            // This decodes CF_HTML, which is an entirely text format using UTF-8. Format of this
+            // header is described at:
+            // http: //msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp
 
-            // Note the counters are byte counts in the original string, which may be Ansi. So byte counts
-            // may be the same as character counts (since sizeof(char) == 1).
-            // But System.String is unicode, and so byte couns are no longer the same as character counts,
-            // (since sizeof(wchar) == 2).
+            // Note the counters are byte counts in the original string, which may be Ansi. So byte
+            // counts may be the same as character counts (since sizeof(char) == 1). But
+            // System.String is unicode, and so byte couns are no longer the same as character
+            // counts, (since sizeof(wchar) == 2).
             int startHMTL = 0;
             int endHTML = 0;
 
@@ -258,13 +258,15 @@
                         m_version = val;
                         break;
 
-                    // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
+                    // Byte count from the beginning of the clipboard to the start of the context,
+                    // or -1 if no context
                     case "starthtml":
                         if (startHMTL != 0) throw new FormatException("StartHtml is already declared");
                         startHMTL = int.Parse(val);
                         break;
 
-                    // Byte count from the beginning of the clipboard to the end of the context, or -1 if no context.
+                    // Byte count from the beginning of the clipboard to the end of the context, or
+                    // -1 if no context.
                     case "endhtml":
                         if (startHMTL == 0) throw new FormatException("StartHTML must be declared before endHTML");
                         endHTML = int.Parse(val);
@@ -272,7 +274,7 @@
                         m_fullText = rawClipboardText.Substring(startHMTL, endHTML - startHMTL);
                         break;
 
-                    //  Byte count from the beginning of the clipboard to the start of the fragment.
+                    // Byte count from the beginning of the clipboard to the start of the fragment.
                     case "startfragment":
                         if (startFragment != 0) throw new FormatException("StartFragment is already declared");
                         startFragment = int.Parse(val);
