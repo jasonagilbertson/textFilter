@@ -87,6 +87,7 @@
     <Compile Include="BaseFile.cs" />
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="FileItem.cs" />
     <Compile Include="FilterFileItem.cs" />
     <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterTabViewModel.cs" />
@@ -159,6 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="issues.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="TestFilter.xml" />
+    <Resource Include="TestFilter2.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -218,11 +218,21 @@
                                  AllowDrop="True"
                                  SelectionMode="Extended"
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
-                            <i:Interaction.Triggers>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Path=Content}" 
+                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" 
+                                               Foreground="{Binding Path=Foreground}"
+                                               Background="{Binding Path=Background}"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        
+                        <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
+                         
                             <!--<ListBox.CommandBindings>
                                 <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
                             </ListBox.CommandBindings>-->

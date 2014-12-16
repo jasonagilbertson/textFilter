@@ -19,7 +19,7 @@ namespace RegexViewer
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
         private Int32 _statusIndex;
         private WorkerManager _workerManager = WorkerManager.Instance;
-        private Command _selectionChangedCommand;
+        private Command _statusChangedCommand;
 
         #endregion Private Fields
 
@@ -149,15 +149,15 @@ namespace RegexViewer
         {
             get
             {
-                if (_selectionChangedCommand == null)
+                if (_statusChangedCommand == null)
                 {
-                    _selectionChangedCommand = new Command(SelectionChangedExecuted);
+                    _statusChangedCommand = new Command(StatusChangedExecuted);
                 }
-                _selectionChangedCommand.CanExecute = true;
+                _statusChangedCommand.CanExecute = true;
 
-                return _selectionChangedCommand;
+                return _statusChangedCommand;
             }
-            set { _selectionChangedCommand = value; }
+            set { _statusChangedCommand = value; }
         }
 
         public Command QuickFindChangedCommand
@@ -234,13 +234,17 @@ namespace RegexViewer
             }
         }
 
-        public void SelectionChangedExecuted(object sender)
+        public void StatusChangedExecuted(object sender)
         {
-            if (sender is ListBox)
+            try
             {
-                ListBox listBox = (sender as ListBox);
-                listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
+                if (sender is ListBox)
+                {
+                    ListBox listBox = (sender as ListBox);
+                    listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
+                }
             }
+            catch { }
         }
 
         public void QuickFindChangedExecuted(object sender)
@@ -259,7 +263,7 @@ namespace RegexViewer
                     fileItem.Regex = false;
                 }
                 
-                _logViewModel.FilterActiveTabItem(fileItem);
+                _logViewModel.FilterTabItem(fileItem);
             }
         }
     }

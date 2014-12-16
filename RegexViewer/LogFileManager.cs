@@ -36,10 +36,10 @@ namespace RegexViewer
 
             try
             {
-                //foreach (LogFileItem logItem in logFileItems)
-                foreach (LogFileItem logItem in ReadFile(logFile.Tag))
+                foreach (LogFileItem logItem in logFile.ContentItems)
+              //  foreach (LogFileItem logItem in ReadFile(logFile.Tag))
                 {
-                    if (string.IsNullOrEmpty(logItem.Text))
+                    if (string.IsNullOrEmpty(logItem.Content))
                     {
                         continue;
                     }
@@ -55,7 +55,7 @@ namespace RegexViewer
                             pattern = Regex.Escape(pattern);
                         }
 
-                        if (!Regex.IsMatch(logItem.Text, pattern, RegexOptions.IgnoreCase))
+                        if (!Regex.IsMatch(logItem.Content, pattern, RegexOptions.IgnoreCase))
                         {
                             continue;
                         }
@@ -65,16 +65,20 @@ namespace RegexViewer
                             break;
                         }
 
-                        LogFileItem item = new LogFileItem()
-                        {
-                            Text = logItem.Text,
-                            Foreground = fileItem.Foreground,
-                            Background = fileItem.Background,
-                            FontSize = RegexViewerSettings.Settings.FontSize
-                        };
+                        //LogFileItem item = new LogFileItem()
+                        //{
+                        //    Text = logItem.Text,
+                        //    Foreground = fileItem.Foreground,
+                        //    Background = fileItem.Background,
+                        //    FontSize = RegexViewerSettings.Settings.FontSize
+                        //};
+                        logItem.Foreground = fileItem.Foreground;
+                        logItem.Background = fileItem.Background;
+                        logItem.FontSize = RegexViewerSettings.Settings.FontSize;
 
                         countTotals[c] += 1;
-                        filteredItems.Add(item);
+                        //filteredItems.Add(item);
+                        filteredItems.Add(logItem);
                         break;
                     }
                 }
@@ -161,8 +165,8 @@ namespace RegexViewer
             {
                 logFile.FileName = Path.GetFileName(LogName);
                 logFile.Tag = LogName;
-                // logFile.ContentItems = ReadFile(LogName);
-
+               // logFile.ContentItems = (ObservableCollection<LogFileItem>)(IFile<LogFileItem>)ReadFile(LogName);
+                logFile.ContentItems = new ObservableCollection<LogFileItem>(ReadFile(LogName));
                 FileManager.Add(logFile);
                 this.Settings.AddLogFile(LogName);
             }
@@ -207,14 +211,14 @@ namespace RegexViewer
                 {
                     LogFileItem logFileItem = new LogFileItem();
                     //logFileItem.Content = line;
-                    logFileItem.Text = line;
+                    logFileItem.Content = line;
                     logFileItem.Background = Settings.BackgroundColor;
                     logFileItem.Foreground = Settings.ForegroundColor;
                     logFileItem.FontSize = Settings.FontSize;
                     logFileItem.FontFamily = new System.Windows.Media.FontFamily("Courier");
                     //logFileItem.Index = count++;
                     logFileItems.Add(logFileItem);
-                    //logFile.ContentItems.Add(logFileItem);
+                   // logFile.ContentItems.Add(logFileItem);
                 }
             }
 
