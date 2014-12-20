@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
@@ -73,6 +74,27 @@ namespace RegexViewer
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
             _logViewModel = new LogViewModel(_filterViewModel);
+
+            // to embed external libraries
+            // http://blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+            {
+
+                String resourceName = "RegexViewer." + new AssemblyName(args.Name).Name + ".dll";
+
+                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                {
+
+                    Byte[] assemblyData = new Byte[stream.Length];
+
+                    stream.Read(assemblyData, 0, assemblyData.Length);
+
+                    return Assembly.Load(assemblyData);
+
+                }
+
+            };
+
             SetStatus("loaded");
         }
 
@@ -256,13 +278,15 @@ namespace RegexViewer
                 {
                     Regex test = new Regex(fileItem.Filterpattern);
                     fileItem.Regex = true;
+
                 }
                 catch 
                 {
                     SetStatus("quick find not a regex:" + fileItem.Filterpattern);
                     fileItem.Regex = false;
                 }
-                
+
+                fileItem.Enabled = true;                
                 _logViewModel.FilterTabItem(fileItem);
             }
         }

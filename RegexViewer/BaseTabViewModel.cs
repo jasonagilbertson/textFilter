@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
@@ -11,20 +12,21 @@ namespace RegexViewer
     {
         #region Private Fields
 
-        private string background;
+        private string _background;
 
-        private ObservableCollection<T> contentList = new ObservableCollection<T>();
+        private ObservableCollection<T> _contentList = new ObservableCollection<T>();
 
         // private string activeTab;
-        private Command copyCommand;
+        private Command _copyCommand;
 
-        private string header;
-        private bool modified;
-        private string name;
-        private Command pasteCommand;
-        private List<T> selectedContent = new List<T>();
-        private Command selectionChangedCommand;
-        private string tag;
+        private string _header;
+        private bool _modified;
+        private string _name;
+        private Command _pasteCommand;
+        private List<T> _selectedContent = new List<T>();
+        private Command _selectionChangedCommand;
+        private Command _newItemCommand;
+        private string _tag;
 
         #endregion Private Fields
 
@@ -43,14 +45,14 @@ namespace RegexViewer
         {
             get
             {
-                return background;
+                return _background;
             }
 
             set
             {
-                if (background != value)
+                if (_background != value)
                 {
-                    background = value;
+                    _background = value;
                     OnPropertyChanged("Background");
                 }
             }
@@ -59,12 +61,12 @@ namespace RegexViewer
         // public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<T> ContentList
         {
-            get { return contentList; }
+            get { return _contentList; }
             set
             {
-                if (contentList != value)
+                if (_contentList != value)
                 {
-                    contentList = value;
+                    _contentList = value;
                     OnPropertyChanged("ContentList");
                     Modified = true;
                 }
@@ -75,29 +77,29 @@ namespace RegexViewer
         {
             get
             {
-                if (copyCommand == null)
+                if (_copyCommand == null)
                 {
-                    copyCommand = new Command(CopyExecuted);
+                    _copyCommand = new Command(CopyExecuted);
                 }
-                copyCommand.CanExecute = true;
+                _copyCommand.CanExecute = true;
 
-                return copyCommand;
+                return _copyCommand;
             }
-            set { copyCommand = value; }
+            set { _copyCommand = value; }
         }
 
         public string Header
         {
             get
             {
-                return header;
+                return _header;
             }
 
             set
             {
-                if (header != value)
+                if (_header != value)
                 {
-                    header = value;
+                    _header = value;
                     OnPropertyChanged("Header");
                 }
             }
@@ -107,14 +109,14 @@ namespace RegexViewer
         {
             get
             {
-                return modified;
+                return _modified;
             }
 
             set
             {
-                if (modified != value)
+                if (_modified != value)
                 {
-                    modified = value;
+                    _modified = value;
                     OnPropertyChanged("Modified");
                 }
             }
@@ -131,14 +133,14 @@ namespace RegexViewer
         {
             get
             {
-                return name;
+                return _name;
             }
 
             set
             {
-                if (name != value)
+                if (_name != value)
                 {
-                    name = value;
+                    _name = value;
                     OnPropertyChanged("Name");
                 }
             }
@@ -148,15 +150,15 @@ namespace RegexViewer
         {
             get
             {
-                if (pasteCommand == null)
+                if (_pasteCommand == null)
                 {
-                    pasteCommand = new Command(PasteText);
+                    _pasteCommand = new Command(PasteText);
                 }
-                pasteCommand.CanExecute = true;
+                _pasteCommand.CanExecute = true;
 
-                return pasteCommand;
+                return _pasteCommand;
             }
-            set { pasteCommand = value; }
+            set { _pasteCommand = value; }
         }
 
         //    set
@@ -172,10 +174,10 @@ namespace RegexViewer
         //   public List<T> UnFilteredContentList { get; set; }
         public List<T> SelectedContent
         {
-            get { return selectedContent; }
+            get { return _selectedContent; }
             set
             {
-                selectedContent = value;
+                _selectedContent = value;
             }
         }
 
@@ -183,29 +185,43 @@ namespace RegexViewer
         {
             get
             {
-                if (selectionChangedCommand == null)
+                if (_selectionChangedCommand == null)
                 {
-                    selectionChangedCommand = new Command(SelectionChangedExecuted);
+                    _selectionChangedCommand = new Command(SelectionChangedExecuted);
                 }
-                selectionChangedCommand.CanExecute = true;
+                _selectionChangedCommand.CanExecute = true;
 
-                return selectionChangedCommand;
+                return _selectionChangedCommand;
             }
-            set { selectionChangedCommand = value; }
+            set { _selectionChangedCommand = value; }
         }
 
+        public Command NewItemCommand
+        {
+            get
+            {
+                if (_newItemCommand == null)
+                {
+                    _newItemCommand = new Command(NewItemExecuted);
+                }
+                _newItemCommand.CanExecute = true;
+
+                return _newItemCommand;
+            }
+            set { _newItemCommand = value; }
+        }
         public string Tag
         {
             get
             {
-                return tag;
+                return _tag;
             }
 
             set
             {
-                if (tag != value)
+                if (_tag != value)
                 {
-                    tag = value;
+                    _tag = value;
                     OnPropertyChanged("Tag");
                 }
             }
@@ -246,12 +262,21 @@ namespace RegexViewer
         {
         }
 
+        public void NewItemExecuted(object sender)
+        {
+            SetStatus("NewItemExecuted:enter");
+            if (sender is DataGrid)
+            {
+               // _selectedContent = (sender as IList).Cast<T>().ToList();
+            }
+        }
+
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
-                selectedContent = (sender as IList).Cast<T>().ToList();
+                _selectedContent = (sender as IList).Cast<T>().ToList();
             }
         }
 

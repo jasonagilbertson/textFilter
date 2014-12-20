@@ -1,4 +1,6 @@
-﻿- ctrl-alt-new for filter only works with hotkey and not context or menu option
+﻿- empty filter blocks all log output
+
+- ctrl-alt-new for filter only works with hotkey and not context or menu option
 
 - closing tab without selecting tab first closes wrong one because of selectedindex not being updated
 

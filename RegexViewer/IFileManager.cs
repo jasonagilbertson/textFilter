@@ -23,12 +23,12 @@ namespace RegexViewer
         bool CloseFile(string LogName);
 
         IFile<T> OpenFile(string LogName);
-
+        IFile<T> NewFile(string LogName);
         List<IFile<T>> OpenFiles(string[] files);
 
         List<T> ReadFile(string LogName);
 
-        bool SaveFile(string LogName, ObservableCollection<T> list);
+        bool SaveFile(string FileName, ObservableCollection<T> list);
 
         #endregion Public Methods
     }

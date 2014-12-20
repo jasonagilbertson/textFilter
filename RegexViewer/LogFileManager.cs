@@ -224,7 +224,10 @@ namespace RegexViewer
 
             return logFileItems;
         }
-
+        public override IFile<LogFileItem> NewFile(string LogName)
+        {
+            throw new NotImplementedException();
+        }
         public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
         {
             throw new NotImplementedException();

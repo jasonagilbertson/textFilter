@@ -50,7 +50,7 @@ namespace RegexViewer
             {
                 SetStatus("adding tab:" + logFile.Tag);
                 LogTabViewModel tabItem = new LogTabViewModel();
-                tabItem.Name = this.TabItems.Count.ToString();
+                tabItem.Name = logFile.FileName;
                 tabItem.Tag = logFile.Tag;
                 tabItem.Header = logFile.FileName;
                 TabItems.Add(tabItem);
@@ -60,6 +60,12 @@ namespace RegexViewer
         public override void NewFile(object sender)
         {
             SetStatus("new file not implemented");
+            throw new NotImplementedException();
+        }
+
+        public override void SaveFile(object sender)
+        {
+            SetStatus("save file not implemented");
             throw new NotImplementedException();
         }
 
@@ -142,6 +148,8 @@ namespace RegexViewer
 
         public void FilterTabItem(FilterFileItem filter = null, LogFile logFile = null)
         {
+            try
+            {
             // Debug.Assert(TabItems != null & SelectedIndex != -1);
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
 
@@ -162,6 +170,17 @@ namespace RegexViewer
                     filterFileItems.Add(filter);
                 }
 
+                if(logFile == null)
+                {
+                    logFile = (LogFile)_logFileManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                }
+
+                if(filterFileItems.Count == 0 | filterFileItems.Count(x => x.Enabled) == 0)
+                {
+                    this.TabItems[SelectedIndex].ContentList = logFile.ContentItems;
+                    return;
+                }
+
                 if (_previousIndex == SelectedIndex & _logFileManager.CompareFilterList(filterFileItems))
                 //if (_logFileManager.CompareFilterList(filterFileItems))
                 {
@@ -178,6 +197,16 @@ namespace RegexViewer
                 }
 
                 this.TabItems[SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems);
+            }
+            else
+            {
+                this.TabItems[SelectedIndex].ContentList = logFile.ContentItems;
+            }
+        }
+            catch (Exception e)
+            {
+                SetStatus("Exception:FilterTabItem:" + e.ToString());
+
             }
         }
 

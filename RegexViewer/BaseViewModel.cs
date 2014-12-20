@@ -181,21 +181,7 @@ namespace RegexViewer
             }
         }
 
-        public void SaveFile(object sender)
-        {
-            ITabViewModel<T> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<T>)(sender as TabItem);
-            }
-            else
-            {
-                tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
-            }
-
-            this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
-        }
+        public abstract void SaveFile(object sender);
 
         #endregion Public Methods
     }

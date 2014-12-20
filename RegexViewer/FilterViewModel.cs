@@ -2,13 +2,16 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
         #region Public Constructors
-
+        private string _tempFilterNameFormat = "*new {0}*";
+        private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
         public FilterViewModel()
         {
             this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
@@ -33,23 +36,38 @@ namespace RegexViewer
             {
                 SetStatus("adding tab:" + logProperties.Tag);
                 FilterTabViewModel tabItem = new FilterTabViewModel();
-                // tabItem.MouseRightButtonDown += tabItem_MouseRightButtonDown;
-                tabItem.Name = this.TabItems.Count.ToString();
+                tabItem.Name = logProperties.FileName;
                 tabItem.ContentList = ((FilterFile)logProperties).ContentItems;
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
                 tabItem.Modified = false;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
+                this.SelectedIndex = this.TabItems.Count - 1;
             }
         }
 
         public override void NewFile(object sender)
         {
-            FilterFile logProperties = new FilterFile();
+            FilterFile filterFile = new FilterFile();
+            // add temp name
+            for(int i = 0;i< 100; i++)
+            {
+                string tempTag = string.Format(_tempFilterNameFormat, i);
+                if(this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
+                {
+                    continue;
+                }
+                else
+                {
 
+                    filterFile = (FilterFile)this.ViewManager.NewFile(tempTag);
+                    break;
+                }
+            }
+            
             // make new tab
-            AddTabItem(logProperties);
+            AddTabItem(filterFile);
         }
 
         /// <summary>
@@ -105,6 +123,30 @@ namespace RegexViewer
             }
         }
 
+        public override void SaveFile(object sender)
+        {
+            ITabViewModel<FilterFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag,_tempFilterNameFormatPattern))
+            {
+                
+                SaveAsFile(tabItem);
+            }
+            else
+            {
+                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+            }
+        }
+
         public void SaveAsFile(object sender)
         {
             // this.OpenDialogVisible = true;
@@ -134,15 +176,24 @@ namespace RegexViewer
             }
 
             // Process save file dialog box results
-            if (result == true && File.Exists(logName))
+            if (result == true)// && File.Exists(logName))
             {
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
-                SaveFile(sender);
+                if (sender is ITabViewModel<FilterFileItem>)
+                {
+                    ITabViewModel<FilterFileItem> item = (sender as ITabViewModel<FilterFileItem>);
+                    item.Tag = logName;
+                    item.Header = item.Name = Path.GetFileName(logName);
+                    Settings.AddFilterFile(logName);
+                    SaveFile(sender);
+                }
+                else
+                {
+                    SaveFile(sender);
+                }
             }
-            else
-            {
-            }
+            
         }
 
         public void SaveModifiedFiles(object sender)

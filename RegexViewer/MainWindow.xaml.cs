@@ -33,6 +33,7 @@ namespace RegexViewer
 
         public MainWindow()
         {
+          
             InitializeComponent();
             // Initialize the View Model Objects
             this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");

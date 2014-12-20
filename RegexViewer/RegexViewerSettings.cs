@@ -264,6 +264,16 @@ namespace RegexViewer
             }
         }
 
+        public void RemoveFilterFile(string filterFile)
+        {
+            List<string> logFiles = new List<string>(CurrentFilterFiles);
+            if (logFiles.Contains(filterFile))
+            {
+                Debug.Print("Removing FilterFile:" + filterFile);
+                logFiles.Remove(filterFile);
+                CurrentFilterFiles = logFiles;
+            }
+        }
         public void Save()
         {
             _Config.Save(ConfigurationSaveMode.Full);

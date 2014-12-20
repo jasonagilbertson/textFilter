@@ -52,46 +52,44 @@
                 <MenuItem Header="_Help" />
             </MenuItem>
         </Menu>
-        <Canvas
-                Name="canvasOpenDialog"
-                Width="200"
-                Height="200"
-                Visibility="{Binding Path=LogViewModel.OpenDialogVisible, Converter={StaticResource boolToVis}, FallbackValue=Collapsed}">
-            <TextBox Text="this is a test" />
-        </Canvas>
-        <!--<Canvas Name="canvasOpenDialog" Width="200" Height="200" Visibility="Collapsed" />-->
-        <Grid>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-
-            <TabControl x:Name="tabFilters" Grid.Column="0" HorizontalAlignment="Stretch"
+        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="25" />
+            </Grid.RowDefinitions>
+            <TabControl x:Name="tabFilters" Grid.Row="0" HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
-                        Margin="0,0,0,25" VerticalAlignment="Stretch">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <TabControl.ItemTemplate>
-                    <!-- this is the header template-->
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
+
                 <TabControl.ContentTemplate>
-                    <!-- this is the body of the TabItem template-->
-                    <!--http://stackoverflow.com/questions/19841649/binding-wpf-datagrid-cell-background-colour-with-trigger-->
                     <DataTemplate>
                         <DataGrid Name="dataGridFilter"
                           ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
-                          Grid.Column="0"
+                          Grid.Row="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}">
+
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="InitializingNewItem">
+                                    <i:InvokeCommandAction Command="{Binding NewItemCommand}"  CommandParameter="{Binding ElementName=dataGridFilter, Path=Items}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
@@ -101,12 +99,13 @@
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
+
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
                                 <KeyBinding Key="N" Modifiers="Control+Alt" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
-                            <DataGrid.ContextMenu>
 
+                            <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="New" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+Alt+N" />
@@ -114,18 +113,29 @@
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
+
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
                                 <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
                                 <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
-                                <DataGridTemplateColumn Header="Background Color">
+                                <DataGridTextColumn Width="300" Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Setters>
+                                                <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
+                                                <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
+                                            </Style.Setters>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
+                                <DataGridTemplateColumn Header="BackgroundColor">
                                     <DataGridTemplateColumn.CellTemplate>
 
                                         <DataTemplate>
                                             <ComboBox Name="backgroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
-
                                                   SelectedValuePath="Name"
                                                   SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   GotFocus="colorCombo_Selected"
@@ -143,7 +153,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="Foreground Color">
+                                <DataGridTemplateColumn Header="ForegroundColor">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox Name="foregroundColorCombo"
@@ -164,28 +174,8 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
-                                    <DataGridTextColumn.CellStyle>
-                                        <Style TargetType="DataGridCell">
-                                            <Style.Setters>
-                                                <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
-                                                <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
-                                            </Style.Setters>
-                                        </Style>
-                                    </DataGridTextColumn.CellStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
                             </DataGrid.Columns>
-                            <!--<DataGrid.ContextMenu>
-                                <ContextMenu HasDropShadow="True">
-                                    -->
-                            <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding ElementName=logFileData,Path=SelectedItems, Mode=TwoWay}" />-->
-                            <!--
-                                    <MenuItem Header="Copy" Command="{Binding FilterViewModel.CopyCommand}" />
-                                    <MenuItem Header="Paste" Command="{Binding FilterViewModel.PasteCommand}" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>-->
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
@@ -198,10 +188,10 @@
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Width="5">
-            </GridSplitter>
-            <TabControl x:Name="tabLogs" Grid.Column="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,25" VerticalAlignment="Stretch"
+            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
+
+            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
+                        Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
@@ -218,6 +208,7 @@
                                  AllowDrop="True"
                                  SelectionMode="Extended"
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Path=Content}" 
@@ -226,32 +217,18 @@
                                                Background="{Binding Path=Background}"/>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
-                        
-                        <i:Interaction.Triggers>
+
+                            <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
-                         
-                            <!--<ListBox.CommandBindings>
-                                <CommandBinding Command="ApplicationCommands.Copy" CanExecute="LogCommandBinding_CanExecute" Executed="LogCommandBinding_Executed" />
-                            </ListBox.CommandBindings>-->
-                            <!--<ListBox.ItemContainerStyle>
-
-                                        <Style TargetType="ListBoxItem">
-                                            <Style.Setters>
-                                                <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                                <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                                <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-                                            </Style.Setters>
-                                        </Style>
-                            </ListBox.ItemContainerStyle>-->
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
                             </ListBox.InputBindings>
-                            <ListBox.ContextMenu>
 
+                            <ListBox.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
@@ -261,6 +238,7 @@
                         </ListBox>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
+
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
@@ -268,30 +246,23 @@
                         <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
                     </ContextMenu>
                 </TabControl.ContextMenu>
+
             </TabControl>
-            <Label Name="labelQuickFind" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
-            <TextBox Name="textboxQuickFind" 
-                     Grid.Column="2" 
-                     HorizontalAlignment="Stretch" 
-                     VerticalAlignment="Bottom" 
-                     Margin="75,0,0,0" 
-                     Height="25" 
-                     
-                     Text="{Binding Path=QuickFindText}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="TextChanged">
-                        <i:InvokeCommandAction Command="{Binding QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </TextBox>
-            <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50" />
+        
+        <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50"  Height="25"/>
             <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      SelectedIndex="{Binding Path=StatusIndex}"
                      Height="25"
-
+                     
                      ItemsSource="{Binding Path=Status}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
@@ -310,6 +281,23 @@
                     </ContextMenu>
                 </ListBox.ContextMenu>
             </ListBox>
+            <GridSplitter Grid.Column="1" Height="25" Width="5" HorizontalAlignment="Center"/>
+            <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
+            <TextBox Name="textboxQuickFind" 
+                    Height="25"
+                     Grid.Column="2"
+                     HorizontalAlignment="Stretch" 
+                     VerticalAlignment="Bottom" 
+                     Margin="75,0,0,0" 
+                     Text="{Binding Path=QuickFindText}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="TextChanged">
+                        <i:InvokeCommandAction Command="{Binding QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </TextBox>
+
+        </Grid>
         </Grid>
     </DockPanel>
 </Window>

@@ -49,6 +49,7 @@ namespace RegexViewer
             }
         }
 
+        public abstract IFile<T> NewFile(string LogName);
         public abstract IFile<T> OpenFile(string LogName);
 
         public abstract List<IFile<T>> OpenFiles(string[] files);

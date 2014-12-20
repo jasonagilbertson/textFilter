@@ -54,18 +54,14 @@ namespace RegexViewer
                         filterFile.ContentItems.Add(fileItem);
                     }
 
-                    filterFile.FileName = Path.GetFileName(LogName);
-                    filterFile.Tag = LogName;
-                    filterFile.EnablePatternNotifications(true);
-                    // filterFile.RebuildRegex();
-                    filterFile.PropertyChanged += filterFile_PropertyChanged;
+                    ManageFileProperties(LogName, filterFile);
                     FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);
                 }
                 else
                 {
                     SetStatus("filter file does not exist:" + LogName);
-                    this.Settings.RemoveLogFile(LogName);
+                    this.Settings.RemoveFilterFile(LogName);
                 }
 
                 return filterFile;
@@ -75,6 +71,25 @@ namespace RegexViewer
                 SetStatus(string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
                 return filterFile;
             }
+        }
+
+        public override IFile<FilterFileItem> NewFile(string LogName)
+        {
+            FilterFile filterFile = new FilterFile();
+            
+            FileManager.Add(ManageFileProperties(LogName, filterFile));
+
+            this.Settings.AddFilterFile(LogName);
+            return filterFile;
+        }
+        private FilterFile ManageFileProperties(string LogName, FilterFile filterFile)
+        {
+            filterFile.FileName = Path.GetFileName(LogName);
+            filterFile.Tag = LogName;
+            filterFile.EnablePatternNotifications(true);
+            // filterFile.RebuildRegex();
+            filterFile.PropertyChanged += filterFile_PropertyChanged;
+            return filterFile;
         }
 
         public override List<IFile<FilterFileItem>> OpenFiles(string[] files)
