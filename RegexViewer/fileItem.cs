@@ -10,7 +10,7 @@ namespace RegexViewer
     {
         public string Content { get; set; }
         public Brush Background { get; set; }
-
+        public Int64 Index { get; set; }
         public Brush Foreground { get; set; }
         public int FontSize { get; set; }
         public IFileItem ShallowCopy()

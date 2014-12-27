@@ -81,12 +81,13 @@
                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
+                                  CanUserAddRows="False"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}">
 
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="InitializingNewItem">
-                                    <i:InvokeCommandAction Command="{Binding NewItemCommand}"  CommandParameter="{Binding ElementName=dataGridFilter, Path=Items}" />
+                                <i:EventTrigger EventName="AddingNewItem">
+                                    <i:InvokeCommandAction Command="{Binding NewItemCommand}"  CommandParameter="{Binding ElementName=dataGridFilter}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -113,7 +114,6 @@
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
-
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
@@ -125,12 +125,13 @@
                                             <Style.Setters>
                                                 <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
                                                 <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
+                                                <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                             </Style.Setters>
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
-                                <DataGridTemplateColumn Header="BackgroundColor">
+                                <DataGridTemplateColumn Header="Background Color">
                                     <DataGridTemplateColumn.CellTemplate>
 
                                         <DataTemplate>
@@ -153,7 +154,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="ForegroundColor">
+                                <DataGridTemplateColumn Header="Foreground Color">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <ComboBox Name="foregroundColorCombo"

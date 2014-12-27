@@ -45,6 +45,7 @@ namespace RegexViewer
             if (enable & !_patternNotifications)
             {
                 _contentItems.CollectionChanged += _contentItems_CollectionChanged;
+                
                 foreach (FilterFileItem item in _contentItems)
                 {
                     item.PropertyChanged += item_PropertyChanged;
@@ -72,7 +73,9 @@ namespace RegexViewer
         private void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             Modified = true;
-            OnPropertyChanged("ContentList");
+            //OnPropertyChanged("ContentList");
+            SetStatus("FilterFile:_contentItems_CollectionChanged");
+            OnPropertyChanged("_contentItems_CollectionChanged");
         }
 
         private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

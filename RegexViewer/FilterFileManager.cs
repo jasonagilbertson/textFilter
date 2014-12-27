@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Xml;
+using System.Linq;
 
 namespace RegexViewer
 {
@@ -22,7 +23,7 @@ namespace RegexViewer
         public override IFile<FilterFileItem> OpenFile(string LogName)
         {
             FilterFile filterFile = new FilterFile();
-
+            
             try
             {
                 if (FileManager.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
@@ -54,6 +55,8 @@ namespace RegexViewer
                         filterFile.ContentItems.Add(fileItem);
                     }
 
+                    ManageNewFilterFileItem(filterFile);
+
                     ManageFileProperties(LogName, filterFile);
                     FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);
@@ -73,10 +76,65 @@ namespace RegexViewer
             }
         }
 
+        public void ManageNewFilterFileItem(FilterFile filterFile)
+        {
+            // add blank new item so defaults / modifications can be set
+            // some type of bug
+            IEnumerable<FilterFileItem> results = null;
+            Int64 indexMax = -1;
+
+            SetStatus("ManageNewFilterFileItem:" + filterFile.FileName);
+            
+            
+            results = filterFile.ContentItems.Where(x => x.Enabled == false
+                    && x.Exclude == false
+                    && x.Regex == false
+                    && string.IsNullOrEmpty(x.Filterpattern)
+                    && string.IsNullOrEmpty(x.Notes));
+                
+            if (filterFile.ContentItems.Count > 0)
+            {
+                indexMax = filterFile.ContentItems.Max(x => x.Index);
+            }
+            
+
+            if (results == null | results != null && results.Count() == 0)
+            {
+                FilterFileItem fileItem = new FilterFileItem();
+                
+                filterFile.EnablePatternNotifications(false);
+                
+                fileItem.Index = indexMax + 1;
+                filterFile.ContentItems.Add(fileItem);
+                filterFile.EnablePatternNotifications(true);
+            }
+            else if(results.Count() == 1)
+            {
+                
+                if (results.ToList()[0].Index != indexMax)
+                {
+                    filterFile.EnablePatternNotifications(false);
+                    results.ToList()[0].Index = indexMax + 1;
+                    filterFile.EnablePatternNotifications(true);
+                }
+
+                return;
+            }
+            else
+            {
+                for (int i = 0; i < results.Count() - 1;i++ )
+                {
+                    filterFile.ContentItems.Remove(results.ToList()[i]);
+                }
+            }
+        }
+
+        
         public override IFile<FilterFileItem> NewFile(string LogName)
         {
             FilterFile filterFile = new FilterFile();
-            
+            ManageNewFilterFileItem(filterFile);
+
             FileManager.Add(ManageFileProperties(LogName, filterFile));
 
             this.Settings.AddFilterFile(LogName);
@@ -86,12 +144,17 @@ namespace RegexViewer
         {
             filterFile.FileName = Path.GetFileName(LogName);
             filterFile.Tag = LogName;
+
+            // todo rework this:
+            filterFile.EnablePatternNotifications(false);
             filterFile.EnablePatternNotifications(true);
+
             // filterFile.RebuildRegex();
             filterFile.PropertyChanged += filterFile_PropertyChanged;
             return filterFile;
         }
 
+        
         public override List<IFile<FilterFileItem>> OpenFiles(string[] files)
         {
             List<IFile<FilterFileItem>> filterFileItems = new List<IFile<FilterFileItem>>();
@@ -183,6 +246,10 @@ namespace RegexViewer
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e.PropertyName);
+            if (sender is FilterFile)
+            {
+                ManageNewFilterFileItem(sender as FilterFile);
+            }
         }
 
         private bool ReadBoolNodeItem(XmlNode node, string nodeName, int item)

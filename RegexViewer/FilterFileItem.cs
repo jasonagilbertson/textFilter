@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -26,7 +27,7 @@ namespace RegexViewer
             }
         }
 
-        public int Index
+        public Int64 Index
         {
             get
             {
@@ -113,7 +114,7 @@ namespace RegexViewer
 
         private string _foregroundColor = "Black";
 
-        private int _index = 0;
+        private Int64 _index = 0;
 
         private string _notes = string.Empty;
 

@@ -25,7 +25,7 @@ namespace RegexViewer
         private Command _pasteCommand;
         private List<T> _selectedContent = new List<T>();
         private Command _selectionChangedCommand;
-        private Command _newItemCommand;
+        //private Command _newItemCommand;
         private string _tag;
 
         #endregion Private Fields
@@ -196,20 +196,20 @@ namespace RegexViewer
             set { _selectionChangedCommand = value; }
         }
 
-        public Command NewItemCommand
-        {
-            get
-            {
-                if (_newItemCommand == null)
-                {
-                    _newItemCommand = new Command(NewItemExecuted);
-                }
-                _newItemCommand.CanExecute = true;
+        //public Command NewItemCommand
+        //{
+        //    get
+        //    {
+        //        if (_newItemCommand == null)
+        //        {
+        //            _newItemCommand = new Command(NewItemExecuted);
+        //        }
+        //        _newItemCommand.CanExecute = true;
 
-                return _newItemCommand;
-            }
-            set { _newItemCommand = value; }
-        }
+        //        return _newItemCommand;
+        //    }
+        //    set { _newItemCommand = value; }
+        //}
         public string Tag
         {
             get
@@ -262,14 +262,24 @@ namespace RegexViewer
         {
         }
 
-        public void NewItemExecuted(object sender)
-        {
-            SetStatus("NewItemExecuted:enter");
-            if (sender is DataGrid)
-            {
-               // _selectedContent = (sender as IList).Cast<T>().ToList();
-            }
-        }
+        //public void NewItemExecuted(object sender)
+        //{
+        //    SetStatus("NewItemExecuted:enter");
+            
+        //    //if (sender is DataGrid)
+        //    if (sender is ItemCollection)
+        //    {
+
+        //        (sender as ItemCollection).RemoveAt((sender as ItemCollection).Count - 1);
+        //        IFileItem newItem = default(IFileItem);
+        //        newItem.Index = 1;
+        //        this.ContentList.Add((T)newItem);
+
+        //        //t.Index = (IFileItem)(sender as ItemCollection).Cast<T>().Max(x => x.Index) + 1;
+                
+        //     //   ((IFileItem)t[t.Count - 1]).Index = 1;
+        //    }
+        //}
 
         public void SelectionChangedExecuted(object sender)
         {
