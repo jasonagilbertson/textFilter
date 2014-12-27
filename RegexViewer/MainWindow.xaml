@@ -4,7 +4,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:RegexViewer"
-        Title="RegexViewer" Height="350" Width="525">
+        Title="RegexViewer" Height="600" Width="900">
     <Window.Resources>
         <local:MainViewModel x:Key="mainViewModel" />
         <local:RegexViewerSettings x:Key="settings" />
@@ -45,12 +45,12 @@
                 <MenuItem Header="_New" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Save" />
             </MenuItem>
-            <MenuItem Header="_Options">
+            <!--<MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Help" />
-            </MenuItem>
+            </MenuItem>-->
         </Menu>
 
         <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
@@ -103,13 +103,12 @@
 
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
-                                <KeyBinding Key="N" Modifiers="Control+Alt" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
 
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    <MenuItem Header="New" Command="{Binding NewCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+Alt+N" />
+                                    <MenuItem Header="New" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="CTRL+ALT+N" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
@@ -196,13 +195,11 @@
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
                 <TabControl.ItemTemplate>
-                    <!-- this is the header template-->
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate>
-                    <!-- this is the body of the TabItem template-->
                     <DataTemplate>
                         <ListBox x:Name="logFileData"
                                  ItemsSource="{Binding Path=ContentList}"
