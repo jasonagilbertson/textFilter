@@ -3,50 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace RegexViewer
 {
     public class MainViewModel : Base, IMainViewModel
     {
-        #region Private Fields
-        private Command _quickFindChangedCommand;
-        private Command _copyCommand;
-        private FilterViewModel _filterViewModel;
-        private LogViewModel _logViewModel;
-        private string _quickFindText = string.Empty;
-        private RegexViewerSettings _settings = RegexViewerSettings.Settings;
-        private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
-        private Int32 _statusIndex;
-        private WorkerManager _workerManager = WorkerManager.Instance;
-        private Command _statusChangedCommand;
-
-        #endregion Private Fields
-
-        #region Public Methods
-
-        public void SetViewStatus(string statusData)
-        {
-            // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
-            while (this.Status.Count > 1000)
-            {
-                this.Status.RemoveAt(0);
-            }
-
-            //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
-            ListBoxItem listBoxItem = new ListBoxItem();
-            listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
-            this.Status.Add(listBoxItem);
-            this.StatusIndex = Status.Count - 1;
-
-            Debug.Print(statusData);
-            OnPropertyChanged("Status");
-            // }));
-        }
-
-        #endregion Public Methods
-
         #region Internal Methods
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -66,6 +28,42 @@ namespace RegexViewer
 
         #endregion Private Methods
 
+        //public Command QuickFindChangedCommand
+        //{
+        //    get
+        //    {
+        //        if (_quickFindChangedCommand == null)
+        //        {
+        //            _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
+        //        }
+        //        _quickFindChangedCommand.CanExecute = true;
+
+        #region Private Fields
+
+        //        return _quickFindChangedCommand;
+        //    }
+        //    set { _quickFindChangedCommand = value; }
+        //}
+        //private Command _quickFindChangedCommand;
+        private Command _copyCommand;
+
+        private FilterViewModel _filterViewModel;
+
+        private LogViewModel _logViewModel;
+
+        //private string _quickFindText = string.Empty;
+        private RegexViewerSettings _settings = RegexViewerSettings.Settings;
+
+        private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
+
+        private Command _statusChangedCommand;
+
+        private Int32 _statusIndex;
+
+        private WorkerManager _workerManager = WorkerManager.Instance;
+
+        #endregion Private Fields
+
         #region Public Constructors
 
         public MainViewModel()
@@ -76,23 +74,19 @@ namespace RegexViewer
             _logViewModel = new LogViewModel(_filterViewModel);
 
             // to embed external libraries
-            // http://blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
+            // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
-
                 String resourceName = "RegexViewer." + new AssemblyName(args.Name).Name + ".dll";
 
                 using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                 {
-
                     Byte[] assemblyData = new Byte[stream.Length];
 
                     stream.Read(assemblyData, 0, assemblyData.Length);
 
                     return Assembly.Load(assemblyData);
-
                 }
-
             };
 
             SetStatus("loaded");
@@ -101,21 +95,6 @@ namespace RegexViewer
         #endregion Public Constructors
 
         #region Public Properties
-        public string QuickFindText
-        {
-            get
-            {
-                return _quickFindText;
-            }
-            set
-            {
-                if(_quickFindText != value)
-                {
-                    _quickFindText = value;
-                    //OnPropertyChanged("QuickFindText");
-                }
-            }
-        }
 
         public Command CopyCommand
         {
@@ -132,6 +111,21 @@ namespace RegexViewer
             set { _copyCommand = value; }
         }
 
+        //public string QuickFindText
+        //{
+        //    get
+        //    {
+        //        return _quickFindText;
+        //    }
+        //    set
+        //    {
+        //        if(_quickFindText != value)
+        //        {
+        //            _quickFindText = value;
+        //            //OnPropertyChanged("QuickFindText");
+        //        }
+        //    }
+        //}
         public FilterViewModel FilterViewModel
         {
             get { return _filterViewModel; }
@@ -182,21 +176,6 @@ namespace RegexViewer
             set { _statusChangedCommand = value; }
         }
 
-        public Command QuickFindChangedCommand
-        {
-            get
-            {
-                if (_quickFindChangedCommand == null)
-                {
-                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
-                }
-                _quickFindChangedCommand.CanExecute = true;
-
-                return _quickFindChangedCommand;
-            }
-            set { _quickFindChangedCommand = value; }
-        }
-
         public int StatusIndex
         {
             get
@@ -214,6 +193,8 @@ namespace RegexViewer
         }
 
         #endregion Public Properties
+
+        #region Public Methods
 
         public void CopyExecuted(object contentList)
         {
@@ -256,6 +237,25 @@ namespace RegexViewer
             }
         }
 
+        public void SetViewStatus(string statusData)
+        {
+            // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
+            while (this.Status.Count > 1000)
+            {
+                this.Status.RemoveAt(0);
+            }
+
+            //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
+            ListBoxItem listBoxItem = new ListBoxItem();
+            listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
+            this.Status.Add(listBoxItem);
+            this.StatusIndex = Status.Count - 1;
+
+            Debug.Print(statusData);
+            OnPropertyChanged("Status");
+            // }));
+        }
+
         public void StatusChangedExecuted(object sender)
         {
             try
@@ -269,26 +269,30 @@ namespace RegexViewer
             catch { }
         }
 
-        public void QuickFindChangedExecuted(object sender)
-        {
-            if (sender is string)
-            {
-                FilterFileItem fileItem = new FilterFileItem() { Filterpattern = (sender as string) };
-                try
-                {
-                    Regex test = new Regex(fileItem.Filterpattern);
-                    fileItem.Regex = true;
+        #endregion Public Methods
 
-                }
-                catch 
-                {
-                    SetStatus("quick find not a regex:" + fileItem.Filterpattern);
-                    fileItem.Regex = false;
-                }
+        //public void QuickFindChangedExecuted(object sender)
+        //{
+        //    // todo: move to filter source?
+        //    if (sender is string)
+        //    {
+        //        string filter = (sender as string);
+        //        if(string.IsNullOrEmpty(filter))
+        //        {
+        //            // send empty function to reset to current filter in filterview
+        //            _logViewModel.FilterTabItem(null, null);
+        //            return;
+        //        }
 
-                fileItem.Enabled = true;                
-                _logViewModel.FilterTabItem(fileItem);
-            }
-        }
+        // FilterFileItem fileItem = new FilterFileItem() { Filterpattern = (sender as string) };
+        // try { Regex test = new Regex(fileItem.Filterpattern); fileItem.Regex = true;
+
+        // } catch { SetStatus("quick find not a regex:" + fileItem.Filterpattern); fileItem.Regex =
+        // false; }
+
+        //        fileItem.Enabled = true;
+        //        _logViewModel.FilterTabItem(fileItem);
+        //    }
+        //}
     }
 }

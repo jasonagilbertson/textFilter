@@ -22,8 +22,10 @@ namespace RegexViewer
 
         bool CloseFile(string LogName);
 
-        IFile<T> OpenFile(string LogName);
         IFile<T> NewFile(string LogName);
+
+        IFile<T> OpenFile(string LogName);
+
         List<IFile<T>> OpenFiles(string[] files);
 
         List<T> ReadFile(string LogName);

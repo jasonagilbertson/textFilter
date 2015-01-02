@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
@@ -25,6 +24,7 @@ namespace RegexViewer
         private Command _pasteCommand;
         private List<T> _selectedContent = new List<T>();
         private Command _selectionChangedCommand;
+
         //private Command _newItemCommand;
         private string _tag;
 
@@ -265,18 +265,13 @@ namespace RegexViewer
         //public void NewItemExecuted(object sender)
         //{
         //    SetStatus("NewItemExecuted:enter");
-            
-        //    //if (sender is DataGrid)
-        //    if (sender is ItemCollection)
-        //    {
 
-        //        (sender as ItemCollection).RemoveAt((sender as ItemCollection).Count - 1);
-        //        IFileItem newItem = default(IFileItem);
-        //        newItem.Index = 1;
-        //        this.ContentList.Add((T)newItem);
+        // //if (sender is DataGrid) if (sender is ItemCollection) { (sender as
+        // ItemCollection).RemoveAt((sender as ItemCollection).Count - 1); IFileItem newItem =
+        // default(IFileItem); newItem.Index = 1; this.ContentList.Add((T)newItem);
 
-        //        //t.Index = (IFileItem)(sender as ItemCollection).Cast<T>().Max(x => x.Index) + 1;
-                
+        // //t.Index = (IFileItem)(sender as ItemCollection).Cast<T>().Max(x => x.Index) + 1;
+
         //     //   ((IFileItem)t[t.Count - 1]).Index = 1;
         //    }
         //}

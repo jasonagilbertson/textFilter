@@ -11,6 +11,21 @@ namespace RegexViewer
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {
+        #region Public Methods
+
+        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion Public Methods
+
+        #region Private Fields
+
+        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
+
+        #endregion Private Fields
+
         #region Public Constructors
 
         public LogFileManager()
@@ -20,20 +35,13 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        #region Private Fields
-
-        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
-
-        #endregion Private Fields
-
-        #region Public Methods
-
-        public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems)
+        public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, bool onlyHighlight)
         {
+            // todo: move to filter class
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyFilter:log file: {0} start time: {1}", logFile.Tag, timer.ToString("hh:mm:ss.fffffff")));
-          
+
             int[] countTotals = new int[filterFileItems.Count];
 
             try
@@ -42,11 +50,12 @@ namespace RegexViewer
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
+                        // filteredItems.Add(logItem);
                         continue;
                     }
 
                     int filterIndex = int.MaxValue;
-                    //int matchIndex = int.MaxValue;
+                    bool exclude = false;
                     for (int c = 0; c < filterFileItems.Count; c++)
                     {
                         FilterFileItem fileItem = filterFileItems[c];
@@ -55,27 +64,37 @@ namespace RegexViewer
                         {
                             pattern = Regex.Escape(pattern);
                         }
-                    
-                        Match match = Regex.Match(logItem.Content, pattern, RegexOptions.IgnoreCase);
 
-                        if(match.Success && filterIndex > c)
+                        if (!Regex.IsMatch(logItem.Content, pattern, RegexOptions.IgnoreCase))
                         {
-                            //matchIndex = match.Index;
+                            continue;
+                        }
+
+                        if (filterIndex > c)
+                        {
+                            if (filterFileItems[c].Exclude)
+                            {
+                                exclude = true;
+                            }
+
                             filterIndex = c;
                         }
-                        
-                        
-                        if(match.Success)
-                        {
-                            countTotals[c] += 1;
-                        }
+
+                        countTotals[c] += 1;
                     }
 
-                    if (filterIndex != int.MaxValue && !filterFileItems[filterIndex].Exclude)
+                    if (filterIndex != int.MaxValue && !exclude)
                     {
                         logItem.Foreground = filterFileItems[filterIndex].Foreground;
                         logItem.Background = filterFileItems[filterIndex].Background;
-                        logItem.FontSize = RegexViewerSettings.Settings.FontSize;
+                        logItem.FontSize = Settings.FontSize;
+                        filteredItems.Add(logItem);
+                    }
+                    else if (onlyHighlight)
+                    {
+                        logItem.Foreground = Settings.ForegroundColor;
+                        logItem.Background = Settings.BackgroundColor;
+                        logItem.FontSize = Settings.FontSize;
                         filteredItems.Add(logItem);
                     }
                 }
@@ -97,8 +116,8 @@ namespace RegexViewer
 
         public ObservableCollection<LogFileItem> ApplyFilterSlow(LogFile logFile, List<FilterFileItem> filterFileItems)
         {
-            // not used but keeping for now. this one combines all filters into one search
-            // testing shows this method slower than just searching for each filter separately
+            // not used but keeping for now. this one combines all filters into one search testing
+            // shows this method slower than just searching for each filter separately
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyFilter:log file: {0} start time: {1}", logFile.Tag, timer.ToString("hh:mm:ss.fffffff")));
@@ -108,7 +127,6 @@ namespace RegexViewer
 
             foreach (FilterFileItem item in filterFileItems)
             {
-
                 string pattern = item.Filterpattern;
 
                 if (!item.Regex)
@@ -120,41 +138,37 @@ namespace RegexViewer
             }
 
             // remove trailing |
-            if(!(filterPattern.Length == 0))
+            if (!(filterPattern.Length == 0))
             {
                 filterPattern.Remove(filterPattern.Length - 1, 1);
             }
 
-            Regex regex = new Regex(filterPattern.ToString(),RegexOptions.Compiled|RegexOptions.IgnoreCase);
+            Regex regex = new Regex(filterPattern.ToString(), RegexOptions.Compiled | RegexOptions.IgnoreCase);
             MatchCollection mc;
-           // int lowestIndex = int.MaxValue;
-            
+            // int lowestIndex = int.MaxValue;
 
             try
             {
                 foreach (LogFileItem logItem in logFile.ContentItems)
-                //  foreach (LogFileItem logItem in ReadFile(logFile.Tag))
+                // foreach (LogFileItem logItem in ReadFile(logFile.Tag))
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
                         continue;
                     }
-                    
+
                     int filterIndex = int.MaxValue; // -1;
 
                     // if(regex.IsMatch(logItem.Content))
-                    if(((mc = regex.Matches(logItem.Content)).Count) > 0)
+                    if (((mc = regex.Matches(logItem.Content)).Count) > 0)
                     {
                         //foreach(Match m in mc)
                         //for (int c = 0; c < countTotals.Length & c < mc[0].Groups.Count; c++)
                         //for (int c = 0; c < mc[0].Groups.Count; c++)
                         for (int c = 0; c < mc.Count; c++)
                         {
-
-                            // check for success and index
-                            // all success gets counted
-                            // match goes to lowest index
-                            // exclusions mask any lower matches
+                            // check for success and index all success gets counted match goes to
+                            // lowest index exclusions mask any lower matches
                             for (int g = 0; g < mc[c].Groups.Count; g++)
                             {
                                 if (mc[c].Groups[g + 1].Success)
@@ -200,10 +214,13 @@ namespace RegexViewer
 
         public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
         {
+            // todo: move to filter class
             List<FilterFileItem> fileItems = new List<FilterFileItem>();
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
+                //fileItem.Count = 0;
+
                 if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
                 {
                     continue;
@@ -217,6 +234,7 @@ namespace RegexViewer
 
         public bool CompareFilterList(List<FilterFileItem> filterFileItems)
         {
+            // todo: move to filter class
             bool retval = false;
             if (_previousFilterFileItems.Count > 0
                 && filterFileItems.Count > 0
@@ -252,6 +270,11 @@ namespace RegexViewer
             return retval;
         }
 
+        public override IFile<LogFileItem> NewFile(string LogName)
+        {
+            throw new NotImplementedException();
+        }
+
         public override IFile<LogFileItem> OpenFile(string LogName)
         {
             IFile<LogFileItem> logFile = new LogFile();
@@ -265,7 +288,7 @@ namespace RegexViewer
             {
                 logFile.FileName = Path.GetFileName(LogName);
                 logFile.Tag = LogName;
-               // logFile.ContentItems = (ObservableCollection<LogFileItem>)(IFile<LogFileItem>)ReadFile(LogName);
+                // logFile.ContentItems = (ObservableCollection<LogFileItem>)(IFile<LogFileItem>)ReadFile(LogName);
                 logFile.ContentItems = new ObservableCollection<LogFileItem>(ReadFile(LogName));
                 FileManager.Add(logFile);
                 this.Settings.AddLogFile(LogName);
@@ -306,7 +329,7 @@ namespace RegexViewer
             using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile))
             {
                 string line;
-                //Int64 count = 0;
+                Int64 count = 0;
                 while ((line = sr.ReadLine()) != null)
                 {
                     LogFileItem logFileItem = new LogFileItem();
@@ -316,23 +339,24 @@ namespace RegexViewer
                     logFileItem.Foreground = Settings.ForegroundColor;
                     logFileItem.FontSize = Settings.FontSize;
                     logFileItem.FontFamily = new System.Windows.Media.FontFamily("Courier");
-                    //logFileItem.Index = count++;
+                    logFileItem.Index = count++;
                     logFileItems.Add(logFileItem);
-                   // logFile.ContentItems.Add(logFileItem);
+                    // logFile.ContentItems.Add(logFileItem);
                 }
             }
 
             return logFileItems;
         }
-        public override IFile<LogFileItem> NewFile(string LogName)
-        {
-            throw new NotImplementedException();
-        }
-        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
-        {
-            throw new NotImplementedException();
-        }
 
-        #endregion Public Methods
+        public ObservableCollection<LogFileItem> ResetColors(ObservableCollection<LogFileItem> logFileItems)
+        {
+            foreach (LogFileItem item in logFileItems)
+            {
+                item.Background = Settings.BackgroundColor;
+                item.Foreground = Settings.ForegroundColor;
+            }
+
+            return logFileItems;
+        }
     }
 }

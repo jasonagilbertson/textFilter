@@ -1,12 +1,8 @@
-﻿using System.Windows.Controls;
-
-namespace RegexViewer
+﻿namespace RegexViewer
 {
-  //  public class LogFileItem : TextBlock, IFileItem
+    // public class LogFileItem : TextBlock, IFileItem
     public class LogFileItem : FileItem //, IFileItem
     {
-        #region Public Properties
-        
         //public string Content
         //{
         //    get
@@ -19,15 +15,9 @@ namespace RegexViewer
         //    }
         //}
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         //public IFileItem ShallowCopy()
         //{
         //    return (LogFileItem)this.MemberwiseClone();
         //}
-
-        #endregion Public Methods
     }
 }

@@ -1,4 +1,6 @@
-﻿- empty filter blocks all log output
+﻿
+
+- empty filter blocks all log output
 
 - ctrl-alt-new for filter only works with hotkey and not context or menu option
 

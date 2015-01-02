@@ -1,23 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Media;
+
 namespace RegexViewer
 {
     public class FileItem : IFileItem
     {
-        public string Content { get; set; }
+        #region Public Properties
+
         public Brush Background { get; set; }
-        public Int64 Index { get; set; }
-        public Brush Foreground { get; set; }
+
+        public string Content { get; set; }
+
+        public FontFamily FontFamily { get; set; }
+
         public int FontSize { get; set; }
+
+        public Brush Foreground { get; set; }
+
+        public Int64 Index { get; set; }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
         public IFileItem ShallowCopy()
         {
             return (LogFileItem)this.MemberwiseClone();
         }
-        public FontFamily FontFamily { get; set; }
 
+        #endregion Public Methods
     }
 }

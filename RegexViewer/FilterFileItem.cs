@@ -5,6 +5,28 @@ using System.Windows.Media;
 
 namespace RegexViewer
 {
+    public struct FilterFileItemEvents
+    {
+        #region Public Fields
+
+        // public static string Background = "Background";
+        public static string BackgroundColor = "BackgroundColor";
+
+        public static string Count = "Count";
+        public static string Enabled = "Enabled";
+        public static string Exclue = "Exclude";
+        public static string Filterpattern = "Filterpattern";
+
+        // public static string Foreground = "Foreground";
+        public static string ForegroundColor = "ForegroundColor";
+
+        public static string Index = "Index";
+        public static string Notes = "Notes";
+        public static string Regex = "Regex";
+
+        #endregion Public Fields
+    }
+
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
         #region Public Properties
@@ -22,7 +44,7 @@ namespace RegexViewer
                 {
                     _foregroundColor = value;
                     this.Foreground = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
-                    OnPropertyChanged("ForegroundColor");
+                    OnPropertyChanged(FilterFileItemEvents.ForegroundColor);
                 }
             }
         }
@@ -39,7 +61,7 @@ namespace RegexViewer
                 if (_index != value)
                 {
                     _index = value;
-                    OnPropertyChanged("Index");
+                    OnPropertyChanged(FilterFileItemEvents.Index);
                 }
             }
         }
@@ -56,7 +78,7 @@ namespace RegexViewer
                 if (_notes != value)
                 {
                     _notes = value;
-                    OnPropertyChanged("Notes");
+                    OnPropertyChanged(FilterFileItemEvents.Notes);
                 }
             }
         }
@@ -74,7 +96,7 @@ namespace RegexViewer
                 {
                     _regex = value;
 
-                    OnPropertyChanged("Regex");
+                    OnPropertyChanged(FilterFileItemEvents.Regex);
                 }
             }
         }
@@ -163,7 +185,7 @@ namespace RegexViewer
                 {
                     _backgroundColor = value;
                     this.Background = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
-                    OnPropertyChanged("BackgroundColor");
+                    OnPropertyChanged(FilterFileItemEvents.BackgroundColor);
                 }
             }
         }
@@ -192,7 +214,7 @@ namespace RegexViewer
                 if (_count != value)
                 {
                     _count = value;
-                    OnPropertyChanged("Count");
+                    OnPropertyChanged(FilterFileItemEvents.Count);
                 }
             }
         }
@@ -209,7 +231,14 @@ namespace RegexViewer
                 if (_enabled != value)
                 {
                     _enabled = value;
-                    OnPropertyChanged("Enabled");
+
+                    // clear counter
+                    if (!_enabled)
+                    {
+                        this.Count = 0;
+                    }
+
+                    OnPropertyChanged(FilterFileItemEvents.Enabled);
                 }
             }
         }
@@ -226,7 +255,7 @@ namespace RegexViewer
                 if (_exclude != value)
                 {
                     _exclude = value;
-                    OnPropertyChanged("Exclude");
+                    OnPropertyChanged(FilterFileItemEvents.Exclue);
                 }
             }
         }
@@ -243,7 +272,7 @@ namespace RegexViewer
                 if (_filterpattern != value)
                 {
                     _filterpattern = value;
-                    OnPropertyChanged("Filterpattern");
+                    OnPropertyChanged(FilterFileItemEvents.Filterpattern);
                 }
             }
         }

@@ -45,7 +45,7 @@ namespace RegexViewer
             if (enable & !_patternNotifications)
             {
                 _contentItems.CollectionChanged += _contentItems_CollectionChanged;
-                
+
                 foreach (FilterFileItem item in _contentItems)
                 {
                     item.PropertyChanged += item_PropertyChanged;

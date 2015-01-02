@@ -1,4 +1,5 @@
 ﻿using System;
+
 namespace RegexViewer
 {
     public interface IFileItem
@@ -11,10 +12,12 @@ namespace RegexViewer
 
         System.Windows.Media.Brush Foreground { get; set; }
 
+        Int64 Index { get; set; }
+
         #endregion Public Properties
 
         #region Public Methods
-        Int64 Index { get; set; }
+
         IFileItem ShallowCopy();
 
         #endregion Public Methods

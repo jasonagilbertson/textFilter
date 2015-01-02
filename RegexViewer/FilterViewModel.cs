@@ -9,9 +9,15 @@ namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
-        #region Public Constructors
+        #region Private Fields
+
         private string _tempFilterNameFormat = "*new {0}*";
         private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public FilterViewModel()
         {
             this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
@@ -51,21 +57,20 @@ namespace RegexViewer
         {
             FilterFile filterFile = new FilterFile();
             // add temp name
-            for(int i = 0;i< 100; i++)
+            for (int i = 0; i < 100; i++)
             {
                 string tempTag = string.Format(_tempFilterNameFormat, i);
-                if(this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
+                if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
                 {
                     continue;
                 }
                 else
                 {
-
                     filterFile = (FilterFile)this.ViewManager.NewFile(tempTag);
                     break;
                 }
             }
-            
+
             // make new tab
             AddTabItem(filterFile);
         }
@@ -123,31 +128,7 @@ namespace RegexViewer
             }
         }
 
-        public override void SaveFile(object sender)
-        {
-            ITabViewModel<FilterFileItem> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
-            }
-            else
-            {
-                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
-            }
-
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag,_tempFilterNameFormatPattern))
-            {
-                
-                SaveAsFile(tabItem);
-            }
-            else
-            {
-                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
-            }
-        }
-
-        public void SaveAsFile(object sender)
+        public bool SaveAsFile(object sender)
         {
             // this.OpenDialogVisible = true;
 
@@ -173,6 +154,11 @@ namespace RegexViewer
             {
                 result = dlg.ShowDialog();
                 logName = dlg.FileName;
+
+                if (string.IsNullOrEmpty(logName))
+                {
+                    return false;
+                }
             }
 
             // Process save file dialog box results
@@ -193,7 +179,34 @@ namespace RegexViewer
                     SaveFile(sender);
                 }
             }
-            
+
+            return true;
+        }
+
+        public override void SaveFile(object sender)
+        {
+            ITabViewModel<FilterFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempFilterNameFormatPattern))
+            {
+                if (!SaveAsFile(tabItem))
+                {
+                    this.TabItems.Remove(tabItem);
+                }
+            }
+            else
+            {
+                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+            }
         }
 
         public void SaveModifiedFiles(object sender)
