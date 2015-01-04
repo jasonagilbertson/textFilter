@@ -42,7 +42,7 @@ namespace RegexViewer
         public AsynchronousCommand(Action action, bool canExecute = true)
             : base(action, canExecute)
         {
-            //  Initialise the command.
+            // Initialise the command.
             Initialise();
         }
 
@@ -54,7 +54,7 @@ namespace RegexViewer
         public AsynchronousCommand(Action<object> parameterizedAction, bool canExecute = true)
             : base(parameterizedAction, canExecute)
         {
-            //  Initialise the command.
+            // Initialise the command.
             Initialise();
         }
 
@@ -88,7 +88,7 @@ namespace RegexViewer
         /// Gets or sets a value indicating whether this instance is cancellation requested.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if this instance is cancellation requested; otherwise, <c>false</c>.
+        /// <c>true</c> if this instance is cancellation requested; otherwise, <c>false</c> .
         /// </value>
         public bool IsCancellationRequested
         {
@@ -109,9 +109,7 @@ namespace RegexViewer
         /// <summary>
         /// Gets or sets a value indicating whether this instance is executing.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is executing; otherwise, <c>false</c>.
-        /// </value>
+        /// <value><c>true</c> if this instance is executing; otherwise, <c>false</c> .</value>
         public bool IsExecuting
         {
             get
@@ -138,11 +136,11 @@ namespace RegexViewer
         /// <returns>True if the command has been cancelled and we must return.</returns>
         public bool CancelIfRequested()
         {
-            //  If we haven't requested cancellation, there's nothing to do.
+            // If we haven't requested cancellation, there's nothing to do.
             if (IsCancellationRequested == false)
                 return false;
 
-            //  We're done.
+            // We're done.
             return true;
         }
 
@@ -152,49 +150,50 @@ namespace RegexViewer
         /// <param name="param">The param.</param>
         public override void DoExecute(object param)
         {
-            //  If we are already executing, do not continue.
+            // If we are already executing, do not continue.
             if (IsExecuting)
                 return;
 
-            //  Invoke the executing command, allowing the command to be cancelled.
+            // Invoke the executing command, allowing the command to be cancelled.
             CancelCommandEventArgs args = new CancelCommandEventArgs() { Parameter = param, Cancel = false };
             InvokeExecuting(args);
 
-            //  If the event has been cancelled, bail now.
+            // If the event has been cancelled, bail now.
             if (args.Cancel)
                 return;
 
-            //  We are executing.
+            // We are executing.
             IsExecuting = true;
 
-            //  Store the calling dispatcher.
+            // Store the calling dispatcher.
 #if !SILVERLIGHT
             callingDispatcher = Dispatcher.CurrentDispatcher;
 #else
       callingDispatcher = System.Windows.Application.Current.RootVisual.Dispatcher;
 #endif
 
-            // Run the action on a new thread from the thread pool (this will therefore work in SL and WP7 as well).
+            // Run the action on a new thread from the thread pool (this will therefore work in SL
+            // and WP7 as well).
             ThreadPool.QueueUserWorkItem(
               (state) =>
               {
-                  //  Invoke the action.
+                  // Invoke the action.
                   InvokeAction(param);
 
-                  //  Fire the executed event and set the executing state.
+                  // Fire the executed event and set the executing state.
                   ReportProgress(
                     () =>
                     {
-                        //  We are no longer executing.
+                        // We are no longer executing.
                         IsExecuting = false;
 
-                        //  If we were cancelled, invoke the cancelled event - otherwise invoke executed.
+                        // If we were cancelled, invoke the cancelled event - otherwise invoke executed.
                         if (IsCancellationRequested)
                             InvokeCancelled(new CommandEventArgs() { Parameter = param });
                         else
                             InvokeExecuted(new CommandEventArgs() { Parameter = param });
 
-                        //  We are no longer requesting cancellation.
+                        // We are no longer requesting cancellation.
                         IsCancellationRequested = false;
                     }
                   );
@@ -224,12 +223,14 @@ namespace RegexViewer
         /// <summary>
         /// Invokes the cancelled event.
         /// </summary>
-        /// <param name="args">The <see cref="Apex.MVVM.CommandEventArgs"/> instance containing the event data.</param>
+        /// <param name="args">
+        /// The <see cref="Apex.MVVM.CommandEventArgs"/> instance containing the event data.
+        /// </param>
         protected void InvokeCancelled(CommandEventArgs args)
         {
             CommandEventHandler cancelled = Cancelled;
 
-            //  Call the cancelled event.
+            // Call the cancelled event.
             if (cancelled != null)
                 cancelled(this, args);
         }
@@ -243,11 +244,11 @@ namespace RegexViewer
         /// </summary>
         private void Initialise()
         {
-            //  Construct the cancel command.
+            // Construct the cancel command.
             cancelCommand = new Command(
               () =>
               {
-                  //  Set the Is Cancellation Requested flag.
+                  // Set the Is Cancellation Requested flag.
                   IsCancellationRequested = true;
               }, true);
         }
@@ -258,11 +259,11 @@ namespace RegexViewer
         /// <param name="propertyName">Name of the property.</param>
         private void NotifyPropertyChanged(string propertyName)
         {
-            //  Store the event handler - in case it changes between
-            //  the line to check it and the line to fire it.
+            // Store the event handler - in case it changes between the line to check it and the
+            // line to fire it.
             PropertyChangedEventHandler propertyChanged = PropertyChanged;
 
-            //  If the event has been subscribed to, fire it.
+            // If the event has been subscribed to, fire it.
             if (propertyChanged != null)
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }

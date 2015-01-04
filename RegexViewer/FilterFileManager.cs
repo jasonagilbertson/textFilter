@@ -20,63 +20,64 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public void ManageNewFilterFileItem(FilterFile filterFile)
-        {
-            // add blank new item so defaults / modifications can be set some type of bug
-            IEnumerable<FilterFileItem> results = null;
-            Int64 indexMax = -1;
+        //public void ManageNewFilterFileItem(FilterFileItem filterFileItem)
+        //{
+        //    // add blank new item so defaults / modifications can be set some type of bug
+        //    IEnumerable<FilterFileItem> results = null;
+            
+        //    Int64 indexMax = -1;
 
-            SetStatus("ManageNewFilterFileItem:" + filterFile.FileName);
+        //    SetStatus("ManageNewFilterFileItem:" + filterFileItem.FileName);
 
-            results = filterFile.ContentItems.Where(x => x.Enabled == false
-                    && x.Exclude == false
-                    && x.Regex == false
-                    && string.IsNullOrEmpty(x.Filterpattern)
-                    && string.IsNullOrEmpty(x.Notes));
+        //    results = filterFileItem.ContentItems.Where(x => x.Enabled == false
+        //            && x.Exclude == false
+        //            && x.Regex == false
+        //            && string.IsNullOrEmpty(x.Filterpattern)
+        //            && string.IsNullOrEmpty(x.Notes));
 
-            if (filterFile.ContentItems.Count > 0)
-            {
-                indexMax = filterFile.ContentItems.Max(x => x.Index);
-            }
+        //    if (filterFileItem.ContentItems.Count > 0)
+        //    {
+        //        indexMax = filterFileItem.ContentItems.Max(x => x.Index);
+        //    }
 
-            if (results == null | results != null && results.Count() == 0)
-            {
-                FilterFileItem fileItem = new FilterFileItem();
+        //    if (results == null | results != null && results.Count() == 0)
+        //    {
+        //        FilterFileItem fileItem = new FilterFileItem();
 
-                filterFile.EnablePatternNotifications(false);
+        //        filterFileItem.EnablePatternNotifications(false);
+        //        fileItem.Index = indexMax + 1;
+        //        filterFileItem.ContentItems.Add(fileItem);
+        //        filterFileItem.EnablePatternNotifications(true);
+        //    }
+        //    else if (results.Count() == 1)
+        //    {
+        //        if (results.ToList()[0].Index != indexMax)
+        //        {
+        //            filterFileItem.EnablePatternNotifications(false);
+        //            results.ToList()[0].Index = indexMax + 1;
+        //            filterFileItem.EnablePatternNotifications(true);
+        //        }
 
-                fileItem.Index = indexMax + 1;
-                filterFile.ContentItems.Add(fileItem);
-                filterFile.EnablePatternNotifications(true);
-            }
-            else if (results.Count() == 1)
-            {
-                if (results.ToList()[0].Index != indexMax)
-                {
-                    filterFile.EnablePatternNotifications(false);
-                    results.ToList()[0].Index = indexMax + 1;
-                    filterFile.EnablePatternNotifications(true);
-                }
-
-                return;
-            }
-            else
-            {
-                for (int i = 0; i < results.Count() - 1; i++)
-                {
-                    filterFile.ContentItems.Remove(results.ToList()[i]);
-                }
-            }
-        }
+        //        return;
+        //    }
+        //    else
+        //    {
+        //        for (int i = 0; i < results.Count() - 1; i++)
+        //        {
+        //            filterFileItem.ContentItems.Remove(results.ToList()[i]);
+        //        }
+        //    }
+        //}
 
         public override IFile<FilterFileItem> NewFile(string LogName)
         {
             FilterFile filterFile = new FilterFile();
-            ManageNewFilterFileItem(filterFile);
+            //ManageNewFilterFileItem(filterFile);
 
             FileManager.Add(ManageFileProperties(LogName, filterFile));
 
             this.Settings.AddFilterFile(LogName);
+            OnPropertyChanged("FilterFileManager");
             return filterFile;
         }
 
@@ -115,11 +116,12 @@ namespace RegexViewer
                         filterFile.ContentItems.Add(fileItem);
                     }
 
-                    ManageNewFilterFileItem(filterFile);
+                    //ManageNewFilterFileItem(filterFile);
 
                     ManageFileProperties(LogName, filterFile);
                     FileManager.Add(filterFile);
                     this.Settings.AddFilterFile(LogName);
+                    OnPropertyChanged("FilterFileManager");
                 }
                 else
                 {
@@ -226,16 +228,18 @@ namespace RegexViewer
 
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == FilterFileItemEvents.Count)
+            if (e.PropertyName == FilterFileItemEvents.Count |
+                e.PropertyName == FilterFileItemEvents.Notes)
             {
                 // dont forward count updates
                 return;
             }
 
-            OnPropertyChanged(e.PropertyName);
-            if (sender is FilterFile)
+            OnPropertyChanged(sender, e);
+            //OnPropertyChanged(e.PropertyName);
+            if (sender is FilterFileItem)
             {
-                ManageNewFilterFileItem(sender as FilterFile);
+                //ManageNewFilterFileItem(sender as FilterFileItem);
             }
         }
 

@@ -12,6 +12,5 @@ namespace RegexViewer
         }
 
         #endregion Public Constructors
-
     }
 }

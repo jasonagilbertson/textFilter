@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -19,12 +17,6 @@ namespace RegexViewer
         }
 
         #endregion Public Methods
-
-        #region Private Fields
-
-        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
-
-        #endregion Private Fields
 
         #region Public Constructors
 
@@ -210,64 +202,6 @@ namespace RegexViewer
                 SetStatus("ApplyFilter:exception" + e.ToString());
                 return filteredItems;
             }
-        }
-
-        public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
-        {
-            // todo: move to filter class
-            List<FilterFileItem> fileItems = new List<FilterFileItem>();
-            // clean up list
-            foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
-            {
-                //fileItem.Count = 0;
-
-                if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
-                {
-                    continue;
-                }
-
-                fileItems.Add(fileItem);
-            }
-
-            return fileItems;
-        }
-
-        public bool CompareFilterList(List<FilterFileItem> filterFileItems)
-        {
-            // todo: move to filter class
-            bool retval = false;
-            if (_previousFilterFileItems.Count > 0
-                && filterFileItems.Count > 0
-                && _previousFilterFileItems.Count == filterFileItems.Count)
-            {
-                int i = 0;
-                foreach (FilterFileItem fileItem in filterFileItems.OrderBy(x => x.Index))
-                {
-                    FilterFileItem previousItem = _previousFilterFileItems[i++];
-                    if (previousItem.BackgroundColor != fileItem.BackgroundColor
-                        || previousItem.ForegroundColor != fileItem.ForegroundColor
-                        || previousItem.Enabled != fileItem.Enabled
-                        || previousItem.Exclude != fileItem.Exclude
-                        || previousItem.Regex != fileItem.Regex
-                        || previousItem.Filterpattern != fileItem.Filterpattern)
-                    {
-                        retval = false;
-                        Debug.Print("returning false");
-                        break;
-                    }
-
-                    retval = true;
-                }
-            }
-
-            _previousFilterFileItems.Clear();
-            foreach (FilterFileItem item in filterFileItems)
-            {
-                _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
-            }
-
-            Debug.Print("CompareFilterList:returning:" + retval.ToString());
-            return retval;
         }
 
         public override IFile<LogFileItem> NewFile(string LogName)

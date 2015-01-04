@@ -90,6 +90,7 @@
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="FileItem.cs" />
+    <Compile Include="FilterCommand.cs" />
     <Compile Include="FilterFileItem.cs" />
     <Compile Include="FilterFileManager.cs" />
     <Compile Include="FilterTabViewModel.cs" />
@@ -162,10 +163,6 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="issues.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="TestFilter.xml" />
-    <Resource Include="TestFilter2.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="System.Windows.Interactivity.dll" />

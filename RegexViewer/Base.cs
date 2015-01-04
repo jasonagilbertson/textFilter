@@ -27,10 +27,15 @@ namespace RegexViewer
 
         public void OnPropertyChanged(string name)
         {
+            OnPropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
-                handler(this, new PropertyChangedEventArgs(name));
+                handler(sender, e);
             }
         }
 

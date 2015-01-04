@@ -81,7 +81,7 @@ namespace RegexViewer
         private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             Modified = true;
-            OnPropertyChanged(e.PropertyName);
+            OnPropertyChanged(sender, e);
         }
 
         #endregion Private Methods

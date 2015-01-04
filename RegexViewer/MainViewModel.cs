@@ -9,24 +9,14 @@ namespace RegexViewer
 {
     public class MainViewModel : Base, IMainViewModel
     {
-        #region Internal Methods
+        #region Private Fields
 
-        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _filterViewModel.SaveModifiedFiles(sender);
-            _settings.Save();
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private void HandleNewStatus(object sender, string status)
-        {
-            SetViewStatus(status);
-        }
-
-        #endregion Private Methods
+        //        return _quickFindChangedCommand;
+        //    }
+        //    set { _quickFindChangedCommand = value; }
+        //}
+        //private Command _quickFindChangedCommand;
+        private Command _copyCommand;
 
         //public Command QuickFindChangedCommand
         //{
@@ -37,16 +27,6 @@ namespace RegexViewer
         //            _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
         //        }
         //        _quickFindChangedCommand.CanExecute = true;
-
-        #region Private Fields
-
-        //        return _quickFindChangedCommand;
-        //    }
-        //    set { _quickFindChangedCommand = value; }
-        //}
-        //private Command _quickFindChangedCommand;
-        private Command _copyCommand;
-
         private FilterViewModel _filterViewModel;
 
         private LogViewModel _logViewModel;
@@ -111,21 +91,6 @@ namespace RegexViewer
             set { _copyCommand = value; }
         }
 
-        //public string QuickFindText
-        //{
-        //    get
-        //    {
-        //        return _quickFindText;
-        //    }
-        //    set
-        //    {
-        //        if(_quickFindText != value)
-        //        {
-        //            _quickFindText = value;
-        //            //OnPropertyChanged("QuickFindText");
-        //        }
-        //    }
-        //}
         public FilterViewModel FilterViewModel
         {
             get { return _filterViewModel; }
@@ -270,6 +235,25 @@ namespace RegexViewer
         }
 
         #endregion Public Methods
+
+        #region Internal Methods
+
+        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _filterViewModel.SaveModifiedFiles(sender);
+            _settings.Save();
+        }
+
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private void HandleNewStatus(object sender, string status)
+        {
+            SetViewStatus(status);
+        }
+
+        #endregion Private Methods
 
         //public void QuickFindChangedExecuted(object sender)
         //{

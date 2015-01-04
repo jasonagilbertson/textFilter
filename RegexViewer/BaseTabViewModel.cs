@@ -267,7 +267,7 @@ namespace RegexViewer
         //    SetStatus("NewItemExecuted:enter");
 
         // //if (sender is DataGrid) if (sender is ItemCollection) { (sender as
-        // ItemCollection).RemoveAt((sender as ItemCollection).Count - 1); IFileItem newItem =
+        // ItemCollection) .RemoveAt((sender as ItemCollection).Count - 1); IFileItem newItem =
         // default(IFileItem); newItem.Index = 1; this.ContentList.Add((T)newItem);
 
         // //t.Index = (IFileItem)(sender as ItemCollection).Cast<T>().Max(x => x.Index) + 1;

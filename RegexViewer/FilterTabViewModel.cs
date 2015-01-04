@@ -13,13 +13,13 @@
 
         // public void NewItemExecuted(object sender) { SetStatus("NewItemExecuted:enter"); //
         // 141227 //
-        // http://blogs.msdn.com/b/vinsibal/archive/2008/11/05/wpf-datagrid-new-item-template-sample.aspx
+        // http: //blogs.msdn.com/b/vinsibal/archive/2008/11/05/wpf-datagrid-new-item-template-sample.aspx
         // try { if (sender is DataGrid) //if (sender is ItemCollection) { DataGrid grid = (sender
         // as DataGrid);
 
         // FilterFileItem fileItem = (FilterFileItem)(sender as ItemCollection).CurrentItem; foreach
         // (var item in (sender as ItemCollection)) { SetStatus(item.ToString()); if (!(item is
-        // FilterFileItem)) { // remove temp entry // DataGrid.DeleteCommand } }
+        // FilterFileItem) ) { // remove temp entry // DataGrid.DeleteCommand } }
         // //IEnumerable<FilterFileItem> items = (sender as ItemCollection).Cast<FilterFileItem>();
         // //FilterFileItem item = (FilterFileItem)(items.Last()); //item.Index =
         // this.ContentList.Max(x => x.Index) + 1; // FilterFileItem fileItem = new
