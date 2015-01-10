@@ -9,7 +9,7 @@ namespace RegexViewer
     {
         #region Public Fields
 
-        // public static string Background = "Background";
+        public static string Background = "Background";
         public static string BackgroundColor = "BackgroundColor";
 
         public static string Count = "Count";
@@ -17,7 +17,7 @@ namespace RegexViewer
         public static string Exclue = "Exclude";
         public static string Filterpattern = "Filterpattern";
 
-        // public static string Foreground = "Foreground";
+        public static string Foreground = "Foreground";
         public static string ForegroundColor = "ForegroundColor";
 
         public static string Index = "Index";
@@ -49,7 +49,7 @@ namespace RegexViewer
             }
         }
 
-        public Int64 Index
+        public int Index
         {
             get
             {
@@ -124,7 +124,7 @@ namespace RegexViewer
 
         #region Private Fields
 
-        private string _backgroundColor = "White";
+        private string _backgroundColor; // = "White";
 
         private int _count = 0;
 
@@ -134,9 +134,9 @@ namespace RegexViewer
 
         private string _filterpattern = string.Empty;
 
-        private string _foregroundColor = "Black";
+        private string _foregroundColor; // = "Black";
 
-        private Int64 _index = 0;
+        private int _index = 0;
 
         private string _notes = string.Empty;
 
@@ -168,7 +168,11 @@ namespace RegexViewer
             }
             set
             {
-                base.Background = value;
+                if (base.Background != value)
+                {
+                    base.Background = value;
+                   // OnPropertyChanged(FilterFileItemEvents.Background);
+                }
             }
         }
 
@@ -286,17 +290,14 @@ namespace RegexViewer
 
             set
             {
-                base.Foreground = value;
+                if (base.Foreground != value)
+                {
+                    base.Foreground = value;
+                   // OnPropertyChanged(FilterFileItemEvents.Foreground);
+                }
             }
         }
 
-        //public void OnPropertyChanged(string name)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (handler != null)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(name));
-        //    }
-        //}
+        
     }
 }

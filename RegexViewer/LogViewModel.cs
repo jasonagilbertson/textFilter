@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Input;
 
 namespace RegexViewer
 {
@@ -14,7 +15,12 @@ namespace RegexViewer
         #region Private Fields
 
         private FilterViewModel _filterViewModel;
-
+        private Command _keyDownCommand;
+        private Command _pageDownCommand;
+        private Command _pageUpCommand;
+        private Command _ctrlEndCommand;
+        private Command _ctrlHomeCommand;
+        private Command _mouseWheelCommand;
         private Command _hideCommand;
         private bool _hiding = false;
         private LogFileManager _logFileManager;
@@ -64,6 +70,84 @@ namespace RegexViewer
             set { _hideCommand = value; }
         }
 
+     
+        public Command PageDownCommand
+        {
+            get
+            {
+                if (_pageDownCommand == null)
+                {
+                    _pageDownCommand = new Command(PageDownExecuted);
+                }
+                _pageDownCommand.CanExecute = true;
+
+                return _pageDownCommand;
+            }
+            set { _pageDownCommand = value; }
+        }
+
+        public Command KeyDownCommand
+        {
+            get
+            {
+                if (_keyDownCommand == null)
+                {
+                    _keyDownCommand = new Command(KeyDownExecuted);
+                }
+                _keyDownCommand.CanExecute = true;
+
+                return _keyDownCommand;
+            }
+            set { _keyDownCommand = value; }
+        }
+
+
+        public Command CtrlHomeCommand
+        {
+            get
+            {
+                if (_ctrlHomeCommand == null)
+                {
+                    _ctrlHomeCommand = new Command(CtrlHomeExecuted);
+                }
+                _ctrlHomeCommand.CanExecute = true;
+
+                return _ctrlHomeCommand;
+            }
+            set { _ctrlHomeCommand = value; }
+        }
+
+        public Command CtrlEndCommand
+        {
+            get
+            {
+                if (_ctrlEndCommand == null)
+                {
+                    _ctrlEndCommand = new Command(CtrlEndExecuted);
+                }
+                _ctrlEndCommand.CanExecute = true;
+
+                return _ctrlEndCommand;
+            }
+            set { _ctrlEndCommand = value; }
+        }
+
+
+
+        public Command PageUpCommand
+        {
+            get
+            {
+                if (_pageUpCommand == null)
+                {
+                    _pageUpCommand = new Command(PageUpExecuted);
+                }
+                _pageUpCommand.CanExecute = true;
+
+                return _pageUpCommand;
+            }
+            set { _pageUpCommand = value; }
+        }
         public Command QuickFindChangedCommand
         {
             get
@@ -90,7 +174,7 @@ namespace RegexViewer
                 if (_quickFindText != value)
                 {
                     _quickFindText = value;
-                    //OnPropertyChanged("QuickFindText");
+                  //  OnPropertyChanged("QuickFindText");
                 }
             }
         }
@@ -138,6 +222,9 @@ namespace RegexViewer
                     return;
 
                 case FilterCommand.DynamicFilter:
+                    //this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ResetColors(logFile.ContentItems);
+                    //goto case FilterCommand.Filter;
+
                 case FilterCommand.Filter:
                     this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
                     return;
@@ -151,6 +238,37 @@ namespace RegexViewer
             }
         }
 
+        public void MouseWheelExecuted(object sender, KeyEventArgs e)
+        {
+            SetStatus("MouseWheelExecuted");
+            throw new NotImplementedException();
+        }
+        public void PageDownExecuted(object sender)
+        {
+            SetStatus("PageDownExecuted");
+            throw new NotImplementedException();
+        }
+
+        public void KeyDownExecuted(object sender)
+        {
+            SetStatus("KeyDownExecuted");
+            throw new NotImplementedException();
+        }
+        public void CtrlEndExecuted(object sender)
+        {
+            SetStatus("CtrlEndExecuted");
+            throw new NotImplementedException();
+        }
+        public void CtrlHomeExecuted(object sender)
+        {
+            SetStatus("CtrlHomeExecuted");
+            throw new NotImplementedException();
+        }
+        public void PageUpExecuted(object sender)
+        {
+            SetStatus("PageUpExecuted");
+            throw new NotImplementedException();
+        }
         public void HideExecuted(object sender)
         {
             if (!_hiding)
@@ -160,7 +278,17 @@ namespace RegexViewer
             else
             {
                 // send empty function to reset to current filter in filterview
-                this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                
+                if(!string.IsNullOrEmpty(QuickFindText))
+                {
+                       QuickFindChangedExecuted(null);
+                    //this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                }
+                else
+                {
+                    //this.FilterLogTabItems(null, null, FilterCommand.DynamicFilter);
+                    this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                }
             }
 
             _hiding = !_hiding;
@@ -227,7 +355,9 @@ namespace RegexViewer
 
         public void QuickFindChangedExecuted(object sender)
         {
-            // todo: move to filter source?
+
+            FilterFileItem fileItem = new FilterFileItem();
+
             if (sender is string)
             {
                 string filter = (sender as string);
@@ -235,24 +365,35 @@ namespace RegexViewer
                 {
                     // send empty function to reset to current filter in filterview
                     this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                    QuickFindText = string.Empty;
                     return;
                 }
 
-                FilterFileItem fileItem = new FilterFileItem() { Filterpattern = (sender as string) };
-                try
-                {
-                    Regex test = new Regex(fileItem.Filterpattern);
-                    fileItem.Regex = true;
-                }
-                catch
-                {
-                    SetStatus("quick find not a regex:" + fileItem.Filterpattern);
-                    fileItem.Regex = false;
-                }
-
-                fileItem.Enabled = true;
-                this.FilterLogTabItems(fileItem, null, FilterCommand.DynamicFilter);
+               
+                fileItem.Filterpattern = QuickFindText = (sender as string);
             }
+            else
+            {
+                fileItem.Filterpattern = QuickFindText;
+            }
+
+            
+            
+            
+            try
+            {
+                Regex test = new Regex(fileItem.Filterpattern);
+                fileItem.Regex = true;
+            }
+            catch
+            {
+                SetStatus("quick find not a regex:" + fileItem.Filterpattern);
+                fileItem.Regex = false;
+            }
+
+            fileItem.Enabled = true;
+            this.FilterLogTabItems(fileItem, null, FilterCommand.DynamicFilter);
+               
         }
 
         public override void SaveFile(object sender)

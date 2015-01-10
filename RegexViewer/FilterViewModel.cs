@@ -438,11 +438,11 @@ namespace RegexViewer
 
                 bool dupes = false;
                 bool needsSorting = false;
-                List<Int64> indexList = new List<Int64>();
+                List<int> indexList = new List<int>();
 
                 for (int i = 0; i < sortedFilterItems.Count; i++)
                 {
-                    Int64 index = sortedFilterItems[i].Index;
+                    int index = sortedFilterItems[i].Index;
                     if (index != filterItems[i].Index)
                     {
                         needsSorting = true;
@@ -472,7 +472,7 @@ namespace RegexViewer
                 }
                 else if (dupes)
                 {
-                    Int64 currentIndex = -1;
+                    int currentIndex = -1;
 
                     if (filterFileItem != null && sortedFilterItems.Count(x => x.Index == filterFileItem.Index) > 1)
                     {
@@ -483,7 +483,7 @@ namespace RegexViewer
 
                     for (int i = 0; i < sortedFilterItems.Count; i++)
                     {
-                        Int64 index = sortedFilterItems[i].Index;
+                        int index = sortedFilterItems[i].Index;
 
                         if (index <= currentIndex)
                         {
@@ -520,64 +520,18 @@ namespace RegexViewer
 
             return new FilterFile();
         }
-        public void ManageNewFilterFileItem()
-        {
-            // add blank new item so defaults / modifications can be set some type of bug
-            IEnumerable<FilterFileItem> results = null;
-            FilterFile filterFile = CurrentFile();
-            Int64 indexMax = -1;
-
-            SetStatus("ManageNewFilterFileItem:" + filterFile.FileName);
-
-            results = filterFile.ContentItems.Where(x => x.Enabled == false
-                    && x.Exclude == false
-                    && x.Regex == false
-                    && string.IsNullOrEmpty(x.Filterpattern)
-                    && string.IsNullOrEmpty(x.Notes));
-
-            if (filterFile.ContentItems.Count > 0)
-            {
-                indexMax = filterFile.ContentItems.Max(x => x.Index);
-            }
-
-            if (results == null | results != null && results.Count() == 0)
-            {
-                FilterFileItem fileItem = new FilterFileItem();
-
-                filterFile.EnablePatternNotifications(false);
-                fileItem.Index = indexMax + 1;
-                filterFile.ContentItems.Add(fileItem);
-                filterFile.EnablePatternNotifications(true);
-            }
-            else if (results.Count() == 1)
-            {
-                if (results.ToList()[0].Index != indexMax)
-                {
-                    filterFile.EnablePatternNotifications(false);
-                    results.ToList()[0].Index = indexMax + 1;
-                    filterFile.EnablePatternNotifications(true);
-                }
-
-                return;
-            }
-            else
-            {
-                for (int i = 0; i < results.Count() - 1; i++)
-                {
-                    filterFile.ContentItems.Remove(results.ToList()[i]);
-                }
-            }
-        }
-
+        
         private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FilterFileItemEvents.Index && (sender is FilterFileItem))
             {
                 VerifyIndex((sender as FilterFileItem));
             }
-            else if(sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
+            
+            if(sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
+            //if (sender is FilterFile)
             {
-                ManageNewFilterFileItem();
+                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(CurrentFile());
             }
             //OnPropertyChanged(e.PropertyName);
             OnPropertyChanged(sender, e);

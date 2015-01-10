@@ -159,5 +159,10 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
+        private void logFileData_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+
+        }
     }
 }

@@ -87,18 +87,13 @@
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}">
 
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="AddingNewItem">
-                                    <i:InvokeCommandAction Command="{Binding NewItemCommand}"  CommandParameter="{Binding ElementName=dataGridFilter}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
                                         <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                         <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
                                         <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                        <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
@@ -128,6 +123,7 @@
                                                 <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
                                                 <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
                                                 <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                                <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
                                             </Style.Setters>
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
@@ -209,18 +205,24 @@
                                  ItemsSource="{Binding Path=ContentList}"
                                  AllowDrop="True"
                                  SelectionMode="Extended"
-                                 Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
-
+                                 FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
+                                 Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                 VirtualizingStackPanel.IsVirtualizing="True"
+                                 VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="False"
+                                 >
+                        
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
                                     <TextBlock Text="{Binding Path=Index}"
                                                Margin="0,0,5,0"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
+                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
                                                Background="{Binding Path=Background}" />
                                     <TextBlock Text="{Binding Path=Content}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
+                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
                                                Background="{Binding Path=Background}" />
                                     </StackPanel>
@@ -231,10 +233,20 @@
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />
                                 </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewKeyDown">
+                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
+                                </i:EventTrigger>
                             </i:Interaction.Triggers>
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+
+                                
+                                <!--<KeyBinding Key="PageDown" Command="{Binding Path=PageDownCommand}" />
+                                <KeyBinding Key="PageUp" Command="{Binding Path=PageUpCommand}" />
+                                <KeyBinding Key="Home" Modifiers="Control" Command="{Binding Path=CtrlHomeCommand}" />
+                                <KeyBinding Key="End" Modifiers="Control" Command="{Binding Path=CtrlEndCommand}" />-->
+
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
@@ -302,7 +314,7 @@
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
                      Margin="75,0,0,0"
-                     Text="{Binding Path=LogViewModel.QuickFindText}">
+                     >
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="TextChanged">
                         <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />

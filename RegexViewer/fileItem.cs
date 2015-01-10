@@ -17,7 +17,7 @@ namespace RegexViewer
 
         public Brush Foreground { get; set; }
 
-        public Int64 Index { get; set; }
+        public int Index { get; set; }
 
         #endregion Public Properties
 

@@ -12,7 +12,7 @@ namespace RegexViewer
 
         System.Windows.Media.Brush Foreground { get; set; }
 
-        Int64 Index { get; set; }
+        int Index { get; set; }
 
         #endregion Public Properties
 

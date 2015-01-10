@@ -263,7 +263,7 @@ namespace RegexViewer
             using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile))
             {
                 string line;
-                Int64 count = 0;
+                int count = 0;
                 while ((line = sr.ReadLine()) != null)
                 {
                     LogFileItem logFileItem = new LogFileItem();
@@ -272,7 +272,7 @@ namespace RegexViewer
                     logFileItem.Background = Settings.BackgroundColor;
                     logFileItem.Foreground = Settings.ForegroundColor;
                     logFileItem.FontSize = Settings.FontSize;
-                    logFileItem.FontFamily = new System.Windows.Media.FontFamily("Courier");
+                    logFileItem.FontFamily = new System.Windows.Media.FontFamily(Settings.FontName);
                     logFileItem.Index = count++;
                     logFileItems.Add(logFileItem);
                     // logFile.ContentItems.Add(logFileItem);

@@ -3,14 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Media;
+using System.Xml;
+using System.Runtime.InteropServices;
 
 namespace RegexViewer
 {
-    public class RegexViewerSettings
+    public class RegexViewerSettings:Base
     {
         #region Private Fields
+        [DllImport("kernel32.dll")]
+        static extern bool AttachConsole(int dwProcessId);
+        private const int ATTACH_PARENT_PROCESS = -1;
 
         private static RegexViewerSettings settings;
 
@@ -34,28 +41,48 @@ namespace RegexViewer
 
         public RegexViewerSettings()
         {
+            
+
+         
+        }
+
+        public bool ReadConfigFile()
+        {
+            if(!ProcessCommandLine())
+            {
+                return false;
+            }
+
+            this.ConfigFile = !string.IsNullOrEmpty(this.ConfigFile) ? this.ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
             _ConfigFileMap = new ExeConfigurationFileMap();
-            _ConfigFileMap.ExeConfigFilename = string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
+            if (!File.Exists(this.ConfigFile))
+            {
+                XmlTextWriter xmlw = new XmlTextWriter(this.ConfigFile, System.Text.Encoding.UTF8);
+                xmlw.Formatting = Formatting.Indented;
+                xmlw.WriteStartDocument();
+                xmlw.WriteStartElement("configuration");
+                    xmlw.WriteStartElement("startup");
+                        xmlw.WriteStartElement("supportedRuntime");
+                        xmlw.WriteAttributeString("version","v4.0");
+                        xmlw.WriteAttributeString("sku", ".NETFramework,Version=v4.5");
+                        xmlw.WriteEndElement();
+                    xmlw.WriteEndElement();
+                    xmlw.WriteStartElement("appSettings");
+                    xmlw.WriteEndElement();
+                xmlw.WriteEndElement();
+                xmlw.WriteEndDocument();
+
+                xmlw.Close();
+
+            }
+
+            _ConfigFileMap.ExeConfigFilename = this.ConfigFile;
 
             // Get the mapped configuration file.
             _Config = ConfigurationManager.OpenMappedExeConfiguration(_ConfigFileMap, ConfigurationUserLevel.None);
             _appSettings = _Config.AppSettings.Settings;
             VerifyAppSettings();
-
-            //List<string> test = new List<string>(RecentLogFiles);
-            //try
-            //{
-            //    // check if exists in recentfiles if you dont want dupe
-            //    test.Add("file1");
-            //    test.Add("file2");
-            //    test.Add("file3");
-            //    test.Add("file4");
-            //    test.Add("file5");
-            //    test.Add("file6");
-            //    test.Remove("file3");
-            //}
-            //catch { }
-            //RecentLogFiles = test;
+            return true;
         }
 
         #endregion Public Constructors
@@ -75,6 +102,7 @@ namespace RegexViewer
             FileHistoryCount,
             FilterDirectory,
             ForegroundColor,
+            FontName,
             FontSize,
             CurrentFilterFiles,
             CurrentLogFiles,
@@ -158,6 +186,22 @@ namespace RegexViewer
             }
         }
 
+        public string FontName
+        {
+            get
+            {
+                return _appSettings["FontName"].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings["FontName"].Value.ToString())
+                {
+                    _appSettings["FontName"].Value = value.ToString();
+                    OnPropertyChanged("FontName");
+                }
+            }
+        }
+
         public int FontSize
         {
             get
@@ -195,7 +239,6 @@ namespace RegexViewer
             }
         }
 
-        //public List<string> RecentLogFiles
         public string[] RecentLogFiles
         {
             get
@@ -223,6 +266,153 @@ namespace RegexViewer
                 RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
             }
         }
+        private bool ProcessCommandLine()
+        {
+            string[] arguments = Environment.GetCommandLineArgs();
+
+            // this is the way fta passes arg
+            if (arguments.Length == 2
+                && !arguments[1].StartsWith("/")
+                && File.Exists(arguments[1]))
+            {
+                Settings.AddLogFile(arguments[1]);
+                return true;
+            }
+            else if (arguments.Length == 2 && arguments[1].Contains("/?"))
+            {
+                DisplayHelp();
+                return false;
+            }
+
+            List<string> results = new List<string>();
+
+            results = ProcessArg("/config:", arguments);
+            if (results.Count == 1)
+            {
+                Settings.ConfigFile = results[0];
+                // Settings.ReadConfigFile();
+            }
+
+            results = ProcessFiles(ProcessArg("/filter:", arguments));
+            if (results.Count > 0)
+            {
+                Settings.RemoveAllFilters();
+                foreach (string file in results)
+                {
+                    Settings.AddFilterFile(file);
+                }
+            }
+
+            results = ProcessFiles(ProcessArg("/log:", arguments));
+            if (results.Count > 0)
+            {
+                Settings.RemoveAllLogs();
+                foreach (string file in results)
+                {
+                    Settings.AddLogFile(file);
+                }
+            }
+
+            if (ProcessArg("/register", arguments).Count > 0)
+            {
+                FileTypeAssociation.Instance.ConfigureFTA(true);
+                AttachConsole(ATTACH_PARENT_PROCESS);
+                Console.WriteLine("registering file type association");
+                return false;
+            }
+
+            if (ProcessArg("/unregister", arguments).Count > 0)
+            {
+                FileTypeAssociation.Instance.ConfigureFTA(false);
+                AttachConsole(ATTACH_PARENT_PROCESS);
+                Console.WriteLine("unregistering file type association");
+                return false;
+            }
+
+            return true;
+        }
+
+        private List<string> ProcessFiles(List<string> results)
+        {
+         
+            List<string> files = new List<string>();
+            string wildcard = "*.*";
+
+            foreach (string arg in results)
+            {
+                string cleanPath = arg.Trim('"');
+                if (Regex.IsMatch(cleanPath, @"[^\\]*$") | cleanPath.Contains("*") | cleanPath.Contains("?"))
+                {
+
+                    string tempString = Regex.Match(cleanPath, @"[^\\]*$").Groups[0].Value;
+                    if (tempString.Contains("*") | tempString.Contains("?"))
+                    {
+                        wildcard = tempString;
+                        cleanPath = cleanPath.Replace(string.Format(@"\{0}", tempString), "");
+                    }
+                    if (string.IsNullOrEmpty(cleanPath) || string.IsNullOrEmpty(Path.GetDirectoryName(cleanPath)))
+                    {
+                        cleanPath = string.Format("{0}\\{1}", Environment.CurrentDirectory, cleanPath);
+                    }
+                    try
+                    {
+                        if (Directory.Exists(cleanPath))
+                        {
+                            files.AddRange(Directory.GetFiles(cleanPath, wildcard, SearchOption.AllDirectories));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        SetStatus("invalid dir: " + e.ToString());
+                    }
+                }
+                else if (File.Exists(arg))
+                {
+                    files.Add(arg);
+                }
+            }
+
+            return files;
+        }
+
+        private void RegisterFTA(bool p)
+        {
+            throw new NotImplementedException();
+        }
+
+        private List<string> ProcessArg(string setting, string[] arguments)
+        {
+            List<string> args = new List<string>();
+
+            for (int i = 0; i < arguments.Length; i++)
+            {
+
+                if (arguments[i].ToLower().StartsWith(setting))
+                {
+
+                    string argument = arguments[i].ToLower().Replace(setting, "");
+                    if (string.IsNullOrEmpty(argument) && arguments.Length > i + 1)
+                    {
+                        argument = arguments[i + 1].Trim();
+                    }
+
+                    foreach (string arg in argument.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        args.Add(arg.Trim());
+                    }
+
+
+                }
+            }
+
+            return args.ToList();
+        }
+
+        private void DisplayHelp()
+        {
+            AttachConsole(ATTACH_PARENT_PROCESS);
+            Console.WriteLine(Properties.Resources.DisplayHelp);
+        }
 
         public void AddLogFile(string logFile)
         {
@@ -235,15 +425,6 @@ namespace RegexViewer
             }
         }
 
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
         //public void OnPropertyChanged(string name)
         //{
         //    PropertyChangedEventHandler handler = PropertyChanged;
@@ -253,6 +434,21 @@ namespace RegexViewer
         //    }
         //}
 
+        public void RemoveAllFilters()
+        {
+            foreach (string logfile in CurrentFilterFiles)
+            {
+                RemoveFilterFile(logfile);
+            }
+        }
+
+        public void RemoveAllLogs()
+        {
+            foreach(string logfile in CurrentLogFiles)
+            {
+                RemoveLogFile(logfile);
+            }
+        }
         public void RemoveLogFile(string logFile)
         {
             List<string> logFiles = new List<string>(CurrentLogFiles);
@@ -332,6 +528,11 @@ namespace RegexViewer
                             _appSettings[name].Value = "20";
                             break;
                         }
+                    case AppSettingNames.FontName:
+                        {
+                            _appSettings[name].Value = "Courier";
+                            break;
+                        }
                     case AppSettingNames.FontSize:
                         {
                             _appSettings[name].Value = "10";
@@ -357,16 +558,7 @@ namespace RegexViewer
 
         #endregion Private Methods
 
-        //public string RecentFiles
-        //{
-        //    get
-        //    {
-        //        return (_appSettings["RecentFiles"].Value);
-        //    }
-        //    set
-        //    {
-        //        _appSettings["RecentFiles"].Value = value;
-        //    }
-        //}
+
+        public string ConfigFile { get; set; }
     }
 }

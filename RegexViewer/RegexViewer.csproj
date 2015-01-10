@@ -57,6 +57,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -90,6 +91,7 @@
     <Compile Include="BaseViewModel.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="FileItem.cs" />
+    <Compile Include="FileTypeAssociation.cs" />
     <Compile Include="FilterCommand.cs" />
     <Compile Include="FilterFileItem.cs" />
     <Compile Include="FilterFileManager.cs" />
