@@ -24,7 +24,12 @@ namespace RegexViewer
 
         public FileTypeAssociation()
         {
-
+            
+            _extension = ".csv";
+            _extensionBackup = _extension + "_back";
+            _fileDescription = "RegexViewer";
+            
+            _hkcuKeyExt = _hkcuKey + _extension;
         }
 
         public static FileTypeAssociation Instance
@@ -53,14 +58,14 @@ namespace RegexViewer
         }
 
         #region Fields
-
-        private static readonly string _extensionBackup = _extension + "_back";
-        private static readonly string _keyName = Process.GetCurrentProcess().ProcessName;
-        private static string _openWith = Process.GetCurrentProcess().MainModule.FileName;
-        private static string _extension = ".csv";
-        private static string _fileDescription = "RegexViewer";
-        private static string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
-        private static string _hkcuKeyExt = _hkcuKey + _extension;
+        
+        private string _keyName = Process.GetCurrentProcess().ProcessName;
+        private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
+        private string _extensionBackup;
+        private string _extension;
+        private string _fileDescription;
+        private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
+        private string _hkcuKeyExt;
 
         #endregion Fields
 

@@ -37,7 +37,14 @@ namespace RegexViewer
             {
                 SetStatus("file not open:" + FileName);
                 FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
-                this.Settings.RemoveLogFile(FileName);
+                if (typeof(T) == typeof(FilterFileItem))
+                {
+                    this.Settings.RemoveFilterFile(FileName);
+                }
+                if (typeof(T) == typeof(LogFileItem))
+                {
+                    this.Settings.RemoveLogFile(FileName);
+                }
                 return true;
             }
             else

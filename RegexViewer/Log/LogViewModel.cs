@@ -204,7 +204,14 @@ namespace RegexViewer
             if (logFile == null)
             {
                 // find logFile if it was not supplied
-                logFile = (LogFile)_logFileManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                if (_logFileManager.FileManager.Count > 0)
+                {
+                    logFile = (LogFile)_logFileManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                }
+                else
+                {
+                    return;
+                }
             }
 
             List<FilterFileItem> filterFileItems = _filterViewModel.FilterList(filter);

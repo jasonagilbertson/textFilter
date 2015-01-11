@@ -48,10 +48,7 @@ namespace RegexViewer
 
         public bool ReadConfigFile()
         {
-            if(!ProcessCommandLine())
-            {
-                return false;
-            }
+            
 
             this.ConfigFile = !string.IsNullOrEmpty(this.ConfigFile) ? this.ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
             _ConfigFileMap = new ExeConfigurationFileMap();
@@ -82,6 +79,12 @@ namespace RegexViewer
             _Config = ConfigurationManager.OpenMappedExeConfiguration(_ConfigFileMap, ConfigurationUserLevel.None);
             _appSettings = _Config.AppSettings.Settings;
             VerifyAppSettings();
+
+            if (!ProcessCommandLine())
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -275,6 +278,7 @@ namespace RegexViewer
                 && !arguments[1].StartsWith("/")
                 && File.Exists(arguments[1]))
             {
+                Settings.RemoveAllLogs();
                 Settings.AddLogFile(arguments[1]);
                 return true;
             }

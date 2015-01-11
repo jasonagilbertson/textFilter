@@ -53,11 +53,14 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>RegexViewer.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -86,31 +89,31 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AsynchronousCommand.cs" />
-    <Compile Include="Base.cs" />
-    <Compile Include="BaseFile.cs" />
-    <Compile Include="BaseViewModel.cs" />
+    <Compile Include="Base\Base.cs" />
+    <Compile Include="Base\BaseFile.cs" />
+    <Compile Include="Base\BaseViewModel.cs" />
     <Compile Include="Command.cs" />
-    <Compile Include="FileItem.cs" />
+    <Compile Include="Filter\FileItem.cs" />
     <Compile Include="FileTypeAssociation.cs" />
-    <Compile Include="FilterCommand.cs" />
-    <Compile Include="FilterFileItem.cs" />
-    <Compile Include="FilterFileManager.cs" />
-    <Compile Include="FilterTabViewModel.cs" />
-    <Compile Include="FilterViewModel.cs" />
+    <Compile Include="Filter\FilterCommand.cs" />
+    <Compile Include="Filter\FilterFileItem.cs" />
+    <Compile Include="Filter\FilterFileManager.cs" />
+    <Compile Include="Filter\FilterTabViewModel.cs" />
+    <Compile Include="Filter\FilterViewModel.cs" />
     <Compile Include="HtmlFragment.cs" />
-    <Compile Include="BaseTabViewModel.cs" />
-    <Compile Include="IFileItem.cs" />
-    <Compile Include="IFileManager.cs" />
-    <Compile Include="IFile.cs" />
-    <Compile Include="IMainViewModel.cs" />
-    <Compile Include="ITabViewModel.cs" />
-    <Compile Include="IViewModel.cs" />
-    <Compile Include="BaseFileManager.cs" />
-    <Compile Include="LogFileItem.cs" />
-    <Compile Include="LogTabViewModel.cs" />
+    <Compile Include="Base\BaseTabViewModel.cs" />
+    <Compile Include="Interface\IFileItem.cs" />
+    <Compile Include="Interface\IFileManager.cs" />
+    <Compile Include="Interface\IFile.cs" />
+    <Compile Include="Interface\IMainViewModel.cs" />
+    <Compile Include="Interface\ITabViewModel.cs" />
+    <Compile Include="Interface\IViewModel.cs" />
+    <Compile Include="Base\BaseFileManager.cs" />
+    <Compile Include="Log\LogFileItem.cs" />
+    <Compile Include="Log\LogTabViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="RegexViewerSettings.cs" />
-    <Compile Include="LogViewModel.cs" />
+    <Compile Include="Log\LogViewModel.cs" />
     <Compile Include="TimedSaveDialog.xaml.cs">
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
@@ -124,9 +127,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FilterFile.cs" />
-    <Compile Include="LogFileManager.cs" />
-    <Compile Include="LogFile.cs" />
+    <Compile Include="Filter\FilterFile.cs" />
+    <Compile Include="Log\LogFileManager.cs" />
+    <Compile Include="Log\LogFile.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -168,6 +171,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="System.Windows.Interactivity.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="RegexViewer.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
