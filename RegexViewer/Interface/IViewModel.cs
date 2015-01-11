@@ -4,12 +4,14 @@
     {
         #region Public Methods
 
+        void CloseAllFiles(object sender);
         void CloseFile(object sender);
 
         void NewFile(object sender);
 
         void OnPropertyChanged(string name);
 
+        void OpenDrop(object sender);
         void OpenFile(object sender);
 
         void RemoveTabItem(ITabViewModel<T> tabItem);
@@ -28,6 +30,7 @@
 
         Command CloseCommand { get; set; }
 
+        Command DragDropCommand { get; set; }
         Command OpenCommand { get; set; }
 
         bool OpenDialogVisible { get; set; }

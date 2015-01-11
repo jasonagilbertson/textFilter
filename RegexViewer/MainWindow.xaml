@@ -32,20 +32,22 @@
         <CommandBinding Command="ApplicationCommands.Copy" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed" />
     </Window.CommandBindings>-->
     <!--http://www.codeproject.com/Articles/768427/The-big-MVVM-Template-->
-    <DockPanel DataContext="{StaticResource mainViewModel}">
+    <DockPanel DataContext="{StaticResource mainViewModel}" >
         <!--<my:ErrorControl Visibility="{Binding Path=ThereWasAnError, Mode=TwoWay, Converter={StaticResource booltoVis}, UpdateSourceTrigger=PropertyChanged}" />-->
 
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="_Close" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
+                <MenuItem Header="_Open Log" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="_Close Log" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
+                <MenuItem Header="_Close All Logs" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
                 <MenuItem Header="Show / _Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
             </MenuItem>
             <MenuItem Header="_Filter">
-                <MenuItem Header="_Open" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
-                <MenuItem Header="_Close" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                <MenuItem Header="_New" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
-                <MenuItem Header="_Save" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
+                <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
+                <MenuItem Header="_Close Filter" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
+                <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
+                <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
+                <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
             </MenuItem>
             <!--<MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />
@@ -55,7 +57,7 @@
             </MenuItem>-->
         </Menu>
 
-        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="5" />
@@ -65,7 +67,8 @@
             <TabControl x:Name="tabFilters" Grid.Row="0" HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch"
+                        >
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
@@ -83,10 +86,18 @@
                           ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
-                                  CanUserAddRows="False"
+                          CanUserAddRows="False"
+                          Drop="dataGridFilter_Drop"
+                          AllowDrop="True"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}">
-
+                            
+                            <!--<i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Drop">
+                                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.DragDropCommand}"  CommandParameter="{Binding}" />
+                            </i:EventTrigger>
+                            </i:Interaction.Triggers>-->
+                            
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
@@ -104,9 +115,11 @@
 
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Close" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    <MenuItem Header="New" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
+                                    <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
+                                    <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
+                                    <MenuItem Header="Copy Filter" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
+                                    
+                                    <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
@@ -182,15 +195,17 @@
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
-                        <MenuItem Header="Close" Command="{Binding FilterViewModel.CloseCommand}" />
-                        <MenuItem Header="Save" Command="{Binding FilterViewModel.SaveCommand}" />
+                        <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}" />
+                        <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
+                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}" />
+                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}" />
                         <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
 
-            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
+            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch" 
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
@@ -209,6 +224,7 @@
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                                  VirtualizingStackPanel.IsVirtualizing="True"
                                  VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="False"
+                                 Drop="logFileData_Drop"
                                  >
                         
                             <ListBox.ItemTemplate>
@@ -236,6 +252,9 @@
                                 <i:EventTrigger EventName="PreviewKeyDown">
                                     <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
                                 </i:EventTrigger>
+                                <!--<i:EventTrigger EventName="Drop">
+                                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.DragDropCommand}"  CommandParameter="{Binding}" />
+                                </i:EventTrigger>-->
                             </i:Interaction.Triggers>
 
                             <ListBox.InputBindings>
@@ -253,9 +272,9 @@
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
 
-                                    <MenuItem Header="Close" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
-                                    <!--<MenuItem Header="Close All Files" Command="{Binding CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="SHIFT+F4" />-->
-                                    <MenuItem Header="Open" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
+                                    <MenuItem Header="Close Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
+                                    <MenuItem Header="Close All Logs" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
+                                    <MenuItem Header="Open Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
                                     <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
@@ -267,7 +286,7 @@
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <MenuItem Header="Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
-                        <!--<MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="SHIFT+F4" />-->
+                        <MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
                         <MenuItem Header="Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                         <MenuItem Header="Show / Hide All Items" Command="{Binding LogViewModel.HideCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+H" />
                     </ContextMenu>

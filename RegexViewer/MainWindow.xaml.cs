@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -163,6 +164,36 @@ namespace RegexViewer
         private void logFileData_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
 
+        }
+
+        private void dataGridFilter_Drop(object sender, DragEventArgs e)
+        {
+            this._mainViewModel.SetStatus("dataGridFilter_Drop");
+            string[] fileNames = (string[])(((IDataObject)e.Data).GetData("FileName"));
+            if (fileNames != null)
+            {
+                foreach(string filename in fileNames)
+                {
+                    string ext = Path.GetExtension(filename).ToLower();
+                    if (ext == ".xml")
+                    {
+                        this._mainViewModel.FilterViewModel.OpenFile(filename);
+                    }
+                }
+            }
+        }
+
+        private void logFileData_Drop(object sender, DragEventArgs e)
+        {
+            this._mainViewModel.SetStatus("logFileData_Drop");
+            string[] fileNames = (string[])(((IDataObject)e.Data).GetData("FileName"));
+            if (fileNames != null)
+            {
+                foreach (string filename in fileNames)
+                {
+                    this._mainViewModel.LogViewModel.OpenFile(filename);
+                }
+            }
         }
     }
 }

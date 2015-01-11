@@ -165,63 +165,71 @@ namespace RegexViewer
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
         {
-            if (File.Exists(FileName))
+            try
             {
-                File.Delete(FileName);
+                if (File.Exists(FileName))
+                {
+                    File.Delete(FileName);
+                }
+
+                SetStatus("saving file:" + FileName);
+
+                XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
+                xmlw.Formatting = Formatting.Indented;
+                xmlw.WriteStartDocument();
+                xmlw.WriteStartElement("filters");
+
+                foreach (FilterFileItem item in fileItems)
+                {
+                    xmlw.WriteStartElement("filter");
+
+                    xmlw.WriteStartElement("filterpattern");
+                    xmlw.WriteString(item.Filterpattern);
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("backgroundcolor");
+                    xmlw.WriteString(item.BackgroundColor);
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("foregroundcolor");
+                    xmlw.WriteString(item.ForegroundColor);
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("index");
+                    xmlw.WriteString(item.Index.ToString());
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("enabled");
+                    xmlw.WriteString(item.Enabled.ToString());
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("exclude");
+                    xmlw.WriteString(item.Exclude.ToString());
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("regex");
+                    xmlw.WriteString(item.Regex.ToString());
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteStartElement("notes");
+                    xmlw.WriteString(item.Notes.ToString());
+                    xmlw.WriteEndElement();
+
+                    xmlw.WriteEndElement();
+                }
+
+                xmlw.WriteEndElement();
+                xmlw.WriteEndDocument();
+
+                xmlw.Close();
+
+                return true;
             }
-
-            SetStatus("saving file:" + FileName);
-
-            XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
-            xmlw.Formatting = Formatting.Indented;
-            xmlw.WriteStartDocument();
-            xmlw.WriteStartElement("filters");
-
-            foreach (FilterFileItem item in fileItems)
+            catch(Exception e)
             {
-                xmlw.WriteStartElement("filter");
-
-                xmlw.WriteStartElement("filterpattern");
-                xmlw.WriteString(item.Filterpattern);
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("backgroundcolor");
-                xmlw.WriteString(item.BackgroundColor);
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("foregroundcolor");
-                xmlw.WriteString(item.ForegroundColor);
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("index");
-                xmlw.WriteString(item.Index.ToString());
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("enabled");
-                xmlw.WriteString(item.Enabled.ToString());
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("exclude");
-                xmlw.WriteString(item.Exclude.ToString());
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("regex");
-                xmlw.WriteString(item.Regex.ToString());
-                xmlw.WriteEndElement();
-
-                xmlw.WriteStartElement("notes");
-                xmlw.WriteString(item.Notes.ToString());
-                xmlw.WriteEndElement();
-
-                xmlw.WriteEndElement();
+                SetStatus("SaveFile:exception: " + e.ToString());
+                return false;
             }
-
-            xmlw.WriteEndElement();
-            xmlw.WriteEndDocument();
-
-            xmlw.Close();
-
-            return true;
         }
 
         #endregion Public Methods
