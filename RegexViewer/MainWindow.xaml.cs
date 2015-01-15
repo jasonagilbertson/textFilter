@@ -67,24 +67,6 @@ namespace RegexViewer
 
         #region Private Methods
 
-        //private void backgroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    if(sender is ComboBox)
-        //    {
-        //        _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor));
-        ////        _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
-        //     //   ((FilterFileItem)(sender as ComboBox).Tag).BackgroundColor = (sender as ComboBox).SelectedValue.ToString();
-        //    }
-        //}
-        //private void foregroundColorCombo_LostFocus(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    if(sender is ComboBox)
-        //    {
-        //    _mainViewModel.SetStatus(string.Format("colorCombo_LostFocus:{0}", ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor));
-        // //   _mainViewModel.SetStatus((sender as ComboBox).SelectedValue.ToString());
-        //  //  ((FilterFileItem)(sender as ComboBox).Tag).ForegroundColor = (sender as ComboBox).SelectedValue.ToString();
-        //    }
-        //}
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (sender is ComboBox)
@@ -134,9 +116,6 @@ namespace RegexViewer
         private void colorCombo_Selected(object sender, RoutedEventArgs e)
         {
             _color.Clear();
-            //(sender as ComboBox).UpdateLayout();
-            //  (sender as mboBox).droppe
-            //(sender as ComboBox).SelectedIndex = 1;
         }
 
         private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)

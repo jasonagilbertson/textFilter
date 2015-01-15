@@ -42,7 +42,9 @@ namespace RegexViewer
             _settings = RegexViewerSettings.Settings;
             if(!_settings.ReadConfigFile())
             {
-                Environment.Exit(1);
+                //Environment.Exit(1);
+                Application.Current.Shutdown(1);
+                
             }
 
             

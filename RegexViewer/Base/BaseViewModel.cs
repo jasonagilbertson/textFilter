@@ -11,13 +11,14 @@ namespace RegexViewer
         #region Private Fields
 
         // private ITabViewModel<T> activeTab;
-        private Command closeCommand;
-        private Command closeAllCommand;
-        private Command newCommand;
-        private Command openCommand;
-        private bool openDialogVisible;
-        private Command saveCommand;
-        private int selectedIndex;
+        private Command _closeCommand;
+        private Command _closeAllCommand;
+        private Command _newCommand;
+        private Command _openCommand;
+        private bool _openDialogVisible;
+        private Command _saveCommand;
+        private Command _saveAsCommand;
+        private int _selectedIndex;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
@@ -39,53 +40,53 @@ namespace RegexViewer
 
         public Command CloseAllCommand
         {
-            get { return closeAllCommand ?? new Command(CloseAllFiles); }
-            set { closeAllCommand = value; }
+            get { return _closeAllCommand ?? new Command(CloseAllFiles); }
+            set { _closeAllCommand = value; }
         }
         public Command CloseCommand
         {
-            get { return closeCommand ?? new Command(CloseFile); }
-            set { closeCommand = value; }
+            get { return _closeCommand ?? new Command(CloseFile); }
+            set { _closeCommand = value; }
         }
 
         public Command NewCommand
         {
             get
             {
-                if (newCommand == null)
+                if (_newCommand == null)
                 {
-                    newCommand = new Command(NewFile);
+                    _newCommand = new Command(NewFile);
                 }
-                newCommand.CanExecute = true;
+                _newCommand.CanExecute = true;
 
-                return newCommand;
+                return _newCommand;
             }
-            set { newCommand = value; }
+            set { _newCommand = value; }
         }
 
         public Command DragDropCommand
         {
-            get { return openCommand ?? new Command(OpenDrop); }
-            set { openCommand = value; }
+            get { return _openCommand ?? new Command(OpenDrop); }
+            set { _openCommand = value; }
         }
         public Command OpenCommand
         {
-            get { return openCommand ?? new Command(OpenFile); }
-            set { openCommand = value; }
+            get { return _openCommand ?? new Command(OpenFile); }
+            set { _openCommand = value; }
         }
 
         public bool OpenDialogVisible
         {
             get
             {
-                return openDialogVisible;
+                return _openDialogVisible;
             }
 
             set
             {
-                if (openDialogVisible != value)
+                if (_openDialogVisible != value)
                 {
-                    openDialogVisible = value;
+                    _openDialogVisible = value;
                     OnPropertyChanged("OpenDialogVisible");
                 }
             }
@@ -93,22 +94,28 @@ namespace RegexViewer
 
         public Command SaveCommand
         {
-            get { return saveCommand ?? new Command(SaveFile); }
-            set { saveCommand = value; }
+            get { return _saveCommand ?? new Command(SaveFile); }
+            set { _saveCommand = value; }
+        }
+
+        public Command SaveAsCommand
+        {
+            get { return _saveAsCommand ?? new Command(SaveFileAs); }
+            set { _saveAsCommand = value; }
         }
 
         public int SelectedIndex
         {
             get
             {
-                return selectedIndex;
+                return _selectedIndex;
             }
 
             set
             {
-                if (selectedIndex != value)
+                if (_selectedIndex != value)
                 {
-                    selectedIndex = value;
+                    _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
                 }
             }
@@ -139,6 +146,16 @@ namespace RegexViewer
 
         #region Public Methods
 
+        public abstract void RenameTabItem(string newName);
+
+        public void AddTabItem(ITabViewModel<T> tabItem)
+        {
+            if (!tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
+            {
+                tabItems.Add(tabItem);
+                this.SelectedIndex = tabItems.Count - 1;
+            }
+        }
         public abstract void AddTabItem(IFile<T> fileProperties);
 
         public void CloseAllFiles(object sender)
@@ -156,7 +173,7 @@ namespace RegexViewer
         }
         public void CloseFile(object sender)
         {
-            ITabViewModel<T> tabItem = tabItems[selectedIndex];
+            ITabViewModel<T> tabItem = tabItems[_selectedIndex];
             if (!this.ViewManager.CloseFile(tabItem.Tag))
             {
                 return;
@@ -184,10 +201,12 @@ namespace RegexViewer
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
                 tabItems.Remove(tabItem);
+                this.SelectedIndex = tabItems.Count - 1;
             }
         }
 
         public abstract void SaveFile(object sender);
+        public abstract void SaveFileAs(object sender);
 
         #endregion Public Methods
     }

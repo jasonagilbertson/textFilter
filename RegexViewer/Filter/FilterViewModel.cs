@@ -56,6 +56,7 @@ namespace RegexViewer
                 tabItem.Modified = false;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
+                _previousIndex = this.SelectedIndex;
                 this.SelectedIndex = this.TabItems.Count - 1;
             }
         }
@@ -193,12 +194,13 @@ namespace RegexViewer
             {
                 if (fileItem == null
                     && this.TabItems.Count > 0
-                    && this.TabItems.Count >= SelectedIndex)
+                    && this.TabItems.Count > SelectedIndex)
                 {
-                    FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First(
-                        x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                   // FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First(
+                   //     x => x.Tag == this.TabItems[SelectedIndex].Tag);
 
-                    return CleanFilterList(filterFile);
+                    //return CleanFilterList(filterFile);
+                    return CleanFilterList(CurrentFile());
                 }
                 else
                 {
@@ -244,10 +246,10 @@ namespace RegexViewer
         {
             // this.OpenDialogVisible = true;
 
-            bool test = false;
+            bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
             if (sender is string && !String.IsNullOrEmpty(sender as string))
             {
-                test = true;
+                silent = true;
             }
 
             string logName = string.Empty;
@@ -257,7 +259,7 @@ namespace RegexViewer
 
             Nullable<bool> result = false;
             // Show open file dialog box
-            if (test)
+            if (silent)
             {
                 result = true;
                 logName = (sender as string);
@@ -289,16 +291,16 @@ namespace RegexViewer
             }
         }
 
+        public override void SaveFileAs(object sender)
+        {
+            SaveAsFile(sender);
+        }
         public bool SaveAsFile(object sender)
         {
             // this.OpenDialogVisible = true;
 
-            bool test = false;
-            if (sender is string && !String.IsNullOrEmpty(sender as string))
-            {
-                test = true;
-            }
-
+            bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
+            
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".xml"; // Default file extension
@@ -306,7 +308,7 @@ namespace RegexViewer
 
             Nullable<bool> result = false;
             // Show save file dialog box
-            if (test)
+            if (silent)
             {
                 result = true;
                 logName = (sender as string);
@@ -327,21 +329,24 @@ namespace RegexViewer
             {
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
-                if (sender is ITabViewModel<FilterFileItem>)
-                {
-                    ITabViewModel<FilterFileItem> item = (sender as ITabViewModel<FilterFileItem>);
-                    item.Tag = logName;
-                    item.Header = item.Name = Path.GetFileName(logName);
-                    Settings.AddFilterFile(logName);
-                    SaveFile(sender);
-                }
-                else
-                {
-                    SaveFile(sender);
-                }
-            }
+                
+                RenameTabItem(logName);
+                
+                
+                SaveFile(null);
+        }
 
             return true;
+        }
+
+        public override void RenameTabItem(string logName)
+        {
+            // rename tab
+            ITabViewModel<FilterFileItem> tabItem = this.TabItems[SelectedIndex];
+            Settings.RemoveFilterFile(tabItem.Tag);
+            tabItem.Tag = CurrentFile().Tag = logName;
+            CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
+            Settings.AddFilterFile(logName);
         }
 
         public override void SaveFile(object sender)
@@ -513,7 +518,7 @@ namespace RegexViewer
         private FilterFile CurrentFile()
         {
             if (this.TabItems.Count > 0
-                    && this.TabItems.Count >= SelectedIndex)
+                    && this.TabItems.Count > SelectedIndex)
             {
                 return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }

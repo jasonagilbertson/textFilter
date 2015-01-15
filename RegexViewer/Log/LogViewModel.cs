@@ -16,13 +16,9 @@ namespace RegexViewer
 
         private FilterViewModel _filterViewModel;
         private Command _keyDownCommand;
-        private Command _pageDownCommand;
-        private Command _pageUpCommand;
-        private Command _ctrlEndCommand;
-        private Command _ctrlHomeCommand;
-        private Command _mouseWheelCommand;
+        
         private Command _hideCommand;
-        private bool _hiding = false;
+        private bool _hiding = true;
         private LogFileManager _logFileManager;
         private Command _quickFindChangedCommand;
         private string _quickFindText = string.Empty;
@@ -71,21 +67,7 @@ namespace RegexViewer
         }
 
      
-        public Command PageDownCommand
-        {
-            get
-            {
-                if (_pageDownCommand == null)
-                {
-                    _pageDownCommand = new Command(PageDownExecuted);
-                }
-                _pageDownCommand.CanExecute = true;
-
-                return _pageDownCommand;
-            }
-            set { _pageDownCommand = value; }
-        }
-
+    
         public Command KeyDownCommand
         {
             get
@@ -102,52 +84,7 @@ namespace RegexViewer
         }
 
 
-        public Command CtrlHomeCommand
-        {
-            get
-            {
-                if (_ctrlHomeCommand == null)
-                {
-                    _ctrlHomeCommand = new Command(CtrlHomeExecuted);
-                }
-                _ctrlHomeCommand.CanExecute = true;
-
-                return _ctrlHomeCommand;
-            }
-            set { _ctrlHomeCommand = value; }
-        }
-
-        public Command CtrlEndCommand
-        {
-            get
-            {
-                if (_ctrlEndCommand == null)
-                {
-                    _ctrlEndCommand = new Command(CtrlEndExecuted);
-                }
-                _ctrlEndCommand.CanExecute = true;
-
-                return _ctrlEndCommand;
-            }
-            set { _ctrlEndCommand = value; }
-        }
-
-
-
-        public Command PageUpCommand
-        {
-            get
-            {
-                if (_pageUpCommand == null)
-                {
-                    _pageUpCommand = new Command(PageUpExecuted);
-                }
-                _pageUpCommand.CanExecute = true;
-
-                return _pageUpCommand;
-            }
-            set { _pageUpCommand = value; }
-        }
+    
         public Command QuickFindChangedCommand
         {
             get
@@ -196,6 +133,9 @@ namespace RegexViewer
                 };
 
                 TabItems.Add(tabItem);
+                _previousIndex = this.SelectedIndex;
+                this.SelectedIndex = this.TabItems.Count - 1;
+                FilterLogTabItems(null, (LogFile)logFile, FilterCommand.Filter);
             }
         }
 
@@ -314,12 +254,8 @@ namespace RegexViewer
         public override void OpenFile(object sender)
         {
             SetStatus("opening file");
-            bool test = false;
-            if (sender is string && !String.IsNullOrEmpty(sender as string))
-            {
-                test = true;
-            }
-
+            bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
+            
             string logName = string.Empty;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = ""; // Default file name
@@ -329,7 +265,7 @@ namespace RegexViewer
 
             Nullable<bool> result = false;
             // Show open file dialog box
-            if (test)
+            if (silent)
             {
                 result = true;
                 logName = (sender as string);
@@ -346,14 +282,15 @@ namespace RegexViewer
                 // Open document
 
                 SetStatus(string.Format("opening file:{0}", logName));
-                LogFile logFileItems = new LogFile();
-                if (String.IsNullOrEmpty((logFileItems = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
+                LogFile logFile = new LogFile();
+                if (String.IsNullOrEmpty((logFile = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
                 {
                     return;
                 }
 
                 // make new tab
-                AddTabItem(logFileItems);
+                AddTabItem(logFile);
+                
             }
             else
             {
@@ -403,12 +340,20 @@ namespace RegexViewer
                
         }
 
+        public override void SaveFileAs(object sender)
+        {
+            SetStatus("save file as not implemented");
+            throw new NotImplementedException();
+        }
         public override void SaveFile(object sender)
         {
             SetStatus("save file not implemented");
             throw new NotImplementedException();
         }
-
+        public override void RenameTabItem(string newName)
+        {
+            throw new NotImplementedException();
+        }
         #endregion Public Methods
 
         #region Private Methods

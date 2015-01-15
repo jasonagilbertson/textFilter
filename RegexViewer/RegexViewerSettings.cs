@@ -17,6 +17,8 @@ namespace RegexViewer
         #region Private Fields
         [DllImport("kernel32.dll")]
         static extern bool AttachConsole(int dwProcessId);
+        [DllImport("kernel32.dll")]
+        static extern bool FreeConsole();
         private const int ATTACH_PARENT_PROCESS = -1;
 
         private static RegexViewerSettings settings;
@@ -110,7 +112,8 @@ namespace RegexViewer
             CurrentFilterFiles,
             CurrentLogFiles,
             RecentFilterFiles,
-            RecentLogFiles
+            RecentLogFiles,
+            MaxMultiFileCount
         }
 
         #endregion Private Enums
@@ -271,109 +274,143 @@ namespace RegexViewer
         }
         private bool ProcessCommandLine()
         {
+            bool retval = true;
             string[] arguments = Environment.GetCommandLineArgs();
 
-            // this is the way fta passes arg
-            if (arguments.Length == 2
-                && !arguments[1].StartsWith("/")
-                && File.Exists(arguments[1]))
-            {
-                Settings.RemoveAllLogs();
-                Settings.AddLogFile(arguments[1]);
-                return true;
-            }
-            else if (arguments.Length == 2 && arguments[1].Contains("/?"))
-            {
-                DisplayHelp();
-                return false;
-            }
-
-            List<string> results = new List<string>();
-
-            results = ProcessArg("/config:", arguments);
-            if (results.Count == 1)
-            {
-                Settings.ConfigFile = results[0];
-                // Settings.ReadConfigFile();
-            }
-
-            results = ProcessFiles(ProcessArg("/filter:", arguments));
-            if (results.Count > 0)
-            {
-                Settings.RemoveAllFilters();
-                foreach (string file in results)
+            
+                if (arguments.Length > 1)
                 {
-                    Settings.AddFilterFile(file);
+                    AttachConsole(ATTACH_PARENT_PROCESS);
                 }
-            }
-
-            results = ProcessFiles(ProcessArg("/log:", arguments));
-            if (results.Count > 0)
-            {
-                Settings.RemoveAllLogs();
-                foreach (string file in results)
+                // this is the way fta passes arg
+                if (arguments.Length == 2
+                    && !arguments[1].StartsWith("/")
+                    && File.Exists(arguments[1]))
                 {
-                    Settings.AddLogFile(file);
+                    Settings.RemoveAllLogs();
+                    Settings.AddLogFile(Environment.ExpandEnvironmentVariables(arguments[1]));
+                    
                 }
-            }
+                else if (arguments.Length == 2 && arguments[1].Contains("/?"))
+                {
+                    DisplayHelp();
+                    retval = false;
+                }
 
-            if (ProcessArg("/register", arguments).Count > 0)
-            {
-                FileTypeAssociation.Instance.ConfigureFTA(true);
-                AttachConsole(ATTACH_PARENT_PROCESS);
-                Console.WriteLine("registering file type association");
-                return false;
-            }
+                List<string> results = new List<string>();
 
-            if (ProcessArg("/unregister", arguments).Count > 0)
-            {
-                FileTypeAssociation.Instance.ConfigureFTA(false);
-                AttachConsole(ATTACH_PARENT_PROCESS);
-                Console.WriteLine("unregistering file type association");
-                return false;
-            }
+                results = ProcessArg("/config:", arguments);
+                if (results.Count == 1)
+                {
+                    Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+                    // Settings.ReadConfigFile();
+                }
 
-            return true;
+                results = ProcessFiles(ProcessArg("/filter:", arguments));
+                if (results.Count > 0)
+                {
+                    Settings.RemoveAllFilters();
+                    if (results.Count > Settings.MaxMultiFileCount)
+                    {
+                        SetStatus("max filter count reached:" + settings.MaxMultiFileCount);
+                    }
+
+                    for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                    {
+                        Settings.AddFilterFile(results[i]);
+                    }
+                }
+
+                results = ProcessFiles(ProcessArg("/log:", arguments));
+                if (results.Count > 0)
+                {
+                    Settings.RemoveAllLogs();
+                    if (results.Count > Settings.MaxMultiFileCount)
+                    {
+                        SetStatus("max log count reached:" + settings.MaxMultiFileCount);
+                    }
+
+                    for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                    {
+                        Settings.AddLogFile(results[i]);
+                    }
+                }
+
+                if (ProcessArg("/register", arguments).Count > 0)
+                {
+                    FileTypeAssociation.Instance.ConfigureFTA(true);
+
+                    Console.WriteLine("registering file type association");
+                    retval = false;
+                }
+
+                if (ProcessArg("/unregister", arguments).Count > 0)
+                {
+                    FileTypeAssociation.Instance.ConfigureFTA(false);
+
+                    Console.WriteLine("unregistering file type association");
+                    retval = false;
+                }
+
+               
+            
+                if (arguments.Length > 1)
+                {
+                    Console.WriteLine("exiting. press enter for prompt.");
+                    
+                    FreeConsole();
+                }
+
+                return retval;
         }
 
         private List<string> ProcessFiles(List<string> results)
         {
          
             List<string> files = new List<string>();
-            string wildcard = "*.*";
+           // string wildcard = "*.*";
 
             foreach (string arg in results)
             {
-                string cleanPath = arg.Trim('"');
-                if (Regex.IsMatch(cleanPath, @"[^\\]*$") | cleanPath.Contains("*") | cleanPath.Contains("?"))
-                {
+                string cleanPath = Environment.ExpandEnvironmentVariables(arg.Trim('"'));
 
-                    string tempString = Regex.Match(cleanPath, @"[^\\]*$").Groups[0].Value;
-                    if (tempString.Contains("*") | tempString.Contains("?"))
-                    {
-                        wildcard = tempString;
-                        cleanPath = cleanPath.Replace(string.Format(@"\{0}", tempString), "");
-                    }
-                    if (string.IsNullOrEmpty(cleanPath) || string.IsNullOrEmpty(Path.GetDirectoryName(cleanPath)))
-                    {
-                        cleanPath = string.Format("{0}\\{1}", Environment.CurrentDirectory, cleanPath);
-                    }
-                    try
-                    {
-                        if (Directory.Exists(cleanPath))
-                        {
-                            files.AddRange(Directory.GetFiles(cleanPath, wildcard, SearchOption.AllDirectories));
-                        }
-                    }
+                try
+                {
+                  //  string path = string.IsNullOrEmpty(Path.GetDirectoryName(cleanPath)) ? Directory.GetCurrentDirectory() : Path.GetDirectoryName(cleanPath);
+                    files.AddRange(
+                        Directory.GetFiles(Path.GetDirectoryName(cleanPath),
+                            Path.GetFileName(cleanPath),
+                            SearchOption.AllDirectories).ToList());
+                }
+                //if (Regex.IsMatch(cleanPath, @"[^\\]*$") | cleanPath.Contains("*") | cleanPath.Contains("?"))
+                //{
+
+                //    string tempString = Regex.Match(cleanPath, @"[^\\]*$").Groups[0].Value;
+                //    if (tempString.Contains("*") | tempString.Contains("?"))
+                //    {
+                //        wildcard = tempString;
+                //        cleanPath = cleanPath.Replace(string.Format(@"\{0}", tempString), "");
+                //    }
+                //    if (string.IsNullOrEmpty(cleanPath) || string.IsNullOrEmpty(Path.GetDirectoryName(cleanPath)))
+                //    {
+                //        cleanPath = string.Format("{0}\\{1}", Environment.CurrentDirectory, cleanPath);
+                //    }
+                //    try
+                //    {
+                //        if (Directory.Exists(cleanPath))
+                //        {
+                //            files.AddRange(Directory.GetFiles(cleanPath, wildcard, SearchOption.AllDirectories));
+                //        }
+                //    }
                     catch (Exception e)
                     {
                         SetStatus("invalid dir: " + e.ToString());
                     }
-                }
-                else if (File.Exists(arg))
-                {
-                    files.Add(arg);
-                }
+                //}
+                //else if (File.Exists(arg))
+                //{
+                //    files.Add(arg);
+                //}
             }
 
             return files;
@@ -414,8 +451,8 @@ namespace RegexViewer
 
         private void DisplayHelp()
         {
-            AttachConsole(ATTACH_PARENT_PROCESS);
             Console.WriteLine(Properties.Resources.DisplayHelp);
+            
         }
 
         public void AddLogFile(string logFile)
@@ -507,56 +544,68 @@ namespace RegexViewer
 
         private void VerifyAppSettings()
         {
-            foreach (string name in Enum.GetNames(typeof(AppSettingNames)))
+            try
             {
-                if (!_appSettings.AllKeys.Contains(name))
+                foreach (string name in Enum.GetNames(typeof(AppSettingNames)))
                 {
-                    _appSettings.Add(name, string.Empty);
-                }
+                    if (!_appSettings.AllKeys.Contains(name))
+                    {
+                        _appSettings.Add(name, string.Empty);
+                    }
 
-                // set default settings
-                if (!string.IsNullOrEmpty(_appSettings[name].Value))
-                {
-                    continue;
-                }
+                    // set default settings
+                    if (!string.IsNullOrEmpty(_appSettings[name].Value))
+                    {
+                        continue;
+                    }
 
-                switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
-                {
-                    case AppSettingNames.BackgroundColor:
-                        {
-                            _appSettings[name].Value = "White";
-                            break;
-                        }
-                    case AppSettingNames.FileHistoryCount:
-                        {
-                            _appSettings[name].Value = "20";
-                            break;
-                        }
-                    case AppSettingNames.FontName:
-                        {
-                            _appSettings[name].Value = "Courier";
-                            break;
-                        }
-                    case AppSettingNames.FontSize:
-                        {
-                            _appSettings[name].Value = "10";
-                            break;
-                        }
-                    case AppSettingNames.ForegroundColor:
-                        {
-                            _appSettings[name].Value = "Black";
-                            break;
-                        }
-                    case AppSettingNames.AutoSaveFilters:
-                        {
-                            _appSettings[name].Value = "False";
-                            break;
-                        }
-                    default:
-                        {
-                            break;
-                        }
+                    switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
+                    {
+                        case AppSettingNames.BackgroundColor:
+                            {
+                                _appSettings[name].Value = "White";
+                                break;
+                            }
+                        case AppSettingNames.FileHistoryCount:
+                            {
+                                _appSettings[name].Value = "20";
+                                break;
+                            }
+                        case AppSettingNames.FontName:
+                            {
+                                _appSettings[name].Value = "Courier";
+                                break;
+                            }
+                        case AppSettingNames.FontSize:
+                            {
+                                _appSettings[name].Value = "10";
+                                break;
+                            }
+                        case AppSettingNames.ForegroundColor:
+                            {
+                                _appSettings[name].Value = "Black";
+                                break;
+                            }
+                        case AppSettingNames.AutoSaveFilters:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
+                        case AppSettingNames.MaxMultiFileCount:
+                            {
+                                _appSettings[name].Value = "10";
+                                break;
+                            }
+                        default:
+                            {
+                                break;
+                            }
+                    }
                 }
+            }
+            catch (Exception e)
+            {
+                SetStatus("Exception:verifyappsetings:" + e.ToString());
             }
         }
 
@@ -564,5 +613,17 @@ namespace RegexViewer
 
 
         public string ConfigFile { get; set; }
+
+        public int MaxMultiFileCount 
+        {
+            get
+            {
+                return (Convert.ToInt32(_appSettings["MaxMultiFileCount"].Value));
+            }
+            set
+            {
+                _appSettings["MaxMultiFileCount"].Value = value.ToString();
+            }
+        }
     }
 }

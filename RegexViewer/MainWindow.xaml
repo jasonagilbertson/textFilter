@@ -48,6 +48,7 @@
                 <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
                 <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
                 <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
+                <MenuItem Header="_Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
             </MenuItem>
             <!--<MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />
@@ -117,9 +118,11 @@
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
                                     <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
-                                    <MenuItem Header="Copy Filter" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    
+                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
+                                    <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
+                                    <MenuItem Header="Save Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" InputGestureText="Ctrl+Alt+S" />
+                                    <MenuItem Header="Save Filter As" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <!--<MenuItem Header="Find" Command="{Binding FindCommand}" />-->
                                 </ContextMenu>
@@ -199,6 +202,7 @@
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
                         <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}" />
                         <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}" />
+                        <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
                         <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
                     </ContextMenu>
                 </TabControl.ContextMenu>

@@ -17,6 +17,7 @@
         void RemoveTabItem(ITabViewModel<T> tabItem);
 
         void SaveFile(object sender);
+        void SaveFileAs(object sender);
 
         #endregion Public Methods
 
@@ -27,7 +28,7 @@
         #endregion Public Events
 
         #region Public Properties
-
+        void RenameTabItem(string newName);
         Command CloseCommand { get; set; }
 
         Command DragDropCommand { get; set; }
