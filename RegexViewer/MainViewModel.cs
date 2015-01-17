@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -15,13 +11,13 @@ namespace RegexViewer
     public class MainViewModel : Base, IMainViewModel
     {
         #region Private Fields
+
         private Command _copyCommand;
 
         private FilterViewModel _filterViewModel;
 
         private LogViewModel _logViewModel;
 
-        
         private RegexViewerSettings _settings;
 
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
@@ -38,17 +34,13 @@ namespace RegexViewer
 
         public MainViewModel()
         {
-            
             _settings = RegexViewerSettings.Settings;
-            if(!_settings.ReadConfigFile())
+            if (!_settings.ReadConfigFile())
             {
                 //Environment.Exit(1);
                 Application.Current.Shutdown(1);
-                
             }
 
-            
-            
             //Base.MainModel = this;
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
@@ -73,7 +65,6 @@ namespace RegexViewer
             SetStatus("loaded");
         }
 
-        
         #endregion Public Constructors
 
         #region Public Properties

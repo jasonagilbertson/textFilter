@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RegexViewer
+﻿namespace RegexViewer
 {
     public interface IFileItem
     {

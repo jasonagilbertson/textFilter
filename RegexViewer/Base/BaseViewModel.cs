@@ -2,7 +2,6 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using System.Windows;
 
 namespace RegexViewer
 {
@@ -10,14 +9,16 @@ namespace RegexViewer
     {
         #region Private Fields
 
+        private Command _closeAllCommand;
+
         // private ITabViewModel<T> activeTab;
         private Command _closeCommand;
-        private Command _closeAllCommand;
+
         private Command _newCommand;
         private Command _openCommand;
         private bool _openDialogVisible;
-        private Command _saveCommand;
         private Command _saveAsCommand;
+        private Command _saveCommand;
         private int _selectedIndex;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
 
@@ -43,10 +44,17 @@ namespace RegexViewer
             get { return _closeAllCommand ?? new Command(CloseAllFiles); }
             set { _closeAllCommand = value; }
         }
+
         public Command CloseCommand
         {
             get { return _closeCommand ?? new Command(CloseFile); }
             set { _closeCommand = value; }
+        }
+
+        public Command DragDropCommand
+        {
+            get { return _openCommand ?? new Command(OpenDrop); }
+            set { _openCommand = value; }
         }
 
         public Command NewCommand
@@ -64,11 +72,6 @@ namespace RegexViewer
             set { _newCommand = value; }
         }
 
-        public Command DragDropCommand
-        {
-            get { return _openCommand ?? new Command(OpenDrop); }
-            set { _openCommand = value; }
-        }
         public Command OpenCommand
         {
             get { return _openCommand ?? new Command(OpenFile); }
@@ -92,16 +95,16 @@ namespace RegexViewer
             }
         }
 
-        public Command SaveCommand
-        {
-            get { return _saveCommand ?? new Command(SaveFile); }
-            set { _saveCommand = value; }
-        }
-
         public Command SaveAsCommand
         {
             get { return _saveAsCommand ?? new Command(SaveFileAs); }
             set { _saveAsCommand = value; }
+        }
+
+        public Command SaveCommand
+        {
+            get { return _saveCommand ?? new Command(SaveFile); }
+            set { _saveCommand = value; }
         }
 
         public int SelectedIndex
@@ -146,8 +149,6 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public abstract void RenameTabItem(string newName);
-
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
             if (!tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
@@ -156,6 +157,7 @@ namespace RegexViewer
                 this.SelectedIndex = tabItems.Count - 1;
             }
         }
+
         public abstract void AddTabItem(IFile<T> fileProperties);
 
         public void CloseAllFiles(object sender)
@@ -171,6 +173,7 @@ namespace RegexViewer
                 RemoveTabItem(tabItem);
             }
         }
+
         public void CloseFile(object sender)
         {
             ITabViewModel<T> tabItem = tabItems[_selectedIndex];
@@ -184,18 +187,18 @@ namespace RegexViewer
 
         public abstract void NewFile(object sender);
 
-        public abstract void OpenFile(object sender);
-
         public void OpenDrop(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());
             SetStatus("OpenDrop: " + sender.ToString());
-            if(sender is string)
+            if (sender is string)
             {
-            SetStatus("OpenDrop: " + (sender as string));
+                SetStatus("OpenDrop: " + (sender as string));
             }
-
         }
+
+        public abstract void OpenFile(object sender);
+
         public void RemoveTabItem(ITabViewModel<T> tabItem)
         {
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
@@ -205,7 +208,10 @@ namespace RegexViewer
             }
         }
 
+        public abstract void RenameTabItem(string newName);
+
         public abstract void SaveFile(object sender);
+
         public abstract void SaveFileAs(object sender);
 
         #endregion Public Methods

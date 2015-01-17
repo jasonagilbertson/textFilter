@@ -5,6 +5,7 @@
         #region Public Methods
 
         void CloseAllFiles(object sender);
+
         void CloseFile(object sender);
 
         void NewFile(object sender);
@@ -12,11 +13,15 @@
         void OnPropertyChanged(string name);
 
         void OpenDrop(object sender);
+
         void OpenFile(object sender);
 
         void RemoveTabItem(ITabViewModel<T> tabItem);
 
+        void RenameTabItem(string newName);
+
         void SaveFile(object sender);
+
         void SaveFileAs(object sender);
 
         #endregion Public Methods
@@ -28,10 +33,11 @@
         #endregion Public Events
 
         #region Public Properties
-        void RenameTabItem(string newName);
+
         Command CloseCommand { get; set; }
 
         Command DragDropCommand { get; set; }
+
         Command OpenCommand { get; set; }
 
         bool OpenDialogVisible { get; set; }

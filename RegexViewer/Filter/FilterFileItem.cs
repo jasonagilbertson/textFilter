@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -124,20 +123,22 @@ namespace RegexViewer
 
         #region Private Fields
 
-        private string _backgroundColor; // = "White";
+        private string _backgroundColor;
 
         private int _count = 0;
 
+        // = "White";
         private bool _enabled = false;
 
         private bool _exclude = false;
 
         private string _filterpattern = string.Empty;
 
-        private string _foregroundColor; // = "Black";
+        private string _foregroundColor;
 
         private int _index = 0;
 
+        // = "Black";
         private string _notes = string.Empty;
 
         private bool _regex = false;
@@ -171,7 +172,7 @@ namespace RegexViewer
                 if (base.Background != value)
                 {
                     base.Background = value;
-                   // OnPropertyChanged(FilterFileItemEvents.Background);
+                    // OnPropertyChanged(FilterFileItemEvents.Background);
                 }
             }
         }
@@ -293,11 +294,9 @@ namespace RegexViewer
                 if (base.Foreground != value)
                 {
                     base.Foreground = value;
-                   // OnPropertyChanged(FilterFileItemEvents.Foreground);
+                    // OnPropertyChanged(FilterFileItemEvents.Foreground);
                 }
             }
         }
-
-        
     }
 }

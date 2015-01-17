@@ -4,7 +4,10 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:RegexViewer"
+        AllowDrop="True"
+        Drop="FileData_Drop"
         Title="RegexViewer" Height="600" Width="900">
+
     <Window.Resources>
         <local:MainViewModel x:Key="mainViewModel" />
         <local:RegexViewerSettings x:Key="settings" />
@@ -18,6 +21,7 @@
         </ObjectDataProvider>
         <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp" />
     </Window.Resources>
+
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="Ctrl+H" />
@@ -28,13 +32,8 @@
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+N" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+S" />
     </Window.InputBindings>
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="ApplicationCommands.Copy" CanExecute="CommandBinding_CanExecute" Executed="CommandBinding_Executed" />
-    </Window.CommandBindings>-->
-    <!--http://www.codeproject.com/Articles/768427/The-big-MVVM-Template-->
-    <DockPanel DataContext="{StaticResource mainViewModel}" >
-        <!--<my:ErrorControl Visibility="{Binding Path=ThereWasAnError, Mode=TwoWay, Converter={StaticResource booltoVis}, UpdateSourceTrigger=PropertyChanged}" />-->
 
+    <DockPanel DataContext="{StaticResource mainViewModel}">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Open Log" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
@@ -58,18 +57,22 @@
             </MenuItem>-->
         </Menu>
 
-        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" >
+        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="5" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
-            <TabControl x:Name="tabFilters" Grid.Row="0" HorizontalAlignment="Stretch"
+
+            <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+
+            <TabControl x:Name="tabFilters"
+                        Grid.Row="0"
+                        HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch"
-                        >
+                        Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
@@ -88,17 +91,9 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
-                          Drop="dataGridFilter_Drop"
-                          AllowDrop="True"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}">
-                            
-                            <!--<i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Drop">
-                                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.DragDropCommand}"  CommandParameter="{Binding}" />
-                            </i:EventTrigger>
-                            </i:Interaction.Triggers>-->
-                            
+
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
@@ -201,6 +196,7 @@
                         <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
                         <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}" />
+                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}" />
                         <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}" />
                         <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
                         <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
@@ -209,7 +205,7 @@
             </TabControl>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
 
-            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch" 
+            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
@@ -218,29 +214,30 @@
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
+
+                <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+
                 <TabControl.ContentTemplate>
                     <DataTemplate>
                         <ListBox x:Name="logFileData"
                                  ItemsSource="{Binding Path=ContentList}"
-                                 AllowDrop="True"
                                  SelectionMode="Extended"
                                  FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                                  VirtualizingStackPanel.IsVirtualizing="True"
-                                 VirtualizingStackPanel.VirtualizationMode="Recycling" ScrollViewer.IsDeferredScrollingEnabled="False"
-                                 Drop="logFileData_Drop"
-                                 >
-                        
+                                 VirtualizingStackPanel.VirtualizationMode="Recycling"
+                                 ScrollViewer.IsDeferredScrollingEnabled="False">
+
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Path=Index}"
+                                        <TextBlock Text="{Binding Path=Index}"
                                                Margin="0,0,5,0"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
                                                Background="{Binding Path=Background}" />
-                                    <TextBlock Text="{Binding Path=Content}"
+                                        <TextBlock Text="{Binding Path=Content}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
@@ -256,26 +253,15 @@
                                 <i:EventTrigger EventName="PreviewKeyDown">
                                     <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
                                 </i:EventTrigger>
-                                <!--<i:EventTrigger EventName="Drop">
-                                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.DragDropCommand}"  CommandParameter="{Binding}" />
-                                </i:EventTrigger>-->
                             </i:Interaction.Triggers>
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-
-                                
-                                <!--<KeyBinding Key="PageDown" Command="{Binding Path=PageDownCommand}" />
-                                <KeyBinding Key="PageUp" Command="{Binding Path=PageUpCommand}" />
-                                <KeyBinding Key="Home" Modifiers="Control" Command="{Binding Path=CtrlHomeCommand}" />
-                                <KeyBinding Key="End" Modifiers="Control" Command="{Binding Path=CtrlEndCommand}" />-->
-
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-
                                     <MenuItem Header="Close Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
                                     <MenuItem Header="Close All Logs" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
                                     <MenuItem Header="Open Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
@@ -297,55 +283,53 @@
                 </TabControl.ContextMenu>
             </TabControl>
 
-        <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+            <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50"  Height="25" />
-            <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+
+                <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      SelectedIndex="{Binding Path=StatusIndex}"
                      Height="25"
-
                      ItemsSource="{Binding Path=Status}">
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding StatusChangedCommand}"  CommandParameter="{Binding ElementName=listboxStatus}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-                <ListBox.InputBindings>
-                    <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"  CommandParameter="{Binding Path=Status}" />
-                </ListBox.InputBindings>
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding StatusChangedCommand}"  CommandParameter="{Binding ElementName=listboxStatus}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.InputBindings>
+                        <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"  CommandParameter="{Binding Path=Status}" />
+                    </ListBox.InputBindings>
 
-                <ListBox.ContextMenu>
-                    <ContextMenu HasDropShadow="True">
-                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />
-                        <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />-->
-                        <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                    </ContextMenu>
-                </ListBox.ContextMenu>
-            </ListBox>
-            <GridSplitter Grid.Column="1" Height="25" Width="5" HorizontalAlignment="Center" />
-            <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
-            <TextBox Name="textboxQuickFind"
+                    <ListBox.ContextMenu>
+                        <ContextMenu HasDropShadow="True">
+                            <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />
+                            <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />-->
+                            <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+                <GridSplitter Grid.Column="1" Height="25" Width="5" HorizontalAlignment="Center" />
+                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
+                <TextBox Name="textboxQuickFind"
                     Height="25"
                      Grid.Column="2"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
-                     Margin="75,0,0,0"
-                     >
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="TextChanged">
-                        <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
-                            <!--<KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="CTRL+S" />-->
+                     Margin="75,0,0,0">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="TextChanged">
+                            <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
                         </i:EventTrigger>
-                </i:Interaction.Triggers>
-            </TextBox>
-        </Grid>
+                    </i:Interaction.Triggers>
+                </TextBox>
+            </Grid>
         </Grid>
     </DockPanel>
 </Window>

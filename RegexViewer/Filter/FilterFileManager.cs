@@ -46,11 +46,12 @@ namespace RegexViewer
 
                 filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
-                
+
                 filterFile.ContentItems.Add(fileItem);
                 filterFile.EnablePatternNotifications(true);
-              //  fileItem.BackgroundColor = RegexViewerSettings.Settings.BackgroundColor.ToString();
-              //  fileItem.ForegroundColor = RegexViewerSettings.Settings.ForegroundColor.ToString();
+                // fileItem.BackgroundColor =
+                // RegexViewerSettings.Settings.BackgroundColor.ToString(); fileItem.ForegroundColor
+                // = RegexViewerSettings.Settings.ForegroundColor.ToString();
             }
             else if (results.Count() == 1)
             {
@@ -71,6 +72,7 @@ namespace RegexViewer
                 }
             }
         }
+
         public override IFile<FilterFileItem> NewFile(string LogName)
         {
             FilterFile filterFile = new FilterFile();
@@ -225,7 +227,7 @@ namespace RegexViewer
 
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 SetStatus("SaveFile:exception: " + e.ToString());
                 return false;

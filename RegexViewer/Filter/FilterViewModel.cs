@@ -11,11 +11,139 @@ namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
+        #region Private Methods
+
+        private FilterFile CurrentFile()
+        {
+            if (this.TabItems.Count > 0
+                    && this.TabItems.Count > SelectedIndex)
+            {
+                return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+            }
+
+            return new FilterFile();
+        }
+
+        private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            OnPropertyChanged(e.PropertyName);
+        }
+
+        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("TabItems");
+        }
+
+        private void VerifyIndex(FilterFileItem filterFileItem = null)
+        {
+            FilterFile filterFile = CurrentFile();
+
+            try
+            {
+                filterFile.EnablePatternNotifications(false);
+                List<FilterFileItem> filterItems = filterFile.ContentItems.ToList();
+                List<FilterFileItem> sortedFilterItems = new List<FilterFileItem>(filterItems.OrderBy(x => x.Index));
+
+                bool dupes = false;
+                bool needsSorting = false;
+                List<int> indexList = new List<int>();
+
+                for (int i = 0; i < sortedFilterItems.Count; i++)
+                {
+                    int index = sortedFilterItems[i].Index;
+                    if (index != filterItems[i].Index)
+                    {
+                        needsSorting = true;
+                    }
+
+                    if (!indexList.Contains(index))
+                    {
+                        indexList.Add(index);
+                    }
+                    else
+                    {
+                        dupes = true;
+                    }
+                }
+
+                // does it need to be resorted
+                if (!needsSorting && !dupes)
+                {
+                    // do nothing
+                    return;
+                }
+                else if (needsSorting && !dupes)
+                {
+                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
+
+                    //filterFile.ContentItems = filterFile.ContentItems.OrderBy(x => x.Index);
+                }
+                else if (dupes)
+                {
+                    int currentIndex = -1;
+
+                    if (filterFileItem != null && sortedFilterItems.Count(x => x.Index == filterFileItem.Index) > 1)
+                    {
+                        // remove and insert selected item in list at lowest position in index of dupes
+                        sortedFilterItems.RemoveAt(sortedFilterItems.IndexOf(filterFileItem));
+                        sortedFilterItems.Insert((int)(sortedFilterItems.IndexOf(sortedFilterItems.First(x => x.Index == filterFileItem.Index))), filterFileItem);
+                    }
+
+                    for (int i = 0; i < sortedFilterItems.Count; i++)
+                    {
+                        int index = sortedFilterItems[i].Index;
+
+                        if (index <= currentIndex)
+                        {
+                            filterItems[i] = sortedFilterItems[i];
+                            filterItems[i].Index = ++currentIndex;
+                        }
+                        else
+                        {
+                            filterItems[i] = sortedFilterItems[i];
+                            currentIndex = index;
+                        }
+                    }
+
+                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterItems);
+                }
+            }
+            catch (Exception ex)
+            {
+                SetStatus("VerifyIndex:exception:" + ex.ToString());
+            }
+            finally
+            {
+                filterFile.EnablePatternNotifications(true);
+            }
+        }
+
+        private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == FilterFileItemEvents.Index && (sender is FilterFileItem))
+            {
+                VerifyIndex((sender as FilterFileItem));
+            }
+
+            if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
+            //if (sender is FilterFile)
+            {
+                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(CurrentFile());
+            }
+            //OnPropertyChanged(e.PropertyName);
+            OnPropertyChanged(sender, e);
+        }
+
+        #endregion Private Methods
+
         #region Private Fields
 
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
+
         private int _previousIndex = -1;
+
         private string _tempFilterNameFormat = "*new {0}*";
+
         private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
 
         #endregion Private Fields
@@ -196,8 +324,8 @@ namespace RegexViewer
                     && this.TabItems.Count > 0
                     && this.TabItems.Count > SelectedIndex)
                 {
-                   // FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First(
-                   //     x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                    // FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First( x =>
+                    // x.Tag == this.TabItems[SelectedIndex].Tag);
 
                     //return CleanFilterList(filterFile);
                     return CleanFilterList(CurrentFile());
@@ -273,39 +401,31 @@ namespace RegexViewer
             // Process open file dialog box results
             if (result == true && File.Exists(logName))
             {
-                // Open document
-
-                //SetStatusHandler(string.Format("opening file:{0}", logName));
                 SetStatus(string.Format("opening file:{0}", logName));
-                FilterFile logProperties = new FilterFile();
-                if (String.IsNullOrEmpty((logProperties = (FilterFile)this.ViewManager.OpenFile(logName)).Tag))
-                {
-                    return;
-                }
-
-                // make new tab
-                AddTabItem(logProperties);
-            }
-            else
-            {
+                VerifyAndOpenFile(logName);
+                
             }
         }
 
-        public override void SaveFileAs(object sender)
+        public override void RenameTabItem(string logName)
         {
-            SaveAsFile(sender);
+            // rename tab
+            ITabViewModel<FilterFileItem> tabItem = this.TabItems[SelectedIndex];
+            Settings.RemoveFilterFile(tabItem.Tag);
+            tabItem.Tag = CurrentFile().Tag = logName;
+            CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
+            Settings.AddFilterFile(logName);
         }
+
         public bool SaveAsFile(object sender)
         {
-            // this.OpenDialogVisible = true;
-
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
-            
+
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".xml"; // Default file extension
             dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*"; // Filter files by extension
-
+            dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             Nullable<bool> result = false;
             // Show save file dialog box
             if (silent)
@@ -329,24 +449,13 @@ namespace RegexViewer
             {
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
-                
+
                 RenameTabItem(logName);
-                
-                
+
                 SaveFile(null);
-        }
+            }
 
             return true;
-        }
-
-        public override void RenameTabItem(string logName)
-        {
-            // rename tab
-            ITabViewModel<FilterFileItem> tabItem = this.TabItems[SelectedIndex];
-            Settings.RemoveFilterFile(tabItem.Tag);
-            tabItem.Tag = CurrentFile().Tag = logName;
-            CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
-            Settings.AddFilterFile(logName);
         }
 
         public override void SaveFile(object sender)
@@ -373,6 +482,11 @@ namespace RegexViewer
             {
                 this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
             }
+        }
+
+        public override void SaveFileAs(object sender)
+        {
+            SaveAsFile(sender);
         }
 
         public void SaveModifiedFiles(object sender)
@@ -419,129 +533,22 @@ namespace RegexViewer
 
         #endregion Public Methods
 
-        #region Private Methods
+        #region Internal Methods
 
-        private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        internal bool VerifyAndOpenFile(string fileName)
         {
-            OnPropertyChanged(e.PropertyName);
+            SetStatus(string.Format("checking filter file:{0}", fileName));
+            FilterFile filterFile = new FilterFile();
+            if (String.IsNullOrEmpty((filterFile = (FilterFile)this.ViewManager.OpenFile(fileName)).Tag))
+            {
+                return false;
+            }
+
+            AddTabItem(filterFile);
+
+            return true;
         }
 
-        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            OnPropertyChanged("TabItems");
-        }
-
-        private void VerifyIndex(FilterFileItem filterFileItem = null)
-        {
-            FilterFile filterFile = CurrentFile();
-
-            try
-            {
-                filterFile.EnablePatternNotifications(false);
-                List<FilterFileItem> filterItems = filterFile.ContentItems.ToList();
-                List<FilterFileItem> sortedFilterItems = new List<FilterFileItem>(filterItems.OrderBy(x => x.Index));
-
-                bool dupes = false;
-                bool needsSorting = false;
-                List<int> indexList = new List<int>();
-
-                for (int i = 0; i < sortedFilterItems.Count; i++)
-                {
-                    int index = sortedFilterItems[i].Index;
-                    if (index != filterItems[i].Index)
-                    {
-                        needsSorting = true;
-                    }
-
-                    if (!indexList.Contains(index))
-                    {
-                        indexList.Add(index);
-                    }
-                    else
-                    {
-                        dupes = true;
-                    }
-                }
-
-                // does it need to be resorted
-                if (!needsSorting && !dupes)
-                {
-                    // do nothing
-                    return;
-                }
-                else if (needsSorting && !dupes)
-                {
-                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
-
-                    //filterFile.ContentItems = filterFile.ContentItems.OrderBy(x => x.Index);
-                }
-                else if (dupes)
-                {
-                    int currentIndex = -1;
-
-                    if (filterFileItem != null && sortedFilterItems.Count(x => x.Index == filterFileItem.Index) > 1)
-                    {
-                        // remove and insert selected item in list at lowest position in index of dupes
-                        sortedFilterItems.RemoveAt(sortedFilterItems.IndexOf(filterFileItem));
-                        sortedFilterItems.Insert((int)(sortedFilterItems.IndexOf(sortedFilterItems.First(x => x.Index == filterFileItem.Index))), filterFileItem);
-                    }
-
-                    for (int i = 0; i < sortedFilterItems.Count; i++)
-                    {
-                        int index = sortedFilterItems[i].Index;
-
-                        if (index <= currentIndex)
-                        {
-                            filterItems[i] = sortedFilterItems[i];
-                            filterItems[i].Index = ++currentIndex;
-                        }
-                        else
-                        {
-                            filterItems[i] = sortedFilterItems[i];
-                            currentIndex = index;
-                        }
-                    }
-
-                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterItems);
-                }
-            }
-            catch (Exception ex)
-            {
-                SetStatus("VerifyIndex:exception:" + ex.ToString());
-            }
-            finally
-            {
-                filterFile.EnablePatternNotifications(true);
-            }
-        }
-
-        private FilterFile CurrentFile()
-        {
-            if (this.TabItems.Count > 0
-                    && this.TabItems.Count > SelectedIndex)
-            {
-                return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
-            }
-
-            return new FilterFile();
-        }
-        
-        private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == FilterFileItemEvents.Index && (sender is FilterFileItem))
-            {
-                VerifyIndex((sender as FilterFileItem));
-            }
-            
-            if(sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
-            //if (sender is FilterFile)
-            {
-                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(CurrentFile());
-            }
-            //OnPropertyChanged(e.PropertyName);
-            OnPropertyChanged(sender, e);
-        }
-
-        #endregion Private Methods
+        #endregion Internal Methods
     }
 }

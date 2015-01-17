@@ -1,22 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Win32;
 using System;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
-using Microsoft.Win32;
 using System.IO;
+using System.Runtime.InteropServices;
 
 namespace RegexViewer
 {
-    public class FileTypeAssociation:Base
+    public class FileTypeAssociation : Base
     {
+        #region Private Fields
+
         private static FileTypeAssociation _fileTypeAssociation;
+        private string _extension;
+
+        private string _extensionBackup;
+
+        private string _fileDescription;
+
+        private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
+
+        private string _hkcuKeyExt;
+
+        private string _keyName = Process.GetCurrentProcess().ProcessName;
+
+        private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         static FileTypeAssociation()
         {
-            if(_fileTypeAssociation == null)
+            if (_fileTypeAssociation == null)
             {
                 _fileTypeAssociation = new FileTypeAssociation();
             }
@@ -24,23 +39,34 @@ namespace RegexViewer
 
         public FileTypeAssociation()
         {
-            
             _extension = ".csv";
             _extensionBackup = _extension + "_back";
             _fileDescription = "RegexViewer";
-            
+
             _hkcuKeyExt = _hkcuKey + _extension;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public static FileTypeAssociation Instance
         {
-            get{ return _fileTypeAssociation;}
+            get { return _fileTypeAssociation; }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
         public bool ConfigureFTA(bool set)
         {
             // set path to programfiles
             string ftaFolder = Directory.GetCurrentDirectory();
-            
+
             if (set)
             {
                 // add
@@ -50,26 +76,12 @@ namespace RegexViewer
             }
             else
             {
-                // remove 
-                
+                // remove
+
                 UnSetAssociation();
                 return true;
             }
         }
-
-        #region Fields
-        
-        private string _keyName = Process.GetCurrentProcess().ProcessName;
-        private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
-        private string _extensionBackup;
-        private string _extension;
-        private string _fileDescription;
-        private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
-        private string _hkcuKeyExt;
-
-        #endregion Fields
-
-        #region Methods
 
         public bool CopyKey(RegistryKey parentKey,
             string keyNameToCopy, string newKeyName)
@@ -122,9 +134,6 @@ namespace RegexViewer
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
         }
 
-        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
-
         public void UnSetAssociation()
         {
             DeleteKey(Registry.ClassesRoot, _keyName);
@@ -134,6 +143,10 @@ namespace RegexViewer
             // Tell explorer the file association has been changed
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
 
         private static void DeleteKey(RegistryKey key, string keyName)
         {
@@ -161,6 +174,6 @@ namespace RegexViewer
             }
         }
 
-        #endregion Methods
+        #endregion Private Methods
     }
 }

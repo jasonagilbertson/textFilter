@@ -18,6 +18,30 @@ namespace RegexViewer
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Private Methods
+
+        private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void FilterCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Debug.Print("here");
+        }
+
+        private void LogCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void LogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            Debug.Print("here");
+        }
+
+        #endregion Private Methods
+
         #region Private Fields
 
         private StringBuilder _color = new StringBuilder();
@@ -64,8 +88,6 @@ namespace RegexViewer
         }
 
         #endregion Public Methods
-
-        #region Private Methods
 
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -118,58 +140,23 @@ namespace RegexViewer
             _color.Clear();
         }
 
-        private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        private void FileData_Drop(object sender, DragEventArgs e)
         {
-            e.CanExecute = true;
-        }
+            this._mainViewModel.SetStatus("FileData_Drop");
+            string[] fileNames = (string[])(((IDataObject)e.Data).GetData("FileDrop"));
 
-        private void FilterCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Debug.Print("here");
-        }
-
-        private void LogCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void LogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Debug.Print("here");
-        }
-
-        #endregion Private Methods
-
-        private void logFileData_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
-        {
-
-        }
-
-        private void dataGridFilter_Drop(object sender, DragEventArgs e)
-        {
-            this._mainViewModel.SetStatus("dataGridFilter_Drop");
-            string[] fileNames = (string[])(((IDataObject)e.Data).GetData("FileName"));
-            if (fileNames != null)
-            {
-                foreach(string filename in fileNames)
-                {
-                    string ext = Path.GetExtension(filename).ToLower();
-                    if (ext == ".xml")
-                    {
-                        this._mainViewModel.FilterViewModel.OpenFile(filename);
-                    }
-                }
-            }
-        }
-
-        private void logFileData_Drop(object sender, DragEventArgs e)
-        {
-            this._mainViewModel.SetStatus("logFileData_Drop");
-            string[] fileNames = (string[])(((IDataObject)e.Data).GetData("FileName"));
             if (fileNames != null)
             {
                 foreach (string filename in fileNames)
                 {
+                    if (Path.GetExtension(filename).ToLower() == ".xml")
+                    {
+                        if (this._mainViewModel.FilterViewModel.VerifyAndOpenFile(filename))
+                        {
+                            continue;
+                        }
+                    }
+                    // not a filter file
                     this._mainViewModel.LogViewModel.OpenFile(filename);
                 }
             }

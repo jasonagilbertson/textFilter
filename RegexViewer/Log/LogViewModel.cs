@@ -9,20 +9,19 @@ using System.Windows.Input;
 
 namespace RegexViewer
 {
-    
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
         #region Private Fields
 
         private FilterViewModel _filterViewModel;
-        private Command _keyDownCommand;
-        
         private Command _hideCommand;
         private bool _hiding = true;
+        private Command _keyDownCommand;
         private LogFileManager _logFileManager;
+        private int _previousIndex;
         private Command _quickFindChangedCommand;
         private string _quickFindText = string.Empty;
-        private int _previousIndex;
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -66,8 +65,6 @@ namespace RegexViewer
             set { _hideCommand = value; }
         }
 
-     
-    
         public Command KeyDownCommand
         {
             get
@@ -83,8 +80,6 @@ namespace RegexViewer
             set { _keyDownCommand = value; }
         }
 
-
-    
         public Command QuickFindChangedCommand
         {
             get
@@ -111,7 +106,7 @@ namespace RegexViewer
                 if (_quickFindText != value)
                 {
                     _quickFindText = value;
-                  //  OnPropertyChanged("QuickFindText");
+                    // OnPropertyChanged("QuickFindText");
                 }
             }
         }
@@ -139,6 +134,18 @@ namespace RegexViewer
             }
         }
 
+        public void CtrlEndExecuted(object sender)
+        {
+            SetStatus("CtrlEndExecuted");
+            throw new NotImplementedException();
+        }
+
+        public void CtrlHomeExecuted(object sender)
+        {
+            SetStatus("CtrlHomeExecuted");
+            throw new NotImplementedException();
+        }
+
         public void FilterLogTabItems(FilterFileItem filter = null, LogFile logFile = null, FilterCommand filterIntent = FilterCommand.Filter)
         {
             if (logFile == null)
@@ -161,7 +168,7 @@ namespace RegexViewer
                 case FilterCommand.Current:
 
                     // refilter if log tab changed
-                    if(_previousIndex != SelectedIndex)
+                    if (_previousIndex != SelectedIndex)
                     {
                         _previousIndex = SelectedIndex;
                         goto case FilterCommand.Filter;
@@ -169,8 +176,8 @@ namespace RegexViewer
                     return;
 
                 case FilterCommand.DynamicFilter:
-                    //this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ResetColors(logFile.ContentItems);
-                    //goto case FilterCommand.Filter;
+                //this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ResetColors(logFile.ContentItems);
+                //goto case FilterCommand.Filter;
 
                 case FilterCommand.Filter:
                     this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
@@ -185,37 +192,6 @@ namespace RegexViewer
             }
         }
 
-        public void MouseWheelExecuted(object sender, KeyEventArgs e)
-        {
-            SetStatus("MouseWheelExecuted");
-            throw new NotImplementedException();
-        }
-        public void PageDownExecuted(object sender)
-        {
-            SetStatus("PageDownExecuted");
-            throw new NotImplementedException();
-        }
-
-        public void KeyDownExecuted(object sender)
-        {
-            SetStatus("KeyDownExecuted");
-            throw new NotImplementedException();
-        }
-        public void CtrlEndExecuted(object sender)
-        {
-            SetStatus("CtrlEndExecuted");
-            throw new NotImplementedException();
-        }
-        public void CtrlHomeExecuted(object sender)
-        {
-            SetStatus("CtrlHomeExecuted");
-            throw new NotImplementedException();
-        }
-        public void PageUpExecuted(object sender)
-        {
-            SetStatus("PageUpExecuted");
-            throw new NotImplementedException();
-        }
         public void HideExecuted(object sender)
         {
             if (!_hiding)
@@ -225,10 +201,10 @@ namespace RegexViewer
             else
             {
                 // send empty function to reset to current filter in filterview
-                
-                if(!string.IsNullOrEmpty(QuickFindText))
+
+                if (!string.IsNullOrEmpty(QuickFindText))
                 {
-                       QuickFindChangedExecuted(null);
+                    QuickFindChangedExecuted(null);
                     //this.FilterLogTabItems(null, null, FilterCommand.Reset);
                 }
                 else
@@ -239,6 +215,18 @@ namespace RegexViewer
             }
 
             _hiding = !_hiding;
+        }
+
+        public void KeyDownExecuted(object sender)
+        {
+            SetStatus("KeyDownExecuted");
+            throw new NotImplementedException();
+        }
+
+        public void MouseWheelExecuted(object sender, KeyEventArgs e)
+        {
+            SetStatus("MouseWheelExecuted");
+            throw new NotImplementedException();
         }
 
         public override void NewFile(object sender)
@@ -255,7 +243,7 @@ namespace RegexViewer
         {
             SetStatus("opening file");
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
-            
+
             string logName = string.Empty;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = ""; // Default file name
@@ -290,16 +278,26 @@ namespace RegexViewer
 
                 // make new tab
                 AddTabItem(logFile);
-                
             }
             else
             {
             }
         }
 
+        public void PageDownExecuted(object sender)
+        {
+            SetStatus("PageDownExecuted");
+            throw new NotImplementedException();
+        }
+
+        public void PageUpExecuted(object sender)
+        {
+            SetStatus("PageUpExecuted");
+            throw new NotImplementedException();
+        }
+
         public void QuickFindChangedExecuted(object sender)
         {
-
             FilterFileItem fileItem = new FilterFileItem();
 
             if (sender is string)
@@ -313,7 +311,6 @@ namespace RegexViewer
                     return;
                 }
 
-               
                 fileItem.Filterpattern = QuickFindText = (sender as string);
             }
             else
@@ -321,9 +318,6 @@ namespace RegexViewer
                 fileItem.Filterpattern = QuickFindText;
             }
 
-            
-            
-            
             try
             {
                 Regex test = new Regex(fileItem.Filterpattern);
@@ -337,7 +331,17 @@ namespace RegexViewer
 
             fileItem.Enabled = true;
             this.FilterLogTabItems(fileItem, null, FilterCommand.DynamicFilter);
-               
+        }
+
+        public override void RenameTabItem(string newName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void SaveFile(object sender)
+        {
+            SetStatus("save file not implemented");
+            throw new NotImplementedException();
         }
 
         public override void SaveFileAs(object sender)
@@ -345,15 +349,7 @@ namespace RegexViewer
             SetStatus("save file as not implemented");
             throw new NotImplementedException();
         }
-        public override void SaveFile(object sender)
-        {
-            SetStatus("save file not implemented");
-            throw new NotImplementedException();
-        }
-        public override void RenameTabItem(string newName)
-        {
-            throw new NotImplementedException();
-        }
+
         #endregion Public Methods
 
         #region Private Methods
