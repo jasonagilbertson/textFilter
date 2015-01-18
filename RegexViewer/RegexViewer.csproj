@@ -88,19 +88,19 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AsynchronousCommand.cs" />
+    <Compile Include="Base\AsynchronousCommand.cs" />
     <Compile Include="Base\Base.cs" />
     <Compile Include="Base\BaseFile.cs" />
     <Compile Include="Base\BaseViewModel.cs" />
-    <Compile Include="Command.cs" />
+    <Compile Include="Base\Command.cs" />
     <Compile Include="Filter\FileItem.cs" />
-    <Compile Include="FileTypeAssociation.cs" />
+    <Compile Include="Base\FileTypeAssociation.cs" />
     <Compile Include="Filter\FilterCommand.cs" />
     <Compile Include="Filter\FilterFileItem.cs" />
     <Compile Include="Filter\FilterFileManager.cs" />
     <Compile Include="Filter\FilterTabViewModel.cs" />
     <Compile Include="Filter\FilterViewModel.cs" />
-    <Compile Include="HtmlFragment.cs" />
+    <Compile Include="Base\HtmlFragment.cs" />
     <Compile Include="Base\BaseTabViewModel.cs" />
     <Compile Include="Interface\IFileItem.cs" />
     <Compile Include="Interface\IFileManager.cs" />
@@ -112,13 +112,17 @@
     <Compile Include="Log\LogFileItem.cs" />
     <Compile Include="Log\LogTabViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
-    <Compile Include="RegexViewerSettings.cs" />
+    <Compile Include="Parser\AsyncVirtualizingCollection.cs" />
+    <Compile Include="Parser\BackgroundParser.cs" />
+    <Compile Include="Parser\IItemsProvider.cs" />
+    <Compile Include="Parser\VirtualizingCollection.cs" />
+    <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
     <Compile Include="TimedSaveDialog.xaml.cs">
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Worker.cs" />
-    <Compile Include="WorkerManager.cs" />
+    <Compile Include="Parser\Worker.cs" />
+    <Compile Include="Parser\WorkerManager.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -175,6 +179,7 @@
   <ItemGroup>
     <Resource Include="RegexViewer.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

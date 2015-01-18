@@ -51,7 +51,7 @@ namespace RegexViewer
                     item.PropertyChanged += item_PropertyChanged;
                 }
 
-                item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
+    //            item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
             }
             else if (!enable & _patternNotifications)
             {
@@ -80,7 +80,11 @@ namespace RegexViewer
 
         private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            Modified = true;
+            if ((sender is FilterFileItem) && e.PropertyName != FilterFileItemEvents.Count)
+            {
+                Modified = true;
+            }
+
             OnPropertyChanged(sender, e);
         }
 

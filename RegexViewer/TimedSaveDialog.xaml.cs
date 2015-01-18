@@ -14,7 +14,7 @@ namespace RegexViewer
         #region Private Fields
 
         private const int _timerSecs = 10;
-        private string _fileName;
+        
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
@@ -26,8 +26,9 @@ namespace RegexViewer
 
         public TimedSaveDialog(string fileName)
         {
-            this.FileName = fileName;
             InitializeComponent();
+            labelDisplay.Content = fileName;
+            
         }
 
         #endregion Public Constructors
@@ -53,22 +54,7 @@ namespace RegexViewer
 
         #region Public Properties
 
-        public string FileName
-        {
-            get
-            {
-                return _fileName;
-            }
-
-            set
-            {
-                if (_fileName != value)
-                {
-                    _fileName = value;
-                    OnPropertyChanged("FileName");
-                }
-            }
-        }
+       
 
         #endregion Public Properties
 
@@ -85,15 +71,7 @@ namespace RegexViewer
             StartTimer();
         }
 
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
+       
         public Results WaitForResult()
         {
             this.ShowDialog();

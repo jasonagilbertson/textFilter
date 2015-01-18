@@ -7,7 +7,7 @@
         <Button Name="buttonSaveAs" Content="Save As" HorizontalAlignment="Left" Margin="130,44,0,0" VerticalAlignment="Top" Width="75" Click="buttonSaveAs_Click"/>
         <Button Name="buttonDontSave" Content="Discard" HorizontalAlignment="Left" Margin="230,44,0,0" VerticalAlignment="Top" Width="75" Click="buttonDontSave_Click"/>
         <Button Name="buttonDisable" Content="Disable" HorizontalAlignment="Left" Margin="330,44,0,0" VerticalAlignment="Top" Width="75" Click="buttonDisable_Click"/>
-        <Label Content="{Binding FileName}" HorizontalAlignment="Left" Margin="24,10,0,0" VerticalAlignment="Top"/>
+        <Label Name="labelDisplay" HorizontalAlignment="Left" Margin="30,10,0,0" VerticalAlignment="Top" Height="25" Width="390" Visibility="Visible"/>
 
     </Grid>
 </Window>

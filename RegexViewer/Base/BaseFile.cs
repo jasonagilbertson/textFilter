@@ -5,6 +5,7 @@ namespace RegexViewer
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
+private  bool _modified;
         //
 
         #region Public Constructors
@@ -22,7 +23,17 @@ namespace RegexViewer
 
         public string FileName { get; set; }
 
-        public bool Modified { get; set; }
+        public bool Modified 
+        { 
+            get
+            {
+                return _modified;
+            }
+            set
+            {
+                _modified = value;
+            }    
+        }
 
         public string Tag { get; set; }
 

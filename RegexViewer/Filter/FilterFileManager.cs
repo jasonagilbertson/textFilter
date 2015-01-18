@@ -85,22 +85,23 @@ namespace RegexViewer
             return filterFile;
         }
 
-        public override IFile<FilterFileItem> OpenFile(string LogName)
+        public override IFile<FilterFileItem> OpenFile(string logName)
         {
             FilterFile filterFile = new FilterFile();
 
             try
             {
-                if (FileManager.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
+                if (FileManager.Exists(x => String.Compare(x.Tag, logName, true) == 0))
                 {
-                    SetStatus("file already open:" + LogName);
+                    SetStatus("file already open:" + logName);
                     return filterFile;
                 }
 
-                if (File.Exists(LogName))
-                {
+                //if (File.Exists(LogName))
+               // if(Settings.GetPathType(logName) == RegexViewerSettings.ResourceType.)
+               // {
                     XmlDocument doc = new XmlDocument();
-                    doc.Load(LogName);
+                    doc.Load(logName);
 
                     XmlNode root = doc.DocumentElement;
 
@@ -122,22 +123,22 @@ namespace RegexViewer
 
                     ManageNewFilterFileItem(filterFile);
 
-                    ManageFileProperties(LogName, filterFile);
+                    ManageFileProperties(logName, filterFile);
                     FileManager.Add(filterFile);
-                    this.Settings.AddFilterFile(LogName);
+                    this.Settings.AddFilterFile(logName);
                     OnPropertyChanged("FilterFileManager");
-                }
-                else
-                {
-                    SetStatus("filter file does not exist:" + LogName);
-                    this.Settings.RemoveFilterFile(LogName);
-                }
+                //}
+                //else
+                //{
+                //    SetStatus("filter file does not exist:" + logName);
+                //    this.Settings.RemoveFilterFile(logName);
+                //}
 
                 return filterFile;
             }
             catch (Exception e)
             {
-                SetStatus(string.Format("error opening filter file:{0}:{1}", LogName, e.ToString()));
+                SetStatus(string.Format("error opening filter file:{0}:{1}", logName, e.ToString()));
                 return filterFile;
             }
         }

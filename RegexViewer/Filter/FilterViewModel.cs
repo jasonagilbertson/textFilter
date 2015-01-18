@@ -120,17 +120,16 @@ namespace RegexViewer
 
         private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == FilterFileItemEvents.Index && (sender is FilterFileItem))
+            if ((sender is FilterFileItem) && e.PropertyName == FilterFileItemEvents.Index)
             {
                 VerifyIndex((sender as FilterFileItem));
             }
 
             if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
-            //if (sender is FilterFile)
             {
                 ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(CurrentFile());
             }
-            //OnPropertyChanged(e.PropertyName);
+
             OnPropertyChanged(sender, e);
         }
 
@@ -163,8 +162,6 @@ namespace RegexViewer
                 AddTabItem(logProperty);
             }
 
-            // doesnt work from here
-            //VerifyIndex(null);
         }
 
         #endregion Public Constructors
@@ -182,6 +179,7 @@ namespace RegexViewer
                 tabItem.Tag = logProperties.Tag;
                 tabItem.Header = logProperties.FileName;
                 tabItem.Modified = false;
+               // logProperties.Modified = false;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
                 _previousIndex = this.SelectedIndex;
@@ -196,8 +194,6 @@ namespace RegexViewer
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
-                //fileItem.Count = 0;
-
                 if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
                 {
                     continue;
@@ -243,75 +239,87 @@ namespace RegexViewer
                 _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
             }
 
+            
+                if(_previousIndex != this.SelectedIndex)
+                {
+                    _previousIndex = SelectedIndex;
+                }
+            
+
             Debug.Print("CompareFilterList:returning:" + retval.ToString());
             return retval;
         }
 
-        public FilterCommand DetermineFilterAction(FilterCommand filterIntent = FilterCommand.Filter)
-        {
-            try
-            {
-                // Debug.Assert(TabItems != null & SelectedIndex != -1);
-                List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+        //public FilterCommand DetermineFilterAction(FilterCommand filterIntent = FilterCommand.Filter)
+        //{
+        //    try
+        //    {
+        //        // Debug.Assert(TabItems != null & SelectedIndex != -1);
+        //        List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
 
-                if (this.TabItems.Count > 0
-                    && this.TabItems.Count >= SelectedIndex)
-                {
-                    FilterFile filterFile = CurrentFile();
+        
 
-                    filterFileItems = CleanFilterList(filterFile);
+        //        if (this.TabItems.Count > 0
+        //            && this.TabItems.Count > SelectedIndex)
+        //        {
+        //            FilterFile filterFile = CurrentFile();
 
-                    if (filterIntent == FilterCommand.DynamicFilter)
-                    {
-                        // reset previous filter list
-                        CompareFilterList(filterFileItems);
-                        return filterIntent;
-                    }
+        //            filterFileItems = CleanFilterList(filterFile);
 
-                    if (filterIntent == FilterCommand.Reset)
-                    {
-                        // reset previous filter list
-                        CompareFilterList(filterFileItems);
-                    }
+        //            // return if nothing changed
+        //            if (_previousIndex == this.SelectedIndex & CompareFilterList(filterFileItems) & filterIntent == FilterCommand.Filter)
+        //            {
+        //                return FilterCommand.Current;
+        //            }
+        //            //else if (_previousIndex != this.SelectedIndex)
+        //            //{
+        //            //    _previousIndex = SelectedIndex;
+        //            //}
 
-                    // return full list if no filters
-                    if ((filterFileItems.Count == 0 | filterFileItems.Count(x => x.Enabled) == 0) & filterIntent == FilterCommand.Filter)
-                    {
-                        // reset colors
+        //            if (filterIntent == FilterCommand.DynamicFilter)
+        //            {
+        //                // reset previous filter list
+        //                CompareFilterList(filterFileItems);
+        //                return filterIntent;
+        //            }
 
-                        //this.TabItems[SelectedIndex].ContentList = ResetColors(logFile.ContentItems);
+        //            if (filterIntent == FilterCommand.Reset)
+        //            {
+        //                // reset previous filter list
+        //                CompareFilterList(filterFileItems);
+        //                return filterIntent;
+        //            }
 
-                        // reset previous filter list
-                        CompareFilterList(filterFileItems);
+        //            // return full list if no filters
+        //            if ((filterFileItems.Count == 0 | filterFileItems.Count(x => x.Enabled) == 0) & filterIntent == FilterCommand.Filter)
+        //            {
+        //                // reset colors
 
-                        return FilterCommand.Reset;
-                    }
+        //                //this.TabItems[SelectedIndex].ContentList = ResetColors(logFile.ContentItems);
 
-                    // return if nothing changed
-                    if (_previousIndex == this.SelectedIndex & CompareFilterList(filterFileItems) & filterIntent == FilterCommand.Filter)
-                    {
-                        return FilterCommand.Current;
-                    }
-                    else if (_previousIndex != this.SelectedIndex)
-                    {
-                        _previousIndex = SelectedIndex;
-                    }
+        //                // reset previous filter list
+        //                CompareFilterList(filterFileItems);
 
-                    // apply filter
-                    return FilterCommand.Filter;
-                }
-                else
-                {
-                    // return unfiltered
-                    return FilterCommand.Current;
-                }
-            }
-            catch (Exception e)
-            {
-                SetStatus("Exception:FilterTabItem:" + e.ToString());
-                return FilterCommand.Unknown;
-            }
-        }
+        //                return FilterCommand.Reset;
+        //            }
+
+                
+        //            // apply filter
+        //            return FilterCommand.Filter;
+        //        }
+        //        else
+        //        {
+        //            // return unfiltered
+        //            return FilterCommand.Current;
+        //        }
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        SetStatus("Exception:FilterTabItem:" + e.ToString());
+        //        return FilterCommand.Unknown;
+        //    }
+          
+      //  }
 
         public List<FilterFileItem> FilterList(FilterFileItem fileItem = null)
         {
@@ -362,8 +370,10 @@ namespace RegexViewer
                 }
             }
 
+           // filterFile.Modified = true;
             // make new tab
             AddTabItem(filterFile);
+            
         }
 
         /// <summary>

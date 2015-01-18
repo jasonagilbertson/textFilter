@@ -19,7 +19,7 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);//.ToList();
+                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
@@ -32,7 +32,7 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);//.ToList();
+                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
@@ -98,6 +98,10 @@ namespace RegexViewer
             _appSettings = _Config.AppSettings.Settings;
             VerifyAppSettings();
 
+            // verify files 
+            this.CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
+            this.CurrentLogFiles = ProcessFiles(CurrentLogFiles);
+
             if (!ProcessCommandLine())
             {
                 return false;
@@ -114,14 +118,6 @@ namespace RegexViewer
             }
         }
 
-        //public void OnPropertyChanged(string name)
-        //{
-        //    PropertyChangedEventHandler handler = PropertyChanged;
-        //    if (handler != null)
-        //    {
-        //        handler(this, new PropertyChangedEventArgs(name));
-        //    }
-        //}
         public void RemoveAllLogs()
         {
             foreach (string logfile in CurrentLogFiles)
@@ -174,9 +170,8 @@ namespace RegexViewer
 
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
-            //string[] recentLogFiles = RecentLogFiles;
             List<string> newList = new List<string>();
-
+            
             // return if already in list
             if (recentLogFiles.ToList().Contains(logFile))
             {
@@ -314,17 +309,51 @@ namespace RegexViewer
             {
                 string cleanPath = Environment.ExpandEnvironmentVariables(arg.Trim('"'));
 
-                try
+                switch (GetPathType(cleanPath))
                 {
-                    files.AddRange(
-                        Directory.GetFiles(Path.GetDirectoryName(cleanPath),
-                            Path.GetFileName(cleanPath),
-                            SearchOption.AllDirectories).ToList());
+                    case ResourceType.Url:
+                        try
+                        {
+                            // only config files (xml) for now
+                            XmlDocument myXmlDocument = new XmlDocument();
+                            myXmlDocument.Load(cleanPath);
+                            files.Add(cleanPath);
+                        }
+                        catch(Exception e)
+                        {
+                            SetStatus("invalid url path: " + cleanPath + e.ToString());
+                        }
+                        break;
+                    case ResourceType.Local:
+                    case ResourceType.Unc:
+
+                        try
+                        {
+                            if (File.Exists(cleanPath))
+                            {
+                                files.Add(cleanPath);
+                            }
+                            else
+                            {
+                                files.AddRange(
+                                    Directory.GetFiles(
+                                        Path.GetDirectoryName(cleanPath),
+                                        Path.GetFileName(cleanPath),
+                                        SearchOption.AllDirectories).ToList());
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            SetStatus("invalid path: " + e.ToString());
+                        }
+                        break;
+                    case ResourceType.Error:
+                    case ResourceType.Unknown:
+                    default:
+                        SetStatus("unknown file type:" + cleanPath);
+                        break;
                 }
-                catch (Exception e)
-                {
-                    SetStatus("invalid dir: " + e.ToString());
-                }
+
             }
 
             return files;
@@ -436,8 +465,7 @@ namespace RegexViewer
 
         #region Public Events
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        
         #endregion Public Events
 
         #region Private Enums
@@ -601,5 +629,79 @@ namespace RegexViewer
                 _appSettings["MaxMultiFileCount"].Value = value.ToString();
             }
         }
+
+        public enum ResourceType
+        {
+            Error,
+            Local,
+            Unc,
+            Unknown,
+            Url
+        }
+        public ResourceType GetPathType(string path)
+        {
+            try
+            {
+
+                if (string.IsNullOrEmpty(path))
+                {
+                    return ResourceType.Unknown;
+                }
+
+                Uri uri;
+                if (Uri.TryCreate(path, UriKind.Absolute, out uri))
+                {
+                    if (uri.IsUnc)
+                    {
+                        return ResourceType.Unc;
+                    }
+                    else if (uri.IsLoopback)
+                    {
+                        return ResourceType.Local;
+                    }
+                    else
+                    {
+                        return ResourceType.Url;
+                    }
+                }
+
+                string fullpath = Path.GetFullPath(path);
+
+                if (fullpath.StartsWith(@"\\\\"))
+                {
+                    return ResourceType.Unc;
+                }
+
+                //else if (fullpath.StartsWith("http")
+                //         || fullpath.StartsWith("ftp"))
+                //{
+                //    return ResourceType.Url;
+                //}
+                //else if (path.Substring(1, 2).Contains(@":\")
+                //         || (Directory.Exists(path)))
+                //{
+                //    return ResourceType.Local;
+                //}
+                //else
+                //{
+                //    return ResourceType.Unknown;
+                //}
+
+                if (File.Exists(fullpath)
+                  || Directory.Exists(fullpath))
+                {
+                    return ResourceType.Local;
+                }
+
+                return ResourceType.Unknown;
+            }
+            catch (Exception e)
+            {
+                SetStatus("GetPathType:Exception" + e.ToString());
+                return ResourceType.Error;
+            }
+        }
+
+     
     }
 }

@@ -33,17 +33,19 @@ namespace RegexViewer
             this.ViewManager = new LogFileManager();
             _logFileManager = (LogFileManager)this.ViewManager;
 
+            _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
+            this.PropertyChanged += LogViewModel_PropertyChanged;
+
             // load tabs from last session
             foreach (LogFile logFile in this.ViewManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
             {
                 AddTabItem(logFile);
-                FilterLogTabItems(null, logFile);
+               // FilterLogTabItems(null, logFile);
             }
-
+            
+            FilterLogTabItems(null, null, FilterCommand.Reset);
             // FilterActiveTabItem();
 
-            _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
-            this.PropertyChanged += LogViewModel_PropertyChanged;
         }
 
         #endregion Public Constructors
@@ -148,6 +150,7 @@ namespace RegexViewer
 
         public void FilterLogTabItems(FilterFileItem filter = null, LogFile logFile = null, FilterCommand filterIntent = FilterCommand.Filter)
         {
+            SetStatus("filterLogTabItems");
             if (logFile == null)
             {
                 // find logFile if it was not supplied
@@ -161,60 +164,44 @@ namespace RegexViewer
                 }
             }
 
+            
+
             List<FilterFileItem> filterFileItems = _filterViewModel.FilterList(filter);
-
-            switch (_filterViewModel.DetermineFilterAction(filterIntent))
+            if (_filterViewModel.CompareFilterList(filterFileItems) 
+                & _previousIndex == SelectedIndex
+                & filter == null 
+                & filterIntent == FilterCommand.Filter)
             {
-                case FilterCommand.Current:
+                SetStatus("filterLogTabItems:no change");
+                return;
 
-                    // refilter if log tab changed
-                    if (_previousIndex != SelectedIndex)
-                    {
-                        _previousIndex = SelectedIndex;
-                        goto case FilterCommand.Filter;
-                    }
-                    return;
-
-                case FilterCommand.DynamicFilter:
-                //this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ResetColors(logFile.ContentItems);
-                //goto case FilterCommand.Filter;
-
-                case FilterCommand.Filter:
-                    this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
-                    return;
-
-                case FilterCommand.Reset:
-                    this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ResetColors(logFile.ContentItems);
-                    return;
-
-                default:
-                    return;
-            }
+            }           
+            
+            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
+            _previousIndex = SelectedIndex;
         }
 
         public void HideExecuted(object sender)
         {
-            if (!_hiding)
+            if (_hiding)
             {
                 this.FilterLogTabItems(null, null, FilterCommand.Highlight);
             }
             else
             {
                 // send empty function to reset to current filter in filterview
-
                 if (!string.IsNullOrEmpty(QuickFindText))
                 {
                     QuickFindChangedExecuted(null);
-                    //this.FilterLogTabItems(null, null, FilterCommand.Reset);
                 }
                 else
                 {
-                    //this.FilterLogTabItems(null, null, FilterCommand.DynamicFilter);
                     this.FilterLogTabItems(null, null, FilterCommand.Reset);
                 }
             }
 
             _hiding = !_hiding;
+
         }
 
         public void KeyDownExecuted(object sender)
