@@ -115,6 +115,7 @@
     <Compile Include="Parser\AsyncVirtualizingCollection.cs" />
     <Compile Include="Parser\BackgroundParser.cs" />
     <Compile Include="Parser\IItemsProvider.cs" />
+    <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />

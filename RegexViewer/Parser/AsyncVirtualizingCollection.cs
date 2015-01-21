@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
 
-namespace DataVirtualization
+namespace RegexViewer
 {
     /// <summary>
     /// Derived VirtualizatingCollection, performing loading asychronously.

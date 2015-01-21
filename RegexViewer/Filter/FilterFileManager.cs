@@ -298,7 +298,7 @@ namespace RegexViewer
         {
             try
             {
-                return (node.ChildNodes.Item(item).SelectSingleNode(nodeName)).InnerXml;
+                return (node.ChildNodes.Item(item).SelectSingleNode(nodeName)).InnerText;
             }
             catch
             {

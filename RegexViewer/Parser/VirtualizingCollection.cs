@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace DataVirtualization
+namespace RegexViewer
 {
     /// <summary>
     /// Specialized list implementation that provides data virtualization. The collection is divided up into pages,

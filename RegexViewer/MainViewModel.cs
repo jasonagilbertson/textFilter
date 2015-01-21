@@ -17,6 +17,7 @@ namespace RegexViewer
         private FilterViewModel _filterViewModel;
 
         private LogViewModel _logViewModel;
+        private Parser _parser;
 
         private RegexViewerSettings _settings;
 
@@ -45,6 +46,7 @@ namespace RegexViewer
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
             _logViewModel = new LogViewModel(_filterViewModel);
+            _parser = new Parser(_filterViewModel, _logViewModel);
 
             // to embed external libraries
             // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
@@ -220,8 +222,8 @@ namespace RegexViewer
             {
                 if (sender is ListBox)
                 {
-                    ListBox listBox = (sender as ListBox);
-                    listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
+            //        ListBox listBox = (sender as ListBox);
+            //        listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
                 }
             }
             catch { }
@@ -248,28 +250,6 @@ namespace RegexViewer
 
         #endregion Private Methods
 
-        //public void QuickFindChangedExecuted(object sender)
-        //{
-        //    // todo: move to filter source?
-        //    if (sender is string)
-        //    {
-        //        string filter = (sender as string);
-        //        if(string.IsNullOrEmpty(filter))
-        //        {
-        //            // send empty function to reset to current filter in filterview
-        //            _logViewModel.FilterTabItem(null, null);
-        //            return;
-        //        }
-
-        // FilterFileItem fileItem = new FilterFileItem() { Filterpattern = (sender as string) };
-        // try { Regex test = new Regex(fileItem.Filterpattern); fileItem.Regex = true;
-
-        // } catch { SetStatus("quick find not a regex:" + fileItem.Filterpattern); fileItem.Regex =
-        // false; }
-
-        //        fileItem.Enabled = true;
-        //        _logViewModel.FilterTabItem(fileItem);
-        //    }
-        //}
+      
     }
 }

@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace RegexViewer
 {
@@ -24,8 +26,9 @@ namespace RegexViewer
         private Command _pasteCommand;
         private List<T> _selectedContent = new List<T>();
         private Command _selectionChangedCommand;
-
-        //private Command _newItemCommand;
+      //  private Command _selectedIndexChangedCommand;
+        private int _selectedIndex;
+        
         private string _tag;
 
         #endregion Private Fields
@@ -58,7 +61,22 @@ namespace RegexViewer
             }
         }
 
-        // public event PropertyChangedEventHandler PropertyChanged;
+        public int SelectedIndex
+        {
+            get
+            {
+                return _selectedIndex;
+            }
+
+            set
+            {
+                if (_selectedIndex != value)
+                {
+                    _selectedIndex = value;
+                    OnPropertyChanged("SelectedIndex");
+                }
+            }
+        }
         public ObservableCollection<T> ContentList
         {
             get { return _contentList; }
@@ -87,6 +105,22 @@ namespace RegexViewer
             }
             set { _copyCommand = value; }
         }
+
+        //public Command SelectedIndexChangedCommand
+        //{
+        //    get
+        //    {
+        //        if (_selectedIndexChangedCommand == null)
+        //        {
+        //            _selectedIndexChangedCommand = new Command(SelectedIndexChangedExecuted);
+        //        }
+        //        _selectedIndexChangedCommand.CanExecute = true;
+
+        //        return _selectedIndexChangedCommand;
+        //    }
+        //    set { _selectedIndexChangedCommand = value; }
+        //}
+
 
         public string Header
         {
@@ -122,12 +156,7 @@ namespace RegexViewer
             }
         }
 
-        //public string ActiveTab
-        //{
-        //    get
-        //    {
-        //        return activeTab;
-        //    }
+        
 
         public string Name
         {
@@ -196,20 +225,7 @@ namespace RegexViewer
             set { _selectionChangedCommand = value; }
         }
 
-        //public Command NewItemCommand
-        //{
-        //    get
-        //    {
-        //        if (_newItemCommand == null)
-        //        {
-        //            _newItemCommand = new Command(NewItemExecuted);
-        //        }
-        //        _newItemCommand.CanExecute = true;
-
-        //        return _newItemCommand;
-        //    }
-        //    set { _newItemCommand = value; }
-        //}
+        
         public string Tag
         {
             get
@@ -262,26 +278,27 @@ namespace RegexViewer
         {
         }
 
-        //public void NewItemExecuted(object sender)
+        //public void SelectedIndexChangedExecuted(object sender)
         //{
-        //    SetStatus("NewItemExecuted:enter");
+        //    SetStatus("SelectedIndexChangedExecuted:enter");
+        //    //if (sender is System.Collections.IList)
+        //    //{
+        //    //    _selectedContent = (sender as IList).Cast<T>().ToList();
 
-        // //if (sender is DataGrid) if (sender is ItemCollection) { (sender as
-        // ItemCollection) .RemoveAt((sender as ItemCollection).Count - 1); IFileItem newItem =
-        // default(IFileItem); newItem.Index = 1; this.ContentList.Add((T)newItem);
-
-        // //t.Index = (IFileItem)(sender as ItemCollection).Cast<T>().Max(x => x.Index) + 1;
-
-        //     //   ((IFileItem)t[t.Count - 1]).Index = 1;
-        //    }
+        //    //}
         //}
-
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
+                
+            }
+            else if(sender is ListBox)
+            {
+                _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
+                //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);
             }
         }
 

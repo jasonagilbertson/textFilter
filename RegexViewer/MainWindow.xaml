@@ -65,7 +65,7 @@
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
 
-            <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
 
             <TabControl x:Name="tabFilters"
                         Grid.Row="0"
@@ -205,18 +205,19 @@
             </TabControl>
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
 
+<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+            
             <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay}">
+                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                        
+                        >
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
-
-                <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
-
                 <TabControl.ContentTemplate>
                     <DataTemplate>
                         <ListBox x:Name="logFileData"
@@ -226,7 +227,10 @@
                                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                                  VirtualizingStackPanel.IsVirtualizing="True"
                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                 ScrollViewer.IsDeferredScrollingEnabled="False">
+                                 ScrollViewer.IsDeferredScrollingEnabled="False"
+                                 SelectedIndex="{Binding Path=SelectedIndex}"
+                                 IsSynchronizedWithCurrentItem="True"
+                                 >
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -248,8 +252,12 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />
+                                    <!--<i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />-->
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
+                                <!--<i:EventTrigger EventName="SelectedIndex">
+                                    <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}"  CommandParameter="{Binding}" />
+                                </i:EventTrigger>-->
                                 <i:EventTrigger EventName="PreviewKeyDown">
                                     <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
                                 </i:EventTrigger>

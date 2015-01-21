@@ -167,6 +167,7 @@ namespace RegexViewer
             
 
             List<FilterFileItem> filterFileItems = _filterViewModel.FilterList(filter);
+        
             if (_filterViewModel.CompareFilterList(filterFileItems) 
                 & _previousIndex == SelectedIndex
                 & filter == null 
@@ -183,9 +184,14 @@ namespace RegexViewer
 
         public void HideExecuted(object sender)
         {
+            // move to MainWindow.cs and handle event there
+            //int currentPosition = this.TabItems[SelectedIndex].SelectedIndex;
+
             if (_hiding)
             {
+                
                 this.FilterLogTabItems(null, null, FilterCommand.Highlight);
+                
             }
             else
             {
@@ -199,6 +205,10 @@ namespace RegexViewer
                     this.FilterLogTabItems(null, null, FilterCommand.Reset);
                 }
             }
+
+            // move to MainWindow.cs and handle event there
+            // this.TabItems[SelectedIndex].SelectedIndex = currentPosition;
+            // (ListBox)this.TabItems[SelectedIndex];
 
             _hiding = !_hiding;
 

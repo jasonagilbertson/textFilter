@@ -16,7 +16,7 @@ namespace RegexViewer
         private FilterFile CurrentFile()
         {
             if (this.TabItems.Count > 0
-                    && this.TabItems.Count > SelectedIndex)
+                    && this.TabItems.Count >= SelectedIndex)
             {
                 return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }
@@ -168,16 +168,16 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public override void AddTabItem(IFile<FilterFileItem> logProperties)
+        public override void AddTabItem(IFile<FilterFileItem> filterFile)
         {
-            if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logProperties.Tag, true) == 0))
+            if (!this.TabItems.Any(x => String.Compare((string)x.Tag, filterFile.Tag, true) == 0))
             {
-                SetStatus("adding tab:" + logProperties.Tag);
+                SetStatus("adding tab:" + filterFile.Tag);
                 FilterTabViewModel tabItem = new FilterTabViewModel();
-                tabItem.Name = logProperties.FileName;
-                tabItem.ContentList = ((FilterFile)logProperties).ContentItems;
-                tabItem.Tag = logProperties.Tag;
-                tabItem.Header = logProperties.FileName;
+                tabItem.Name = filterFile.FileName;
+                tabItem.ContentList = ((FilterFile)filterFile).ContentItems;
+                tabItem.Tag = filterFile.Tag;
+                tabItem.Header = filterFile.FileName;
                 tabItem.Modified = false;
                // logProperties.Modified = false;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
@@ -207,7 +207,8 @@ namespace RegexViewer
 
         public bool CompareFilterList(List<FilterFileItem> filterFileItems)
         {
-            // todo: move to filter class
+            
+
             bool retval = false;
             if (_previousFilterFileItems.Count > 0
                 && filterFileItems.Count > 0
@@ -260,7 +261,7 @@ namespace RegexViewer
         
 
         //        if (this.TabItems.Count > 0
-        //            && this.TabItems.Count > SelectedIndex)
+        //            && this.TabItems.Count >= SelectedIndex)
         //        {
         //            FilterFile filterFile = CurrentFile();
 
@@ -330,7 +331,7 @@ namespace RegexViewer
             {
                 if (fileItem == null
                     && this.TabItems.Count > 0
-                    && this.TabItems.Count > SelectedIndex)
+                    && this.TabItems.Count >= SelectedIndex)
                 {
                     // FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First( x =>
                     // x.Tag == this.TabItems[SelectedIndex].Tag);
@@ -338,7 +339,7 @@ namespace RegexViewer
                     //return CleanFilterList(filterFile);
                     return CleanFilterList(CurrentFile());
                 }
-                else
+                else if(fileItem != null)
                 {
                     filterFileItems.Add(fileItem);
                 }
@@ -394,7 +395,7 @@ namespace RegexViewer
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".xml"; // Default file extension
             dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*"; // Filter files by extension
-
+            dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             Nullable<bool> result = false;
             // Show open file dialog box
             if (silent)

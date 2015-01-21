@@ -139,7 +139,7 @@ namespace RegexViewer
             set
             {
                 tabItems = value;
-                // OnPropertyChanged("TabItems");
+                //OnPropertyChanged("TabItems");
             }
         }
 

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DataVirtualization
+namespace RegexViewer
 {
     /// <summary>
     /// Represents a provider of collection details.
