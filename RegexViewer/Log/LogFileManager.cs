@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RegexViewer
 {
@@ -13,7 +15,33 @@ namespace RegexViewer
 
         public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
         {
-            throw new NotImplementedException();
+              try
+            {
+                if (File.Exists(FileName))
+                {
+                    File.Delete(FileName);
+                }
+
+                using (StreamWriter writer = File.CreateText(FileName))
+                {
+                    foreach (LogFileItem item in list)
+                    {
+                        writer.WriteLine(item.Content);
+                    }
+
+                    writer.Close();
+                }
+
+                SetStatus("saving file:" + FileName);
+                return true;
+            }
+              catch (Exception e)
+              {
+                  SetStatus("SaveFile:exception: " + e.ToString());
+                  return false;
+              }
+
+
         }
 
         #endregion Public Methods
@@ -29,6 +57,7 @@ namespace RegexViewer
 
         public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, bool onlyHighlight)
         {
+            Mouse.OverrideCursor = Cursors.Wait;
             // todo: move to filter class
             ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
             DateTime timer = DateTime.Now;
@@ -73,6 +102,10 @@ namespace RegexViewer
                         }
 
                         countTotals[c] += 1;
+                        if(!Settings.CountMaskedMatches)
+                        {
+                            break;
+                        }
                     }
 
                     if (filterIndex != int.MaxValue && !exclude)
@@ -97,12 +130,16 @@ namespace RegexViewer
                     filterFileItems[i].Count = countTotals[i];
                 }
                 SetStatus(string.Format("ApplyFilter:log file: {0} total time in seconds: {1}", logFile.Tag, DateTime.Now.Subtract(timer).TotalSeconds));
+                Mouse.OverrideCursor = null;
                 return filteredItems;
+                
             }
             catch (Exception e)
             {
                 SetStatus("ApplyFilter:exception" + e.ToString());
+                Mouse.OverrideCursor = null;
                 return filteredItems;
+                
             }
         }
 
@@ -277,6 +314,8 @@ namespace RegexViewer
                     logFileItems.Add(logFileItem);
                     // logFile.ContentItems.Add(logFileItem);
                 }
+
+                sr.Close();
             }
 
             return logFileItems;

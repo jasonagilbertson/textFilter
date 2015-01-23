@@ -51,6 +51,7 @@ namespace RegexViewer
         //private FilterViewModel filterViewModel;
         //private RegexViewModel regexViewModel;
         private MainViewModel _mainViewModel;
+        private bool _endEditing;
 
         #endregion Private Fields
 
@@ -86,9 +87,68 @@ namespace RegexViewer
             }
             return list;
         }
+        private void DataGridCell_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                _endEditing = true;
+            }
+            else
+            {
+                _endEditing = false;
+            }
 
+        }
+        private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
+        {
+            if(_endEditing)
+            {
+                _endEditing = false;
+                return;
+            }
+            // Lookup for the source to be DataGridCell
+            if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            {
+                // Starts the Edit on the row;
+                DataGrid grd = (DataGrid)sender;
+                grd.BeginEdit(e);
+
+                Control control = GetFirstChildByType<Control>(e.OriginalSource as DataGridCell);
+                if (control != null)
+                {
+                    if (control is CheckBox)
+                    {
+                        (control as CheckBox).IsChecked = !(control as CheckBox).IsChecked;
+                    }
+                    else
+                    {
+                        control.Focus();
+                    }
+                }
+            }
+        }
+
+        private T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild((prop), i) as DependencyObject;
+                if (child == null)
+                    continue;
+
+                T castedProp = child as T;
+                if (castedProp != null)
+                    return castedProp;
+
+                castedProp = GetFirstChildByType<T>(child);
+
+                if (castedProp != null)
+                    return castedProp;
+            }
+            return null;
+        }
         #endregion Public Methods
-
+        
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (sender is ComboBox)

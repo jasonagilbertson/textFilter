@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace RegexViewer
@@ -174,11 +175,18 @@ namespace RegexViewer
                 & filterIntent == FilterCommand.Filter)
             {
                 SetStatus("filterLogTabItems:no change");
-                return;
-
-            }           
+            }
+            else if (filterFileItems == null | (filterFileItems != null && filterFileItems.Count == 0))
+            {
+                // no filter so return full list
+                SetStatus("filterLogTabItems:no filter, returning full list");
+                this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
+            }
+            else
+            {
+                this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
+            }
             
-            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
             _previousIndex = SelectedIndex;
         }
 
@@ -243,10 +251,9 @@ namespace RegexViewer
 
             string logName = string.Empty;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.FileName = ""; // Default file name
-            dlg.DefaultExt = ".csv"; // Default file extension
-            //dlg.Filter = "Text Files (*.txt)|*.txt|Csv Files (*.csv)|*.csv|All Files (*.*)|*.*"; // Filter files by extension
-            dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"; // Filter files by extension
+            dlg.FileName = ""; 
+            dlg.DefaultExt = ".csv"; 
+            dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv|Text Files (*.txt)|*.txt"; 
 
             Nullable<bool> result = false;
             // Show open file dialog box
@@ -343,8 +350,65 @@ namespace RegexViewer
 
         public override void SaveFileAs(object sender)
         {
-            SetStatus("save file as not implemented");
-            throw new NotImplementedException();
+
+
+            ITabViewModel<LogFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<LogFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag))
+            {
+            
+                this.TabItems.Remove(tabItem);
+            
+            }
+            else
+            {
+            
+                bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
+
+                string logName = string.Empty;
+                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+               
+                dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
+                dlg.FileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
+                Nullable<bool> result = false;
+                // Show save file dialog box
+                if (silent)
+                {
+                    result = true;
+                    logName = (sender as string);
+                }
+                else
+                {
+                    result = dlg.ShowDialog();
+                    logName = dlg.FileName;
+
+                    if (string.IsNullOrEmpty(logName))
+                    {
+                        return;
+                    }
+                }
+
+                // Process save file dialog box results
+                if (result == true)
+                {
+                    // Save document
+                    SetStatus(string.Format("saving file:{0}", logName));
+                    
+                    this.ViewManager.SaveFile(logName, tabItem.ContentList);
+                }
+
+
+            }
+
         }
 
         #endregion Public Methods

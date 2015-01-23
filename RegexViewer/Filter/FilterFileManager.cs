@@ -97,42 +97,13 @@ namespace RegexViewer
                     return filterFile;
                 }
 
-                //if (File.Exists(LogName))
-               // if(Settings.GetPathType(logName) == RegexViewerSettings.ResourceType.)
-               // {
-                    XmlDocument doc = new XmlDocument();
-                    doc.Load(logName);
+                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadFile(logName));
+                ManageNewFilterFileItem(filterFile);
 
-                    XmlNode root = doc.DocumentElement;
-
-                    for (int i = 0; i < root.ChildNodes.Count; i++)
-                    {
-                        FilterFileItem fileItem = new FilterFileItem();
-                        fileItem.Count = 0;
-                        fileItem.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
-                        fileItem.Enabled = ReadBoolNodeItem(root, "enabled", i);
-                        fileItem.Exclude = ReadBoolNodeItem(root, "exclude", i);
-                        fileItem.Regex = ReadBoolNodeItem(root, "regex", i);
-                        fileItem.Filterpattern = ReadStringNodeItem(root, "filterpattern", i);
-                        fileItem.ForegroundColor = ReadStringNodeItem(root, "foregroundcolor", i);
-                        fileItem.Index = ReadIntNodeItem(root, "index", i);
-                        fileItem.Notes = ReadStringNodeItem(root, "notes", i);
-
-                        filterFile.ContentItems.Add(fileItem);
-                    }
-
-                    ManageNewFilterFileItem(filterFile);
-
-                    ManageFileProperties(logName, filterFile);
-                    FileManager.Add(filterFile);
-                    this.Settings.AddFilterFile(logName);
-                    OnPropertyChanged("FilterFileManager");
-                //}
-                //else
-                //{
-                //    SetStatus("filter file does not exist:" + logName);
-                //    this.Settings.RemoveFilterFile(logName);
-                //}
+                ManageFileProperties(logName, filterFile);
+                FileManager.Add(filterFile);
+                this.Settings.AddFilterFile(logName);
+                OnPropertyChanged("FilterFileManager");
 
                 return filterFile;
             }
@@ -161,9 +132,31 @@ namespace RegexViewer
             return filterFileItems;
         }
 
-        public override List<FilterFileItem> ReadFile(string LogName)
+        public override List<FilterFileItem> ReadFile(string logName)
         {
-            throw new NotImplementedException();
+            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+
+            XmlDocument doc = new XmlDocument();
+            doc.Load(logName);
+
+            XmlNode root = doc.DocumentElement;
+
+            for (int i = 0; i < root.ChildNodes.Count; i++)
+            {
+                FilterFileItem fileItem = new FilterFileItem();
+                fileItem.Count = 0;
+                fileItem.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
+                fileItem.Enabled = ReadBoolNodeItem(root, "enabled", i);
+                fileItem.Exclude = ReadBoolNodeItem(root, "exclude", i);
+                fileItem.Regex = ReadBoolNodeItem(root, "regex", i);
+                fileItem.Filterpattern = ReadStringNodeItem(root, "filterpattern", i);
+                fileItem.ForegroundColor = ReadStringNodeItem(root, "foregroundcolor", i);
+                fileItem.Index = ReadIntNodeItem(root, "index", i);
+                fileItem.Notes = ReadStringNodeItem(root, "notes", i);
+
+                filterFileItems.Add(fileItem);
+            }
+            return filterFileItems;
         }
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)

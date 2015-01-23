@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Data;
 
 namespace RegexViewer
 {
@@ -25,10 +24,11 @@ namespace RegexViewer
         private string _name;
         private Command _pasteCommand;
         private List<T> _selectedContent = new List<T>();
-        private Command _selectionChangedCommand;
-      //  private Command _selectedIndexChangedCommand;
+
+        // private Command _selectedIndexChangedCommand;
         private int _selectedIndex;
-        
+
+        private Command _selectionChangedCommand;
         private string _tag;
 
         #endregion Private Fields
@@ -61,22 +61,6 @@ namespace RegexViewer
             }
         }
 
-        public int SelectedIndex
-        {
-            get
-            {
-                return _selectedIndex;
-            }
-
-            set
-            {
-                if (_selectedIndex != value)
-                {
-                    _selectedIndex = value;
-                    OnPropertyChanged("SelectedIndex");
-                }
-            }
-        }
         public ObservableCollection<T> ContentList
         {
             get { return _contentList; }
@@ -106,22 +90,6 @@ namespace RegexViewer
             set { _copyCommand = value; }
         }
 
-        //public Command SelectedIndexChangedCommand
-        //{
-        //    get
-        //    {
-        //        if (_selectedIndexChangedCommand == null)
-        //        {
-        //            _selectedIndexChangedCommand = new Command(SelectedIndexChangedExecuted);
-        //        }
-        //        _selectedIndexChangedCommand.CanExecute = true;
-
-        //        return _selectedIndexChangedCommand;
-        //    }
-        //    set { _selectedIndexChangedCommand = value; }
-        //}
-
-
         public string Header
         {
             get
@@ -139,6 +107,10 @@ namespace RegexViewer
             }
         }
 
+        //        return _selectedIndexChangedCommand;
+        //    }
+        //    set { _selectedIndexChangedCommand = value; }
+        //}
         public bool Modified
         {
             get
@@ -156,8 +128,15 @@ namespace RegexViewer
             }
         }
 
-        
-
+        //public Command SelectedIndexChangedCommand
+        //{
+        //    get
+        //    {
+        //        if (_selectedIndexChangedCommand == null)
+        //        {
+        //            _selectedIndexChangedCommand = new Command(SelectedIndexChangedExecuted);
+        //        }
+        //        _selectedIndexChangedCommand.CanExecute = true;
         public string Name
         {
             get
@@ -210,6 +189,23 @@ namespace RegexViewer
             }
         }
 
+        public int SelectedIndex
+        {
+            get
+            {
+                return _selectedIndex;
+            }
+
+            set
+            {
+                if (_selectedIndex != value)
+                {
+                    _selectedIndex = value;
+                    OnPropertyChanged("SelectedIndex");
+                }
+            }
+        }
+
         public Command SelectionChangedCommand
         {
             get
@@ -225,7 +221,6 @@ namespace RegexViewer
             set { _selectionChangedCommand = value; }
         }
 
-        
         public string Tag
         {
             get
@@ -293,9 +288,8 @@ namespace RegexViewer
             if (sender is System.Collections.IList)
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
-                
             }
-            else if(sender is ListBox)
+            else if (sender is ListBox)
             {
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
                 //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);

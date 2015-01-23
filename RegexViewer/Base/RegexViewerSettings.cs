@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -13,59 +12,7 @@ namespace RegexViewer
 {
     public class RegexViewerSettings : Base
     {
-        #region Public Properties
-
-        public string[] RecentFilterFiles
-        {
-            get
-            {
-                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            }
-
-            private set
-            {
-                _appSettings["RecentFilterFiles"].Value = string.Join(",", value);
-            }
-        }
-
-        public string[] RecentLogFiles
-        {
-            get
-            {
-                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
-            }
-
-            private set
-            {
-                _appSettings["RecentLogFiles"].Value = string.Join(",", value);
-            }
-        }
-
-        #endregion Public Properties
-
         #region Public Methods
-
-        public void AddFilterFile(string filterFile)
-        {
-            List<string> filterFiles = new List<string>(CurrentFilterFiles);
-            if (!filterFiles.Contains(filterFile))
-            {
-                filterFiles.Add(filterFile);
-                CurrentFilterFiles = filterFiles;
-                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
-            }
-        }
-
-        public void AddLogFile(string logFile)
-        {
-            List<string> logFiles = new List<string>(CurrentLogFiles);
-            if (!logFiles.Contains(logFile))
-            {
-                logFiles.Add(logFile);
-                CurrentLogFiles = logFiles;
-                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
-            }
-        }
 
         public bool ReadConfigFile()
         {
@@ -96,9 +43,11 @@ namespace RegexViewer
             // Get the mapped configuration file.
             _Config = ConfigurationManager.OpenMappedExeConfiguration(_ConfigFileMap, ConfigurationUserLevel.None);
             _appSettings = _Config.AppSettings.Settings;
+
             VerifyAppSettings();
 
-            // verify files 
+
+            // verify files
             this.CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
             this.CurrentLogFiles = ProcessFiles(CurrentLogFiles);
 
@@ -150,7 +99,17 @@ namespace RegexViewer
 
         public void Save()
         {
-            _Config.Save(ConfigurationSaveMode.Full);
+            // TODO: FIX EXCEPTION when two instances open and one saves to config file first
+            //if(File.Exists(this.ConfigFile))
+            //{
+            //    File.Delete(this.ConfigFile);
+            //}
+            try
+            {
+
+                _Config.Save(ConfigurationSaveMode.Full);
+            }
+            catch (Exception e) { }
         }
 
         #endregion Public Methods
@@ -171,7 +130,7 @@ namespace RegexViewer
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
             List<string> newList = new List<string>();
-            
+
             // return if already in list
             if (recentLogFiles.ToList().Contains(logFile))
             {
@@ -319,11 +278,12 @@ namespace RegexViewer
                             myXmlDocument.Load(cleanPath);
                             files.Add(cleanPath);
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             SetStatus("invalid url path: " + cleanPath + e.ToString());
                         }
                         break;
+
                     case ResourceType.Local:
                     case ResourceType.Unc:
 
@@ -347,13 +307,13 @@ namespace RegexViewer
                             SetStatus("invalid path: " + e.ToString());
                         }
                         break;
+
                     case ResourceType.Error:
                     case ResourceType.Unknown:
                     default:
                         SetStatus("unknown file type:" + cleanPath);
                         break;
                 }
-
             }
 
             return files;
@@ -406,6 +366,11 @@ namespace RegexViewer
                         case AppSettingNames.ForegroundColor:
                             {
                                 _appSettings[name].Value = "Black";
+                                break;
+                            }
+                        case AppSettingNames.CountMaskedMatches:
+                            {
+                                _appSettings[name].Value = "False";
                                 break;
                             }
                         case AppSettingNames.AutoSaveFilters:
@@ -463,10 +428,18 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        #region Public Events
+        #region Public Enums
 
-        
-        #endregion Public Events
+        public enum ResourceType
+        {
+            Error,
+            Local,
+            Unc,
+            Unknown,
+            Url
+        }
+
+        #endregion Public Enums
 
         #region Private Enums
 
@@ -476,6 +449,7 @@ namespace RegexViewer
             BackgroundColor,
             FileHistoryCount,
             FilterDirectory,
+            CountMaskedMatches,
             ForegroundColor,
             FontName,
             FontSize,
@@ -487,6 +461,8 @@ namespace RegexViewer
         }
 
         #endregion Private Enums
+
+        #region Public Properties
 
         public static RegexViewerSettings Settings
         {
@@ -523,6 +499,18 @@ namespace RegexViewer
         }
 
         public string ConfigFile { get; set; }
+
+        public bool CountMaskedMatches
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings["CountMaskedMatches"].Value));
+            }
+            set
+            {
+                _appSettings["CountMaskedMatches"].Value = value.ToString();
+            }
+        }
 
         public List<string> CurrentFilterFiles
         {
@@ -630,19 +618,60 @@ namespace RegexViewer
             }
         }
 
-        public enum ResourceType
+        public string[] RecentFilterFiles
         {
-            Error,
-            Local,
-            Unc,
-            Unknown,
-            Url
+            get
+            {
+                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            private set
+            {
+                _appSettings["RecentFilterFiles"].Value = string.Join(",", value);
+            }
         }
+
+        public string[] RecentLogFiles
+        {
+            get
+            {
+                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            private set
+            {
+                _appSettings["RecentLogFiles"].Value = string.Join(",", value);
+            }
+        }
+
+        #endregion Public Properties
+
+        public void AddFilterFile(string filterFile)
+        {
+            List<string> filterFiles = new List<string>(CurrentFilterFiles);
+            if (!filterFiles.Contains(filterFile))
+            {
+                filterFiles.Add(filterFile);
+                CurrentFilterFiles = filterFiles;
+                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+            }
+        }
+
+        public void AddLogFile(string logFile)
+        {
+            List<string> logFiles = new List<string>(CurrentLogFiles);
+            if (!logFiles.Contains(logFile))
+            {
+                logFiles.Add(logFile);
+                CurrentLogFiles = logFiles;
+                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+            }
+        }
+
         public ResourceType GetPathType(string path)
         {
             try
             {
-
                 if (string.IsNullOrEmpty(path))
                 {
                     return ResourceType.Unknown;
@@ -701,7 +730,5 @@ namespace RegexViewer
                 return ResourceType.Error;
             }
         }
-
-     
     }
 }

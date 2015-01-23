@@ -222,8 +222,8 @@ namespace RegexViewer
             {
                 if (sender is ListBox)
                 {
-            //        ListBox listBox = (sender as ListBox);
-            //        listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
+                    ListBox listBox = (sender as ListBox);
+                    listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
                 }
             }
             catch { }
@@ -249,7 +249,5 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
-
-      
     }
 }

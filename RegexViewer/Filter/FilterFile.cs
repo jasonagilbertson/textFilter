@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
 
 namespace RegexViewer
 {
@@ -51,7 +50,7 @@ namespace RegexViewer
                     item.PropertyChanged += item_PropertyChanged;
                 }
 
-    //            item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
+                // item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
             }
             else if (!enable & _patternNotifications)
             {

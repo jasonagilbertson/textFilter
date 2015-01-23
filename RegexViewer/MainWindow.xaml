@@ -26,6 +26,7 @@
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="Ctrl+H" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
 
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+O" />
@@ -92,7 +93,10 @@
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Tag="{Binding}">
+                          Tag="{Binding}"
+                          DataGridCell.GotFocus="DataGrid_CellGotFocus"  
+                                  >
+                            <!--DataGridCell.KeyDown="DataGridCell_KeyDown"-->
 
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
@@ -104,6 +108,12 @@
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
+                            <!--<DataGrid.Resources>
+                                <Style TargetType="{x:Type DataGridCell}">
+                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
+                                </Style>
+
+                            </DataGrid.Resources>-->
 
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
@@ -265,15 +275,17 @@
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                                
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="Close Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
+                                    <MenuItem Header="Save Filtered View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
                                     <MenuItem Header="Close All Logs" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
                                     <MenuItem Header="Open Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
-                                    <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
+                                    <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+H" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
                             </ListBox.ContextMenu>
