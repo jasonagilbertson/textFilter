@@ -157,7 +157,7 @@ namespace RegexViewer
                 this.SelectedIndex = tabItems.Count - 1;
             }
         }
-
+      //  public object ViewObject { get; set; }
         public abstract void AddTabItem(IFile<T> fileProperties);
 
         public void CloseAllFiles(object sender)

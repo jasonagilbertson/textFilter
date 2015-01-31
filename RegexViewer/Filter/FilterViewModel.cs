@@ -62,6 +62,8 @@ namespace RegexViewer
             }
         }
 
+        //public new DataGrid ViewObject { get; set; }
+        
         public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
         {
             // todo: move to filter class
@@ -482,5 +484,7 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
+        public TabControl TabControl { get; set; }
     }
 }

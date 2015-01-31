@@ -28,11 +28,11 @@ namespace RegexViewer
         private Int32 _statusIndex;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
-
+        
         #endregion Private Fields
 
         #region Public Constructors
-
+        
         public MainViewModel()
         {
             _settings = RegexViewerSettings.Settings;
@@ -42,10 +42,10 @@ namespace RegexViewer
                 Application.Current.Shutdown(1);
             }
 
-            //Base.MainModel = this;
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
             _logViewModel = new LogViewModel(_filterViewModel);
+        
             _parser = new Parser(_filterViewModel, _logViewModel);
 
             // to embed external libraries
@@ -249,5 +249,8 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
+        
+        
     }
 }

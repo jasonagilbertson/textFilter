@@ -29,8 +29,9 @@ namespace RegexViewer
         string Tag { get; set; }
 
         #endregion Public Properties
-
-        int SelectedIndex { get; set; }
+        object Viewer { get; set; }
+        T SelectedIndexItem { get; set; }
+        //int SelectedIndex { get; set; }
         #region Public Methods
 
         void CopyExecuted(object target);

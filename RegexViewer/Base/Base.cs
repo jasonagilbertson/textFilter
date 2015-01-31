@@ -1,12 +1,14 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows;
+using System.Windows.Media;
 
 namespace RegexViewer
 {
     public class Base : INotifyPropertyChanged
     {
         #region Public Events
-
+        
         public static event EventHandler<string> NewStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,6 +25,42 @@ namespace RegexViewer
             {
                 newStatus(this, status);
             }
+        }
+
+        public T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild((prop), i) as DependencyObject;
+                if (child == null)
+                    continue;
+
+                T castedProp = child as T;
+                if (castedProp != null)
+                    return castedProp;
+
+                castedProp = GetFirstChildByType<T>(child);
+
+                if (castedProp != null)
+                    return castedProp;
+            }
+            return null;
+        }
+        #endregion Public Methods
+        public T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            while (parent != null)
+            {
+                var correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
+            return null;
         }
 
         public void OnPropertyChanged(string name)
@@ -45,6 +83,6 @@ namespace RegexViewer
             OnNewStatus(status);
         }
 
-        #endregion Public Methods
+        
     }
 }

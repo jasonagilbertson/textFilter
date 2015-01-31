@@ -20,28 +20,10 @@ namespace RegexViewer
     {
         #region Private Methods
 
-        private void FilterCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void FilterCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Debug.Print("here");
-        }
-
-        private void LogCommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-        private void LogCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            Debug.Print("here");
-        }
-
+    
         #endregion Private Methods
-
+        //public DataGrid dataGridFilter = new DataGrid();
+        //public ListBox logFileData = new ListBox();
         #region Private Fields
 
         private StringBuilder _color = new StringBuilder();
@@ -60,10 +42,15 @@ namespace RegexViewer
         public MainWindow()
         {
             InitializeComponent();
+            
             // Initialize the View Model Objects
             this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
-            //this.regexViewModel = (RegexViewModel)this.FindResource("regexViewModel");
-            //this.filterViewModel = (FilterViewModel)this.FindResource("filterViewModel");
+            
+             
+            
+            //https://msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
+            
+           
             _colorNames = GetColorNames();
             Closing += _mainViewModel.OnWindowClosing;
         }
@@ -99,11 +86,23 @@ namespace RegexViewer
             }
 
         }
+        private void DataGridCell_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                _endEditing = false;
+            }
+            else
+            {
+                _endEditing = true;
+            }
+
+        }
         private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
         {
             if(_endEditing)
             {
-                _endEditing = false;
+               // _endEditing = false;
                 return;
             }
             // Lookup for the source to be DataGridCell
@@ -200,6 +199,7 @@ namespace RegexViewer
             _color.Clear();
         }
 
+        
         private void FileData_Drop(object sender, DragEventArgs e)
         {
             this._mainViewModel.SetStatus("FileData_Drop");

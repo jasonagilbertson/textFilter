@@ -100,16 +100,27 @@ namespace RegexViewer
         public void Save()
         {
             // TODO: FIX EXCEPTION when two instances open and one saves to config file first
-            //if(File.Exists(this.ConfigFile))
-            //{
-            //    File.Delete(this.ConfigFile);
-            //}
+            // may need to use reflection
+            /*
+                    KeyValueConfigurationElement[] kvcea = new KeyValueConfigurationElement[AppSettings.ToKeyValueConfigurationCollection().Count];
+                    AppSettings.ToKeyValueConfigurationCollection().CopyTo(kvcea, 0);
+                    List<KeyValueConfigurationElement> kList = kvcea.ToList();
+                    kList.Sort((a, b) => { return (a.Key.CompareTo(b.Key)); }); 
+            
+
+                    foreach (KeyValueConfigurationElement kvce in kList)
+                    {
+                        _Config.AppSettings.Settings.Remove(kvce.Key);
+                        _Config.AppSettings.Settings.Add(kvce);
+                    } */
             try
             {
-
-                _Config.Save(ConfigurationSaveMode.Full);
+                if (this.SaveSessionInformation)
+                {
+                    _Config.Save(ConfigurationSaveMode.Full);
+                }
             }
-            catch (Exception e) { }
+            catch { }
         }
 
         #endregion Public Methods
@@ -378,6 +389,11 @@ namespace RegexViewer
                                 _appSettings[name].Value = "False";
                                 break;
                             }
+                        case AppSettingNames.SaveSessionInformation:
+                            {
+                                _appSettings[name].Value = "True";
+                                break;
+                            }
                         case AppSettingNames.MaxMultiFileCount:
                             {
                                 _appSettings[name].Value = "10";
@@ -457,7 +473,8 @@ namespace RegexViewer
             CurrentLogFiles,
             RecentFilterFiles,
             RecentLogFiles,
-            MaxMultiFileCount
+            MaxMultiFileCount,
+            SaveSessionInformation
         }
 
         #endregion Private Enums
@@ -479,6 +496,19 @@ namespace RegexViewer
             set
             {
                 _appSettings["AutoSaveFilters"].Value = value.ToString();
+            }
+        }
+
+
+        public bool SaveSessionInformation
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings["SaveSessionInformation"].Value));
+            }
+            set
+            {
+                _appSettings["SaveSessionInformation"].Value = value.ToString();
             }
         }
 

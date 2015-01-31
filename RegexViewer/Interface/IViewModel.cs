@@ -43,7 +43,7 @@
         bool OpenDialogVisible { get; set; }
 
         int SelectedIndex { get; set; }
-
+        //object ViewObject { get; set; }
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }

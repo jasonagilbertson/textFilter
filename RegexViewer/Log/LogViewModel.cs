@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -22,6 +23,7 @@ namespace RegexViewer
         private int _previousIndex;
         private Command _quickFindChangedCommand;
         private string _quickFindText = string.Empty;
+        //private int _selectedItemIndex;
 
         #endregion Private Fields
 
@@ -189,15 +191,25 @@ namespace RegexViewer
             
             _previousIndex = SelectedIndex;
         }
-
+        //public new ListBox ViewObject { get; set; }
         public void HideExecuted(object sender)
         {
             // move to MainWindow.cs and handle event there
             //int currentPosition = this.TabItems[SelectedIndex].SelectedIndex;
+            //int currentPosition = this.SelectedItemIndex;
+         //   int currentPosition = this.ViewObject.SelectedIndex;
+       //     ListBox listbox = FindVisualParent<ListBox>((UIElement)sender);
+        //    ListBox listbox2 = GetFirstChildByType<ListBox>((DependencyObject)sender);
 
+            //Function: RegexViewer.BaseTabViewModel<T>.SelectionChangedExecuted(object), Thread: 0x4664C Main Thread
+            LogFileItem currentPosition = this.TabItems[SelectedIndex].SelectedIndexItem;
+
+            
+            SetStatus("hiding:currentposition:" + currentPosition.Content);
             if (_hiding)
             {
-                
+            
+    
                 this.FilterLogTabItems(null, null, FilterCommand.Highlight);
                 
             }
@@ -214,10 +226,25 @@ namespace RegexViewer
                 }
             }
 
+            try
+            {
+                ListBox listBox = (ListBox)this.TabItems[SelectedIndex].Viewer;
+                if (listBox != null && listBox.Items.Contains(currentPosition))
+                {
+                    SetStatus("hiding:scrollingintoview:");
+                    listBox.ScrollIntoView(currentPosition);
+                    listBox.SelectedItem = currentPosition;
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("hiding:exception:" + e.ToString());
+            }
             // move to MainWindow.cs and handle event there
-            // this.TabItems[SelectedIndex].SelectedIndex = currentPosition;
+            //this.TabItems[SelectedIndex].SelectedIndex = currentPosition;
+            //this.SelectedItemIndex = currentPosition;
             // (ListBox)this.TabItems[SelectedIndex];
-
+       //     this.ViewObject.ScrollIntoView(currentPosition);
             _hiding = !_hiding;
 
         }
@@ -436,5 +463,23 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
+        //public TabControl TabControl { get; set; }
+
+        //public int SelectedItemIndex 
+        //{
+        //    get
+        //    {
+        //        return _selectedItemIndex;
+        //    }
+        //    set
+        //    {
+        //        if (_selectedItemIndex != value)
+        //        {
+        //            _selectedItemIndex = value;
+        //            OnPropertyChanged("SelectedItemIndex");
+        //        }
+        //    }
+        //}
     }
 }

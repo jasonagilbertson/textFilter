@@ -25,6 +25,7 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="Ctrl+H" />
+        
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
 
@@ -68,7 +69,7 @@
 
 <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
 
-            <TabControl x:Name="tabFilters"
+            <TabControl x:Name="tabFilters" 
                         Grid.Row="0"
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
@@ -80,9 +81,9 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
 
-                <TabControl.ContentTemplate>
+                <TabControl.ContentTemplate x:Uid="tabContent">
                     <DataTemplate>
-                        <DataGrid Name="dataGridFilter"
+                        <DataGrid x:Name="dataGridFilter" 
                           ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           Grid.Row="0"
@@ -94,9 +95,12 @@
                           CanUserAddRows="False"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}"
-                          DataGridCell.GotFocus="DataGrid_CellGotFocus"  
+                          DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
+                          DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
+                          DataGridCell.GotFocus="DataGrid_CellGotFocus"
                                   >
-                            <!--DataGridCell.KeyDown="DataGridCell_KeyDown"-->
+                            <!--DataGridCell.GotFocus="DataGrid_CellGotFocus"
+                            DataGridCell.KeyDown="DataGridCell_KeyDown"-->
 
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
@@ -221,16 +225,16 @@
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        
                         >
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
-                <TabControl.ContentTemplate>
+                <TabControl.ContentTemplate x:Uid="logFileContent">
                     <DataTemplate>
                         <ListBox x:Name="logFileData"
+                                 
                                  ItemsSource="{Binding Path=ContentList}"
                                  SelectionMode="Extended"
                                  FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"

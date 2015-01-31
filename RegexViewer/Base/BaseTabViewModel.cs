@@ -30,6 +30,8 @@ namespace RegexViewer
 
         private Command _selectionChangedCommand;
         private string _tag;
+        private T _selectedItemIndex;
+        private object _viewer;
 
         #endregion Private Fields
 
@@ -273,15 +275,32 @@ namespace RegexViewer
         {
         }
 
-        //public void SelectedIndexChangedExecuted(object sender)
-        //{
-        //    SetStatus("SelectedIndexChangedExecuted:enter");
-        //    //if (sender is System.Collections.IList)
-        //    //{
-        //    //    _selectedContent = (sender as IList).Cast<T>().ToList();
-
-        //    //}
-        //}
+        public T SelectedIndexItem
+        {
+            get
+            {
+                return _selectedItemIndex;
+            }
+            set
+            {
+               // if (_selectedItemIndex != value)
+               // {
+                    _selectedItemIndex = value;
+                    OnPropertyChanged("SelectedItemIndex");
+               // }
+            }
+        }
+        public object Viewer 
+        {
+            get
+            {
+                return _viewer;
+            }
+            set
+            {
+                _viewer = value;
+            }
+        }
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
@@ -289,10 +308,28 @@ namespace RegexViewer
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
             }
+            // todo: shouldnt be storing listbox and datagrid
             else if (sender is ListBox)
             {
+                SetStatus("SelectionChangeExecuted:listbox");
+                if(_viewer == null)
+                {
+                    _viewer = sender;
+                }
+                this.SelectedIndexItem = (T)(sender as ListBox).Items[SelectedIndex];
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
                 //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);
+            }
+            else if (sender is DataGrid)
+            {
+                SetStatus("SelectionChangeExecuted:datagrid");
+                //this.SelectedIndexItem = (sender as DataGrid).SelectedIndex;
+                _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
+                //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);
+                if (_viewer == null)
+                {
+                    _viewer = sender;
+                }
             }
         }
 
