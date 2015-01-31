@@ -25,7 +25,7 @@ namespace RegexViewer
         //public DataGrid dataGridFilter = new DataGrid();
         //public ListBox logFileData = new ListBox();
         #region Private Fields
-
+        
         private StringBuilder _color = new StringBuilder();
 
         private List<string> _colorNames = new List<string>();
@@ -34,6 +34,7 @@ namespace RegexViewer
         //private RegexViewModel regexViewModel;
         private MainViewModel _mainViewModel;
         private bool _endEditing;
+        //private Command _gotoLineCommand;
 
         #endregion Private Fields
 
@@ -41,6 +42,7 @@ namespace RegexViewer
 
         public MainWindow()
         {
+          //  this.GotoLineCommand = new Command(GotoLine, true);
             InitializeComponent();
             
             // Initialize the View Model Objects
@@ -221,5 +223,42 @@ namespace RegexViewer
                 }
             }
         }
+        public T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            while (parent != null)
+            {
+                var correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
+            return null;
+        }
+
+        //public Command GotoLineCommand
+        //{
+        //    get
+        //    {
+        //        if (_gotoLineCommand == null)
+        //        {
+        //            _gotoLineCommand = new Command(GotoLine);
+        //        }
+        //        _gotoLineCommand.CanExecute = true;
+
+        //        return _gotoLineCommand;
+        //    }
+        //    set { _gotoLineCommand = value; }
+        //}
+
+        //public void GotoLine(object line)
+        //{
+        //    Debug.Print("here");
+        //    listboxStatus.Items.Add(new ListBoxItem() { Content = "test" });
+        //    //_mainViewModel.LogViewModel.
+        //}
     }
 }

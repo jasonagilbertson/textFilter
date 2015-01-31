@@ -23,6 +23,7 @@ namespace RegexViewer
         private int _previousIndex;
         private Command _quickFindChangedCommand;
         private string _quickFindText = string.Empty;
+        private Command _gotoLineCommand;
         //private int _selectedItemIndex;
 
         #endregion Private Fields
@@ -202,10 +203,19 @@ namespace RegexViewer
         //    ListBox listbox2 = GetFirstChildByType<ListBox>((DependencyObject)sender);
 
             //Function: RegexViewer.BaseTabViewModel<T>.SelectionChangedExecuted(object), Thread: 0x4664C Main Thread
-            LogFileItem currentPosition = this.TabItems[SelectedIndex].SelectedIndexItem;
-
+            //LogFileItem currentPosition = this.TabItems[SelectedIndex].SelectedIndexItem;
             
-            SetStatus("hiding:currentposition:" + currentPosition.Content);
+            if (!(sender is ListBox))
+            {
+                return;
+            }
+
+//            ListBox listBox = sender as ListBox;
+            //LogFileItem logFileItem = (LogFileItem)listBox.Items[listBox.SelectedIndex];
+            LogFileItem logFileItem = this.TabItems[SelectedIndex].SelectedIndexItem;
+            //ListBoxItem logFileItem = (ListBoxItem)listBox.Items[listBox.SelectedIndex];
+            
+            //SetStatus("hiding:currentposition:" + currentPosition.Content);
             if (_hiding)
             {
             
@@ -229,11 +239,15 @@ namespace RegexViewer
             try
             {
                 ListBox listBox = (ListBox)this.TabItems[SelectedIndex].Viewer;
-                if (listBox != null && listBox.Items.Contains(currentPosition))
+                if (listBox != null && listBox.Items.Contains(logFileItem))
+                //if (listBox.Items.Contains(logFileItem))
                 {
+                    
                     SetStatus("hiding:scrollingintoview:");
-                    listBox.ScrollIntoView(currentPosition);
-                    listBox.SelectedItem = currentPosition;
+                    listBox.ScrollIntoView(logFileItem);
+                    listBox.SelectedItem = logFileItem;
+                    
+               //     listBox.UpdateLayout();
                 }
             }
             catch (Exception e)
@@ -464,22 +478,26 @@ namespace RegexViewer
 
         #endregion Private Methods
 
-        //public TabControl TabControl { get; set; }
+        public Command GotoLineCommand
+        {
+            get
+            {
+                if (_gotoLineCommand == null)
+                {
+                    _gotoLineCommand = new Command(GotoLine);
+                }
+                _gotoLineCommand.CanExecute = true;
 
-        //public int SelectedItemIndex 
-        //{
-        //    get
-        //    {
-        //        return _selectedItemIndex;
-        //    }
-        //    set
-        //    {
-        //        if (_selectedItemIndex != value)
-        //        {
-        //            _selectedItemIndex = value;
-        //            OnPropertyChanged("SelectedItemIndex");
-        //        }
-        //    }
-        //}
+                return _gotoLineCommand;
+            }
+            set { _gotoLineCommand = value; }
+        }
+
+        public void GotoLine(object sender)
+        {
+            
+            SetStatus("gotoLine");
+            //_mainViewModel.LogViewModel.
+        }
     }
 }

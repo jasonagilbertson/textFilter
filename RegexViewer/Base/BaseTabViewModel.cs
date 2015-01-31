@@ -29,8 +29,9 @@ namespace RegexViewer
         private int _selectedIndex;
 
         private Command _selectionChangedCommand;
+        private Command _setViewerCommand;
         private string _tag;
-        private T _selectedItemIndex;
+        private T _selectedIndexItem;
         private object _viewer;
 
         #endregion Private Fields
@@ -208,6 +209,21 @@ namespace RegexViewer
             }
         }
 
+        public Command SetViewerCommand
+        {
+            get
+            {
+                if (_setViewerCommand == null)
+                {
+                    _setViewerCommand = new Command(SetViewerExecuted);
+                }
+                _setViewerCommand.CanExecute = true;
+
+                return _setViewerCommand;
+            }
+            set { _setViewerCommand = value; }
+        }
+
         public Command SelectionChangedCommand
         {
             get
@@ -279,18 +295,18 @@ namespace RegexViewer
         {
             get
             {
-                return _selectedItemIndex;
+                return _selectedIndexItem;
             }
             set
             {
-               // if (_selectedItemIndex != value)
-               // {
-                    _selectedItemIndex = value;
-                    OnPropertyChanged("SelectedItemIndex");
-               // }
+                // if (_selectedItemIndex != value)
+                // {
+                _selectedIndexItem = value;
+                OnPropertyChanged("SelectedItemIndex");
+                // }
             }
         }
-        public object Viewer 
+        public object Viewer
         {
             get
             {
@@ -299,6 +315,15 @@ namespace RegexViewer
             set
             {
                 _viewer = value;
+            }
+        }
+        public void SetViewerExecuted(object sender)
+        {
+         
+            if(_viewer == null)
+            {
+                SetStatus("viewer set");
+                _viewer = sender;
             }
         }
         public void SelectionChangedExecuted(object sender)
@@ -311,11 +336,11 @@ namespace RegexViewer
             // todo: shouldnt be storing listbox and datagrid
             else if (sender is ListBox)
             {
-                SetStatus("SelectionChangeExecuted:listbox");
-                if(_viewer == null)
-                {
-                    _viewer = sender;
-                }
+                //SetStatus("SelectionChangeExecuted:listbox");
+                //if(_viewer == null)
+                //{
+                //    _viewer = sender;
+                //}
                 this.SelectedIndexItem = (T)(sender as ListBox).Items[SelectedIndex];
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
                 //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);
@@ -323,13 +348,13 @@ namespace RegexViewer
             else if (sender is DataGrid)
             {
                 SetStatus("SelectionChangeExecuted:datagrid");
-                //this.SelectedIndexItem = (sender as DataGrid).SelectedIndex;
+                //this.SelectedIndexItem = (sender as DataGrid).Items[SelectedIndex];
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
                 //(sender as ListBox).ScrollIntoView((sender as ListBox).SelectedIndex);
-                if (_viewer == null)
-                {
-                    _viewer = sender;
-                }
+                //if (_viewer == null)
+                //{
+                //    _viewer = sender;
+                //}
             }
         }
 

@@ -13,6 +13,7 @@
         <local:RegexViewerSettings x:Key="settings" />
         <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
+        
         <BooleanToVisibilityConverter x:Key="boolToVis" />
         <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
             <ObjectDataProvider.MethodParameters>
@@ -24,8 +25,10 @@
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="Ctrl+H" />
-        
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+H" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G"/>
+        <!--<KeyBinding Command="{Binding GotoLineCommand}" CommandParameter="{Binding}" Gesture="Ctrl+G" />-->
+
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
 
@@ -244,6 +247,7 @@
                                  ScrollViewer.IsDeferredScrollingEnabled="False"
                                  SelectedIndex="{Binding Path=SelectedIndex}"
                                  IsSynchronizedWithCurrentItem="True"
+                                 
                                  >
 
                             <ListBox.ItemTemplate>
@@ -272,6 +276,9 @@
                                 <!--<i:EventTrigger EventName="SelectedIndex">
                                     <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}"  CommandParameter="{Binding}" />
                                 </i:EventTrigger>-->
+                                <i:EventTrigger EventName="LayoutUpdated">
+                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
+                                </i:EventTrigger>
                                 <i:EventTrigger EventName="PreviewKeyDown">
                                     <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
                                 </i:EventTrigger>
@@ -279,7 +286,7 @@
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-                                
+                                <!--<KeyBinding Key="G" Modifiers="Control" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding}" />-->
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
@@ -289,7 +296,8 @@
                                     <MenuItem Header="Save Filtered View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
                                     <MenuItem Header="Close All Logs" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
                                     <MenuItem Header="Open Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
-                                    <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+H" />
+                                    <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
+                                    <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+H" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
                             </ListBox.ContextMenu>
@@ -315,7 +323,7 @@
                 </Grid.ColumnDefinitions>
                 <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50"  Height="25" />
 
-                <ListBox Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                <ListBox x:Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -334,7 +342,7 @@
                     <ListBox.ContextMenu>
                         <ContextMenu HasDropShadow="True">
                             <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />
-                            <!--<MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />-->
+
                             <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                         </ContextMenu>
                     </ListBox.ContextMenu>
