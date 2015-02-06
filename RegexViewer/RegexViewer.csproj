@@ -119,6 +119,9 @@
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
+    <Compile Include="GotoLineDialog.xaml.cs">
+      <DependentUpon>GotoLineDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TimedSaveDialog.xaml.cs">
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
@@ -139,6 +142,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="GotoLineDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="TimedSaveDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

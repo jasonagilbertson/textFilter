@@ -71,7 +71,16 @@ namespace RegexViewer
             }
             set { _newCommand = value; }
         }
-
+        public ITabViewModel<T> CurrentTab()
+        {
+            return this.TabItems[SelectedIndex];
+        }
+        public IFile<T> CurrentFile()
+        {
+         
+            return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+        
+        }
         public Command OpenCommand
         {
             get { return _openCommand ?? new Command(OpenFile); }

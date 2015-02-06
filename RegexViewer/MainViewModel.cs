@@ -199,21 +199,28 @@ namespace RegexViewer
 
         public void SetViewStatus(string statusData)
         {
-            // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
-            while (this.Status.Count > 1000)
+            try
             {
-                this.Status.RemoveAt(0);
+                // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
+                while (this.Status.Count > 1000)
+                {
+                    this.Status.RemoveAt(0);
+                }
+
+                //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
+                ListBoxItem listBoxItem = new ListBoxItem();
+                listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
+                this.Status.Add(listBoxItem);
+                this.StatusIndex = Status.Count - 1;
+
+                Debug.Print(statusData);
+                OnPropertyChanged("Status");
+                // }));
             }
-
-            //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
-            ListBoxItem listBoxItem = new ListBoxItem();
-            listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
-            this.Status.Add(listBoxItem);
-            this.StatusIndex = Status.Count - 1;
-
-            Debug.Print(statusData);
-            OnPropertyChanged("Status");
-            // }));
+            catch (Exception e)
+            {
+                Debug.Print(string.Format("SetViewStatus:exception: {0}: {1}", statusData, e));
+            }
         }
 
         public void StatusChangedExecuted(object sender)

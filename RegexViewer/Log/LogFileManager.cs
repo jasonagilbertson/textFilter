@@ -71,7 +71,11 @@ namespace RegexViewer
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        // filteredItems.Add(logItem);
+                        if (onlyHighlight)
+                        {
+                            filteredItems.Add(logItem);
+                        }
+
                         continue;
                     }
 

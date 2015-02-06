@@ -47,7 +47,8 @@
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
-
+        IFile<T> CurrentFile();
+        ITabViewModel<T> CurrentTab();
         #endregion Public Properties
 
         void AddTabItem(IFile<T> fileProperties);

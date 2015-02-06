@@ -17,7 +17,6 @@ namespace RegexViewer
 
         private FilterViewModel _filterViewModel;
         private Command _hideCommand;
-        private bool _hiding = true;
         private Command _keyDownCommand;
         private LogFileManager _logFileManager;
         private int _previousIndex;
@@ -25,7 +24,8 @@ namespace RegexViewer
         private string _quickFindText = string.Empty;
         private Command _gotoLineCommand;
         //private int _selectedItemIndex;
-
+        LogFileItem _filteredSelectedItem;
+        LogFileItem _unFilteredSelectedItem;
         #endregion Private Fields
 
         #region Public Constructors
@@ -160,7 +160,8 @@ namespace RegexViewer
                 // find logFile if it was not supplied
                 if (_logFileManager.FileManager.Count > 0)
                 {
-                    logFile = (LogFile)_logFileManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                    // logFile = (LogFile)_logFileManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                    logFile = (LogFile)CurrentFile();
                 }
                 else
                 {
@@ -192,39 +193,35 @@ namespace RegexViewer
             
             _previousIndex = SelectedIndex;
         }
-        //public new ListBox ViewObject { get; set; }
+        //private LogFile CurrentFile()
+        //{
+        //    if (this.TabItems.Count > 0
+        //            && this.TabItems.Count >= SelectedIndex)
+        //    {
+        //        return (LogFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+        //    }
+
+        //    return new LogFile();
+        //}
         public void HideExecuted(object sender)
         {
-            // move to MainWindow.cs and handle event there
-            //int currentPosition = this.TabItems[SelectedIndex].SelectedIndex;
-            //int currentPosition = this.SelectedItemIndex;
-         //   int currentPosition = this.ViewObject.SelectedIndex;
-       //     ListBox listbox = FindVisualParent<ListBox>((UIElement)sender);
-        //    ListBox listbox2 = GetFirstChildByType<ListBox>((DependencyObject)sender);
-
-            //Function: RegexViewer.BaseTabViewModel<T>.SelectionChangedExecuted(object), Thread: 0x4664C Main Thread
-            //LogFileItem currentPosition = this.TabItems[SelectedIndex].SelectedIndexItem;
             
             if (!(sender is ListBox))
             {
                 return;
             }
 
-//            ListBox listBox = sender as ListBox;
-            //LogFileItem logFileItem = (LogFileItem)listBox.Items[listBox.SelectedIndex];
-            LogFileItem logFileItem = this.TabItems[SelectedIndex].SelectedIndexItem;
-            //ListBoxItem logFileItem = (ListBoxItem)listBox.Items[listBox.SelectedIndex];
+            ListBox listBox = (ListBox)this.CurrentTab().Viewer;
+            //ListBox listBox = (ListBox)this.TabItems[SelectedIndex].Viewer;
+            LogFileItem logFileItem;
             
-            //SetStatus("hiding:currentposition:" + currentPosition.Content);
-            if (_hiding)
+            // if count the same then assume it is not filtered
+            SetStatus(string.Format("Hide Executed:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", listBox.Items.Count, CurrentFile().ContentItems.Count));
+            if(listBox.Items.Count == CurrentFile().ContentItems.Count)
             {
+
+                logFileItem = _unFilteredSelectedItem = (LogFileItem)listBox.SelectedItem;
             
-    
-                this.FilterLogTabItems(null, null, FilterCommand.Highlight);
-                
-            }
-            else
-            {
                 // send empty function to reset to current filter in filterview
                 if (!string.IsNullOrEmpty(QuickFindText))
                 {
@@ -232,35 +229,49 @@ namespace RegexViewer
                 }
                 else
                 {
+                    
                     this.FilterLogTabItems(null, null, FilterCommand.Reset);
                 }
+            
+            }
+            else
+            {
+                logFileItem = _filteredSelectedItem = (LogFileItem)listBox.SelectedItem;
+                
+                this.FilterLogTabItems(null, null, FilterCommand.Highlight);
             }
 
             try
             {
-                ListBox listBox = (ListBox)this.TabItems[SelectedIndex].Viewer;
-                if (listBox != null && listBox.Items.Contains(logFileItem))
-                //if (listBox.Items.Contains(logFileItem))
+                //ListBox listBox = (ListBox)this.TabItems[SelectedIndex].Viewer;
+                if (listBox != null)
                 {
-                    
+                    if(listBox.Items.Contains(logFileItem))
+                    {
+
+                    }
+                    else if(listBox.Items.Contains(_unFilteredSelectedItem))
+                    {
+                        logFileItem = _unFilteredSelectedItem;
+                    }
+                    else if (listBox.Items.Contains(_filteredSelectedItem))
+                    {
+                        logFileItem = _filteredSelectedItem;
+                    }
+                    else
+                    {
+                        return;
+                    }
+
                     SetStatus("hiding:scrollingintoview:");
                     listBox.ScrollIntoView(logFileItem);
                     listBox.SelectedItem = logFileItem;
-                    
-               //     listBox.UpdateLayout();
                 }
             }
             catch (Exception e)
             {
                 SetStatus("hiding:exception:" + e.ToString());
             }
-            // move to MainWindow.cs and handle event there
-            //this.TabItems[SelectedIndex].SelectedIndex = currentPosition;
-            //this.SelectedItemIndex = currentPosition;
-            // (ListBox)this.TabItems[SelectedIndex];
-       //     this.ViewObject.ScrollIntoView(currentPosition);
-            _hiding = !_hiding;
-
         }
 
         public void KeyDownExecuted(object sender)
@@ -497,7 +508,19 @@ namespace RegexViewer
         {
             
             SetStatus("gotoLine");
-            //_mainViewModel.LogViewModel.
+            GotoLineDialog gotoDialog = new GotoLineDialog();
+            int result = gotoDialog.WaitForResult();
+            SetStatus("gotoLine:" + result.ToString());
+
+            ListBox listBox = (ListBox)CurrentTab().Viewer;
+            if ((listBox.Items.Count >= result) && (result >= 0))
+            {
+                
+                // todo: only works when unfiltered
+                LogFileItem logFileItem = listBox.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
+                listBox.ScrollIntoView(logFileItem);
+                listBox.SelectedItem = logFileItem;
+            }
         }
     }
 }

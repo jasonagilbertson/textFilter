@@ -30,8 +30,7 @@ namespace RegexViewer
 
         #endregion Public Properties
         object Viewer { get; set; }
-        T SelectedIndexItem { get; set; }
-        //int SelectedIndex { get; set; }
+        
         #region Public Methods
 
         void CopyExecuted(object target);

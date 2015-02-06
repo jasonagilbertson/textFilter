@@ -139,7 +139,7 @@ namespace RegexViewer
                     // x.Tag == this.TabItems[SelectedIndex].Tag);
 
                     //return CleanFilterList(filterFile);
-                    return CleanFilterList(CurrentFile());
+                    return CleanFilterList((FilterFile)CurrentFile());
                 }
                 else if (fileItem != null)
                 {
@@ -363,16 +363,16 @@ namespace RegexViewer
 
         #region Private Methods
 
-        private FilterFile CurrentFile()
-        {
-            if (this.TabItems.Count > 0
-                    && this.TabItems.Count >= SelectedIndex)
-            {
-                return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
-            }
+        //private FilterFile CurrentFile()
+        //{
+        //    if (this.TabItems.Count > 0
+        //            && this.TabItems.Count >= SelectedIndex)
+        //    {
+        //        return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+        //    }
 
-            return new FilterFile();
-        }
+        //    return new FilterFile();
+        //}
 
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
@@ -386,7 +386,7 @@ namespace RegexViewer
 
         private void VerifyIndex(FilterFileItem filterFileItem = null)
         {
-            FilterFile filterFile = CurrentFile();
+            FilterFile filterFile = (FilterFile)CurrentFile();
 
             try
             {
@@ -477,7 +477,7 @@ namespace RegexViewer
 
             if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
             {
-                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(CurrentFile());
+                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem((FilterFile)CurrentFile());
             }
 
             OnPropertyChanged(sender, e);
