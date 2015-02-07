@@ -8,7 +8,7 @@ namespace RegexViewer
     public class Base : INotifyPropertyChanged
     {
         #region Public Events
-        
+
         public static event EventHandler<string> NewStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -17,14 +17,20 @@ namespace RegexViewer
 
         #region Public Methods
 
-        //public static IMainViewModel MainModel;
-        public void OnNewStatus(string status)
+        public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
-            EventHandler<string> newStatus = NewStatus;
-            if (newStatus != null)
+            var parent = element;
+            while (parent != null)
             {
-                newStatus(this, status);
+                var correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
             }
+            return null;
         }
 
         public T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
@@ -46,21 +52,15 @@ namespace RegexViewer
             }
             return null;
         }
-        #endregion Public Methods
-        public T FindVisualParent<T>(UIElement element) where T : UIElement
-        {
-            var parent = element;
-            while (parent != null)
-            {
-                var correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
 
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+        //public static IMainViewModel MainModel;
+        public void OnNewStatus(string status)
+        {
+            EventHandler<string> newStatus = NewStatus;
+            if (newStatus != null)
+            {
+                newStatus(this, status);
             }
-            return null;
         }
 
         public void OnPropertyChanged(string name)
@@ -83,6 +83,6 @@ namespace RegexViewer
             OnNewStatus(status);
         }
 
-        
+        #endregion Public Methods
     }
 }

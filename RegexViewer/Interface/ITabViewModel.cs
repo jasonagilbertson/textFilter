@@ -28,9 +28,10 @@ namespace RegexViewer
 
         string Tag { get; set; }
 
-        #endregion Public Properties
         object Viewer { get; set; }
-        
+
+        #endregion Public Properties
+
         #region Public Methods
 
         void CopyExecuted(object target);

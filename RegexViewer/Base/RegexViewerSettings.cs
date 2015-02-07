@@ -46,7 +46,6 @@ namespace RegexViewer
 
             VerifyAppSettings();
 
-
             // verify files
             this.CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
             this.CurrentLogFiles = ProcessFiles(CurrentLogFiles);
@@ -99,14 +98,13 @@ namespace RegexViewer
 
         public void Save()
         {
-            // TODO: FIX EXCEPTION when two instances open and one saves to config file first
-            // may need to use reflection
+            // TODO: FIX EXCEPTION when two instances open and one saves to config file first may
+            // need to use reflection
             /*
                     KeyValueConfigurationElement[] kvcea = new KeyValueConfigurationElement[AppSettings.ToKeyValueConfigurationCollection().Count];
                     AppSettings.ToKeyValueConfigurationCollection().CopyTo(kvcea, 0);
                     List<KeyValueConfigurationElement> kList = kvcea.ToList();
-                    kList.Sort((a, b) => { return (a.Key.CompareTo(b.Key)); }); 
-            
+                    kList.Sort((a, b) => { return (a.Key.CompareTo(b.Key)); });
 
                     foreach (KeyValueConfigurationElement kvce in kList)
                     {
@@ -263,7 +261,7 @@ namespace RegexViewer
 
             if (arguments.Length > 1)
             {
-                Console.WriteLine("exiting. press enter for prompt.");
+                Console.WriteLine("Press Enter to continue...");
 
                 FreeConsole();
             }
@@ -499,19 +497,6 @@ namespace RegexViewer
             }
         }
 
-
-        public bool SaveSessionInformation
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings["SaveSessionInformation"].Value));
-            }
-            set
-            {
-                _appSettings["SaveSessionInformation"].Value = value.ToString();
-            }
-        }
-
         public SolidColorBrush BackgroundColor
         {
             get
@@ -671,6 +656,18 @@ namespace RegexViewer
             private set
             {
                 _appSettings["RecentLogFiles"].Value = string.Join(",", value);
+            }
+        }
+
+        public bool SaveSessionInformation
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings["SaveSessionInformation"].Value));
+            }
+            set
+            {
+                _appSettings["SaveSessionInformation"].Value = value.ToString();
             }
         }
 

@@ -7,6 +7,7 @@ namespace RegexViewer
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
+
         #region Private Fields
 
         private Command _closeAllCommand;
@@ -19,7 +20,7 @@ namespace RegexViewer
         private bool _openDialogVisible;
         private Command _saveAsCommand;
         private Command _saveCommand;
-        private int _selectedIndex;
+        private int _selectedIndex=-1;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
@@ -71,16 +72,6 @@ namespace RegexViewer
             }
             set { _newCommand = value; }
         }
-        public ITabViewModel<T> CurrentTab()
-        {
-            return this.TabItems[SelectedIndex];
-        }
-        public IFile<T> CurrentFile()
-        {
-         
-            return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
-        
-        }
         public Command OpenCommand
         {
             get { return _openCommand ?? new Command(OpenFile); }
@@ -129,6 +120,7 @@ namespace RegexViewer
                 {
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
+                    App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
         }
@@ -166,7 +158,8 @@ namespace RegexViewer
                 this.SelectedIndex = tabItems.Count - 1;
             }
         }
-      //  public object ViewObject { get; set; }
+
+        //  public object ViewObject { get; set; }
         public abstract void AddTabItem(IFile<T> fileProperties);
 
         public void CloseAllFiles(object sender)
@@ -194,6 +187,26 @@ namespace RegexViewer
             RemoveTabItem(tabItem);
         }
 
+        public IFile<T> CurrentFile()
+        {
+            if (SelectedIndex >= 0)
+            {
+                return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+            }
+
+            return default(IFile<T>);
+
+        }
+
+        public ITabViewModel<T> CurrentTab()
+        {
+            if (SelectedIndex >= 0)
+            {
+                return this.TabItems[SelectedIndex];
+            }
+
+            return default(ITabViewModel<T>);
+        }
         public abstract void NewFile(object sender);
 
         public void OpenDrop(object sender)
@@ -224,5 +237,6 @@ namespace RegexViewer
         public abstract void SaveFileAs(object sender);
 
         #endregion Public Methods
+
     }
 }

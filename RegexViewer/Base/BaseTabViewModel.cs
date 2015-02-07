@@ -10,6 +10,7 @@ namespace RegexViewer
 {
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
+
         #region Private Fields
 
         private string _background;
@@ -31,7 +32,7 @@ namespace RegexViewer
         private Command _selectionChangedCommand;
         private Command _setViewerCommand;
         private string _tag;
-        private T _selectedIndexItem;
+        //private T _selectedIndexItem;
         private object _viewer;
 
         #endregion Private Fields
@@ -205,23 +206,9 @@ namespace RegexViewer
                 {
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
+                    
                 }
             }
-        }
-
-        public Command SetViewerCommand
-        {
-            get
-            {
-                if (_setViewerCommand == null)
-                {
-                    _setViewerCommand = new Command(SetViewerExecuted);
-                }
-                _setViewerCommand.CanExecute = true;
-
-                return _setViewerCommand;
-            }
-            set { _setViewerCommand = value; }
         }
 
         public Command SelectionChangedCommand
@@ -239,6 +226,20 @@ namespace RegexViewer
             set { _selectionChangedCommand = value; }
         }
 
+        public Command SetViewerCommand
+        {
+            get
+            {
+                if (_setViewerCommand == null)
+                {
+                    _setViewerCommand = new Command(SetViewerExecuted);
+                }
+                _setViewerCommand.CanExecute = true;
+
+                return _setViewerCommand;
+            }
+            set { _setViewerCommand = value; }
+        }
         public string Tag
         {
             get
@@ -253,6 +254,33 @@ namespace RegexViewer
                     _tag = value;
                     OnPropertyChanged("Tag");
                 }
+            }
+        }
+
+        //public T SelectedIndexItem
+        //{
+        //    get
+        //    {
+        //        return _selectedIndexItem;
+        //    }
+        //    set
+        //    {
+        //        // if (_selectedItemIndex != value)
+        //        // {
+        //        _selectedIndexItem = value;
+        //        OnPropertyChanged("SelectedItemIndex");
+        //        // }
+        //    }
+        //}
+        public object Viewer
+        {
+            get
+            {
+                return _viewer;
+            }
+            set
+            {
+                _viewer = value;
             }
         }
 
@@ -290,42 +318,6 @@ namespace RegexViewer
         public void PasteText()
         {
         }
-
-        //public T SelectedIndexItem
-        //{
-        //    get
-        //    {
-        //        return _selectedIndexItem;
-        //    }
-        //    set
-        //    {
-        //        // if (_selectedItemIndex != value)
-        //        // {
-        //        _selectedIndexItem = value;
-        //        OnPropertyChanged("SelectedItemIndex");
-        //        // }
-        //    }
-        //}
-        public object Viewer
-        {
-            get
-            {
-                return _viewer;
-            }
-            set
-            {
-                _viewer = value;
-            }
-        }
-        public void SetViewerExecuted(object sender)
-        {
-         
-            if(_viewer == null)
-            {
-                SetStatus("viewer set");
-                _viewer = sender;
-            }
-        }
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
@@ -335,15 +327,25 @@ namespace RegexViewer
             }
             else if (sender is ListBox)
             {
-             //   this.SelectedIndexItem = (T)(sender as ListBox).SelectedItem;
-                
+                //   this.SelectedIndexItem = (T)(sender as ListBox).SelectedItem;
+
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
             }
             else if (sender is DataGrid)
             {
                 SetStatus("SelectionChangeExecuted:datagrid");
-               // this.SelectedIndexItem = (T)(sender as DataGrid).SelectedItem;
+                // this.SelectedIndexItem = (T)(sender as DataGrid).SelectedItem;
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
+            }
+        }
+
+        public void SetViewerExecuted(object sender)
+        {
+         
+            if(_viewer == null)
+            {
+                SetStatus("viewer set");
+                _viewer = sender;
             }
         }
 

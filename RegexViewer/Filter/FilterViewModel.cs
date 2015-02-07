@@ -11,36 +11,6 @@ namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
-        #region Private Fields
-
-        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
-
-        private int _previousIndex = -1;
-
-        private string _tempFilterNameFormat = "*new {0}*";
-
-        private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public FilterViewModel()
-        {
-            this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
-            this.TabItems.CollectionChanged += TabItems_CollectionChanged;
-            this.ViewManager = new FilterFileManager();
-            this.ViewManager.PropertyChanged += ViewManager_PropertyChanged;
-
-            // load tabs from last session
-            foreach (FilterFile logProperty in this.ViewManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
-            {
-                AddTabItem(logProperty);
-            }
-        }
-
-        #endregion Public Constructors
-
         #region Public Methods
 
         public override void AddTabItem(IFile<FilterFileItem> filterFile)
@@ -63,10 +33,9 @@ namespace RegexViewer
         }
 
         //public new DataGrid ViewObject { get; set; }
-        
+
         public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
         {
-            // todo: move to filter class
             List<FilterFileItem> fileItems = new List<FilterFileItem>();
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
@@ -135,11 +104,11 @@ namespace RegexViewer
                     && this.TabItems.Count > 0
                     && this.TabItems.Count >= SelectedIndex)
                 {
-                    // FilterFile filterFile = (FilterFile)this.ViewManager.FileManager.First( x =>
-                    // x.Tag == this.TabItems[SelectedIndex].Tag);
-
-                    //return CleanFilterList(filterFile);
-                    return CleanFilterList((FilterFile)CurrentFile());
+                    FilterFile filterFile = (FilterFile)CurrentFile();
+                    if (filterFile != null)
+                    {
+                        return CleanFilterList(filterFile);
+                    }
                 }
                 else if (fileItem != null)
                 {
@@ -363,17 +332,6 @@ namespace RegexViewer
 
         #region Private Methods
 
-        //private FilterFile CurrentFile()
-        //{
-        //    if (this.TabItems.Count > 0
-        //            && this.TabItems.Count >= SelectedIndex)
-        //    {
-        //        return (FilterFile)this.ViewManager.FileManager.First(x => x.Tag == this.TabItems[SelectedIndex].Tag);
-        //    }
-
-        //    return new FilterFile();
-        //}
-
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             OnPropertyChanged(e.PropertyName);
@@ -470,14 +428,20 @@ namespace RegexViewer
 
         private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is FilterFileItem) && e.PropertyName == FilterFileItemEvents.Index)
-            {
-                VerifyIndex((sender as FilterFileItem));
-            }
+            //if ((sender is FilterFileItem) && e.PropertyName == FilterFileItemEvents.Index)
+            //{
+            //    VerifyIndex((sender as FilterFileItem));
+            //}
 
-            if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
+            // if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
+            if (sender is FilterFileItem)
             {
-                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem((FilterFile)CurrentFile());
+                FilterFile filterFile = (FilterFile)CurrentFile();
+                if (filterFile != null)
+                {
+                    ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(filterFile);
+                    VerifyIndex((sender as FilterFileItem));
+                }
             }
 
             OnPropertyChanged(sender, e);
@@ -485,6 +449,40 @@ namespace RegexViewer
 
         #endregion Private Methods
 
+        #region Private Fields
+
+        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
+
+        private int _previousIndex = -1;
+
+        private string _tempFilterNameFormat = "*new {0}*";
+
+        private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public FilterViewModel()
+        {
+            this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
+            this.TabItems.CollectionChanged += TabItems_CollectionChanged;
+            this.ViewManager = new FilterFileManager();
+            this.ViewManager.PropertyChanged += ViewManager_PropertyChanged;
+
+            // load tabs from last session
+            foreach (FilterFile logProperty in this.ViewManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
+            {
+                AddTabItem(logProperty);
+            }
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
         public TabControl TabControl { get; set; }
+
+        #endregion Public Properties
     }
 }

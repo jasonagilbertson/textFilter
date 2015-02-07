@@ -9,6 +9,7 @@ namespace RegexViewer
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
+
         #region Public Constructors
 
         public FilterFileManager()
@@ -300,5 +301,6 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
     }
 }

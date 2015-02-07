@@ -13,7 +13,7 @@
         <local:RegexViewerSettings x:Key="settings" />
         <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
-        
+
         <BooleanToVisibilityConverter x:Key="boolToVis" />
         <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
             <ObjectDataProvider.MethodParameters>
@@ -26,7 +26,7 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+H" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G"/>
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G" />
         <!--<KeyBinding Command="{Binding GotoLineCommand}" CommandParameter="{Binding}" Gesture="Ctrl+G" />-->
 
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
@@ -49,7 +49,7 @@
             <MenuItem Header="_Filter">
                 <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
                 <MenuItem Header="_Close Filter" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
+                <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
                 <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
                 <MenuItem Header="_Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
@@ -64,15 +64,15 @@
 
         <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="*" />
+                <RowDefinition Height="20*" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="80*" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
 
 <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
 
-            <TabControl x:Name="tabFilters" 
+            <TabControl x:Name="tabFilters"
                         Grid.Row="0"
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
@@ -86,7 +86,8 @@
 
                 <TabControl.ContentTemplate x:Uid="tabContent">
                     <DataTemplate>
-                        <DataGrid x:Name="dataGridFilter" 
+                        <DataGrid x:Name="dataGridFilter"
+
                           ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           Grid.Row="0"
@@ -100,8 +101,7 @@
                           Tag="{Binding}"
                           DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
                           DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
-                          DataGridCell.GotFocus="DataGrid_CellGotFocus"
-                                  >
+                          DataGridCell.GotFocus="DataGrid_CellGotFocus">
                             <!--DataGridCell.GotFocus="DataGrid_CellGotFocus"
                             DataGridCell.KeyDown="DataGridCell_KeyDown"-->
 
@@ -119,7 +119,6 @@
                                 <Style TargetType="{x:Type DataGridCell}">
                                     <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
                                 </Style>
-
                             </DataGrid.Resources>-->
 
                             <DataGrid.InputBindings>
@@ -129,7 +128,7 @@
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                                    <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+Alt+F4" />
+                                    <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
                                     <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
@@ -223,12 +222,11 @@
             <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
 
 <!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
-            
+
             <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        >
+                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
@@ -237,7 +235,7 @@
                 <TabControl.ContentTemplate x:Uid="logFileContent">
                     <DataTemplate>
                         <ListBox x:Name="logFileData"
-                                 
+
                                  ItemsSource="{Binding Path=ContentList}"
                                  SelectionMode="Extended"
                                  FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
@@ -246,9 +244,7 @@
                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
                                  ScrollViewer.IsDeferredScrollingEnabled="False"
                                  SelectedIndex="{Binding Path=SelectedIndex}"
-                                 IsSynchronizedWithCurrentItem="True"
-                                 
-                                 >
+                                 IsSynchronizedWithCurrentItem="True">
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>

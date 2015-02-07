@@ -8,6 +8,10 @@
 
         void CloseFile(object sender);
 
+        IFile<T> CurrentFile();
+
+        ITabViewModel<T> CurrentTab();
+
         void NewFile(object sender);
 
         void OnPropertyChanged(string name);
@@ -43,12 +47,12 @@
         bool OpenDialogVisible { get; set; }
 
         int SelectedIndex { get; set; }
+
         //object ViewObject { get; set; }
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
-        IFile<T> CurrentFile();
-        ITabViewModel<T> CurrentTab();
+
         #endregion Public Properties
 
         void AddTabItem(IFile<T> fileProperties);

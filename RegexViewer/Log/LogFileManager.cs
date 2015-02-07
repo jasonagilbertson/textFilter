@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Input;
 
 namespace RegexViewer
@@ -15,7 +14,7 @@ namespace RegexViewer
 
         public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
         {
-              try
+            try
             {
                 if (File.Exists(FileName))
                 {
@@ -35,13 +34,11 @@ namespace RegexViewer
                 SetStatus("saving file:" + FileName);
                 return true;
             }
-              catch (Exception e)
-              {
-                  SetStatus("SaveFile:exception: " + e.ToString());
-                  return false;
-              }
-
-
+            catch (Exception e)
+            {
+                SetStatus("SaveFile:exception: " + e.ToString());
+                return false;
+            }
         }
 
         #endregion Public Methods
@@ -106,7 +103,7 @@ namespace RegexViewer
                         }
 
                         countTotals[c] += 1;
-                        if(!Settings.CountMaskedMatches)
+                        if (!Settings.CountMaskedMatches)
                         {
                             break;
                         }
@@ -136,14 +133,12 @@ namespace RegexViewer
                 SetStatus(string.Format("ApplyFilter:log file: {0} total time in seconds: {1}", logFile.Tag, DateTime.Now.Subtract(timer).TotalSeconds));
                 Mouse.OverrideCursor = null;
                 return filteredItems;
-                
             }
             catch (Exception e)
             {
                 SetStatus("ApplyFilter:exception" + e.ToString());
                 Mouse.OverrideCursor = null;
                 return filteredItems;
-                
             }
         }
 

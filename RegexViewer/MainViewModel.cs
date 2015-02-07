@@ -28,11 +28,11 @@ namespace RegexViewer
         private Int32 _statusIndex;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
-        
+
         #endregion Private Fields
 
         #region Public Constructors
-        
+
         public MainViewModel()
         {
             _settings = RegexViewerSettings.Settings;
@@ -45,7 +45,7 @@ namespace RegexViewer
             Base.NewStatus += HandleNewStatus;
             _filterViewModel = new FilterViewModel();
             _logViewModel = new LogViewModel(_filterViewModel);
-        
+
             _parser = new Parser(_filterViewModel, _logViewModel);
 
             // to embed external libraries
@@ -201,7 +201,8 @@ namespace RegexViewer
         {
             try
             {
-                // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(() => {
+                // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(()
+                // => {
                 while (this.Status.Count > 1000)
                 {
                     this.Status.RemoveAt(0);
@@ -256,8 +257,5 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
-
-        
-        
     }
 }
