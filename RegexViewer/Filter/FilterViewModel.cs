@@ -84,10 +84,10 @@ namespace RegexViewer
                 _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
             }
 
-            if (_previousIndex != this.SelectedIndex)
-            {
-                _previousIndex = SelectedIndex;
-            }
+            //if (_previousIndex != this.SelectedIndex)
+            //{
+            //    _previousIndex = SelectedIndex;
+            //}
 
             Debug.Print("CompareFilterList:returning:" + retval.ToString());
             return retval;

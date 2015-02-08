@@ -64,9 +64,9 @@
 
         <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="20*" />
+                <RowDefinition Height="25*" />
                 <RowDefinition Height="5" />
-                <RowDefinition Height="80*" />
+                <RowDefinition Height="75*" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
 
@@ -83,12 +83,14 @@
                         <TextBlock Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
-
-                <TabControl.ContentTemplate x:Uid="tabContent">
+                <TabControl.Background>
+                    <ImageBrush ImageSource="Filter3.png" Opacity="1" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                </TabControl.Background>
+                <TabControl.ContentTemplate x:Uid="tabContent" >
                     <DataTemplate>
                         <DataGrid x:Name="dataGridFilter"
-
-                          ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
+                           
+                            ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           Grid.Row="0"
                           HorizontalAlignment="Stretch"
@@ -104,8 +106,9 @@
                           DataGridCell.GotFocus="DataGrid_CellGotFocus">
                             <!--DataGridCell.GotFocus="DataGrid_CellGotFocus"
                             DataGridCell.KeyDown="DataGridCell_KeyDown"-->
-
+                            
                             <DataGrid.CellStyle>
+                                
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
                                         <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
@@ -209,11 +212,11 @@
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
                         <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
-                        <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}" />
+                        <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
-                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}" />
-                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}" />
-                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}" />
+                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O"/>
+                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N"/>
+                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S"/>
                         <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
                         <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
                     </ContextMenu>
@@ -227,6 +230,9 @@
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                <TabControl.Background>
+                    <ImageBrush ImageSource="File3.png" Opacity="1" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />

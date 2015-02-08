@@ -62,6 +62,41 @@ namespace RegexViewer
 
             int[] countTotals = new int[filterFileItems.Count];
 
+            // todo: move this to clean
+            List<FilterFileItem> filterItems = new List<FilterFileItem>();
+            foreach(FilterFileItem filterItem in filterFileItems)
+            {
+                if(string.IsNullOrEmpty(filterItem.Filterpattern))
+                {
+                    continue;
+                }
+                FilterFileItem newFilter = new FilterFileItem();
+                newFilter = (FilterFileItem)filterItem.ShallowCopy();
+
+                if(filterItem.Regex)
+                {
+                    newFilter.Regex = true;
+                    try
+                    {
+                        Regex test = new Regex(filterItem.Filterpattern);
+                        
+                    }
+                    catch
+                    {
+                        SetStatus("quick find not a regex:" + filterItem.Filterpattern);
+                        newFilter.Regex = false;
+                    }
+                }
+
+                if (!filterItem.Regex | !newFilter.Regex)
+                {
+                    newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
+                }
+
+                filterItems.Add(newFilter);
+            }
+            
+
             try
             {
                 foreach (LogFileItem logItem in logFile.ContentItems)
@@ -78,23 +113,28 @@ namespace RegexViewer
 
                     int filterIndex = int.MaxValue;
                     bool exclude = false;
-                    for (int c = 0; c < filterFileItems.Count; c++)
+                    //for (int c = 0; c < filterFileItems.Count; c++)
+                    for (int c = 0; c < filterItems.Count; c++)
                     {
-                        FilterFileItem fileItem = filterFileItems[c];
-                        string pattern = fileItem.Filterpattern;
-                        if (!fileItem.Regex)
-                        {
-                            pattern = Regex.Escape(pattern);
-                        }
+                        FilterFileItem filterItem = filterItems[c];
+                        
+                        //if (!filterItem.Regex)
+                        //{
+                        //    pattern = Regex.Escape(pattern);
+                        //}
 
-                        if (!Regex.IsMatch(logItem.Content, pattern, RegexOptions.IgnoreCase))
+                        if(!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
+                        {
+                            continue;
+                        }
+                        else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.IgnoreCase))
                         {
                             continue;
                         }
 
                         if (filterIndex > c)
                         {
-                            if (filterFileItems[c].Exclude)
+                            if (filterItem.Exclude)
                             {
                                 exclude = true;
                             }
@@ -111,8 +151,8 @@ namespace RegexViewer
 
                     if (filterIndex != int.MaxValue && !exclude)
                     {
-                        logItem.Foreground = filterFileItems[filterIndex].Foreground;
-                        logItem.Background = filterFileItems[filterIndex].Background;
+                        logItem.Foreground = filterItems[filterIndex].Foreground;
+                        logItem.Background = filterItems[filterIndex].Background;
                         logItem.FontSize = Settings.FontSize;
                         filteredItems.Add(logItem);
                     }
