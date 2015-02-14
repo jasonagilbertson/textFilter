@@ -8,12 +8,14 @@ using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+
 namespace RegexViewer
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
         #region Public Methods
 
+        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
         public void HideExecuted(object sender)
         {
             //if (!(sender is ListBox))
@@ -44,7 +46,7 @@ namespace RegexViewer
             {
                 logFileItem = _filteredSelectedItem = (LogFileItem)listBox.SelectedItem;
 
-                this.FilterLogTabItems(null, null, FilterCommand.Highlight);
+                this.FilterLogTabItems(null, null, FilterCommand.ShowAll);
             }
 
             try
@@ -160,10 +162,11 @@ namespace RegexViewer
         public void QuickFindChangedExecuted(object sender)
         {
             FilterFileItem fileItem = new FilterFileItem();
-
+            SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is string)));
             if (sender is string)
             {
                 string filter = (sender as string);
+                SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", (sender as string).Length));
                 if (string.IsNullOrEmpty(filter))
                 {
                     // send empty function to reset to current filter in filterview
@@ -465,7 +468,11 @@ namespace RegexViewer
 
         public void FilterLogTabItems(FilterFileItem filter = null, LogFile logFile = null, FilterCommand filterIntent = FilterCommand.Filter)
         {
-            SetStatus("filterLogTabItems");
+
+            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+            SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
+
+
             if (logFile == null)
             {
                 // find logFile if it was not supplied
@@ -480,26 +487,96 @@ namespace RegexViewer
                 }
             }
 
-            List<FilterFileItem> filterFileItems = _filterViewModel.FilterList(filter);
+            
+            filterFileItems = _filterViewModel.FilterList();
 
-            if (_filterViewModel.CompareFilterList(filterFileItems)
-                & _previousIndex == SelectedIndex
-                & filter == null
-                & filterIntent == FilterCommand.Filter)
+            FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
+            SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
+
+            
+
+
+            //if (filterFileItems == null | (filterFileItems != null && filterFileItems.Count == 0))
+            //{
+            //    filterIntent = FilterCommand.ShowAll;
+            //}
+            if (filterIntent != FilterCommand.Reset & filterIntent != FilterCommand.ShowAll)
             {
-                SetStatus("filterLogTabItems:no change");
-            }
-            else if (filterFileItems == null | (filterFileItems != null && filterFileItems.Count == 0))
-            {
-                // no filter so return full list
-                SetStatus("filterLogTabItems:no filter, returning full list");
-                this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
-            }
-            else
-            {
-                this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent == FilterCommand.Highlight);
+            
+
+                switch (filterNeed)
+                {
+                    case FilterNeed.ApplyColor:
+                        {
+                            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems,filterFileItems);
+                            SaveCurrentFilter(filterFileItems);
+                            return;
+                        }
+                    case FilterNeed.Current:
+                        {
+                            if (_previousIndex == SelectedIndex & filter == null)
+                            {
+                                SetStatus("filterLogTabItems:no change");
+                                return;
+                            }
+
+                            break;
+                        }
+                    case FilterNeed.Filter:
+                    case FilterNeed.Unknown:
+                    default:
+                        break;
+                }
             }
 
+            SaveCurrentFilter(filterFileItems);
+
+            switch(filterIntent)
+            {
+                
+                case FilterCommand.DynamicFilter:
+                    {
+                        SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
+                        // quick find
+                        filterFileItems = new List<FilterFileItem>();
+                        filterFileItems.Add(filter);
+                        goto case FilterCommand.Filter;
+                    }
+                case FilterCommand.Filter:
+                case FilterCommand.Reset:
+                    {
+                        SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
+                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilterNew(logFile, filterFileItems, filterIntent);
+                        break;
+                    }
+                case FilterCommand.ShowAll:
+                    {
+                        SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
+                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems, true);
+                        break;
+                    }
+               
+                case FilterCommand.Unknown:
+                default:
+                    {
+                        break;
+                    }
+            }
+        }
+
+        private List<FilterFileItem> GetPreviousFilter()
+        {
+            return _previousFilterFileItems;
+        }
+
+        private void SaveCurrentFilter(List<FilterFileItem> filterFileItems)
+        {
+            // save filter for next applyfilter compare
+            _previousFilterFileItems.Clear();
+            foreach (FilterFileItem item in filterFileItems)
+            {
+                _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
+            }
             _previousIndex = SelectedIndex;
         }
 

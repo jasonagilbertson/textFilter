@@ -12,7 +12,6 @@ namespace RegexViewer
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
         #region Public Methods
-
         public override void AddTabItem(IFile<FilterFileItem> filterFile)
         {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, filterFile.Tag, true) == 0))
@@ -40,7 +39,7 @@ namespace RegexViewer
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
-                if (!fileItem.Enabled || string.IsNullOrEmpty(fileItem.Filterpattern))
+                if (!fileItem.Enabled | string.IsNullOrEmpty(fileItem.Filterpattern))
                 {
                     continue;
                 }
@@ -51,38 +50,45 @@ namespace RegexViewer
             return fileItems;
         }
 
-        public bool CompareFilterList(List<FilterFileItem> filterFileItems)
+        public FilterNeed CompareFilterList(List<FilterFileItem> filterFileItems)
         {
-            bool retval = false;
-            if (_previousFilterFileItems.Count > 0
+            //bool retval = false;
+            FilterNeed retval = FilterNeed.Unknown;
+            List<FilterFileItem> currentItems = this.FilterList();
+            if(filterFileItems.Count == 0)
+            {
+                return FilterNeed.Unknown;
+            }
+            if (currentItems.Count > 0
                 && filterFileItems.Count > 0
-                && _previousFilterFileItems.Count == filterFileItems.Count)
+                && currentItems.Count == filterFileItems.Count)
             {
                 int i = 0;
                 foreach (FilterFileItem fileItem in filterFileItems.OrderBy(x => x.Index))
                 {
-                    FilterFileItem previousItem = _previousFilterFileItems[i++];
-                    if (previousItem.BackgroundColor != fileItem.BackgroundColor
-                        || previousItem.ForegroundColor != fileItem.ForegroundColor
-                        || previousItem.Enabled != fileItem.Enabled
-                        || previousItem.Exclude != fileItem.Exclude
-                        || previousItem.Regex != fileItem.Regex
-                        || previousItem.Filterpattern != fileItem.Filterpattern)
+                    FilterFileItem currentItem = currentItems[i++];
+                    if (currentItem.Enabled != fileItem.Enabled
+                        || currentItem.Exclude != fileItem.Exclude
+                        || currentItem.Regex != fileItem.Regex
+                        || currentItem.Filterpattern != fileItem.Filterpattern)
                     {
-                        retval = false;
+                        //retval = false;
+                        retval = FilterNeed.Filter;
                         Debug.Print("returning false");
                         break;
                     }
-
-                    retval = true;
+                    else if (currentItem.BackgroundColor != fileItem.BackgroundColor
+                        || currentItem.ForegroundColor != fileItem.ForegroundColor)
+                    {
+                        retval = FilterNeed.ApplyColor;
+                        break;
+                    }
+                    //retval = true;
+                    retval = FilterNeed.Current;
                 }
             }
 
-            _previousFilterFileItems.Clear();
-            foreach (FilterFileItem item in filterFileItems)
-            {
-                _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
-            }
+           
 
             //if (_previousIndex != this.SelectedIndex)
             //{
@@ -93,15 +99,14 @@ namespace RegexViewer
             return retval;
         }
 
-        public List<FilterFileItem> FilterList(FilterFileItem fileItem = null)
+        public List<FilterFileItem> FilterList()
         {
             // Debug.Assert(TabItems != null & SelectedIndex != -1);
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
 
             try
             {
-                if (fileItem == null
-                    && this.TabItems.Count > 0
+                if (this.TabItems.Count > 0
                     && this.TabItems.Count >= SelectedIndex)
                 {
                     FilterFile filterFile = (FilterFile)CurrentFile();
@@ -110,10 +115,7 @@ namespace RegexViewer
                         return CleanFilterList(filterFile);
                     }
                 }
-                else if (fileItem != null)
-                {
-                    filterFileItems.Add(fileItem);
-                }
+          
 
                 return filterFileItems;
             }
@@ -451,7 +453,7 @@ namespace RegexViewer
 
         #region Private Fields
 
-        private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
+        //private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private int _previousIndex = -1;
 

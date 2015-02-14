@@ -11,6 +11,7 @@
         System.Windows.Media.Brush Foreground { get; set; }
 
         int Index { get; set; }
+        
 
         #endregion Public Properties
 

@@ -84,7 +84,7 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="Filter3.png" Opacity="1" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                    <ImageBrush ImageSource="Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
                 </TabControl.Background>
                 <TabControl.ContentTemplate x:Uid="tabContent" >
                     <DataTemplate>
@@ -231,7 +231,7 @@
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
                 <TabControl.Background>
-                    <ImageBrush ImageSource="File3.png" Opacity="1" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                    <ImageBrush ImageSource="File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -260,19 +260,23 @@
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" />
+                                               Background="{Binding Path=Background}" 
+                                                   Visibility="{Binding Path=Visibility}"
+                                                   />
                                         <TextBlock Text="{Binding Path=Content}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" />
+                                               Background="{Binding Path=Background}" 
+                                                   Visibility="{Binding Path=Visibility}"
+                                                   />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <!--<i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData, Path=SelectedItems}" />-->
+                                    
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <!--<i:EventTrigger EventName="SelectedIndex">
@@ -288,18 +292,19 @@
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-                                <!--<KeyBinding Key="G" Modifiers="Control" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding}" />-->
+                                
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    <MenuItem Header="Close Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
+                                    <MenuItem Header="Close File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
                                     <MenuItem Header="Save Filtered View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
-                                    <MenuItem Header="Close All Logs" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
-                                    <MenuItem Header="Open Log" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
+                                    <MenuItem Header="Close All Files" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" InputGestureText="Ctrl+Shift+F4" />
+                                    <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
                                     <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
                                     <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+H" />
+                                    <MenuItem Header="Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
                             </ListBox.ContextMenu>
@@ -312,7 +317,7 @@
                         <MenuItem Header="Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
                         <MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
                         <MenuItem Header="Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
-                        <MenuItem Header="Show / Hide All Items" Command="{Binding LogViewModel.HideCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+H" />
+
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
@@ -356,12 +361,19 @@
                      Grid.Column="2"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
-                     Margin="75,0,0,0">
-                    <i:Interaction.Triggers>
+                     Margin="75,0,0,0"
+                         
+                         >
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
+                    </TextBox.InputBindings>
+
+                    <!--<i:Interaction.Triggers>
                         <i:EventTrigger EventName="TextChanged">
-                            <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
+                            --><!--<i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />--><!--
+                            <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding}" />
                         </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                    </i:Interaction.Triggers>-->
                 </TextBox>
             </Grid>
         </Grid>

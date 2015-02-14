@@ -165,10 +165,22 @@ namespace RegexViewer
             {
                 if (arguments[i].ToLower().StartsWith(setting))
                 {
+                    
+                    // remove argument name
                     string argument = arguments[i].ToLower().Replace(setting, "");
-                    if (string.IsNullOrEmpty(argument) && arguments.Length > i + 1)
+
+                    // argument had space in it /filter: filter1, filter2
+                    if (string.IsNullOrEmpty(argument) 
+                        && (arguments.Length > i + 1)
+                        && !arguments[i+1].StartsWith("/"))
                     {
                         argument = arguments[i + 1].Trim();
+                    }
+
+                    if(string.IsNullOrEmpty(argument))
+                    {
+                        // its an argument with no value
+                        args.Add(arguments[i].Trim());
                     }
 
                     foreach (string arg in argument.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
@@ -195,6 +207,7 @@ namespace RegexViewer
                 && !arguments[1].StartsWith("/")
                 && File.Exists(arguments[1]))
             {
+               
                 Settings.RemoveAllLogs();
                 Settings.AddLogFile(Environment.ExpandEnvironmentVariables(arguments[1]));
             }
@@ -245,17 +258,19 @@ namespace RegexViewer
 
             if (ProcessArg("/register", arguments).Count > 0)
             {
+                Console.WriteLine("registering file type association");
                 FileTypeAssociation.Instance.ConfigureFTA(true);
 
-                Console.WriteLine("registering file type association");
+                
                 retval = false;
             }
 
             if (ProcessArg("/unregister", arguments).Count > 0)
             {
+                Console.WriteLine("unregistering file type association");
                 FileTypeAssociation.Instance.ConfigureFTA(false);
 
-                Console.WriteLine("unregistering file type association");
+               
                 retval = false;
             }
 
