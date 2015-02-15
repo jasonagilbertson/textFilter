@@ -9,7 +9,7 @@ namespace RegexViewer
         ObservableCollection<T> ContentItems { get; set; }
 
         string FileName { get; set; }
-        System.Windows.Visibility Visibility { get; set; }
+        //System.Windows.Visibility Visibility { get; set; }
         bool Modified { get; set; }
 
         string Tag { get; set; }

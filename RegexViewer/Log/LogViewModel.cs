@@ -39,14 +39,14 @@ namespace RegexViewer
                 }
                 else
                 {
-                    this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                    this.FilterLogTabItems(FilterCommand.Hide);
                 }
             }
             else
             {
                 logFileItem = _filteredSelectedItem = (LogFileItem)listBox.SelectedItem;
 
-                this.FilterLogTabItems(null, null, FilterCommand.ShowAll);
+                this.FilterLogTabItems(FilterCommand.ShowAll);
             }
 
             try
@@ -169,8 +169,17 @@ namespace RegexViewer
                 SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", (sender as string).Length));
                 if (string.IsNullOrEmpty(filter))
                 {
-                    // send empty function to reset to current filter in filterview
-                    this.FilterLogTabItems(null, null, FilterCommand.Reset);
+                    if (_filterViewModel.FilterList().Count > 0)
+                    {
+                        // send empty function to reset to current filter in filterview
+                        this.FilterLogTabItems(FilterCommand.Reset);
+                    }
+                    else
+                    {
+                        // no filter show all
+                        this.FilterLogTabItems(FilterCommand.ShowAll);
+                    }
+
                     QuickFindText = string.Empty;
                     return;
                 }
@@ -194,7 +203,7 @@ namespace RegexViewer
             }
 
             fileItem.Enabled = true;
-            this.FilterLogTabItems(fileItem, null, FilterCommand.DynamicFilter);
+            this.FilterLogTabItems(FilterCommand.DynamicFilter, fileItem);
         }
 
         public override void RenameTabItem(string newName)
@@ -349,7 +358,7 @@ namespace RegexViewer
                 // FilterLogTabItems(null, logFile);
             }
 
-            FilterLogTabItems(null, null, FilterCommand.Reset);
+            FilterLogTabItems(FilterCommand.Reset);
             // FilterActiveTabItem();
         }
 
@@ -450,7 +459,8 @@ namespace RegexViewer
                 TabItems.Add(tabItem);
                 _previousIndex = this.SelectedIndex;
                 this.SelectedIndex = this.TabItems.Count - 1;
-                FilterLogTabItems(null, (LogFile)logFile, FilterCommand.Filter);
+                //FilterLogTabItems(null, (LogFile)logFile, FilterCommand.Filter);
+                FilterLogTabItems(FilterCommand.Filter);
             }
         }
 
@@ -466,42 +476,34 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        public void FilterLogTabItems(FilterFileItem filter = null, LogFile logFile = null, FilterCommand filterIntent = FilterCommand.Filter)
+        public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter, FilterFileItem filter = null)
         {
 
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
             SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
+            LogFile logFile;
 
-
-            if (logFile == null)
+            // get current log file
+            if (_logFileManager.FileManager.Count > 0)
             {
-                // find logFile if it was not supplied
-                if (_logFileManager.FileManager.Count > 0)
-                {
-                    // logFile = (LogFile)_logFileManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
-                    logFile = (LogFile)CurrentFile();
-                }
-                else
-                {
-                    return;
-                }
+                logFile = (LogFile)CurrentFile();
             }
+            else
+            {
+                return;
+            }
+          
 
-            
+            // get current filter list
             filterFileItems = _filterViewModel.FilterList();
 
-            FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
-            SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
-
-            
-
-
-            //if (filterFileItems == null | (filterFileItems != null && filterFileItems.Count == 0))
-            //{
-            //    filterIntent = FilterCommand.ShowAll;
-            //}
-            if (filterIntent != FilterCommand.Reset & filterIntent != FilterCommand.ShowAll)
+            // dont check filter need if intent is to reset list to current filter or to show all
+            if (filterIntent != FilterCommand.Reset 
+                & filterIntent != FilterCommand.ShowAll
+                & filterIntent != FilterCommand.Hide)
             {
+                FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
+                SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
             
 
                 switch (filterNeed)
@@ -529,11 +531,11 @@ namespace RegexViewer
                 }
             }
 
-            SaveCurrentFilter(filterFileItems);
+            
 
             switch(filterIntent)
             {
-                
+             
                 case FilterCommand.DynamicFilter:
                     {
                         SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
@@ -542,17 +544,25 @@ namespace RegexViewer
                         filterFileItems.Add(filter);
                         goto case FilterCommand.Filter;
                     }
-                case FilterCommand.Filter:
                 case FilterCommand.Reset:
+                case FilterCommand.Filter:
                     {
                         SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilterNew(logFile, filterFileItems, filterIntent);
+                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent);
+                        break;
+                    }
+                case FilterCommand.Hide:
+                    {
+                        SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
+                        // this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
+                        this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
                         break;
                     }
                 case FilterCommand.ShowAll:
                     {
                         SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems, true);
+                        // this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems, true);
+                        this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
                         break;
                     }
                
@@ -562,6 +572,8 @@ namespace RegexViewer
                         break;
                     }
             }
+
+            SaveCurrentFilter(filterFileItems);
         }
 
         private List<FilterFileItem> GetPreviousFilter()

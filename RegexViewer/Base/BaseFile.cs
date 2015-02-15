@@ -22,7 +22,7 @@ private  bool _modified;
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
         public string FileName { get; set; }
-        public System.Windows.Visibility Visibility { get; set; }
+        //public System.Windows.Visibility Visibility { get; set; }
         public bool Modified 
         { 
             get

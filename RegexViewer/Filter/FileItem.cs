@@ -4,7 +4,7 @@ namespace RegexViewer
 {
     public class FileItem : IFileItem
     {
-        private System.Windows.Visibility _visibility;
+        //private System.Windows.Visibility _visibility;
         #region Public Properties
 
         public Brush Background { get; set; }
@@ -16,23 +16,23 @@ namespace RegexViewer
         public int FontSize { get; set; }
 
         public Brush Foreground { get; set; }
-        public System.Windows.Visibility Visibility 
-        { 
-            get
-            {
-                return _visibility;
-            }
-             set
-            {
-                 if(_visibility != value)
-                 {
-                     _visibility = value;
-                   //  OnPropertyChanged("Visibility");
+        //public System.Windows.Visibility Visibility 
+        //{ 
+        //    get
+        //    {
+        //        return _visibility;
+        //    }
+        //     set
+        //    {
+        //         if(_visibility != value)
+        //         {
+        //             _visibility = value;
+        //           //  OnPropertyChanged("Visibility");
 
-                 }
-            }
+        //         }
+        //    }
              
-             }
+        //     }
         public int Index { get; set; }
         
 

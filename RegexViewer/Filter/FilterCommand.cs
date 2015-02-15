@@ -6,7 +6,8 @@
         ShowAll,
         Reset,
         Unknown,
-        DynamicFilter
+        DynamicFilter,
+        Hide
     }
 
     public enum FilterNeed

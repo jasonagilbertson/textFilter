@@ -6,6 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Linq;
+using System.Timers;
+
 
 namespace RegexViewer
 {
@@ -53,104 +55,16 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        //public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, bool onlyHighlight)
+        
         public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
         {
             Mouse.OverrideCursor = Cursors.Wait;
-            // todo: move to filter class
-            ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
             DateTime timer = DateTime.Now;
-            SetStatus(string.Format("ApplyFilter:log file: {0} start time: {1}", logFile.Tag, timer.ToString("hh:mm:ss.fffffff")));
+            SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
 
             int[] countTotals = new int[filterFileItems.Count];
 
-
-            List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
-            
-            
-            try
-            {
-                foreach (LogFileItem logItem in logFile.ContentItems)
-                {
-                    if (string.IsNullOrEmpty(logItem.Content))
-                    {
-                        // used for goto line as it needs all line items
-                        filteredItems.Add(logItem);
-                        continue;
-                    }
-
-                    int filterIndex = int.MaxValue;
-                    bool exclude = false;
-                    
-                    for (int c = 0; c < filterItems.Count; c++)
-                    {
-                        FilterFileItem filterItem = filterItems[c];
-                    
-                        if(!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
-                        {
-                            continue;
-                        }
-                        else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.IgnoreCase))
-                        {
-                            continue;
-                        }
-
-                        if (filterIndex > c)
-                        {
-                            if (filterItem.Exclude)
-                            {
-                                exclude = true;
-                            }
-
-                            filterIndex = c;
-                        }
-
-                        countTotals[c] += 1;
-                        if (!Settings.CountMaskedMatches)
-                        {
-                            break;
-                        }
-                    }
-
-                    if (filterIndex != int.MaxValue && !exclude)
-                    {
-                        logItem.FilterIndex = filterIndex;
-                        logItem.Foreground = filterItems[filterIndex].Foreground;
-                        logItem.Background = filterItems[filterIndex].Background;
-                        logItem.FontSize = Settings.FontSize;
-                        filteredItems.Add(logItem);
-                    }
-                }
-
-                // write totals
-                for (int i = 0; i < countTotals.Length; i++)
-                {
-                    filterFileItems[i].Count = countTotals[i];
-                }
-
-                SetStatus(string.Format("ApplyFilter:log file: {0} total time in seconds: {1}", logFile.Tag, DateTime.Now.Subtract(timer).TotalSeconds));
-                Mouse.OverrideCursor = null;
-                return filteredItems;
-            }
-            catch (Exception e)
-            {
-                SetStatus("ApplyFilter:exception" + e.ToString());
-                Mouse.OverrideCursor = null;
-                return filteredItems;
-            }
-        }
-
-        //public ObservableCollection<LogFileItem> ApplyFilterNew(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
-        public ObservableCollection<LogFileItem> ApplyFilterNew(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-            // todo: move to filter class
-         //   ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
-            DateTime timer = DateTime.Now;
-            SetStatus(string.Format("ApplyFilter:log file: {0} start time: {1}", logFile.Tag, timer.ToString("hh:mm:ss.fffffff")));
-
-            int[] countTotals = new int[filterFileItems.Count];
-
+            DateTime lastUpdate = DateTime.Now;
 
             List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
             
@@ -163,7 +77,7 @@ namespace RegexViewer
                     {
                         // used for goto line as it needs all line items
                       //  filteredItems.Add(logItem);
-                        logItem.Visibility = System.Windows.Visibility.Visible;
+                        //logItem.Visibility = System.Windows.Visibility.Hidden;
                         continue;
                     }
 
@@ -176,12 +90,14 @@ namespace RegexViewer
                     
                         if(!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
                         {
-                            logItem.Visibility = System.Windows.Visibility.Collapsed;
+                            logItem.FilterIndex = -1;
+                            //logItem.Visibility = System.Windows.Visibility.Collapsed;
                             continue;
                         }
                         else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.IgnoreCase))
                         {
-                            logItem.Visibility = System.Windows.Visibility.Collapsed;
+                            logItem.FilterIndex = -1;
+                            //logItem.Visibility = System.Windows.Visibility.Collapsed;
                             continue;
                         }
 
@@ -190,7 +106,8 @@ namespace RegexViewer
                             if (filterItem.Exclude)
                             {
                                 exclude = true;
-                                logItem.Visibility = System.Windows.Visibility.Collapsed;
+                                //logItem.Visibility = System.Windows.Visibility.Collapsed;
+                                logItem.FilterIndex = -1;
                             }
 
                             filterIndex = c;
@@ -210,7 +127,7 @@ namespace RegexViewer
                         logItem.Background = filterItems[filterIndex].Background;
                         logItem.FontSize = Settings.FontSize;
                         //filteredItems.Add(logItem);
-                        logItem.Visibility = System.Windows.Visibility.Visible;
+                        //logItem.Visibility = System.Windows.Visibility.Visible;
                     }
                 }
 
@@ -220,9 +137,12 @@ namespace RegexViewer
                     filterFileItems[i].Count = countTotals[i];
                 }
 
-                SetStatus(string.Format("ApplyFilter:log file: {0} total time in seconds: {1}", logFile.Tag, DateTime.Now.Subtract(timer).TotalSeconds));
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} log file: {1}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.Tag));
                 Mouse.OverrideCursor = null;
-                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.Visibility == System.Windows.Visibility.Visible)); // filteredItems;
+                //return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.Visibility == System.Windows.Visibility.Visible));
+                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
+                //return new ObservableCollection<LogFileItem>(logFile.ContentItems);
+
             }
             catch (Exception e)
             {
@@ -274,7 +194,7 @@ namespace RegexViewer
 
 
 
-        public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems, bool resetVisibility = false)
+        public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems)//, bool showAll = false)
         {
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyColor:start time: {0}", timer.ToString("hh:mm:ss.fffffff")));
@@ -285,31 +205,33 @@ namespace RegexViewer
             {
                 foreach (LogFileItem item in logFileItems)
                 {
-                  
-                        if (item.FilterIndex == -1 | item.FilterIndex >= filterItems.Count)
-                        {
-                            item.Background = Settings.BackgroundColor;
-                            item.Foreground = Settings.ForegroundColor;
-                        }
-                        else
-                        {
-                            item.Foreground = filterItems[item.FilterIndex].Foreground;
-                            item.Background = filterItems[item.FilterIndex].Background;
-                        }
 
-                        item.FontSize = Settings.FontSize;
-                    if (resetVisibility)
+                    if (item.FilterIndex == -1 | item.FilterIndex >= filterItems.Count)
                     {
-                        item.Visibility = System.Windows.Visibility.Visible;
+                        item.Background = Settings.BackgroundColor;
+                        item.Foreground = Settings.ForegroundColor;
                     }
-                        continue;
+                    else
+                    {
+                        item.Foreground = filterItems[item.FilterIndex].Foreground;
+                        item.Background = filterItems[item.FilterIndex].Background;
                     }
 
+                    item.FontSize = Settings.FontSize;
+                    
+                }
                 
                     
                 SetStatus(string.Format("ApplyColor:total time in seconds: {0}", DateTime.Now.Subtract(timer).TotalSeconds));
 
-                return new ObservableCollection<LogFileItem>(logFileItems.Where(x => x.Visibility == System.Windows.Visibility.Visible)); 
+                //if (showAll)
+                //{
+                //    return logFileItems;
+                //}
+                //else
+                //{
+                    return new ObservableCollection<LogFileItem>(logFileItems.Where(x => x.FilterIndex != -1));
+                //}
             }
             catch (Exception e)
             {
@@ -320,103 +242,7 @@ namespace RegexViewer
         }
 
         
-        public ObservableCollection<LogFileItem> ApplyFilterSlow(LogFile logFile, List<FilterFileItem> filterFileItems)
-        {
-            // not used but keeping for now. this one combines all filters into one search testing
-            // shows this method slower than just searching for each filter separately
-            ObservableCollection<LogFileItem> filteredItems = new ObservableCollection<LogFileItem>();
-            DateTime timer = DateTime.Now;
-            SetStatus(string.Format("ApplyFilter:log file: {0} start time: {1}", logFile.Tag, timer.ToString("hh:mm:ss.fffffff")));
-            int[] countTotals = new int[filterFileItems.Count];
-
-            StringBuilder filterPattern = new StringBuilder();
-
-            foreach (FilterFileItem item in filterFileItems)
-            {
-                string pattern = item.Filterpattern;
-
-                if (!item.Regex)
-                {
-                    pattern = Regex.Escape(pattern);
-                }
-
-                filterPattern.Append(string.Format("({0})|", pattern));
-            }
-
-            // remove trailing |
-            if (!(filterPattern.Length == 0))
-            {
-                filterPattern.Remove(filterPattern.Length - 1, 1);
-            }
-
-            Regex regex = new Regex(filterPattern.ToString(), RegexOptions.Compiled | RegexOptions.IgnoreCase);
-            MatchCollection mc;
-            // int lowestIndex = int.MaxValue;
-
-            try
-            {
-                foreach (LogFileItem logItem in logFile.ContentItems)
-                // foreach (LogFileItem logItem in ReadFile(logFile.Tag))
-                {
-                    if (string.IsNullOrEmpty(logItem.Content))
-                    {
-                        continue;
-                    }
-
-                    int filterIndex = int.MaxValue; // -1;
-
-                    // if(regex.IsMatch(logItem.Content))
-                    if (((mc = regex.Matches(logItem.Content)).Count) > 0)
-                    {
-                        //foreach(Match m in mc)
-                        //for (int c = 0; c < countTotals.Length & c < mc[0].Groups.Count; c++)
-                        //for (int c = 0; c < mc[0].Groups.Count; c++)
-                        for (int c = 0; c < mc.Count; c++)
-                        {
-                            // check for success and index all success gets counted match goes to
-                            // lowest index exclusions mask any lower matches
-                            for (int g = 0; g < mc[c].Groups.Count; g++)
-                            {
-                                if (mc[c].Groups[g + 1].Success)
-                                {
-                                    //Group group = mc[c].Groups[g + 1];
-                                    countTotals[g] += 1;
-                                    //if(group.Index > 0 & group.Index < lowestIndex)
-                                    //if (group.Index < lowestIndex)
-                                    if (filterIndex > g)
-                                    {
-                                        // lowestIndex = group.Index;
-                                        filterIndex = g;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (filterIndex >= 0 && !filterFileItems[filterIndex].Exclude)
-                        {
-                            logItem.Foreground = filterFileItems[filterIndex].Foreground;
-                            logItem.Background = filterFileItems[filterIndex].Background;
-                            logItem.FontSize = RegexViewerSettings.Settings.FontSize;
-                            filteredItems.Add(logItem);
-                        }
-                    }
-                }
-
-                // write totals
-                for (int i = 0; i < countTotals.Length; i++)
-                {
-                    filterFileItems[i].Count = countTotals[i];
-                }
-
-                SetStatus(string.Format("ApplyFilter:log file: {0} total time in seconds: {1}", logFile.Tag, DateTime.Now.Subtract(timer).TotalSeconds));
-                return filteredItems;
-            }
-            catch (Exception e)
-            {
-                SetStatus("ApplyFilter:exception" + e.ToString());
-                return filteredItems;
-            }
-        }
+        
 
         public override IFile<LogFileItem> NewFile(string LogName)
         {
