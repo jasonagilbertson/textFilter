@@ -189,7 +189,7 @@ namespace RegexViewer
 
         public IFile<T> CurrentFile()
         {
-            if (SelectedIndex >= 0)
+            if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
                 return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }

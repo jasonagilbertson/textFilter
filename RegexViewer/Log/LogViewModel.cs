@@ -5,9 +5,10 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using System.Windows.Threading;
 
 namespace RegexViewer
 {
@@ -548,7 +549,8 @@ namespace RegexViewer
                 case FilterCommand.Filter:
                     {
                         SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent);
+                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent),filterFileItems);
+                        
                         break;
                     }
                 case FilterCommand.Hide:

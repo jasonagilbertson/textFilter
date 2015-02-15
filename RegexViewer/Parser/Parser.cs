@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 
 namespace RegexViewer
 {
@@ -12,7 +15,8 @@ namespace RegexViewer
         private List<IFile<LogFileItem>> _logFiles = new List<IFile<LogFileItem>>();
         private bool _logMonitoringEnabled = false;
         private LogViewModel _logViewModel;
-        private List<BackgroundParser> _parsers = new List<BackgroundParser>();
+        //private List<BackgroundParser> _parsers = new List<BackgroundParser>();
+        private WorkerManager _workerManager = WorkerManager.Instance;
 
         #endregion Private Fields
 
@@ -20,6 +24,7 @@ namespace RegexViewer
 
         public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
         {
+            SetStatus("Parser:ctor");
             // TODO: Complete member initialization
             this._filterViewModel = filterViewModel;
             this._logViewModel = logViewModel;
@@ -30,7 +35,7 @@ namespace RegexViewer
             _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
 
             this.EnableFilterFileMonitoring(true);
-            this.EnableLogFileMonitoring(true);
+          //  this.EnableLogFileMonitoring(true);
         }
 
         #endregion Public Constructors
@@ -57,25 +62,25 @@ namespace RegexViewer
             }
         }
 
-        public void EnableLogFileMonitoring(bool enable)
-        {
-            if (enable & !_logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in _logFiles)
-                {
-                    item.ContentItems.CollectionChanged += logItems_CollectionChanged;
-                }
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-            else if (!enable & _logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in _logFiles)
-                {
-                    item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
-                }
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-        }
+        //public void EnableLogFileMonitoring(bool enable)
+        //{
+        //    if (enable & !_logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged += logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //    else if (!enable & _logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //}
 
         #endregion Public Methods
 
@@ -90,12 +95,51 @@ namespace RegexViewer
         {
             SetStatus("Parser:filterViewPropertyChanged");
             // todo: determine what changed and run parser new filter, modified filter, removed filter
+            // see if tab was added or removed
+
+            List<IFile<FilterFileItem>> newFilterFiles = (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
+            foreach (IFile<FilterFileItem> file in newFilterFiles)
+            {
+                if(!_filterFiles.Contains(file))
+                {
+                    // new filter file added
+                    
+                    _filterFiles.Add(file);
+                    EnableFilterFileMonitoring(true);
+                    // todo : re parse current log with new filter
+                }
+            }
+
+            foreach (IFile<FilterFileItem> file in new List<IFile<FilterFileItem>>(_filterFiles))
+            {
+                if(!newFilterFiles.Contains(file))
+                {
+                    // existing filter file removed
+                    EnableFilterFileMonitoring(false);
+                    _filterFiles.Remove(file);
+                    // todo : re parse current log with new selected filter
+                    bool ret = ParseFile(_filterViewModel.CurrentFile(), _logViewModel.CurrentFile());
+                }
+            }
+            
         }
 
-        private void logItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private bool ParseFile(IFile<FilterFileItem> filterFile, IFile<LogFileItem> logFile)
         {
-            SetStatus("Parser:logItemsCollectionChanged");
+            // http://stackoverflow.com/questions/1207832/wpf-dispatcher-begininvoke-and-ui-background-threads
+            WorkerManager workerManager = WorkerManager.Instance;
+            Worker worker = new Worker();
+
+            workerManager.StartWorker(worker);
+            
+            return true;
         }
+
+        //private void logItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        //{
+        //    SetStatus("Parser:logItemsCollectionChanged");
+        //    throw new NotSupportedException();
+        //}
 
         private void logViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

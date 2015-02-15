@@ -9,7 +9,12 @@ namespace RegexViewer
 {
     public class WorkerManager:Base
     {
-
+        public class BGWorkerInfo
+        {
+            public BackgroundWorker BackGroundWorker {get; set;}
+            public Worker Worker { get; set; }
+        }
+        public List<BGWorkerInfo> Workers { get; set; }
         private static WorkerManager _workerManager;
         private WorkerManager() {}
         public static WorkerManager Instance
@@ -24,41 +29,58 @@ namespace RegexViewer
             }
         }
 
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
+        private void DoWork(object sender, DoWorkEventArgs e)
         {
             // This event handler is where the actual work is done. 
             // This method runs on the background thread. 
 
             // Get the BackgroundWorker object that raised this event.
-            System.ComponentModel.BackgroundWorker worker;
-            worker = (System.ComponentModel.BackgroundWorker)sender;
-
+            System.ComponentModel.BackgroundWorker bgWorker;
+            bgWorker = (System.ComponentModel.BackgroundWorker)sender;
+            
             // Get the Words object and call the main method.
             Worker WC = (Worker)e.Argument;
-            WC.CountWords(worker, e);
+
+           // WC.DoWork(worker, e);
         }
-        private void CancelWorker(BackgroundWorker bgWorker)
+        public void CancelWorker(BGWorkerInfo bgWorker)
         {
             // Cancel the asynchronous operation. 
-            bgWorker.CancelAsync();
+            bgWorker.BackGroundWorker.CancelAsync();
+            if (this.Workers.Contains(bgWorker))
+            {
+                this.Workers.Remove(bgWorker);
+            }
         }
 
-        private BackgroundWorker StartWorker()
+        public BGWorkerInfo StartWorker(Worker worker)
         {
+            
             // This method runs on the main thread. 
-       //     this.WordsCounted.Text = "0";
             BackgroundWorker bgWorker = new BackgroundWorker();
             // Initialize the object that the background worker calls.
-            Worker WC = new Worker();
-        //    WC.CompareString = this.CompareString.Text;
-        //    WC.SourceFile = this.SourceFile.Text;
+            
+            bgWorker.WorkerSupportsCancellation = true;
+            bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DoWork);
+            bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.RunWorkerCompleted);
+            
+            BGWorkerInfo bgInfo = new BGWorkerInfo
+            {
+                BackGroundWorker = bgWorker,
+                Worker = worker
+            };
+
+            if(!this.Workers.Contains(bgInfo))
+            {
+                this.Workers.Add(bgInfo);
+            }
 
             // Start the asynchronous operation.
-            bgWorker.RunWorkerAsync(WC);
-            return bgWorker;
+            bgWorker.RunWorkerAsync(worker);
+            return bgInfo;
         }
 
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // This event handler is called when the background thread finishes. 
             // This method runs on the main thread. 
@@ -70,11 +92,11 @@ namespace RegexViewer
                 SetStatus("Finished counting words.");
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        public void ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             // This method runs on the main thread.
-            Worker.CurrentState state =
-                (Worker.CurrentState)e.UserState;
+            //Worker.CurrentState state =
+            //    (Worker.CurrentState)e.UserState;
           //  this.LinesCounted.Text = state.LinesCounted.ToString();
           //  this.WordsCounted.Text = state.WordsMatched.ToString();
         }

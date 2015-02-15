@@ -7,6 +7,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using System.Linq;
 using System.Timers;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Threading;
 
 
 namespace RegexViewer
@@ -71,33 +74,32 @@ namespace RegexViewer
             
             try
             {
-                foreach (LogFileItem logItem in logFile.ContentItems)
+                Parallel.ForEach(logFile.ContentItems, logItem =>
+                //foreach (LogFileItem logItem in logFile.ContentItems)
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
                         // used for goto line as it needs all line items
-                      //  filteredItems.Add(logItem);
-                        //logItem.Visibility = System.Windows.Visibility.Hidden;
-                        continue;
+                        //continue;
+                        logItem.FilterIndex = -1;
+                        return;
                     }
 
                     int filterIndex = int.MaxValue;
                     bool exclude = false;
-                    
+
                     for (int c = 0; c < filterItems.Count; c++)
                     {
                         FilterFileItem filterItem = filterItems[c];
-                    
-                        if(!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
+
+                        if (!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
                         {
                             logItem.FilterIndex = -1;
-                            //logItem.Visibility = System.Windows.Visibility.Collapsed;
                             continue;
                         }
                         else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.IgnoreCase))
                         {
                             logItem.FilterIndex = -1;
-                            //logItem.Visibility = System.Windows.Visibility.Collapsed;
                             continue;
                         }
 
@@ -106,7 +108,6 @@ namespace RegexViewer
                             if (filterItem.Exclude)
                             {
                                 exclude = true;
-                                //logItem.Visibility = System.Windows.Visibility.Collapsed;
                                 logItem.FilterIndex = -1;
                             }
 
@@ -120,28 +121,26 @@ namespace RegexViewer
                         }
                     }
 
-                    if (filterIndex != int.MaxValue && !exclude)
+                    
+                    if (filterIndex > -1 && filterIndex != int.MaxValue && !exclude)
                     {
-                        logItem.FilterIndex = filterIndex;
-                        logItem.Foreground = filterItems[filterIndex].Foreground;
-                        logItem.Background = filterItems[filterIndex].Background;
-                        logItem.FontSize = Settings.FontSize;
-                        //filteredItems.Add(logItem);
-                        //logItem.Visibility = System.Windows.Visibility.Visible;
+                            logItem.FilterIndex = filterIndex;
                     }
                 }
+                
+                );
 
                 // write totals
                 for (int i = 0; i < countTotals.Length; i++)
                 {
                     filterFileItems[i].Count = countTotals[i];
+                    SetStatus(string.Format("ApplyFilter:counttotals: {0}", countTotals[i]));
                 }
 
-                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} log file: {1}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.Tag));
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile line count: {1} log file: {1}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, logFile.Tag));
                 Mouse.OverrideCursor = null;
-                //return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.Visibility == System.Windows.Visibility.Visible));
+                
                 return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
-                //return new ObservableCollection<LogFileItem>(logFile.ContentItems);
 
             }
             catch (Exception e)
@@ -304,7 +303,12 @@ namespace RegexViewer
             {
                 string line;
                 int count = 0;
+                //argItem.Value.ArgReplacementString = Encoding.ASCII.GetString(tmfTraceMsg.EventStringBytes)
+                //            .Substring(_startIndex, _nextIndex)
+                //            .Replace("\0", "");
+                // http://cc.davelozinski.com/c-sharp/the-fastest-way-to-read-and-process-text-files
                 while ((line = sr.ReadLine()) != null)
+                //while ((line = sr.ReadLine().Replace("\0","")) != null)
                 {
                     LogFileItem logFileItem = new LogFileItem();
                     //logFileItem.Content = line;
