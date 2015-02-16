@@ -495,11 +495,21 @@ namespace RegexViewer
             }
           
 
-            // get current filter list
-            filterFileItems = _filterViewModel.FilterList();
+            
+            if(filter != null)
+            {
+                filterFileItems.Add(filter);
+            }
+            else
+            {
+                // get current filter list
+                filterFileItems = _filterViewModel.FilterList();
+            }
+            
 
             // dont check filter need if intent is to reset list to current filter or to show all
-            if (filterIntent != FilterCommand.Reset 
+            if (filterIntent != FilterCommand.DynamicFilter
+                & filterIntent != FilterCommand.Reset 
                 & filterIntent != FilterCommand.ShowAll
                 & filterIntent != FilterCommand.Hide)
             {
@@ -525,10 +535,19 @@ namespace RegexViewer
 
                             break;
                         }
+
+                    case FilterNeed.ShowAll:
+                        {
+                            filterIntent = FilterCommand.ShowAll;
+                            break;
+                        }
                     case FilterNeed.Filter:
-                    case FilterNeed.Unknown:
-                    default:
                         break;
+                    case FilterNeed.Unknown:
+                    
+                    default:
+                        SaveCurrentFilter(filterFileItems);
+                        return;
                 }
             }
 
@@ -538,13 +557,13 @@ namespace RegexViewer
             {
              
                 case FilterCommand.DynamicFilter:
-                    {
-                        SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
-                        // quick find
-                        filterFileItems = new List<FilterFileItem>();
-                        filterFileItems.Add(filter);
-                        goto case FilterCommand.Filter;
-                    }
+                    //{
+                    //    SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
+                    //    // quick find
+                    //    filterFileItems = new List<FilterFileItem>();
+                    //    filterFileItems.Add(filter);
+                    //    goto case FilterCommand.Filter;
+                    //}
                 case FilterCommand.Reset:
                 case FilterCommand.Filter:
                     {

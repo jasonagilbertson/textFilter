@@ -15,6 +15,7 @@
         Current,
         Filter,
         ApplyColor,
-        Unknown
+        Unknown,
+        ShowAll
     }
 }

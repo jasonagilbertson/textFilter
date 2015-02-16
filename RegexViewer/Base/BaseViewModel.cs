@@ -118,8 +118,10 @@ namespace RegexViewer
             {
                 if (_selectedIndex != value)
                 {
+                    SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
+                    
                     App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
@@ -178,22 +180,29 @@ namespace RegexViewer
 
         public void CloseFile(object sender)
         {
-            ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-            if (!this.ViewManager.CloseFile(tabItem.Tag))
+            if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
-                return;
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                if (!this.ViewManager.CloseFile(tabItem.Tag))
+                {
+                    return;
+                }
+
+                RemoveTabItem(tabItem);
             }
 
-            RemoveTabItem(tabItem);
+            
         }
 
         public IFile<T> CurrentFile()
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
+                SetStatus(string.Format("CurrentFile: SelectedIndex: {0}", SelectedIndex));
                 return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }
 
+            SetStatus(string.Format("CurrentFile: warning: returning default T SelectedIndex: {0}", SelectedIndex));
             return default(IFile<T>);
 
         }

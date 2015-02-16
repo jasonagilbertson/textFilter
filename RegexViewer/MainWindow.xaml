@@ -27,7 +27,6 @@
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+H" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G" />
-        <!--<KeyBinding Command="{Binding GotoLineCommand}" CommandParameter="{Binding}" Gesture="Ctrl+G" />-->
 
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
@@ -77,7 +76,7 @@
                         Grid.Row="0"
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay}"
+                        SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
                         Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -105,8 +104,6 @@
                           DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
                           DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
                           DataGridCell.GotFocus="DataGrid_CellGotFocus">
-                            <!--DataGridCell.GotFocus="DataGrid_CellGotFocus"
-                            DataGridCell.KeyDown="DataGridCell_KeyDown"-->
                             
                             <DataGrid.CellStyle>
                                 
@@ -119,11 +116,6 @@
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
-                            <!--<DataGrid.Resources>
-                                <Style TargetType="{x:Type DataGridCell}">
-                                    <EventSetter Event="PreviewMouseLeftButtonDown" Handler="DataGridCell_PreviewMouseLeftButtonDown"></EventSetter>
-                                </Style>
-                            </DataGrid.Resources>-->
 
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
@@ -212,14 +204,12 @@
                 </TabControl.ContentTemplate>
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-                        <!--<MenuItem Header="Copy" Command="ApplicationCommands.Copy" CommandTarget="{Binding ElementName=logFileData}" />-->
                         <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
                         <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O"/>
                         <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N"/>
                         <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S"/>
                         <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
-                        <!--<MenuItem Header="Copy" Command="{Binding LogViewModel.CopyCommand}" CommandTarget="{Binding ElementName=logFileData}" />-->
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
@@ -279,9 +269,6 @@
                                     
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
-                                <!--<i:EventTrigger EventName="SelectedIndex">
-                                    <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}"  CommandParameter="{Binding}" />
-                                </i:EventTrigger>-->
                                 <i:EventTrigger EventName="LayoutUpdated">
                                     <i:InvokeCommandAction Command="{Binding SetViewerCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>

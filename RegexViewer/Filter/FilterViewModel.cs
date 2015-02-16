@@ -55,9 +55,9 @@ namespace RegexViewer
             //bool retval = false;
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            if(filterFileItems.Count == 0)
+            if(filterFileItems.Count == 0 & currentItems.Count == 0)
             {
-                return FilterNeed.Unknown;
+                return FilterNeed.ShowAll;
             }
             if (currentItems.Count > 0
                 && filterFileItems.Count > 0
@@ -87,7 +87,10 @@ namespace RegexViewer
                     retval = FilterNeed.Current;
                 }
             }
-
+            else
+            {
+                retval = FilterNeed.Filter;
+            }
            
 
             //if (_previousIndex != this.SelectedIndex)
@@ -106,8 +109,7 @@ namespace RegexViewer
 
             try
             {
-                if (this.TabItems.Count > 0
-                    && this.TabItems.Count >= SelectedIndex)
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
                 {
                     FilterFile filterFile = (FilterFile)CurrentFile();
                     if (filterFile != null)
@@ -249,7 +251,16 @@ namespace RegexViewer
             }
             else
             {
-                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    // can get here by having no filters and hitting save file. 
+                    // todo: disable save file if no tab items
+                    return;
+                }
             }
 
             if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempFilterNameFormatPattern))
@@ -336,11 +347,13 @@ namespace RegexViewer
 
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            SetStatus("filterViewModel:tabItem_PropertyChanged");
             OnPropertyChanged(e.PropertyName);
         }
 
         private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
+            SetStatus("filterViewModel:TabItems_CollectionChanged");
             OnPropertyChanged("TabItems");
         }
 

@@ -33,25 +33,33 @@ namespace RegexViewer
 
         public bool CloseFile(string FileName)
         {
-            if (FileManager.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
+            try
             {
-                SetStatus("file not open:" + FileName);
-                FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
-                if (typeof(T) == typeof(FilterFileItem))
+                if (FileManager.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
                 {
-                    this.Settings.RemoveFilterFile(FileName);
+                    SetStatus("file not open:" + FileName);
+                    FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
+                    if (typeof(T) == typeof(FilterFileItem))
+                    {
+                        this.Settings.RemoveFilterFile(FileName);
+                    }
+                    if (typeof(T) == typeof(LogFileItem))
+                    {
+                        this.Settings.RemoveLogFile(FileName);
+                    }
+                    return true;
                 }
-                if (typeof(T) == typeof(LogFileItem))
+                else
                 {
-                    this.Settings.RemoveLogFile(FileName);
-                }
-                return true;
-            }
-            else
-            {
-                //ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
-                SetStatus("file not open:" + FileName);
+                    //ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
+                    SetStatus("file not open:" + FileName);
 
+                    return false;
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("CloseFile exception:" + e.ToString());
                 return false;
             }
         }

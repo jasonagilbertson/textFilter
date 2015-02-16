@@ -137,7 +137,7 @@ namespace RegexViewer
                     SetStatus(string.Format("ApplyFilter:counttotals: {0}", countTotals[i]));
                 }
 
-                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile line count: {1} log file: {1}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, logFile.Tag));
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile line count: {1} log file: {2}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, logFile.Tag));
                 Mouse.OverrideCursor = null;
                 
                 return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
