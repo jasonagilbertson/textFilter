@@ -9,7 +9,9 @@ namespace RegexViewer
     {
 
         #region Private Fields
+        public string _tempTabNameFormat = "*new {0}*";
 
+        public string _tempTabNameFormatPattern = @"\*new [0-9]{1,2}\*";
         private Command _closeAllCommand;
 
         // private ITabViewModel<T> activeTab;
@@ -21,6 +23,7 @@ namespace RegexViewer
         private Command _saveAsCommand;
         private Command _saveCommand;
         private int _selectedIndex=-1;
+        private int _previousIndex = -1;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
@@ -106,7 +109,19 @@ namespace RegexViewer
             get { return _saveCommand ?? new Command(SaveFile); }
             set { _saveCommand = value; }
         }
+        public int PreviousIndex
+        {
+            get
+            {
+                return _previousIndex;
+            }
+            set
+            {
+                _previousIndex = value;
 
+            }
+            
+        }
         public int SelectedIndex
         {
             get
@@ -119,6 +134,7 @@ namespace RegexViewer
                 if (_selectedIndex != value)
                 {
                     SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
+                    //_previousIndex = _selectedIndex;
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
                     
@@ -214,9 +230,40 @@ namespace RegexViewer
                 return this.TabItems[SelectedIndex];
             }
 
+            SetStatus(string.Format("CurrentTab: warning: returning default T SelectedTab: {0}", SelectedIndex));
             return default(ITabViewModel<T>);
         }
-        public abstract void NewFile(object sender);
+        
+   //     public abstract void NewFile(object sender);
+
+        public void NewFile(object sender)
+        {
+            IFile<T> file = default (IFile<T>);
+            // add temp name
+            for (int i = 0; i < 100; i++)
+            {
+                string tempTag = string.Format(_tempTabNameFormat, i);
+                if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
+                {
+                    continue;
+                }
+                else
+                {
+                    if(SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)                       
+                    {
+                        file = this.ViewManager.NewFile(tempTag,this.TabItems[SelectedIndex].ContentList);
+                    }
+                    else
+                    {
+                        file = this.ViewManager.NewFile(tempTag);
+                    }
+                    break;
+                }
+            }
+
+            AddTabItem(file);
+        }
+
 
         public void OpenDrop(object sender)
         {

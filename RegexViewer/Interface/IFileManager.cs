@@ -22,7 +22,7 @@ namespace RegexViewer
 
         bool CloseFile(string LogName);
 
-        IFile<T> NewFile(string LogName);
+        IFile<T> NewFile(string LogName, ObservableCollection<T> items = null);
 
         IFile<T> OpenFile(string LogName);
 

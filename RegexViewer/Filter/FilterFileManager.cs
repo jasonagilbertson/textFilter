@@ -74,7 +74,7 @@ namespace RegexViewer
             }
         }
 
-        public override IFile<FilterFileItem> NewFile(string LogName)
+        public override IFile<FilterFileItem> NewFile(string LogName, ObservableCollection<FilterFileItem> fileItems = null)
         {
             FilterFile filterFile = new FilterFile();
             ManageNewFilterFileItem(filterFile);

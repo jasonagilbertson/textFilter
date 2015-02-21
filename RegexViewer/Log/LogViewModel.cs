@@ -94,11 +94,7 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        public override void NewFile(object sender)
-        {
-            SetStatus("new file not implemented");
-            throw new NotImplementedException();
-        }
+       
 
         /// <summary>
         /// Opens OpenFileDialog to test supply valid string file in argument sender
@@ -173,7 +169,8 @@ namespace RegexViewer
                     if (_filterViewModel.FilterList().Count > 0)
                     {
                         // send empty function to reset to current filter in filterview
-                        this.FilterLogTabItems(FilterCommand.Reset);
+                     //   this.FilterLogTabItems(FilterCommand.Reset);
+                        this.FilterLogTabItems(FilterCommand.Filter);
                     }
                     else
                     {
@@ -243,6 +240,7 @@ namespace RegexViewer
                 Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
 
                 dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
+                dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
                 dlg.FileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
                 Nullable<bool> result = false;
                 // Show save file dialog box
@@ -330,7 +328,7 @@ namespace RegexViewer
 
         private LogFileManager _logFileManager;
 
-        private int _previousIndex;
+        //private int _previousIndex;
 
         private Command _quickFindChangedCommand;
 
@@ -458,7 +456,7 @@ namespace RegexViewer
                 };
 
                 TabItems.Add(tabItem);
-                _previousIndex = this.SelectedIndex;
+                
                 this.SelectedIndex = this.TabItems.Count - 1;
                 //FilterLogTabItems(null, (LogFile)logFile, FilterCommand.Filter);
                 FilterLogTabItems(FilterCommand.Filter);
@@ -496,15 +494,15 @@ namespace RegexViewer
           
 
             
-            if(filter != null)
-            {
-                filterFileItems.Add(filter);
-            }
-            else
-            {
+            //if(filter != null)
+            //{
+            //    filterFileItems.Add(filter);
+            //}
+            //else
+            //{
                 // get current filter list
                 filterFileItems = _filterViewModel.FilterList();
-            }
+            //}
             
 
             // dont check filter need if intent is to reset list to current filter or to show all
@@ -527,7 +525,7 @@ namespace RegexViewer
                         }
                     case FilterNeed.Current:
                         {
-                            if (_previousIndex == SelectedIndex & filter == null)
+                            if (this.PreviousIndex == this.SelectedIndex & filter == null)
                             {
                                 SetStatus("filterLogTabItems:no change");
                                 return;
@@ -557,13 +555,15 @@ namespace RegexViewer
             {
              
                 case FilterCommand.DynamicFilter:
-                    //{
-                    //    SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
+                    {
+                        SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
+                        filter.Include = true;
+                        filter.Regex = true;
                     //    // quick find
                     //    filterFileItems = new List<FilterFileItem>();
-                    //    filterFileItems.Add(filter);
-                    //    goto case FilterCommand.Filter;
-                    //}
+                        filterFileItems.Add(filter);
+                        goto case FilterCommand.Filter;
+                    }
                 case FilterCommand.Reset:
                 case FilterCommand.Filter:
                     {
@@ -582,7 +582,7 @@ namespace RegexViewer
                 case FilterCommand.ShowAll:
                     {
                         SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                        // this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems, true);
+                        // this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems,true);
                         this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
                         break;
                     }
@@ -610,7 +610,8 @@ namespace RegexViewer
             {
                 _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
             }
-            _previousIndex = SelectedIndex;
+
+            PreviousIndex = SelectedIndex;
         }
 
         public void GotoLineExecuted(object sender)

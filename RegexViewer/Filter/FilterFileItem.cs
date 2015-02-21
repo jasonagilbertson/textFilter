@@ -158,6 +158,7 @@ namespace RegexViewer
         #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
+        private bool _include = false;
 
         #endregion Public Events
 
@@ -295,6 +296,22 @@ namespace RegexViewer
                 {
                     base.Foreground = value;
                     // OnPropertyChanged(FilterFileItemEvents.Foreground);
+                }
+            }
+        }
+
+        public bool Include 
+        { 
+            get
+            {
+                return _include;
+            }
+            set
+            {
+                if(_include != value)
+                {
+                    _include = value;
+                    OnPropertyChanged("Include");
                 }
             }
         }

@@ -204,7 +204,7 @@ namespace RegexViewer
             {
                 if (_selectedIndex != value)
                 {
-                    SetStatus(string.Format("BaseTabViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
+                    //SetStatus(string.Format("BaseTabViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
                     
                     OnPropertyChanged("SelectedIndex");

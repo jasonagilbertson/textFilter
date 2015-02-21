@@ -37,7 +37,7 @@ namespace RegexViewer
             {
                 if (FileManager.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
                 {
-                    SetStatus("file not open:" + FileName);
+                    SetStatus("file not open. removing:" + FileName);
                     FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
                     if (typeof(T) == typeof(FilterFileItem))
                     {
@@ -64,7 +64,7 @@ namespace RegexViewer
             }
         }
 
-        public abstract IFile<T> NewFile(string LogName);
+        public abstract IFile<T> NewFile(string LogName, ObservableCollection<T> items);
 
         public abstract IFile<T> OpenFile(string LogName);
 

@@ -77,6 +77,7 @@ namespace RegexViewer
                 Parallel.ForEach(logFile.ContentItems, logItem =>
                 //foreach (LogFileItem logItem in logFile.ContentItems)
                 {
+                    
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
                         // used for goto line as it needs all line items
@@ -86,7 +87,29 @@ namespace RegexViewer
                     }
 
                     int filterIndex = int.MaxValue;
-                    bool exclude = false;
+
+
+                    // make sure all matches have all includes
+                    foreach(FilterFileItem item in filterItems.Where( x => x.Include == true))
+                    {
+                        
+                        if(item.Regex)
+                        {
+                            if(!Regex.IsMatch(logItem.Content, item.Filterpattern,RegexOptions.IgnoreCase))
+                            {
+                                logItem.FilterIndex = -1;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (!logItem.Content.ToLower().Contains(item.Filterpattern.ToLower()))
+                            {
+                                logItem.FilterIndex = -1;
+                                return;
+                            }
+                        }
+                    }
 
                     for (int c = 0; c < filterItems.Count; c++)
                     {
@@ -107,7 +130,7 @@ namespace RegexViewer
                         {
                             if (filterItem.Exclude)
                             {
-                                exclude = true;
+                                
                                 logItem.FilterIndex = -1;
                             }
 
@@ -122,9 +145,11 @@ namespace RegexViewer
                     }
 
                     
-                    if (filterIndex > -1 && filterIndex != int.MaxValue && !exclude)
+                    if (filterIndex > -1 && filterIndex != int.MaxValue)
                     {
-                            logItem.FilterIndex = filterIndex;
+
+                        //logItem.FilterIndex =  filterCommand != FilterCommand.DynamicFilter ? filterIndex : Math.Max(logItem.FilterIndex, filterIndex);
+                        logItem.FilterIndex = filterIndex;
                     }
                 }
                 
@@ -166,6 +191,7 @@ namespace RegexViewer
                     Exclude = filterItem.Exclude,
                     Filterpattern = filterItem.Filterpattern,
                     Foreground = filterItem.Foreground,
+                    Include = filterItem.Include,
                     Regex = filterItem.Regex
 
                 };
@@ -180,7 +206,7 @@ namespace RegexViewer
                     }
                     catch
                     {
-                        SetStatus("quick find not a regex:" + filterItem.Filterpattern);
+                        SetStatus("not a regex:" + filterItem.Filterpattern);
                         newFilter.Regex = false;
                         newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
                     }
@@ -193,7 +219,7 @@ namespace RegexViewer
 
 
 
-        public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems)//, bool showAll = false)
+        public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems, bool showAll = false)
         {
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyColor:start time: {0}", timer.ToString("hh:mm:ss.fffffff")));
@@ -223,14 +249,14 @@ namespace RegexViewer
                     
                 SetStatus(string.Format("ApplyColor:total time in seconds: {0}", DateTime.Now.Subtract(timer).TotalSeconds));
 
-                //if (showAll)
-                //{
-                //    return logFileItems;
-                //}
-                //else
-                //{
+                if (showAll)
+                {
+                    return logFileItems;
+                }
+                else
+                {
                     return new ObservableCollection<LogFileItem>(logFileItems.Where(x => x.FilterIndex != -1));
-                //}
+                }
             }
             catch (Exception e)
             {
@@ -240,13 +266,34 @@ namespace RegexViewer
             }
         }
 
-        
-        
 
-        public override IFile<LogFileItem> NewFile(string LogName)
+
+        public override IFile<LogFileItem> NewFile(string LogName, ObservableCollection<LogFileItem> logFileItems = null)
         {
-            throw new NotImplementedException();
+            LogFile logFile = new LogFile();
+            if (logFileItems != null)
+            {
+                logFile.ContentItems = logFileItems;
+            }
+
+            FileManager.Add(ManageFileProperties(LogName, logFile));
+
+            this.Settings.AddLogFile(LogName);
+            OnPropertyChanged("LogFileManager");
+            return logFile;
         }
+
+     
+
+        private LogFile ManageFileProperties(string LogName, LogFile filterFile)
+        {
+            filterFile.FileName = Path.GetFileName(LogName);
+            filterFile.Tag = LogName;
+
+            
+            return filterFile;
+        }
+        
 
         public override IFile<LogFileItem> OpenFile(string LogName)
         {

@@ -26,7 +26,7 @@ namespace RegexViewer
                 // logProperties.Modified = false;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
-                _previousIndex = this.SelectedIndex;
+                
                 this.SelectedIndex = this.TabItems.Count - 1;
             }
         }
@@ -55,7 +55,7 @@ namespace RegexViewer
             //bool retval = false;
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            if(filterFileItems.Count == 0 & currentItems.Count == 0)
+            if(currentItems.Count == 0 & filterFileItems.Count == 0)
             {
                 return FilterNeed.ShowAll;
             }
@@ -128,27 +128,27 @@ namespace RegexViewer
             }
         }
 
-        public override void NewFile(object sender)
-        {
-            FilterFile filterFile = new FilterFile();
-            // add temp name
-            for (int i = 0; i < 100; i++)
-            {
-                string tempTag = string.Format(_tempFilterNameFormat, i);
-                if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
-                {
-                    continue;
-                }
-                else
-                {
-                    filterFile = (FilterFile)this.ViewManager.NewFile(tempTag);
-                    break;
-                }
-            }
+        //public override void NewFile(object sender)
+        //{
+        //    FilterFile filterFile = new FilterFile();
+        //    // add temp name
+        //    for (int i = 0; i < 100; i++)
+        //    {
+        //        string tempTag = string.Format(_tempFilterNameFormat, i);
+        //        if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
+        //        {
+        //            continue;
+        //        }
+        //        else
+        //        {
+        //            filterFile = (FilterFile)this.ViewManager.NewFile(tempTag);
+        //            break;
+        //        }
+        //    }
 
-            // filterFile.Modified = true; make new tab
-            AddTabItem(filterFile);
-        }
+        //    // filterFile.Modified = true; make new tab
+        //    AddTabItem(filterFile);
+        //}
 
         /// <summary>
         /// Open File Dialog To test specify valid file for object sender
@@ -263,7 +263,7 @@ namespace RegexViewer
                 }
             }
 
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempFilterNameFormatPattern))
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
             {
                 if (!SaveAsFile(tabItem))
                 {
@@ -468,11 +468,11 @@ namespace RegexViewer
 
         //private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
-        private int _previousIndex = -1;
+//        private int _previousIndex = -1;
 
-        private string _tempFilterNameFormat = "*new {0}*";
+        //private string _tempFilterNameFormat = "*new {0}*";
 
-        private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
+        //private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
 
         #endregion Private Fields
 
