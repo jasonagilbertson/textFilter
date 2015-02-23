@@ -49,8 +49,6 @@ namespace RegexViewer
                 {
                     item.PropertyChanged += item_PropertyChanged;
                 }
-
-                // item_PropertyChanged(this, new PropertyChangedEventArgs("enable"));
             }
             else if (!enable & _patternNotifications)
             {
@@ -72,7 +70,6 @@ namespace RegexViewer
         private void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             Modified = true;
-            //OnPropertyChanged("ContentList");
             SetStatus("FilterFile:_contentItems_CollectionChanged");
             OnPropertyChanged("_contentItems_CollectionChanged");
         }

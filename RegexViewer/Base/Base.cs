@@ -53,7 +53,6 @@ namespace RegexViewer
             return null;
         }
 
-        //public static IMainViewModel MainModel;
         public void OnNewStatus(string status)
         {
             EventHandler<string> newStatus = NewStatus;
@@ -79,7 +78,6 @@ namespace RegexViewer
 
         public void SetStatus(string status)
         {
-            //MainModel.SetViewStatus(status);
             OnNewStatus(status);
         }
 

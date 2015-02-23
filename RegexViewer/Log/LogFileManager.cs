@@ -2,53 +2,15 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Input;
 using System.Linq;
-using System.Timers;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Threading;
-
+using System.Windows.Input;
 
 namespace RegexViewer
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {
-        #region Public Methods
-
-        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
-        {
-            try
-            {
-                if (File.Exists(FileName))
-                {
-                    File.Delete(FileName);
-                }
-
-                using (StreamWriter writer = File.CreateText(FileName))
-                {
-                    foreach (LogFileItem item in list)
-                    {
-                        writer.WriteLine(item.Content);
-                    }
-
-                    writer.Close();
-                }
-
-                SetStatus("saving file:" + FileName);
-                return true;
-            }
-            catch (Exception e)
-            {
-                SetStatus("SaveFile:exception: " + e.ToString());
-                return false;
-            }
-        }
-
-        #endregion Public Methods
-
         #region Public Constructors
 
         public LogFileManager()
@@ -58,166 +20,7 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
-        
-        public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
-        {
-            Mouse.OverrideCursor = Cursors.Wait;
-            DateTime timer = DateTime.Now;
-            SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
-
-            int[] countTotals = new int[filterFileItems.Count];
-
-            DateTime lastUpdate = DateTime.Now;
-
-            List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
-            
-            
-            try
-            {
-                Parallel.ForEach(logFile.ContentItems, logItem =>
-                //foreach (LogFileItem logItem in logFile.ContentItems)
-                {
-                    
-                    if (string.IsNullOrEmpty(logItem.Content))
-                    {
-                        // used for goto line as it needs all line items
-                        //continue;
-                        logItem.FilterIndex = -1;
-                        return;
-                    }
-
-                    int filterIndex = int.MaxValue;
-
-
-                    // make sure all matches have all includes
-                    foreach(FilterFileItem item in filterItems.Where( x => x.Include == true))
-                    {
-                        
-                        if(item.Regex)
-                        {
-                            if(!Regex.IsMatch(logItem.Content, item.Filterpattern,RegexOptions.IgnoreCase))
-                            {
-                                logItem.FilterIndex = -1;
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (!logItem.Content.ToLower().Contains(item.Filterpattern.ToLower()))
-                            {
-                                logItem.FilterIndex = -1;
-                                return;
-                            }
-                        }
-                    }
-
-                    for (int c = 0; c < filterItems.Count; c++)
-                    {
-                        FilterFileItem filterItem = filterItems[c];
-
-                        if (!filterItem.Regex && !logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
-                        {
-                            logItem.FilterIndex = -1;
-                            continue;
-                        }
-                        else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.IgnoreCase))
-                        {
-                            logItem.FilterIndex = -1;
-                            continue;
-                        }
-
-                        if (filterIndex > c)
-                        {
-                            if (filterItem.Exclude)
-                            {
-                                
-                                logItem.FilterIndex = -1;
-                            }
-
-                            filterIndex = c;
-                        }
-
-                        countTotals[c] += 1;
-                        if (!Settings.CountMaskedMatches)
-                        {
-                            break;
-                        }
-                    }
-
-                    
-                    if (filterIndex > -1 && filterIndex != int.MaxValue)
-                    {
-
-                        //logItem.FilterIndex =  filterCommand != FilterCommand.DynamicFilter ? filterIndex : Math.Max(logItem.FilterIndex, filterIndex);
-                        logItem.FilterIndex = filterIndex;
-                    }
-                }
-                
-                );
-
-                // write totals
-                for (int i = 0; i < countTotals.Length; i++)
-                {
-                    filterFileItems[i].Count = countTotals[i];
-                    SetStatus(string.Format("ApplyFilter:counttotals: {0}", countTotals[i]));
-                }
-
-                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile line count: {1} log file: {2}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, logFile.Tag));
-                Mouse.OverrideCursor = null;
-                
-                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
-
-            }
-            catch (Exception e)
-            {
-                SetStatus("ApplyFilter:exception" + e.ToString());
-                Mouse.OverrideCursor = null;
-                return new ObservableCollection<LogFileItem>();
-            }
-        }
-        private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems)
-        {
-            List<FilterFileItem> filterItems = new List<FilterFileItem>();
-            foreach (FilterFileItem filterItem in filterFileItems)
-            {
-                if (string.IsNullOrEmpty(filterItem.Filterpattern))
-                {
-                    continue;
-                }
-                FilterFileItem newFilter = new FilterFileItem()
-                {
-                    Background = filterItem.Background,
-                    Enabled = filterItem.Enabled,
-                    Exclude = filterItem.Exclude,
-                    Filterpattern = filterItem.Filterpattern,
-                    Foreground = filterItem.Foreground,
-                    Include = filterItem.Include,
-                    Regex = filterItem.Regex
-
-                };
-
-                if (newFilter.Regex)
-                {
-
-                    try
-                    {
-                        Regex test = new Regex(filterItem.Filterpattern);
-
-                    }
-                    catch
-                    {
-                        SetStatus("not a regex:" + filterItem.Filterpattern);
-                        newFilter.Regex = false;
-                        newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
-                    }
-                }
-
-                filterItems.Add(newFilter);
-            }
-            return filterItems;
-        }
-
-
+        #region Public Methods
 
         public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems, bool showAll = false)
         {
@@ -229,8 +32,12 @@ namespace RegexViewer
             try
             {
                 foreach (LogFileItem item in logFileItems)
-                {
 
+                //Parallel.ForEach(logFileItems,
+                //        () => 0,
+                //        ()
+                //        item =>
+                {
                     if (item.FilterIndex == -1 | item.FilterIndex >= filterItems.Count)
                     {
                         item.Background = Settings.BackgroundColor;
@@ -243,10 +50,8 @@ namespace RegexViewer
                     }
 
                     item.FontSize = Settings.FontSize;
-                    
-                }
-                
-                    
+                }//);
+
                 SetStatus(string.Format("ApplyColor:total time in seconds: {0}", DateTime.Now.Subtract(timer).TotalSeconds));
 
                 if (showAll)
@@ -266,7 +71,114 @@ namespace RegexViewer
             }
         }
 
+        public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
+        {
+            Mouse.OverrideCursor = Cursors.Wait;
+            DateTime timer = DateTime.Now;
+            SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
 
+            List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
+
+            try
+            {
+                Parallel.ForEach(logFile.ContentItems, logItem =>
+                {
+                    if (string.IsNullOrEmpty(logItem.Content))
+                    {
+                        // used for goto line as it needs all line items
+                        logItem.FilterIndex = -1;
+                        return;
+                    }
+
+                    int filterIndex = int.MaxValue;
+
+                    // make sure all matches have all includes
+                    foreach (FilterFileItem item in filterItems.Where(x => x.Include == true))
+                    {
+                        if (item.Regex)
+                        {
+                            if (!Regex.IsMatch(logItem.Content, item.Filterpattern, item.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
+                            {
+                                logItem.FilterIndex = -1;
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (!logItem.Content.ToLower().Contains(item.Filterpattern.ToLower()))
+                            {
+                                logItem.FilterIndex = -1;
+                                return;
+                            }
+                        }
+                    }
+
+                    for (int c = 0; c < filterItems.Count; c++)
+                    {
+                        FilterFileItem filterItem = filterItems[c];
+
+                        if (!filterItem.Regex)
+                        
+                        {
+                            if(filterItem.CaseSensitive & !logItem.Content.Contains(filterItem.Filterpattern))
+                                {
+                                    logItem.FilterIndex = -1;
+                                    continue;
+                                }
+                            else if (!logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
+                            {
+                                logItem.FilterIndex = -1;
+                                continue;
+                            }
+                        }
+                        else if (!Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
+                        {
+                            logItem.FilterIndex = -1;
+                            continue;
+                        }
+
+                        if (filterIndex > c)
+                        {
+                            if (filterItem.Exclude)
+                            {
+                                logItem.FilterIndex = -1;
+                                continue;
+                            }
+
+                            filterIndex = c;
+                        }
+
+                        if (!Settings.CountMaskedMatches)
+                        {
+                            break;
+                        }
+                    }
+
+                    if (filterIndex > -1 && filterIndex != int.MaxValue)
+                    {
+                        logItem.FilterIndex = filterIndex;
+                    }
+                });
+
+                // write totals
+                for (int i = 0; i < filterFileItems.Count; i++)
+                {
+                    filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == i);
+                    SetStatus(string.Format("ApplyFilter:counttotals: {0}", filterFileItems[i].Count));
+                }
+
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile line count: {1} log file: {2}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, logFile.Tag));
+                Mouse.OverrideCursor = null;
+
+                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
+            }
+            catch (Exception e)
+            {
+                SetStatus("ApplyFilter:exception" + e.ToString());
+                Mouse.OverrideCursor = null;
+                return new ObservableCollection<LogFileItem>();
+            }
+        }
 
         public override IFile<LogFileItem> NewFile(string LogName, ObservableCollection<LogFileItem> logFileItems = null)
         {
@@ -283,18 +195,6 @@ namespace RegexViewer
             return logFile;
         }
 
-     
-
-        private LogFile ManageFileProperties(string LogName, LogFile filterFile)
-        {
-            filterFile.FileName = Path.GetFileName(LogName);
-            filterFile.Tag = LogName;
-
-            
-            return filterFile;
-        }
-        
-
         public override IFile<LogFileItem> OpenFile(string LogName)
         {
             IFile<LogFileItem> logFile = new LogFile();
@@ -308,14 +208,12 @@ namespace RegexViewer
             {
                 logFile.FileName = Path.GetFileName(LogName);
                 logFile.Tag = LogName;
-                // logFile.ContentItems = (ObservableCollection<LogFileItem>)(IFile<LogFileItem>)ReadFile(LogName);
                 logFile.ContentItems = new ObservableCollection<LogFileItem>(ReadFile(LogName));
                 FileManager.Add(logFile);
                 this.Settings.AddLogFile(LogName);
             }
             else
             {
-                // ts.TraceEvent(TraceEventType.Error, 2, "log file does not exist:" + LogName);
                 SetStatus("log file does not exist:" + LogName);
                 this.Settings.RemoveLogFile(LogName);
             }
@@ -350,15 +248,10 @@ namespace RegexViewer
             {
                 string line;
                 int count = 0;
-                //argItem.Value.ArgReplacementString = Encoding.ASCII.GetString(tmfTraceMsg.EventStringBytes)
-                //            .Substring(_startIndex, _nextIndex)
-                //            .Replace("\0", "");
                 // http://cc.davelozinski.com/c-sharp/the-fastest-way-to-read-and-process-text-files
                 while ((line = sr.ReadLine()) != null)
-                //while ((line = sr.ReadLine().Replace("\0","")) != null)
                 {
                     LogFileItem logFileItem = new LogFileItem();
-                    //logFileItem.Content = line;
                     logFileItem.Content = line;
                     logFileItem.Background = Settings.BackgroundColor;
                     logFileItem.Foreground = Settings.ForegroundColor;
@@ -366,7 +259,6 @@ namespace RegexViewer
                     logFileItem.FontFamily = new System.Windows.Media.FontFamily(Settings.FontName);
                     logFileItem.Index = count++;
                     logFileItems.Add(logFileItem);
-                    // logFile.ContentItems.Add(logFileItem);
                 }
 
                 sr.Close();
@@ -375,6 +267,86 @@ namespace RegexViewer
             return logFileItems;
         }
 
-        
+        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
+        {
+            try
+            {
+                if (File.Exists(FileName))
+                {
+                    File.Delete(FileName);
+                }
+
+                using (StreamWriter writer = File.CreateText(FileName))
+                {
+                    foreach (LogFileItem item in list)
+                    {
+                        writer.WriteLine(item.Content);
+                    }
+
+                    writer.Close();
+                }
+
+                SetStatus("saving file:" + FileName);
+                return true;
+            }
+            catch (Exception e)
+            {
+                SetStatus("SaveFile:exception: " + e.ToString());
+                return false;
+            }
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private LogFile ManageFileProperties(string LogName, LogFile filterFile)
+        {
+            filterFile.FileName = Path.GetFileName(LogName);
+            filterFile.Tag = LogName;
+
+            return filterFile;
+        }
+
+        private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems)
+        {
+            List<FilterFileItem> filterItems = new List<FilterFileItem>();
+            foreach (FilterFileItem filterItem in filterFileItems)
+            {
+                if (string.IsNullOrEmpty(filterItem.Filterpattern))
+                {
+                    continue;
+                }
+                FilterFileItem newFilter = new FilterFileItem()
+                {
+                    Background = filterItem.Background,
+                    Enabled = filterItem.Enabled,
+                    Exclude = filterItem.Exclude,
+                    Filterpattern = filterItem.Filterpattern,
+                    Foreground = filterItem.Foreground,
+                    Include = filterItem.Include,
+                    Regex = filterItem.Regex
+                };
+
+                if (newFilter.Regex)
+                {
+                    try
+                    {
+                        Regex test = new Regex(filterItem.Filterpattern);
+                    }
+                    catch
+                    {
+                        SetStatus("not a regex:" + filterItem.Filterpattern);
+                        newFilter.Regex = false;
+                        newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
+                    }
+                }
+
+                filterItems.Add(newFilter);
+            }
+            return filterItems;
+        }
+
+        #endregion Private Methods
     }
 }

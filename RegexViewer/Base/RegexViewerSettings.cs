@@ -165,19 +165,18 @@ namespace RegexViewer
             {
                 if (arguments[i].ToLower().StartsWith(setting))
                 {
-                    
                     // remove argument name
                     string argument = arguments[i].ToLower().Replace(setting, "");
 
                     // argument had space in it /filter: filter1, filter2
-                    if (string.IsNullOrEmpty(argument) 
+                    if (string.IsNullOrEmpty(argument)
                         && (arguments.Length > i + 1)
-                        && !arguments[i+1].StartsWith("/"))
+                        && !arguments[i + 1].StartsWith("/"))
                     {
                         argument = arguments[i + 1].Trim();
                     }
 
-                    if(string.IsNullOrEmpty(argument))
+                    if (string.IsNullOrEmpty(argument))
                     {
                         // its an argument with no value
                         args.Add(arguments[i].Trim());
@@ -202,12 +201,12 @@ namespace RegexViewer
             {
                 AttachConsole(ATTACH_PARENT_PROCESS);
             }
+
             // this is the way fta passes arg
             if (arguments.Length == 2
                 && !arguments[1].StartsWith("/")
                 && File.Exists(arguments[1]))
             {
-               
                 Settings.RemoveAllLogs();
                 Settings.AddLogFile(Environment.ExpandEnvironmentVariables(arguments[1]));
             }
@@ -223,7 +222,6 @@ namespace RegexViewer
             if (results.Count == 1)
             {
                 Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
-                // Settings.ReadConfigFile();
             }
 
             results = ProcessFiles(ProcessArg("/filter:", arguments));
@@ -261,7 +259,6 @@ namespace RegexViewer
                 Console.WriteLine("registering file type association");
                 FileTypeAssociation.Instance.ConfigureFTA(true);
 
-                
                 retval = false;
             }
 
@@ -270,7 +267,6 @@ namespace RegexViewer
                 Console.WriteLine("unregistering file type association");
                 FileTypeAssociation.Instance.ConfigureFTA(false);
 
-               
                 retval = false;
             }
 
@@ -367,27 +363,12 @@ namespace RegexViewer
 
                     switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
                     {
+                        case AppSettingNames.AutoSaveFilters:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
                         case AppSettingNames.BackgroundColor:
-                            {
-                                _appSettings[name].Value = "White";
-                                break;
-                            }
-                        case AppSettingNames.FileHistoryCount:
-                            {
-                                _appSettings[name].Value = "20";
-                                break;
-                            }
-                        case AppSettingNames.FontName:
-                            {
-                                _appSettings[name].Value = "Courier";
-                                break;
-                            }
-                        case AppSettingNames.FontSize:
-                            {
-                                _appSettings[name].Value = "10";
-                                break;
-                            }
-                        case AppSettingNames.ForegroundColor:
                             {
                                 _appSettings[name].Value = "Black";
                                 break;
@@ -397,21 +378,38 @@ namespace RegexViewer
                                 _appSettings[name].Value = "False";
                                 break;
                             }
-                        case AppSettingNames.AutoSaveFilters:
+                        case AppSettingNames.FileHistoryCount:
                             {
-                                _appSettings[name].Value = "False";
+                                _appSettings[name].Value = "20";
                                 break;
                             }
-                        case AppSettingNames.SaveSessionInformation:
+                        case AppSettingNames.FontName:
                             {
-                                _appSettings[name].Value = "True";
+                                _appSettings[name].Value = "Courier New";
+                                break;
+                            }
+                        case AppSettingNames.FontSize:
+                            {
+                                _appSettings[name].Value = "10";
+                                break;
+                            }
+                        case AppSettingNames.ForegroundColor:
+                            {
+                                _appSettings[name].Value = "Cyan";
                                 break;
                             }
                         case AppSettingNames.MaxMultiFileCount:
                             {
                                 _appSettings[name].Value = "10";
                                 break;
+                            } 
+                    
+                        case AppSettingNames.SaveSessionInformation:
+                            {
+                                _appSettings[name].Value = "True";
+                                break;
                             }
+                
                         default:
                             {
                                 break;
@@ -742,21 +740,6 @@ namespace RegexViewer
                 {
                     return ResourceType.Unc;
                 }
-
-                //else if (fullpath.StartsWith("http")
-                //         || fullpath.StartsWith("ftp"))
-                //{
-                //    return ResourceType.Url;
-                //}
-                //else if (path.Substring(1, 2).Contains(@":\")
-                //         || (Directory.Exists(path)))
-                //{
-                //    return ResourceType.Local;
-                //}
-                //else
-                //{
-                //    return ResourceType.Unknown;
-                //}
 
                 if (File.Exists(fullpath)
                   || Directory.Exists(fullpath))

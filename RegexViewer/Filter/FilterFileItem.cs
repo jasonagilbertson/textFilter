@@ -10,7 +10,7 @@ namespace RegexViewer
 
         public static string Background = "Background";
         public static string BackgroundColor = "BackgroundColor";
-
+        public static string CaseSensitive = "CaseSensitive";
         public static string Count = "Count";
         public static string Enabled = "Enabled";
         public static string Exclue = "Exclude";
@@ -23,30 +23,13 @@ namespace RegexViewer
         public static string Notes = "Notes";
         public static string Regex = "Regex";
 
+        
         #endregion Public Fields
     }
 
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
         #region Public Properties
-
-        public string ForegroundColor
-        {
-            get
-            {
-                return _foregroundColor;
-            }
-
-            set
-            {
-                if (_foregroundColor != value)
-                {
-                    _foregroundColor = value;
-                    this.Foreground = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
-                    OnPropertyChanged(FilterFileItemEvents.ForegroundColor);
-                }
-            }
-        }
 
         public int Index
         {
@@ -124,23 +107,14 @@ namespace RegexViewer
         #region Private Fields
 
         private string _backgroundColor;
-
         private int _count = 0;
-
-        // = "White";
         private bool _enabled = false;
-
         private bool _exclude = false;
-
         private string _filterpattern = string.Empty;
-
         private string _foregroundColor;
-
+        private bool _include = false;
         private int _index = 0;
-
-        // = "Black";
         private string _notes = string.Empty;
-
         private bool _regex = false;
 
         #endregion Private Fields
@@ -158,7 +132,7 @@ namespace RegexViewer
         #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private bool _include = false;
+        private bool _caseSensitive;
 
         #endregion Public Events
 
@@ -173,7 +147,6 @@ namespace RegexViewer
                 if (base.Background != value)
                 {
                     base.Background = value;
-                    // OnPropertyChanged(FilterFileItemEvents.Background);
                 }
             }
         }
@@ -295,25 +268,62 @@ namespace RegexViewer
                 if (base.Foreground != value)
                 {
                     base.Foreground = value;
-                    // OnPropertyChanged(FilterFileItemEvents.Foreground);
                 }
             }
         }
 
-        public bool Include 
-        { 
+        public string ForegroundColor
+        {
+            get
+            {
+                return _foregroundColor;
+            }
+
+            set
+            {
+                if (_foregroundColor != value)
+                {
+                    _foregroundColor = value;
+                    this.Foreground = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
+                    OnPropertyChanged(FilterFileItemEvents.ForegroundColor);
+                }
+            }
+        }
+
+        public bool Include
+        {
             get
             {
                 return _include;
             }
             set
             {
-                if(_include != value)
+                if (_include != value)
                 {
                     _include = value;
                     OnPropertyChanged("Include");
                 }
             }
         }
+
+        public bool CaseSensitive
+        {
+            get
+            {
+                return _caseSensitive;
+            }
+            set
+            {
+                if (_caseSensitive != value)
+                {
+                    _caseSensitive = value;
+                    OnPropertyChanged("CaseSensitive");
+                }
+            }
+        }
+
+        // for tat 'type' text or marker
+        public string TatType { get; set; }
+        
     }
 }

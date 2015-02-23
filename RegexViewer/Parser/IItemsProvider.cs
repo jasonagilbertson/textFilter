@@ -8,6 +8,8 @@ namespace RegexViewer
     /// <typeparam name="T">The type of items in the collection.</typeparam>
     public interface IItemsProvider<T>
     {
+        #region Public Methods
+
         /// <summary>
         /// Fetches the total number of items available.
         /// </summary>
@@ -21,5 +23,7 @@ namespace RegexViewer
         /// <param name="count">The number of items to fetch.</param>
         /// <returns></returns>
         IList<T> FetchRange(int startIndex, int count);
+
+        #endregion Public Methods
     }
 }

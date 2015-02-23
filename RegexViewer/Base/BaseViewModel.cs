@@ -7,25 +7,23 @@ namespace RegexViewer
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
+        #region Public Fields
+
+        public string _tempTabNameFormat = "*new {0}*";
+        public string _tempTabNameFormatPattern = @"\*new [0-9]{1,2}\*";
+        #endregion Public Fields
 
         #region Private Fields
-        public string _tempTabNameFormat = "*new {0}*";
-
-        public string _tempTabNameFormatPattern = @"\*new [0-9]{1,2}\*";
         private Command _closeAllCommand;
-
-        // private ITabViewModel<T> activeTab;
         private Command _closeCommand;
-
         private Command _newCommand;
         private Command _openCommand;
         private bool _openDialogVisible;
+        private int _previousIndex = -1;
         private Command _saveAsCommand;
         private Command _saveCommand;
-        private int _selectedIndex=-1;
-        private int _previousIndex = -1;
+        private int _selectedIndex = -1;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
-
         private ObservableCollection<ITabViewModel<T>> tabItems;
 
         #endregion Private Fields
@@ -34,9 +32,6 @@ namespace RegexViewer
 
         public BaseViewModel()
         {
-            //   MainModel = mainModel;
-            //SetStatusHandler = SetStatus;
-            // this.OpenDialogVisible = false;
         }
 
         #endregion Public Constructors
@@ -75,6 +70,7 @@ namespace RegexViewer
             }
             set { _newCommand = value; }
         }
+
         public Command OpenCommand
         {
             get { return _openCommand ?? new Command(OpenFile); }
@@ -98,6 +94,18 @@ namespace RegexViewer
             }
         }
 
+        public int PreviousIndex
+        {
+            get
+            {
+                return _previousIndex;
+            }
+            set
+            {
+                _previousIndex = value;
+            }
+        }
+
         public Command SaveAsCommand
         {
             get { return _saveAsCommand ?? new Command(SaveFileAs); }
@@ -109,19 +117,7 @@ namespace RegexViewer
             get { return _saveCommand ?? new Command(SaveFile); }
             set { _saveCommand = value; }
         }
-        public int PreviousIndex
-        {
-            get
-            {
-                return _previousIndex;
-            }
-            set
-            {
-                _previousIndex = value;
 
-            }
-            
-        }
         public int SelectedIndex
         {
             get
@@ -134,10 +130,8 @@ namespace RegexViewer
                 if (_selectedIndex != value)
                 {
                     SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
-                    //_previousIndex = _selectedIndex;
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
-                    
                     App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
@@ -158,7 +152,6 @@ namespace RegexViewer
             set
             {
                 tabItems = value;
-                //OnPropertyChanged("TabItems");
             }
         }
 
@@ -177,7 +170,6 @@ namespace RegexViewer
             }
         }
 
-        //  public object ViewObject { get; set; }
         public abstract void AddTabItem(IFile<T> fileProperties);
 
         public void CloseAllFiles(object sender)
@@ -206,8 +198,6 @@ namespace RegexViewer
 
                 RemoveTabItem(tabItem);
             }
-
-            
         }
 
         public IFile<T> CurrentFile()
@@ -220,7 +210,6 @@ namespace RegexViewer
 
             SetStatus(string.Format("CurrentFile: warning: returning default T SelectedIndex: {0}", SelectedIndex));
             return default(IFile<T>);
-
         }
 
         public ITabViewModel<T> CurrentTab()
@@ -233,12 +222,10 @@ namespace RegexViewer
             SetStatus(string.Format("CurrentTab: warning: returning default T SelectedTab: {0}", SelectedIndex));
             return default(ITabViewModel<T>);
         }
-        
-   //     public abstract void NewFile(object sender);
 
         public void NewFile(object sender)
         {
-            IFile<T> file = default (IFile<T>);
+            IFile<T> file = default(IFile<T>);
             // add temp name
             for (int i = 0; i < 100; i++)
             {
@@ -249,9 +236,9 @@ namespace RegexViewer
                 }
                 else
                 {
-                    if(SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)                       
+                    if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
                     {
-                        file = this.ViewManager.NewFile(tempTag,this.TabItems[SelectedIndex].ContentList);
+                        file = this.ViewManager.NewFile(tempTag, this.TabItems[SelectedIndex].ContentList);
                     }
                     else
                     {
@@ -263,7 +250,6 @@ namespace RegexViewer
 
             AddTabItem(file);
         }
-
 
         public void OpenDrop(object sender)
         {
@@ -293,6 +279,5 @@ namespace RegexViewer
         public abstract void SaveFileAs(object sender);
 
         #endregion Public Methods
-
     }
 }

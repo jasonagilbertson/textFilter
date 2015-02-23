@@ -45,15 +45,8 @@ namespace RegexViewer
         #region Private Fields
 
         private StringBuilder _color = new StringBuilder();
-
-        //public DataGrid dataGridFilter = new DataGrid();
-        //public ListBox logFileData = new ListBox();
         private List<string> _colorNames = new List<string>();
-
         private bool _endEditing;
-
-        //private FilterViewModel filterViewModel;
-        //private RegexViewModel regexViewModel;
         private MainViewModel _mainViewModel;
 
         #endregion Private Fields
@@ -62,13 +55,10 @@ namespace RegexViewer
 
         public MainWindow()
         {
-            // this.GotoLineCommand = new Command(GotoLine, true);
             InitializeComponent();
-
-            // Initialize the View Model Objects
             this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
 
-            //https://msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
+            // https://msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
 
             _colorNames = GetColorNames();
             Closing += _mainViewModel.OnWindowClosing;
@@ -93,8 +83,6 @@ namespace RegexViewer
             }
             return null;
         }
-
-        //private Command _gotoLineCommand;
         public List<string> GetColorNames()
         {
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -123,7 +111,6 @@ namespace RegexViewer
                     case Key.Tab:
                     case Key.Back:
                         {
-                            // _color.Remove(_color.Length - 1, 1);
                             _color.Clear();
                             return;
                         }
@@ -140,7 +127,6 @@ namespace RegexViewer
                 }
 
                 _color.Append(e.Key.ToString());
-                //((SolidColorBrush)new BrushConverter().ConvertFromString(lbi.BackgroundColor)),
                 ComboBox comboBox = (sender as ComboBox);
 
                 string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
@@ -168,9 +154,9 @@ namespace RegexViewer
         {
             if (_endEditing)
             {
-                // _endEditing = false;
                 return;
             }
+
             // Lookup for the source to be DataGridCell
             if (e.OriginalSource.GetType() == typeof(DataGridCell))
             {
@@ -238,27 +224,5 @@ namespace RegexViewer
                 }
             }
         }
-
-        //public Command GotoLineCommand
-        //{
-        //    get
-        //    {
-        //        if (_gotoLineCommand == null)
-        //        {
-        //            _gotoLineCommand = new Command(GotoLine);
-        //        }
-        //        _gotoLineCommand.CanExecute = true;
-
-        //        return _gotoLineCommand;
-        //    }
-        //    set { _gotoLineCommand = value; }
-        //}
-
-        //public void GotoLine(object line)
-        //{
-        //    Debug.Print("here");
-        //    listboxStatus.Items.Add(new ListBoxItem() { Content = "test" });
-        //    //_mainViewModel.LogViewModel.
-        //}
     }
 }

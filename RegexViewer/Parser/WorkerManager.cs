@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RegexViewer
 {
-    public class WorkerManager:Base
+    public class WorkerManager : Base
     {
-        public class BGWorkerInfo
-        {
-            public BackgroundWorker BackGroundWorker {get; set;}
-            public Worker Worker { get; set; }
-        }
-        public List<BGWorkerInfo> Workers { get; set; }
+        #region Private Fields
+
         private static WorkerManager _workerManager;
-        private WorkerManager() {}
+
+        #endregion Private Fields
+
+        #region Private Constructors
+
+        private WorkerManager()
+        {
+        }
+
+        #endregion Private Constructors
+
+        #region Public Properties
+
         public static WorkerManager Instance
         {
             get
             {
-                if(_workerManager == null)
+                if (_workerManager == null)
                 {
                     _workerManager = new WorkerManager();
                 }
@@ -29,23 +33,15 @@ namespace RegexViewer
             }
         }
 
-        private void DoWork(object sender, DoWorkEventArgs e)
-        {
-            // This event handler is where the actual work is done. 
-            // This method runs on the background thread. 
+        public List<BGWorkerInfo> Workers { get; set; }
 
-            // Get the BackgroundWorker object that raised this event.
-            System.ComponentModel.BackgroundWorker bgWorker;
-            bgWorker = (System.ComponentModel.BackgroundWorker)sender;
-            
-            // Get the Words object and call the main method.
-            Worker WC = (Worker)e.Argument;
+        #endregion Public Properties
 
-           // WC.DoWork(worker, e);
-        }
+        #region Public Methods
+
         public void CancelWorker(BGWorkerInfo bgWorker)
         {
-            // Cancel the asynchronous operation. 
+            // Cancel the asynchronous operation.
             bgWorker.BackGroundWorker.CancelAsync();
             if (this.Workers.Contains(bgWorker))
             {
@@ -53,24 +49,74 @@ namespace RegexViewer
             }
         }
 
+        public bool ProcessWorker(Worker worker)
+        {
+            if (worker == null)
+            {
+                SetStatus("WorkerManager.ProcessWorker enter worker null. returning");
+                return false;
+            }
+
+            SetStatus("WorkerManager.ProcessWorker enter worker.Modification:" + worker.WorkerModification.ToString());
+
+            switch (worker.WorkerModification)
+            {
+                case Worker.Modification.FilterAdded:
+                case Worker.Modification.FilterIndex:
+                case Worker.Modification.FilterModified:
+                case Worker.Modification.FilterRemoved:
+                case Worker.Modification.LogAdded:
+                case Worker.Modification.LogIndex:
+                case Worker.Modification.LogRemoved:
+                case Worker.Modification.Unknown:
+                default:
+                    {
+                        SetStatus("WorkerManager.ProcessWorker unknown state exit.");
+                        return false;
+                    }
+            }
+
+            return true;
+        }
+
+        public void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // This method runs on the main thread.
+            //Worker.CurrentState state =
+            //    (Worker.CurrentState)e.UserState;
+            //  this.LinesCounted.Text = state.LinesCounted.ToString();
+            //  this.WordsCounted.Text = state.WordsMatched.ToString();
+        }
+
+        public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // This event handler is called when the background thread finishes. This method runs on
+            // the main thread.
+            if (e.Error != null)
+                SetStatus("Error: " + e.Error.Message);
+            else if (e.Cancelled)
+                SetStatus("Word counting canceled.");
+            else
+                SetStatus("Finished counting words.");
+        }
+
         public BGWorkerInfo StartWorker(Worker worker)
         {
-            
-            // This method runs on the main thread. 
+            // This method runs on the main thread.
             BackgroundWorker bgWorker = new BackgroundWorker();
             // Initialize the object that the background worker calls.
-            
+
             bgWorker.WorkerSupportsCancellation = true;
             bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DoWork);
             bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.RunWorkerCompleted);
-            
+
             BGWorkerInfo bgInfo = new BGWorkerInfo
             {
                 BackGroundWorker = bgWorker,
                 Worker = worker
             };
 
-            if(!this.Workers.Contains(bgInfo))
+            if (!this.Workers.Contains(bgInfo))
             {
                 this.Workers.Add(bgInfo);
             }
@@ -80,25 +126,40 @@ namespace RegexViewer
             return bgInfo;
         }
 
-        public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void DoWork(object sender, DoWorkEventArgs e)
         {
-            // This event handler is called when the background thread finishes. 
-            // This method runs on the main thread. 
-            if (e.Error != null)
-                SetStatus("Error: " + e.Error.Message);
-            else if (e.Cancelled)
-                SetStatus("Word counting canceled.");
-            else
-                SetStatus("Finished counting words.");
+            // This event handler is where the actual work is done. This method runs on the
+            // background thread.
+
+            // Get the BackgroundWorker object that raised this event.
+            System.ComponentModel.BackgroundWorker bgWorker;
+            bgWorker = (System.ComponentModel.BackgroundWorker)sender;
+
+            // Get the Words object and call the main method.
+            Worker WC = (Worker)e.Argument;
+
+            // WC.DoWork(worker, e);
         }
 
-        public void ProgressChanged(object sender, ProgressChangedEventArgs e)
+        #endregion Private Methods
+
+        #region Public Classes
+
+        public class BGWorkerInfo
         {
-            // This method runs on the main thread.
-            //Worker.CurrentState state =
-            //    (Worker.CurrentState)e.UserState;
-          //  this.LinesCounted.Text = state.LinesCounted.ToString();
-          //  this.WordsCounted.Text = state.WordsMatched.ToString();
+            #region Public Properties
+
+            public BackgroundWorker BackGroundWorker { get; set; }
+
+            public Worker Worker { get; set; }
+
+            #endregion Public Properties
         }
+
+        #endregion Public Classes
     }
 }

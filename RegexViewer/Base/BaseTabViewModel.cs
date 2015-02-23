@@ -10,29 +10,22 @@ namespace RegexViewer
 {
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
-
         #region Private Fields
 
         private string _background;
 
         private ObservableCollection<T> _contentList = new ObservableCollection<T>();
-
-        // private string activeTab;
         private Command _copyCommand;
-
         private string _header;
         private bool _modified;
         private string _name;
         private Command _pasteCommand;
         private List<T> _selectedContent = new List<T>();
-
-        // private Command _selectedIndexChangedCommand;
         private int _selectedIndex;
-
         private Command _selectionChangedCommand;
         private Command _setViewerCommand;
         private string _tag;
-        //private T _selectedIndexItem;
+
         private object _viewer;
 
         #endregion Private Fields
@@ -41,7 +34,6 @@ namespace RegexViewer
 
         public BaseTabViewModel()
         {
-            // MainModel = mainModel;
         }
 
         #endregion Public Constructors
@@ -111,10 +103,6 @@ namespace RegexViewer
             }
         }
 
-        //        return _selectedIndexChangedCommand;
-        //    }
-        //    set { _selectedIndexChangedCommand = value; }
-        //}
         public bool Modified
         {
             get
@@ -132,15 +120,6 @@ namespace RegexViewer
             }
         }
 
-        //public Command SelectedIndexChangedCommand
-        //{
-        //    get
-        //    {
-        //        if (_selectedIndexChangedCommand == null)
-        //        {
-        //            _selectedIndexChangedCommand = new Command(SelectedIndexChangedExecuted);
-        //        }
-        //        _selectedIndexChangedCommand.CanExecute = true;
         public string Name
         {
             get
@@ -173,17 +152,6 @@ namespace RegexViewer
             set { _pasteCommand = value; }
         }
 
-        //    set
-        //    {
-        //        if (activeTab != value)
-        //        {
-        //            activeTab = value;
-        //            OnPropertyChanged("ActiveTab");
-        //            //OnTabChanged("ActiveTab");
-        //        }
-        //    }
-        //}
-        //   public List<T> UnFilteredContentList { get; set; }
         public List<T> SelectedContent
         {
             get { return _selectedContent; }
@@ -204,11 +172,8 @@ namespace RegexViewer
             {
                 if (_selectedIndex != value)
                 {
-                    //SetStatus(string.Format("BaseTabViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
-                    
                     OnPropertyChanged("SelectedIndex");
-                    
                 }
             }
         }
@@ -242,6 +207,7 @@ namespace RegexViewer
             }
             set { _setViewerCommand = value; }
         }
+
         public string Tag
         {
             get
@@ -290,23 +256,14 @@ namespace RegexViewer
 
         #region Public Methods
 
-        //public abstract void CopyExecuted(object sender);
         public void CopyExecuted(object contentList)
         {
             try
             {
-                // List<LogFileItem> ContentList = (List<LogFileItem>)contentList;
-
                 HtmlFragment htmlFragment = new HtmlFragment();
                 foreach (IFileItem lbi in SelectedContent)
                 {
-                    //if (lbi != null && lbi.IsSelected)
-                    // if (lbi != null && lbi.IsFocused)
-                    //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
-                    //{
-                    //    htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
                     htmlFragment.AddClipToList(lbi.Content, lbi.Background, lbi.Foreground);
-                    //}
                 }
 
                 htmlFragment.CopyListToClipboard();
@@ -320,6 +277,7 @@ namespace RegexViewer
         public void PasteText()
         {
         }
+
         public void SelectionChangedExecuted(object sender)
         {
             SetStatus("SelectionChangeExecuted:enter");
@@ -329,22 +287,18 @@ namespace RegexViewer
             }
             else if (sender is ListBox)
             {
-                //   this.SelectedIndexItem = (T)(sender as ListBox).SelectedItem;
-
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
             }
             else if (sender is DataGrid)
             {
                 SetStatus("SelectionChangeExecuted:datagrid");
-                // this.SelectedIndexItem = (T)(sender as DataGrid).SelectedItem;
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
             }
         }
 
         public void SetViewerExecuted(object sender)
         {
-         
-            if(_viewer == null)
+            if (_viewer == null)
             {
                 SetStatus("viewer set");
                 _viewer = sender;

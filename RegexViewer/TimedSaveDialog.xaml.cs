@@ -14,7 +14,7 @@ namespace RegexViewer
         #region Private Fields
 
         private const int _timerSecs = 10;
-        
+
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
@@ -28,7 +28,6 @@ namespace RegexViewer
         {
             InitializeComponent();
             labelDisplay.Content = fileName;
-            
         }
 
         #endregion Public Constructors
@@ -52,12 +51,6 @@ namespace RegexViewer
 
         #endregion Public Enums
 
-        #region Public Properties
-
-       
-
-        #endregion Public Properties
-
         #region Public Methods
 
         public void Disable()
@@ -71,7 +64,6 @@ namespace RegexViewer
             StartTimer();
         }
 
-       
         public Results WaitForResult()
         {
             this.ShowDialog();

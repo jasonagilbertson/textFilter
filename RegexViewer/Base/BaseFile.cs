@@ -5,8 +5,11 @@ namespace RegexViewer
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
-private  bool _modified;
-        //
+        #region Private Fields
+
+        private bool _modified;
+
+        #endregion Private Fields
 
         #region Public Constructors
 
@@ -22,9 +25,9 @@ private  bool _modified;
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
         public string FileName { get; set; }
-        //public System.Windows.Visibility Visibility { get; set; }
-        public bool Modified 
-        { 
+
+        public bool Modified
+        {
             get
             {
                 return _modified;
@@ -32,7 +35,7 @@ private  bool _modified;
             set
             {
                 _modified = value;
-            }    
+            }
         }
 
         public string Tag { get; set; }

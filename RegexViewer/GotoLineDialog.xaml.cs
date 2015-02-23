@@ -45,7 +45,6 @@ namespace RegexViewer
         private void buttonGotoLine_Click(object sender, RoutedEventArgs e)
         {
             Disable();
-            
         }
 
         private void textBoxLineNumber_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -54,7 +53,7 @@ namespace RegexViewer
             {
                 buttonGotoLine_Click(null, null);
             }
-            else if(e.Key == Key.Escape)
+            else if (e.Key == Key.Escape)
             {
                 Disable();
             }

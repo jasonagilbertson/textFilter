@@ -93,7 +93,6 @@ namespace RegexViewer
             set { _filterViewModel = value; }
         }
 
-        // public event PropertyChangedEventHandler PropertyChanged;
         public LogViewModel LogViewModel
         {
             get { return _logViewModel; }
@@ -167,10 +166,6 @@ namespace RegexViewer
                 {
                     c_contentList = (List<ListBoxItem>)contentList;
                 }
-                //else if (contentList is ObservableCollection<string>)
-                //{
-                //    c_contentList = new List<ListBoxItem>((ObservableCollection<string>)contentList);
-                //}
                 else if (contentList is ObservableCollection<ListBoxItem>)
                 {
                     c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
@@ -184,7 +179,6 @@ namespace RegexViewer
                 foreach (ListBoxItem lbi in c_contentList)
                 {
                     if (lbi != null && lbi.IsSelected)
-                    //&& htmlFragment.Length < (copyContent.MaxCapacity - lbi.Content.ToString().Length))
                     {
                         htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
                     }
@@ -202,22 +196,18 @@ namespace RegexViewer
         {
             try
             {
-                // Dispatcher.CurrentDispatcher.Invoke(DispatcherPriority.Background, new Action(()
-                // => {
                 while (this.Status.Count > 1000)
                 {
                     this.Status.RemoveAt(0);
                 }
 
-                //this.Status.Add(string.Format("{0}: {1}",DateTime.Now,statusData));
                 ListBoxItem listBoxItem = new ListBoxItem();
-                listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now, statusData);
+                listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), statusData);
                 this.Status.Add(listBoxItem);
                 this.StatusIndex = Status.Count - 1;
 
                 Debug.Print(statusData);
                 OnPropertyChanged("Status");
-                // }));
             }
             catch (Exception e)
             {

@@ -346,13 +346,13 @@
                     </ListBox.ContextMenu>
                 </ListBox>
                 <GridSplitter Grid.Column="1" Height="25" Width="5" HorizontalAlignment="Center" />
-                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="Quick Find:" Width="75" />
+                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="AND/Quick Filter:" Width="105" />
                 <TextBox Name="textboxQuickFind"
                     Height="25"
                      Grid.Column="2"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
-                     Margin="75,0,0,0"
+                     Margin="105,0,0,0"
                          
                          >
                     <TextBox.InputBindings>

@@ -11,31 +11,56 @@ namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
+        #region Public Constructors
+
+        public FilterViewModel()
+        {
+            this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
+            this.TabItems.CollectionChanged += TabItems_CollectionChanged;
+            this.ViewManager = new FilterFileManager();
+            this.ViewManager.PropertyChanged += ViewManager_PropertyChanged;
+
+            // load tabs from last session
+            foreach (FilterFile logProperty in this.ViewManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
+            {
+                AddTabItem(logProperty);
+            }
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+        public TabControl TabControl { get; set; }
+
+        #endregion Public Properties
+
         #region Public Methods
+
         public override void AddTabItem(IFile<FilterFileItem> filterFile)
         {
             if (!this.TabItems.Any(x => String.Compare((string)x.Tag, filterFile.Tag, true) == 0))
             {
                 SetStatus("adding tab:" + filterFile.Tag);
-                FilterTabViewModel tabItem = new FilterTabViewModel();
-                tabItem.Name = filterFile.FileName;
-                tabItem.ContentList = ((FilterFile)filterFile).ContentItems;
-                tabItem.Tag = filterFile.Tag;
-                tabItem.Header = filterFile.FileName;
-                tabItem.Modified = false;
-                // logProperties.Modified = false;
+                FilterTabViewModel tabItem = new FilterTabViewModel()
+                {
+                Name = filterFile.FileName,
+                ContentList = ((FilterFile)filterFile).ContentItems,
+                Tag = filterFile.Tag,
+                Header = filterFile.FileName,
+                Modified = false
+                
+            };
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
-                
+
                 this.SelectedIndex = this.TabItems.Count - 1;
             }
         }
 
-        //public new DataGrid ViewObject { get; set; }
-
         public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
         {
             List<FilterFileItem> fileItems = new List<FilterFileItem>();
+           
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
@@ -52,10 +77,9 @@ namespace RegexViewer
 
         public FilterNeed CompareFilterList(List<FilterFileItem> filterFileItems)
         {
-            //bool retval = false;
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            if(currentItems.Count == 0 & filterFileItems.Count == 0)
+            if (currentItems.Count == 0 & filterFileItems.Count == 0)
             {
                 return FilterNeed.ShowAll;
             }
@@ -70,9 +94,9 @@ namespace RegexViewer
                     if (currentItem.Enabled != fileItem.Enabled
                         || currentItem.Exclude != fileItem.Exclude
                         || currentItem.Regex != fileItem.Regex
-                        || currentItem.Filterpattern != fileItem.Filterpattern)
+                        || currentItem.Filterpattern != fileItem.Filterpattern
+                        || currentItem.CaseSensitive != currentItem.CaseSensitive)
                     {
-                        //retval = false;
                         retval = FilterNeed.Filter;
                         Debug.Print("returning false");
                         break;
@@ -83,7 +107,7 @@ namespace RegexViewer
                         retval = FilterNeed.ApplyColor;
                         break;
                     }
-                    //retval = true;
+
                     retval = FilterNeed.Current;
                 }
             }
@@ -91,12 +115,6 @@ namespace RegexViewer
             {
                 retval = FilterNeed.Filter;
             }
-           
-
-            //if (_previousIndex != this.SelectedIndex)
-            //{
-            //    _previousIndex = SelectedIndex;
-            //}
 
             Debug.Print("CompareFilterList:returning:" + retval.ToString());
             return retval;
@@ -104,7 +122,6 @@ namespace RegexViewer
 
         public List<FilterFileItem> FilterList()
         {
-            // Debug.Assert(TabItems != null & SelectedIndex != -1);
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
 
             try
@@ -117,7 +134,6 @@ namespace RegexViewer
                         return CleanFilterList(filterFile);
                     }
                 }
-          
 
                 return filterFileItems;
             }
@@ -128,36 +144,8 @@ namespace RegexViewer
             }
         }
 
-        //public override void NewFile(object sender)
-        //{
-        //    FilterFile filterFile = new FilterFile();
-        //    // add temp name
-        //    for (int i = 0; i < 100; i++)
-        //    {
-        //        string tempTag = string.Format(_tempFilterNameFormat, i);
-        //        if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
-        //        {
-        //            continue;
-        //        }
-        //        else
-        //        {
-        //            filterFile = (FilterFile)this.ViewManager.NewFile(tempTag);
-        //            break;
-        //        }
-        //    }
-
-        //    // filterFile.Modified = true; make new tab
-        //    AddTabItem(filterFile);
-        //}
-
-        /// <summary>
-        /// Open File Dialog To test specify valid file for object sender
-        /// </summary>
-        /// <param name="sender"></param>
         public override void OpenFile(object sender)
         {
-            // this.OpenDialogVisible = true;
-
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
             if (sender is string && !String.IsNullOrEmpty(sender as string))
             {
@@ -166,10 +154,11 @@ namespace RegexViewer
 
             string logName = string.Empty;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".xml"; // Default file extension
-            dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*"; // Filter files by extension
+            dlg.DefaultExt = ".xml"; 
+            dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*"; 
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             Nullable<bool> result = false;
+            
             // Show open file dialog box
             if (silent)
             {
@@ -206,10 +195,11 @@ namespace RegexViewer
 
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-            dlg.DefaultExt = ".xml"; // Default file extension
-            dlg.Filter = "Xml Files (*.xml)|*.xml|All Files (*.*)|*.*"; // Filter files by extension
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             Nullable<bool> result = false;
+            
             // Show save file dialog box
             if (silent)
             {
@@ -228,7 +218,7 @@ namespace RegexViewer
             }
 
             // Process save file dialog box results
-            if (result == true)// && File.Exists(logName))
+            if (result == true)
             {
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
@@ -257,7 +247,7 @@ namespace RegexViewer
                 }
                 else
                 {
-                    // can get here by having no filters and hitting save file. 
+                    // can get here by having no filters and hitting save file.
                     // todo: disable save file if no tab items
                     return;
                 }
@@ -398,8 +388,6 @@ namespace RegexViewer
                 else if (needsSorting && !dupes)
                 {
                     this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
-
-                    //filterFile.ContentItems = filterFile.ContentItems.OrderBy(x => x.Index);
                 }
                 else if (dupes)
                 {
@@ -443,12 +431,6 @@ namespace RegexViewer
 
         private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            //if ((sender is FilterFileItem) && e.PropertyName == FilterFileItemEvents.Index)
-            //{
-            //    VerifyIndex((sender as FilterFileItem));
-            //}
-
-            // if (sender is FilterFileItem | sender is FilterFile | sender is FilterFileManager)
             if (sender is FilterFileItem)
             {
                 FilterFile filterFile = (FilterFile)CurrentFile();
@@ -463,41 +445,5 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
-
-        #region Private Fields
-
-        //private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
-
-//        private int _previousIndex = -1;
-
-        //private string _tempFilterNameFormat = "*new {0}*";
-
-        //private string _tempFilterNameFormatPattern = @"\*new [0-9]{1,2}\*";
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public FilterViewModel()
-        {
-            this.TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
-            this.TabItems.CollectionChanged += TabItems_CollectionChanged;
-            this.ViewManager = new FilterFileManager();
-            this.ViewManager.PropertyChanged += ViewManager_PropertyChanged;
-
-            // load tabs from last session
-            foreach (FilterFile logProperty in this.ViewManager.OpenFiles(this.Settings.CurrentFilterFiles.ToArray()))
-            {
-                AddTabItem(logProperty);
-            }
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public TabControl TabControl { get; set; }
-
-        #endregion Public Properties
     }
 }

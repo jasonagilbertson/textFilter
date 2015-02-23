@@ -16,7 +16,7 @@ namespace RegexViewer
 
         public BaseFileManager()
         {
-            // MainModel = mainModel;
+
         }
 
         #endregion Public Constructors
@@ -26,8 +26,6 @@ namespace RegexViewer
         public List<IFile<T>> FileManager { get; set; }
 
         #endregion Public Properties
-
-        //public abstract bool CloseLog(string FileName);
 
         #region Public Methods
 
@@ -51,7 +49,6 @@ namespace RegexViewer
                 }
                 else
                 {
-                    //ts.TraceEvent(TraceEventType.Error, 3, "file not open:" + FileName);
                     SetStatus("file not open:" + FileName);
 
                     return false;
