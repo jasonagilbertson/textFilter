@@ -280,7 +280,7 @@ namespace RegexViewer
 
         public void SelectionChangedExecuted(object sender)
         {
-            SetStatus("SelectionChangeExecuted:enter");
+          //  SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
@@ -291,16 +291,19 @@ namespace RegexViewer
             }
             else if (sender is DataGrid)
             {
-                SetStatus("SelectionChangeExecuted:datagrid");
+          //      SetStatus("SelectionChangeExecuted:datagrid");
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
             }
         }
 
         public void SetViewerExecuted(object sender)
         {
-            if (_viewer == null)
+            // cant setstatus here due to recursion
+            // cant set when only null
+
+            if (_viewer != sender)
             {
-                SetStatus("viewer set");
+                SetStatus(string.Format("viewer set: {0}", sender.GetType()));
                 _viewer = sender;
             }
         }

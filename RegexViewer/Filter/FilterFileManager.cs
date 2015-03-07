@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Windows.Media;
+using System.Text.RegularExpressions;
+//using System.Windows.Media;
 using System.Xml;
 
 namespace RegexViewer
@@ -164,6 +166,8 @@ namespace RegexViewer
 
         private List<FilterFileItem> ReadTatFile(string logName)
         {
+           
+
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
             XmlDocument doc = new XmlDocument();
             doc.Load(logName);
@@ -174,39 +178,16 @@ namespace RegexViewer
             {
                 FilterFileItem fileItem = new FilterFileItem();
                 fileItem.Count = 0;
-                
+                                    
+                fileItem.BackgroundColor = FindColorName(ReadAttributeString(root, "backColor", i));
+                fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "foreColor", i));
 
-                string bColor = ReadAttributeString(root, "filter", i, "backColor");
-                string fColor = ReadAttributeString(root, "filter", i, "foreColor");
-                SetStatus("bColor" + bColor);
-                SetStatus("fColor" + fColor);
-
-                if (!string.IsNullOrEmpty(bColor))
-                {
-                fileItem.BackgroundColor = "#" + bColor;
-    //                fileItem.BackgroundColor = new SolidColorBrush(Color.FromRgb(
-    //                                    Convert.ToByte(bColor.Substring(0, 2), 16),
-    //                                    Convert.ToByte(bColor.Substring(2, 2), 16),
-    //                                    Convert.ToByte(bColor.Substring(4, 2), 16))).ToString();
-                }
-                if (!string.IsNullOrEmpty(fColor))
-                {
-                    fileItem.ForegroundColor = "#" + fColor;
-    
-    //                fileItem.ForegroundColor = new SolidColorBrush(Color.FromRgb(
-    //Convert.ToByte(fColor.Substring(0, 2), 16),
-    //Convert.ToByte(fColor.Substring(2, 2), 16),
-    //Convert.ToByte(fColor.Substring(4, 2), 16))).ToString();
-                }
-
-                //((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["ForegroundColor"].Value));
-                
-                fileItem.CaseSensitive = ReadAttributeBool(root, "filter", i, "case_sensitive");
-                fileItem.Enabled = ReadAttributeBool(root, "filter", i, "enabled");
-                fileItem.Exclude = ReadAttributeBool(root, "filter", i, "excluding");
-                fileItem.Regex = ReadAttributeBool(root, "filter", i, "regex");
-                fileItem.Filterpattern = ReadAttributeString(root, "filter", i, "text");
-                fileItem.TatType = ReadAttributeString(root, "filter", i, "type");
+                fileItem.CaseSensitive = ReadAttributeBool(root, "case_sensitive", i);
+                fileItem.Enabled = ReadAttributeBool(root, "enabled", i);
+                fileItem.Exclude = ReadAttributeBool(root, "excluding", i);
+                fileItem.Regex = ReadAttributeBool(root, "regex", i);
+                fileItem.Filterpattern = ReadAttributeString(root, "text", i);
+                fileItem.TatType = ReadAttributeString(root, "type", i);
                 
                 fileItem.Index = i; // ReadIntNodeItem(root, "index", i);
                 //fileItem.Notes = ReadStringNodeItem(root, "notes", i);
@@ -214,6 +195,47 @@ namespace RegexViewer
                 filterFileItems.Add(fileItem);
             }
             return filterFileItems;
+        }
+
+        /// <summary>
+        /// Finds Color Name from string of RGB #(FFFFFF)
+        /// returns KnownColor color name
+        /// </summary>
+        /// <param name="rgbColor"></param>
+        /// <returns></returns>
+        private string FindColorName(string rgbColor)
+        {
+            SetStatus("FindColorName:" + rgbColor);
+
+            if(!Regex.IsMatch(rgbColor, "[0-9A-Fa-f]{6}"))
+            {
+                SetStatus("FindColorName: invalid. returning black");
+                return "black";
+            }
+
+            System.Array colorsArray = Enum.GetValues(typeof(KnownColor));
+            KnownColor[] allColors = new KnownColor[colorsArray.Length];
+            Array.Copy(colorsArray, allColors, colorsArray.Length);      
+
+            Color newColor = System.Drawing.Color.FromArgb(0xff,
+                                Convert.ToByte(rgbColor.Substring(0, 2), 16),
+                                Convert.ToByte(rgbColor.Substring(2, 2), 16),
+                                Convert.ToByte(rgbColor.Substring(4, 2), 16));
+
+            foreach (KnownColor color in allColors)
+            {
+                Color tempColor = Color.FromKnownColor(color);
+                if (!tempColor.IsSystemColor
+                    && tempColor.R == newColor.R
+                    && tempColor.G == newColor.G
+                    && tempColor.B == newColor.B)
+                {
+                    SetStatus("FindColorName return:" + color.ToString());
+                    return color.ToString();
+                }
+            }
+
+            return "white";
         }
 
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
@@ -380,7 +402,7 @@ namespace RegexViewer
             return filterFile;
         }
 
-        private bool ReadAttributeBool(XmlNode node, string nodeName, int item, string attName)
+        private bool ReadAttributeBool(XmlNode node, string attName, int item)
         {
             try
             {
@@ -402,11 +424,10 @@ namespace RegexViewer
                 return false;
             }
         }
-        private string ReadAttributeString(XmlNode node, string nodeName, int item, string attName)
+        private string ReadAttributeString(XmlNode node, string attName, int item)
         {
             try
             {
-                //return (node.ChildNodes.Item(item).SelectSingleNode(nodeName)).Attributes[attName].Value.ToString();
                 return (node.ChildNodes.Item(item).Attributes[attName].Value.ToString());
             }
             catch

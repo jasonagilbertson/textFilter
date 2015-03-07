@@ -57,7 +57,7 @@ namespace RegexViewer
                 {
                     item.PropertyChanged -= item_PropertyChanged;
                 }
-                Modified = false;
+              //  Modified = false;
             }
 
             _patternNotifications = enable;

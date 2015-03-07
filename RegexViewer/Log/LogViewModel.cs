@@ -64,7 +64,6 @@ namespace RegexViewer
             foreach (LogFile logFile in this.ViewManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
             {
                 AddTabItem(logFile);
-                // FilterLogTabItems(null, logFile);
             }
 
             FilterLogTabItems(FilterCommand.Reset);
@@ -279,7 +278,7 @@ namespace RegexViewer
                 case FilterCommand.Hide:
                     {
                         SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex != -1));
+                        this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
                         break;
                     }
                 case FilterCommand.ShowAll:
@@ -578,17 +577,26 @@ namespace RegexViewer
 
         private bool IsHiding()
         {
-            ListBox listBox = (ListBox)this.CurrentTab().Viewer;
+           
 
             // if count the same then assume it is not filtered
-            SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", listBox.Items.Count, CurrentFile().ContentItems.Count));
-            if (listBox.Items.Count == CurrentFile().ContentItems.Count)
+           try
             {
-                return false;
+                 ListBox listBox = (ListBox)this.CurrentTab().Viewer;
+                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", listBox.Items.Count, CurrentFile().ContentItems.Count));
+                if (listBox.Items.Count == CurrentFile().ContentItems.Count)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
-            else
+            catch (Exception e)
             {
-                return true;
+                SetStatus("IsHiding:exception " + e.ToString());
+                return false;
             }
         }
 

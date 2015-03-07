@@ -49,6 +49,9 @@ namespace RegexViewer
 
             _parser = new Parser(_filterViewModel, _logViewModel);
 
+            App.Current.MainWindow.Title = string.Format("{0} {1}", Process.GetCurrentProcess().MainModule.ModuleName, Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
+            SetStatus(App.Current.MainWindow.Title);
+
             // to embed external libraries
             // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>

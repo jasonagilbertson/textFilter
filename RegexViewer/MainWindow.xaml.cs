@@ -212,7 +212,8 @@ namespace RegexViewer
             {
                 foreach (string filename in fileNames)
                 {
-                    if (Path.GetExtension(filename).ToLower() == ".xml")
+                    if (Path.GetExtension(filename).ToLower() == ".xml"
+                        | Path.GetExtension(filename).ToLower() == ".tat")
                     {
                         if (this._mainViewModel.FilterViewModel.VerifyAndOpenFile(filename))
                         {

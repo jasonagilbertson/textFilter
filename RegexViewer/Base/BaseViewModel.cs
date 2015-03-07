@@ -18,6 +18,7 @@ namespace RegexViewer
         private Command _closeCommand;
         private Command _newCommand;
         private Command _openCommand;
+        private Command _gotFocusCommand;
         private bool _openDialogVisible;
         private int _previousIndex = -1;
         private Command _saveAsCommand;
@@ -54,6 +55,21 @@ namespace RegexViewer
         {
             get { return _openCommand ?? new Command(OpenDrop); }
             set { _openCommand = value; }
+        }
+
+        public Command GotFocusCommand
+        {
+            get
+            {
+                if (_gotFocusCommand == null)
+                {
+                    _gotFocusCommand = new Command(GotFocusExecuted);
+                }
+                _gotFocusCommand.CanExecute = true;
+
+                return _gotFocusCommand;
+            }
+            set { _gotFocusCommand = value; }
         }
 
         public Command NewCommand
@@ -118,6 +134,11 @@ namespace RegexViewer
             set { _saveCommand = value; }
         }
 
+        public void GotFocusExecuted(object sender)
+        {
+            
+                App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
+        }
         public int SelectedIndex
         {
             get
@@ -132,7 +153,7 @@ namespace RegexViewer
                     SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
-                    App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
+                  //  App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
         }
@@ -204,7 +225,7 @@ namespace RegexViewer
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
-                SetStatus(string.Format("CurrentFile: SelectedIndex: {0}", SelectedIndex));
+                //SetStatus(string.Format("CurrentFile: SelectedIndex: {0}", SelectedIndex));
                 return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }
 

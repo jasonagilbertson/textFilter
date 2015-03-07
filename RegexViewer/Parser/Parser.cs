@@ -174,6 +174,7 @@ namespace RegexViewer
                 };
 
                 // foreach(FilterFile file in _filterFiles) {
+                // todo: arg not right...
                 FilterNeed filterNeed = _filterViewModel.CompareFilterList(filterFileWorkerItem.FilterFile.ContentItems.ToList());
                 switch (filterNeed)
                 {

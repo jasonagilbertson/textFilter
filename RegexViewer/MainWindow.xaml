@@ -80,7 +80,14 @@
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch"
+               
+                        >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
                         <TextBlock Text="{Binding Path=Header}" />
@@ -123,8 +130,8 @@
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
-
-                            <DataGrid.ContextMenu>
+                          
+                                    <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
                                     <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
@@ -223,7 +230,13 @@
             <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                        >
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="GotFocus">
+                        <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <TabControl.Background>
                     <ImageBrush ImageSource="File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
                 </TabControl.Background>
@@ -269,9 +282,9 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
+                                <!--<i:EventTrigger EventName="LayoutUpdated">-->
                                 <i:EventTrigger EventName="LayoutUpdated">
                                     <i:InvokeCommandAction Command="{Binding SetViewerCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>

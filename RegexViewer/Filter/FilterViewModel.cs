@@ -75,20 +75,21 @@ namespace RegexViewer
             return fileItems;
         }
 
-        public FilterNeed CompareFilterList(List<FilterFileItem> filterFileItems)
+        public FilterNeed CompareFilterList(List<FilterFileItem> previousFilterFileItems)
         {
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            if (currentItems.Count == 0 & filterFileItems.Count == 0)
+            //if (currentItems.Count == 0 & filterFileItems.Count == 0)
+            if (currentItems.Count == 0)
             {
                 return FilterNeed.ShowAll;
             }
             if (currentItems.Count > 0
-                && filterFileItems.Count > 0
-                && currentItems.Count == filterFileItems.Count)
+                && previousFilterFileItems.Count > 0
+                && currentItems.Count == previousFilterFileItems.Count)
             {
                 int i = 0;
-                foreach (FilterFileItem fileItem in filterFileItems.OrderBy(x => x.Index))
+                foreach (FilterFileItem fileItem in previousFilterFileItems.OrderBy(x => x.Index))
                 {
                     FilterFileItem currentItem = currentItems[i++];
                     if (currentItem.Enabled != fileItem.Enabled
