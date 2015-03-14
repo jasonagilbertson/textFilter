@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 
 namespace RegexViewer
 {
@@ -49,26 +50,26 @@ namespace RegexViewer
             }
         }
 
-        public bool ProcessWorker(Worker worker)
+        public bool ProcessWorker(WorkerItem workerItem)
         {
-            if (worker == null)
+            if (workerItem == null)
             {
                 SetStatus("WorkerManager.ProcessWorker enter worker null. returning");
                 return false;
             }
 
-            SetStatus("WorkerManager.ProcessWorker enter worker.Modification:" + worker.WorkerModification.ToString());
+            SetStatus("WorkerManager.ProcessWorker enter worker.Modification:" + workerItem.WorkerModification.ToString());
 
-            switch (worker.WorkerModification)
+            switch (workerItem.WorkerModification)
             {
-                case Worker.Modification.FilterAdded:
-                case Worker.Modification.FilterIndex:
-                case Worker.Modification.FilterModified:
-                case Worker.Modification.FilterRemoved:
-                case Worker.Modification.LogAdded:
-                case Worker.Modification.LogIndex:
-                case Worker.Modification.LogRemoved:
-                case Worker.Modification.Unknown:
+                case WorkerItem.Modification.FilterAdded:
+                case WorkerItem.Modification.FilterIndex:
+                case WorkerItem.Modification.FilterModified:
+                case WorkerItem.Modification.FilterRemoved:
+                case WorkerItem.Modification.LogAdded:
+                case WorkerItem.Modification.LogIndex:
+                case WorkerItem.Modification.LogRemoved:
+                case WorkerItem.Modification.Unknown:
                 default:
                     {
                         SetStatus("WorkerManager.ProcessWorker unknown state exit.");
@@ -93,14 +94,14 @@ namespace RegexViewer
             // This event handler is called when the background thread finishes. This method runs on
             // the main thread.
             if (e.Error != null)
-                SetStatus("Error: " + e.Error.Message);
+                SetStatus("WorkerItem Error: " + e.Error.Message);
             else if (e.Cancelled)
-                SetStatus("Word counting canceled.");
+                SetStatus("WorkerItem canceled.");
             else
-                SetStatus("Finished counting words.");
+                SetStatus("Finished workerItem.");
         }
 
-        public BGWorkerInfo StartWorker(Worker worker)
+        public BGWorkerInfo StartWorker(WorkerItem workerItem)
         {
             // This method runs on the main thread.
             BackgroundWorker bgWorker = new BackgroundWorker();
@@ -110,20 +111,20 @@ namespace RegexViewer
             bgWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.DoWork);
             bgWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.RunWorkerCompleted);
 
-            BGWorkerInfo bgInfo = new BGWorkerInfo
+            BGWorkerInfo bgWorkerInfo = new BGWorkerInfo
             {
                 BackGroundWorker = bgWorker,
-                Worker = worker
+                Worker = workerItem
             };
 
-            if (!this.Workers.Contains(bgInfo))
+            if (!this.Workers.Contains(bgWorkerInfo))
             {
-                this.Workers.Add(bgInfo);
+                this.Workers.Add(bgWorkerInfo);
             }
 
             // Start the asynchronous operation.
-            bgWorker.RunWorkerAsync(worker);
-            return bgInfo;
+            bgWorker.RunWorkerAsync(workerItem);
+            return bgWorkerInfo;
         }
 
         #endregion Public Methods
@@ -140,7 +141,7 @@ namespace RegexViewer
             bgWorker = (System.ComponentModel.BackgroundWorker)sender;
 
             // Get the Words object and call the main method.
-            Worker WC = (Worker)e.Argument;
+            WorkerItem WC = (WorkerItem)e.Argument;
 
             // WC.DoWork(worker, e);
         }
@@ -155,11 +156,38 @@ namespace RegexViewer
 
             public BackgroundWorker BackGroundWorker { get; set; }
 
-            public Worker Worker { get; set; }
+            public WorkerItem Worker { get; set; }
 
             #endregion Public Properties
         }
 
         #endregion Public Classes
+
+        public List<WorkerItem> GetWorkers(WorkerItem workerItem)
+        {
+            if(workerItem.FilterFile != null && workerItem.LogFile != null)
+            {
+                return (List<WorkerItem>)_workerManager.Workers.Select(x => x.Worker)
+                    .Where(x => x.FilterFile == workerItem.FilterFile && x.LogFile == workerItem.LogFile)
+                    .Cast<WorkerItem>();
+            }
+            else if (workerItem.FilterFile != null)
+            {
+                return (List<WorkerItem>)_workerManager.Workers.Select(x => x.Worker)
+                    .Where(x => x.FilterFile == workerItem.FilterFile)
+                    .Cast<WorkerItem>();
+            }
+            else if (workerItem.LogFile != null)
+            {
+                return (List<WorkerItem>)_workerManager.Workers.Select(x => x.Worker)
+                    .Where(x => x.LogFile == workerItem.LogFile)
+                    .Cast<WorkerItem>();
+            }
+            else
+            {
+                return new List<WorkerItem>();
+            }
+
+        }
     }
 }

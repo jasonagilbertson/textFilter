@@ -257,7 +257,9 @@
                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
                                  ScrollViewer.IsDeferredScrollingEnabled="False"
                                  SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                                 IsSynchronizedWithCurrentItem="True">
+                                 IsSynchronizedWithCurrentItem="True"
+                                  
+                                 >
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -281,6 +283,9 @@
                             </ListBox.ItemTemplate>
 
                             <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SourceUpdated">
+                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
+                                </i:EventTrigger>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>

@@ -81,7 +81,7 @@ namespace RegexViewer
             SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
 
             List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
-            Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
+            // Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
 
             try
             {
@@ -89,7 +89,7 @@ namespace RegexViewer
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId,logItem.Content));
+                        // Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId,logItem.Content));
                         // used for goto line as it needs all line items
                         logItem.FilterIndex = int.MinValue;
                         return;
@@ -125,7 +125,7 @@ namespace RegexViewer
                     {
                         bool match = false;
                         FilterFileItem filterItem = filterItems[filterItemCount];
-                        Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
+                        // Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
                         
 
                         if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
@@ -144,7 +144,7 @@ namespace RegexViewer
                             }
                         }
 
-                        Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem Match={1}:{2} **", filterItemCount, Thread.CurrentThread.ManagedThreadId, match));
+                        // Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem Match={1}:{2} **", filterItemCount, Thread.CurrentThread.ManagedThreadId, match));
 
                         if (!matchSet)
                         {
@@ -152,19 +152,19 @@ namespace RegexViewer
                            {
                                
                                filterIndex = (filterItemCount * -1) - 1;
-                               Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Exclusion and match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                               // Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Exclusion and match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                                matchSet = true;
                               // break;
                            }
                            else if(!match && !filterItem.Exclude)
                            {
                                filterIndex = int.MinValue;
-                               Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclusion and not match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                               // Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclusion and not match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                            }
                            else if(match)
                            {
                                filterIndex = filterItemCount;
-                               Debug.Print(string.Format("ApplyFilter: loop:{0} setting filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                               // Debug.Print(string.Format("ApplyFilter: loop:{0} setting filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                                matchSet = true;
                             //   break;
                            }
@@ -174,17 +174,17 @@ namespace RegexViewer
                             // todo: need additional variable to set masked matches
                             // this is hiding a valid match adn cant be used
                             //filterIndex = (filterItemCount * -1) - 1;
-                            Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                            // Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                         }
                         
                         if (matchSet && !Settings.CountMaskedMatches)
                         {
-                            Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, Settings.CountMaskedMatches));
+                            // Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, Settings.CountMaskedMatches));
                             break;
                         }
                     }
 
-                    Debug.Print(string.Format("ApplyFilter: loop finished set filterIndex={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterIndex));
+                    // Debug.Print(string.Format("ApplyFilter: loop finished set filterIndex={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterIndex));
                     logItem.FilterIndex = filterIndex;
                 });
 

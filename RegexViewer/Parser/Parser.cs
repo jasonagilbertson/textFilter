@@ -128,7 +128,7 @@ namespace RegexViewer
         private void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SetStatus("Parser:filterItemsCollectionChanged");
-            Worker worker = ModifiedFilterFile();
+            WorkerItem worker = ModifiedFilterFile();
             _workerManager.ProcessWorker(worker);
         }
 
@@ -138,7 +138,7 @@ namespace RegexViewer
             // todo: determine what changed and run parser new filter, modified filter, removed filter
             // see if tab was added or removed
 
-            Worker worker = ModifiedFilterFile();
+            WorkerItem worker = ModifiedFilterFile();
             _workerManager.ProcessWorker(worker);
             //check worker
 
@@ -151,31 +151,45 @@ namespace RegexViewer
             SetStatus("Parser:logViewPropertyChanged");
             // todo: determine what changed and run parser new log or remove log
 
-            Worker worker = ModifiedLogFile();
+            WorkerItem worker = ModifiedLogFile();
             _workerManager.ProcessWorker(worker);
         }
 
-        private Worker ModifiedFilterFile()
+        private WorkerItem ModifiedFilterFile()
         {
             List<IFile<FilterFileItem>> currentFilterFiles = (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
             FilterFile currentFilter = (FilterFile)_filterViewModel.CurrentFile();
+            //LogFile currentLog = (LogFile)_logViewModel.CurrentFile();
 
             if (currentFilterFiles == null || currentFilter == null)
             {
-                return new Worker();
+                return new WorkerItem();
             }
 
             if (currentFilterFiles.Count > 0 && _filterFiles.Count == currentFilterFiles.Count)
             {
-                Worker filterFileWorkerItem = new Worker()
+                WorkerItem filterFileWorkerItem = new WorkerItem()
                 {
-                    WorkerModification = Worker.Modification.FilterIndex,
-                    FilterFile = (FilterFile)_filterViewModel.CurrentFile()
+                    WorkerModification = WorkerItem.Modification.FilterIndex,
+                    FilterFile = currentFilter,
+                   // LogFile = currentLog
                 };
 
-                // foreach(FilterFile file in _filterFiles) {
-                // todo: arg not right...
-                FilterNeed filterNeed = _filterViewModel.CompareFilterList(filterFileWorkerItem.FilterFile.ContentItems.ToList());
+                FilterNeed filterNeed = FilterNeed.Unknown;
+                if (_filterFiles.Contains(currentFilter))
+                {
+                    IFile<FilterFileItem> previousFilterFile = _filterFiles.First(x => x.Tag == currentFilter.Tag);
+
+                    // update list
+                    _filterFiles.Remove(previousFilterFile);
+                    _filterFiles.Add(currentFilter);
+                    filterNeed = _filterViewModel.CompareFilterList(previousFilterFile.ContentItems.ToList());
+                }
+                else
+                {
+                    filterNeed = FilterNeed.Filter;
+                }
+                
                 switch (filterNeed)
                 {
                     case FilterNeed.Unknown:
@@ -183,7 +197,9 @@ namespace RegexViewer
                     case FilterNeed.Filter:
                     case FilterNeed.ApplyColor:
                         filterFileWorkerItem.FilterNeed = filterNeed;
-                        filterFileWorkerItem.WorkerModification = Worker.Modification.FilterModified;
+                        filterFileWorkerItem.WorkerModification = WorkerItem.Modification.FilterModified;
+                        //todo: update _filterFiles
+
                         return filterFileWorkerItem;
 
                     case FilterNeed.Current:
@@ -205,11 +221,11 @@ namespace RegexViewer
                         _filterFiles.Add(file);
                         EnableFilterFileMonitoring(true);
                         // todo : re parse current log with new filter
-                        return new Worker()
+                        return new WorkerItem()
                         {
                             FilterFile = file,
                             FilterNeed = FilterNeed.Filter,
-                            WorkerModification = Worker.Modification.FilterAdded
+                            WorkerModification = WorkerItem.Modification.FilterAdded
                         };
                     }
                 }
@@ -223,39 +239,39 @@ namespace RegexViewer
                         // existing filter file removed
                         EnableFilterFileMonitoring(false);
                         _filterFiles.Remove(file);
-                        return new Worker()
+                        return new WorkerItem()
                         {
                             FilterFile = file,
                             FilterNeed = FilterNeed.Filter,
-                            WorkerModification = Worker.Modification.FilterRemoved
+                            WorkerModification = WorkerItem.Modification.FilterRemoved
                         };
                     }
                 }
             }
 
-            return new Worker()
+            return new WorkerItem()
                     {
                         FilterNeed = FilterNeed.Unknown,
-                        WorkerModification = Worker.Modification.Unknown
+                        WorkerModification = WorkerItem.Modification.Unknown
                     };
         }
 
-        private Worker ModifiedLogFile()
+        private WorkerItem ModifiedLogFile()
         {
             List<IFile<LogFileItem>> currentLogFiles = (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
             LogFile currentLog = (LogFile)_logViewModel.CurrentFile();
 
             if (currentLogFiles == null || currentLog == null)
             {
-                return new Worker();
+                return new WorkerItem();
             }
 
             if (_logFiles.Count == currentLogFiles.Count)
             {
-                return new Worker()
+                return new WorkerItem()
                 {
                     LogFile = currentLog,
-                    WorkerModification = Worker.Modification.LogIndex,
+                    WorkerModification = WorkerItem.Modification.LogIndex,
                     FilterNeed = FilterNeed.Current
                 };
             }
@@ -269,50 +285,50 @@ namespace RegexViewer
 
                         _logFiles.Add(file);
                         // EnableFilterFileMonitoring(true); todo : re parse current log with new filter
-                        return new Worker()
+                        return new WorkerItem()
                         {
                             LogFile = file,
                             FilterNeed = FilterNeed.Filter,
-                            WorkerModification = Worker.Modification.LogAdded
+                            WorkerModification = WorkerItem.Modification.LogAdded
                         };
                     }
                 }
             }
             else
             {
-                foreach (LogFile file in new List<IFile<FilterFileItem>>(_filterFiles))
+                foreach (LogFile file in new List<IFile<LogFileItem>>(_logFiles))
                 {
                     if (!currentLogFiles.Contains(file))
                     {
                         // existing filter file removed EnableFilterFileMonitoring(false);
                         _logFiles.Remove(file);
-                        return new Worker()
+                        return new WorkerItem()
                         {
                             LogFile = file,
                             FilterNeed = FilterNeed.Filter,
-                            WorkerModification = Worker.Modification.LogRemoved
+                            WorkerModification = WorkerItem.Modification.LogRemoved
                         };
                     }
                 }
             }
 
-            return new Worker()
+            return new WorkerItem()
             {
                 FilterNeed = FilterNeed.Unknown,
-                WorkerModification = Worker.Modification.Unknown
+                WorkerModification = WorkerItem.Modification.Unknown
             };
         }
 
-        private bool ParseFile(IFile<FilterFileItem> filterFile, IFile<LogFileItem> logFile)
-        {
-            // http: //stackoverflow.com/questions/1207832/wpf-dispatcher-begininvoke-and-ui-background-threads
+        //private bool ParseFile(IFile<FilterFileItem> filterFile, IFile<LogFileItem> logFile)
+        //{
+        //    // http: //stackoverflow.com/questions/1207832/wpf-dispatcher-begininvoke-and-ui-background-threads
 
-            Worker worker = new Worker();
+        //    WorkerItem worker = new WorkerItem();
 
-            _workerManager.StartWorker(worker);
+        //    _workerManager.StartWorker(worker);
 
-            return true;
-        }
+        //    return true;
+        //}
 
         #endregion Private Methods
 

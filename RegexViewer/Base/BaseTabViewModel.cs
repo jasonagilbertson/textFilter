@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace RegexViewer
 {
@@ -23,6 +24,7 @@ namespace RegexViewer
         private List<T> _selectedContent = new List<T>();
         private int _selectedIndex;
         private Command _selectionChangedCommand;
+        private Command _sourceUpdatedCommand;
         private Command _setViewerCommand;
         private string _tag;
 
@@ -178,6 +180,45 @@ namespace RegexViewer
             }
         }
 
+        public Command SourceUpdatedCommand
+        {
+            get
+            {
+                if (_sourceUpdatedCommand == null)
+                {
+                    _sourceUpdatedCommand = new Command(SourceUpdatedExecuted);
+                }
+                _sourceUpdatedCommand.CanExecute = true;
+
+                return _sourceUpdatedCommand;
+            }
+            set { _sourceUpdatedCommand = value; }
+        }
+
+        private void SourceUpdatedExecuted(object sender)
+        {
+            SetStatus("SourceUpdatedExecuted: enter");
+            if(sender is ListBox)
+            {
+                // set keyboard focus on selecteditem
+                ListBox listBox = sender as ListBox;
+                if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+
+                    int index = listBox.SelectedIndex;
+                    if (index >= 0)
+                    {
+                        SetStatus("SourceUpdatedExecuted: container generated, setting keyboard focus to index:" + index);
+                        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                        if (item != null) item.Focus();
+                    }
+                }
+                else
+                {
+                    SetStatus("SourceUpdatedExecuted: container NOT generated");
+                }
+            }
+        }
         public Command SelectionChangedCommand
         {
             get
@@ -280,14 +321,32 @@ namespace RegexViewer
 
         public void SelectionChangedExecuted(object sender)
         {
-          //  SetStatus("SelectionChangeExecuted:enter");
+            // SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
             }
             else if (sender is ListBox)
             {
-                _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
+                ListBox listBox = (sender as ListBox);
+                _selectedContent = listBox.SelectedItems.Cast<T>().ToList();
+                //// set keyboard focus on selecteditem
+                //if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                //{
+                    
+                //    int index = listBox.SelectedIndex;
+                //    if (index >= 0)
+                //    {
+                //        SetStatus("SelectionChangedExecuted: container generated, setting keyboard focus to index:" + index);
+                //        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                //        if (item != null) item.Focus();
+                //    }
+                //}
+                //else
+                //{
+                //    SetStatus("SelectionChangedExecuted: container NOT generated");
+                //}
+
             }
             else if (sender is DataGrid)
             {
@@ -298,15 +357,31 @@ namespace RegexViewer
 
         public void SetViewerExecuted(object sender)
         {
-            // cant setstatus here due to recursion
+            // cant setstatus here due to recursion?
             // cant set when only null
+            // should be listbox for logfileData
 
-            if (_viewer != sender)
+            if (sender is ListBox && _viewer != sender)
             {
-                SetStatus(string.Format("viewer set: {0}", sender.GetType()));
+                // todo: remove old event and set new event to handle selectedindex change so keyboard focus can be set
+                //if(_viewer != null && _viewer is ListBox)
+                //{
+                //    (_viewer as ListBox).ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
+                //}
+
+                //(sender as ListBox).ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
+
+                SetStatus(string.Format("tab viewer set: {0}", sender.GetType()));
+               // SetStatus("tab viewer set:");
                 _viewer = sender;
             }
         }
+
+        //void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
+        //{
+        //    //throw new NotImplementedException();
+        //    // set keyboard focus to listbox selecteditem
+        //}
 
         #endregion Public Methods
     }

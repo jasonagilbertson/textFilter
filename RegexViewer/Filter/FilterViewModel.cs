@@ -79,12 +79,22 @@ namespace RegexViewer
         {
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            //if (currentItems.Count == 0 & filterFileItems.Count == 0)
-            if (currentItems.Count == 0)
+            
+            SetStatus("CompareFilterList: enter");
+                                    
+            if(previousFilterFileItems == null && currentItems != null)
             {
-                return FilterNeed.ShowAll;
+                retval = FilterNeed.Filter;
             }
-            if (currentItems.Count > 0
+            else if(currentItems == null)
+            {
+                retval = FilterNeed.ShowAll;
+            }
+            else if (currentItems.Count == 0)
+            {
+                retval = FilterNeed.ShowAll;
+            }
+            else if (currentItems.Count > 0
                 && previousFilterFileItems.Count > 0
                 && currentItems.Count == previousFilterFileItems.Count)
             {
@@ -99,7 +109,7 @@ namespace RegexViewer
                         || currentItem.CaseSensitive != currentItem.CaseSensitive)
                     {
                         retval = FilterNeed.Filter;
-                        Debug.Print("returning false");
+                        
                         break;
                     }
                     else if (currentItem.BackgroundColor != fileItem.BackgroundColor
@@ -117,7 +127,7 @@ namespace RegexViewer
                 retval = FilterNeed.Filter;
             }
 
-            Debug.Print("CompareFilterList:returning:" + retval.ToString());
+            SetStatus("CompareFilterList:returning:" + retval.ToString());
             return retval;
         }
 
@@ -190,7 +200,7 @@ namespace RegexViewer
             Settings.AddFilterFile(logName);
         }
 
-        public bool SaveAsFile(object sender)
+        public override void SaveFileAs(object sender)
         {
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
 
@@ -214,7 +224,7 @@ namespace RegexViewer
 
                 if (string.IsNullOrEmpty(logName))
                 {
-                    return false;
+                    return;
                 }
             }
 
@@ -229,7 +239,7 @@ namespace RegexViewer
                 SaveFile(null);
             }
 
-            return true;
+            return;
         }
 
         public override void SaveFile(object sender)
@@ -256,10 +266,10 @@ namespace RegexViewer
 
             if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
             {
-                if (!SaveAsFile(tabItem))
-                {
-                    this.TabItems.Remove(tabItem);
-                }
+                SaveFileAs(tabItem);
+                
+                this.TabItems.Remove(tabItem);
+                
             }
             else
             {
@@ -267,10 +277,11 @@ namespace RegexViewer
             }
         }
 
-        public override void SaveFileAs(object sender)
-        {
-            SaveAsFile(sender);
-        }
+        //public override void SaveFileAs(object sender)
+        //{
+        //    // doing this so i can use bool return which 'Command' does not support
+        //    SaveAsFile(sender);
+        //}
 
         public void SaveModifiedFiles(object sender)
         {
@@ -298,7 +309,7 @@ namespace RegexViewer
                             break;
 
                         case TimedSaveDialog.Results.SaveAs:
-                            this.SaveAsFile(item);
+                            this.SaveFileAs(item);
                             break;
 
                         case TimedSaveDialog.Results.Unknown:

@@ -318,6 +318,8 @@ namespace RegexViewer
                 LogFileItem logFileItem = listBox.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
                 listBox.ScrollIntoView(logFileItem);
                 listBox.SelectedItem = logFileItem;
+                listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
+             //   ((ListBoxItem)listBox.SelectedItem).Focus();
             }
         }
 
@@ -369,8 +371,18 @@ namespace RegexViewer
                     }
 
                     SetStatus("hiding:scrollingintoview:");
+                    //listBox.SelectedItem = 0;
+                    //listBox.UpdateLayout();
                     listBox.ScrollIntoView(logFileItem);
                     listBox.SelectedItem = logFileItem;
+                    listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
+                    //listBox.UpdateLayout();
+                    
+                    // ((ListBoxItem)listBox.SelectedItem).Focus();
+                    //ListBoxItem item = listBox.ItemContainerGenerator.ContainerFromItem(listBox.SelectedItem) as ListBoxItem;
+                    //item.Focus();
+                    
+                    
                 }
             }
             catch (Exception e)
@@ -494,9 +506,14 @@ namespace RegexViewer
             this.FilterLogTabItems(FilterCommand.DynamicFilter, fileItem);
         }
 
-        public override void RenameTabItem(string newName)
+        public override void RenameTabItem(string logName)
         {
-            throw new NotImplementedException();
+            // rename tab
+            ITabViewModel<LogFileItem> tabItem = this.TabItems[SelectedIndex];
+            Settings.RemoveLogFile(tabItem.Tag);
+            tabItem.Tag = CurrentFile().Tag = logName;
+            CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
+            Settings.AddFilterFile(logName);
         }
 
         public override void SaveFile(object sender)
@@ -557,6 +574,7 @@ namespace RegexViewer
                     SetStatus(string.Format("saving file:{0}", logName));
 
                     this.ViewManager.SaveFile(logName, tabItem.ContentList);
+                    RenameTabItem(logName);
                 }
             }
         }

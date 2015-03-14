@@ -1,8 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace RegexViewer
 {
-    public class Worker
+    public class WorkerItem
     {
         #region Public Fields
 
@@ -18,7 +19,7 @@ namespace RegexViewer
 
         #region Public Constructors
 
-        public Worker()
+        public WorkerItem()
         {
             WorkerModification = Modification.Unknown;
         }

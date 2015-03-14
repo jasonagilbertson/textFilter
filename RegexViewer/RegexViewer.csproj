@@ -113,7 +113,7 @@
     <Compile Include="Log\LogTabViewModel.cs" />
     <Compile Include="MainViewModel.cs" />
     <Compile Include="Parser\AsyncVirtualizingCollection.cs" />
-    <Compile Include="Parser\Worker.cs" />
+    <Compile Include="Parser\WorkerItem.cs" />
     <Compile Include="Parser\IItemsProvider.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\VirtualizingCollection.cs" />

@@ -9,8 +9,8 @@ namespace RegexViewer
     {
         #region Public Fields
 
-        public string _tempTabNameFormat = "*new {0}*";
-        public string _tempTabNameFormatPattern = @"\*new [0-9]{1,2}\*";
+        public string _tempTabNameFormat = "-new {0}-";
+        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
         #endregion Public Fields
 
         #region Private Fields
@@ -136,8 +136,10 @@ namespace RegexViewer
 
         public void GotFocusExecuted(object sender)
         {
-            
+            if (CurrentFile() != null)
+            {
                 App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
+            }
         }
         public int SelectedIndex
         {
