@@ -1,15 +1,17 @@
-﻿- opening log file not applying filter
+﻿
 
-- drag and drop not working when viewers are empty
+- only first save to exe.config works - have to make a class and use reflection
 
-0 empty filter blocks all log output
+- opening bad filter error? should i put a regex header in xml?
 
-0 ctrl-alt-new for filter only works with hotkey and not context or menu option
+- log save as not filtering output when saving
+
+- countmaskedmatches not working until its threaded
+
+- opening / switching log tabs does not use dynamic filter if one is set - wait until its threaded
+
+- changing a colored filter item to an exclusion doesnt remove the colors
 
 - closing tab without selecting tab first closes wrong one because of selectedindex not being updated
 
-0 index not dynamically sorting
-
 - when reading in filter xml that has been escaped for xml : (?&lt;test&gt;.*) is the filter pattern
-
-- filters always prompting to save

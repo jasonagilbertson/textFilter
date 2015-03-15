@@ -267,9 +267,6 @@ namespace RegexViewer
             if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
             {
                 SaveFileAs(tabItem);
-                
-                this.TabItems.Remove(tabItem);
-                
             }
             else
             {

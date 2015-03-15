@@ -169,7 +169,7 @@ namespace RegexViewer
                 TabItems.Add(tabItem);
 
                 this.SelectedIndex = this.TabItems.Count - 1;
-                //FilterLogTabItems(null, (LogFile)logFile, FilterCommand.Filter);
+                _previousFilterFileItems  = new List<FilterFileItem>();
                 FilterLogTabItems(FilterCommand.Filter);
             }
         }
@@ -202,15 +202,7 @@ namespace RegexViewer
                 return;
             }
 
-            //if(filter != null)
-            //{
-            //    filterFileItems.Add(filter);
-            //}
-            //else
-            //{
-            // get current filter list
             filterFileItems = _filterViewModel.FilterList();
-            //}
 
             // dont check filter need if intent is to reset list to current filter or to show all
             if (filterIntent != FilterCommand.DynamicFilter
@@ -306,7 +298,7 @@ namespace RegexViewer
             SetStatus("gotoLine:" + result.ToString());
 
             ListBox listBox = (ListBox)CurrentTab().Viewer;
-            //if ((listBox.Items.Count >= result) && (result >= 0))
+
             if (result >= 0)
             {
                 // todo: currently only works when unfiltered
@@ -319,7 +311,7 @@ namespace RegexViewer
                 listBox.ScrollIntoView(logFileItem);
                 listBox.SelectedItem = logFileItem;
                 listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
-             //   ((ListBoxItem)listBox.SelectedItem).Focus();
+             
             }
         }
 
@@ -371,18 +363,9 @@ namespace RegexViewer
                     }
 
                     SetStatus("hiding:scrollingintoview:");
-                    //listBox.SelectedItem = 0;
-                    //listBox.UpdateLayout();
                     listBox.ScrollIntoView(logFileItem);
                     listBox.SelectedItem = logFileItem;
                     listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
-                    //listBox.UpdateLayout();
-                    
-                    // ((ListBoxItem)listBox.SelectedItem).Focus();
-                    //ListBoxItem item = listBox.ItemContainerGenerator.ContainerFromItem(listBox.SelectedItem) as ListBoxItem;
-                    //item.Focus();
-                    
-                    
                 }
             }
             catch (Exception e)
@@ -548,7 +531,14 @@ namespace RegexViewer
 
                 dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
                 dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
-                dlg.FileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
+
+                string fileName = tabItem.Tag;
+                if(!fileName.ToLower().Contains(".filtered"))
+                {
+                    fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
+                }
+
+                dlg.FileName = fileName;
                 Nullable<bool> result = false;
                 // Show save file dialog box
                 if (silent)
@@ -571,10 +561,19 @@ namespace RegexViewer
                 if (result == true)
                 {
                     // Save document
-                    SetStatus(string.Format("saving file:{0}", logName));
-
                     this.ViewManager.SaveFile(logName, tabItem.ContentList);
-                    RenameTabItem(logName);
+
+                    // open filtered view into new tab if not a '-new x-' tab
+                    if (string.Compare(tabItem.Tag, logName, true) != 0
+                        &&  !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
+                    {
+                        AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
+                        
+                    }
+                    else
+                    {
+                        RenameTabItem(logName);
+                    }
                 }
             }
         }
@@ -595,9 +594,7 @@ namespace RegexViewer
 
         private bool IsHiding()
         {
-           
-
-            // if count the same then assume it is not filtered
+           // if count the same then assume it is not filtered
            try
             {
                  ListBox listBox = (ListBox)this.CurrentTab().Viewer;
