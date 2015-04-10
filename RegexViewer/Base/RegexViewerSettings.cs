@@ -16,6 +16,13 @@ namespace RegexViewer
 
         public bool ReadConfigFile()
         {
+            // check config file first
+            List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
+            if (results.Count == 1)
+            {
+                Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+            }
+
             this.ConfigFile = !string.IsNullOrEmpty(this.ConfigFile) ? this.ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
             _ConfigFileMap = new ExeConfigurationFileMap();
             if (!File.Exists(this.ConfigFile))
@@ -218,11 +225,11 @@ namespace RegexViewer
 
             List<string> results = new List<string>();
 
-            results = ProcessArg("/config:", arguments);
-            if (results.Count == 1)
-            {
-                Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
-            }
+            //results = ProcessArg("/config:", arguments);
+            //if (results.Count == 1)
+            //{
+            //    Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+            //}
 
             results = ProcessFiles(ProcessArg("/filter:", arguments));
             if (results.Count > 0)
@@ -363,7 +370,7 @@ namespace RegexViewer
 
                     switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
                     {
-                        case AppSettingNames.AutoSaveFilters:
+                        case AppSettingNames.AutoSave:
                             {
                                 _appSettings[name].Value = "False";
                                 break;
@@ -472,7 +479,7 @@ namespace RegexViewer
 
         private enum AppSettingNames
         {
-            AutoSaveFilters,
+            AutoSave,
             BackgroundColor,
             FileHistoryCount,
             FilterDirectory,
@@ -498,15 +505,15 @@ namespace RegexViewer
             set { RegexViewerSettings.settings = value; }
         }
 
-        public bool AutoSaveFilters
+        public bool AutoSave
         {
             get
             {
-                return (Convert.ToBoolean(_appSettings["AutoSaveFilters"].Value));
+                return (Convert.ToBoolean(_appSettings["AutoSave"].Value));
             }
             set
             {
-                _appSettings["AutoSaveFilters"].Value = value.ToString();
+                _appSettings["AutoSave"].Value = value.ToString();
             }
         }
 

@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
@@ -17,6 +19,7 @@ namespace RegexViewer
         private Command _closeAllCommand;
         private Command _closeCommand;
         private Command _newCommand;
+        private Command _reloadCommand;
         private Command _openCommand;
         private Command _gotFocusCommand;
         private bool _openDialogVisible;
@@ -85,6 +88,21 @@ namespace RegexViewer
                 return _newCommand;
             }
             set { _newCommand = value; }
+        }
+
+        public Command ReloadCommand
+        {
+            get
+            {
+                if (_reloadCommand == null)
+                {
+                    _reloadCommand = new Command(ReloadFile);
+                }
+                _reloadCommand.CanExecute = true;
+
+                return _reloadCommand;
+            }
+            set { _reloadCommand = value; }
         }
 
         public Command OpenCommand
@@ -274,6 +292,24 @@ namespace RegexViewer
             AddTabItem(file);
         }
 
+        public void ReloadFile(object sender)
+        {
+
+            IFile<T> file = default(IFile<T>);
+            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                if (!this.ViewManager.CloseFile(tabItem.Tag))
+                {
+                    return;
+                }
+
+                RemoveTabItem(tabItem);
+                file = this.ViewManager.OpenFile(tabItem.Tag);
+                AddTabItem(file);
+            }
+        }
+
         public void OpenDrop(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());
@@ -295,9 +331,81 @@ namespace RegexViewer
             }
         }
 
+        public void SaveModifiedFiles(object sender)
+        {
+            foreach (IFile<T> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
+            {
+                // todo: prompt for saving?
+                if (!RegexViewerSettings.Settings.AutoSave)
+                {
+                    TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
+                    dialog.Enable();
+
+                    switch (dialog.WaitForResult())
+                    {
+                        case TimedSaveDialog.Results.Disable:
+                            RegexViewerSettings.Settings.AutoSave = true;
+                            break;
+
+                        case TimedSaveDialog.Results.DontSave:
+                            item.Modified = false;
+                            break;
+
+                        case TimedSaveDialog.Results.Save:
+                            this.SaveFile(item);
+                            item.Modified = false;
+                            break;
+
+                        case TimedSaveDialog.Results.SaveAs:
+                            this.SaveFileAs(item);
+                            break;
+
+                        case TimedSaveDialog.Results.Unknown:
+                            // dont worry about errors since we are closing.
+                            break;
+                    }
+                }
+                else
+                {
+                    this.SaveFile(item);
+                    item.Modified = false;
+                }
+            }
+        }
         public abstract void RenameTabItem(string newName);
 
-        public abstract void SaveFile(object sender);
+        //public abstract void SaveFile(object sender);
+        public void SaveFile(object sender)
+        {
+            ITabViewModel<T> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<T>)(sender as TabItem);
+            }
+            else
+            {
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    // can get here by having no filters and hitting save file.
+                    // todo: disable save file if no tab items
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
+            {
+                SaveFileAs(tabItem);
+            }
+            else
+            {
+                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+            }
+        }
 
         public abstract void SaveFileAs(object sender);
 

@@ -68,9 +68,13 @@ namespace RegexViewer.Properties {
         ////config:
         ////filter:
         ////log:
-        ////registerfta
-        ////unregisterfta
-        ////?.
+        ////register
+        ////unregister
+        ////?
+        ///
+        ///Example 1: open a specified filter file and specified log file
+        ///	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: eventlog-filter.xml /log: ascii.txt
+        ///	- For folders with spaces: C:\temp\regexViewer&gt;RegexViewer.exe /filter: &quot;i love folder spaces\ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DisplayHelp {
             get {

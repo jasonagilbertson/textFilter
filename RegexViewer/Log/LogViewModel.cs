@@ -188,106 +188,114 @@ namespace RegexViewer
 
         public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter, FilterFileItem filter = null)
         {
-            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
-            SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
-            LogFile logFile;
-
-            // get current log file
-            if (_logFileManager.FileManager.Count > 0)
+            try
             {
-                logFile = (LogFile)CurrentFile();
-            }
-            else
-            {
-                return;
-            }
+                List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+                SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
+                LogFile logFile;
 
-            filterFileItems = _filterViewModel.FilterList();
-
-            // dont check filter need if intent is to reset list to current filter or to show all
-            if (filterIntent != FilterCommand.DynamicFilter
-                & filterIntent != FilterCommand.Reset
-                & filterIntent != FilterCommand.ShowAll
-                & filterIntent != FilterCommand.Hide)
-            {
-                FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
-                SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
-
-                switch (filterNeed)
+                // get current log file
+                if (_logFileManager.FileManager.Count > 0)
                 {
-                    case FilterNeed.ApplyColor:
-                        {
-                            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
-                            SaveCurrentFilter(filterFileItems);
-                            return;
-                        }
-                    case FilterNeed.Current:
-                        {
-                            if (this.PreviousIndex == this.SelectedIndex & filter == null)
+                    logFile = (LogFile)CurrentFile();
+                }
+                else
+                {
+                    return;
+                }
+
+                filterFileItems = _filterViewModel.FilterList();
+
+                // dont check filter need if intent is to reset list to current filter or to show all
+                if (filterIntent != FilterCommand.DynamicFilter
+                    & filterIntent != FilterCommand.Reset
+                    & filterIntent != FilterCommand.ShowAll
+                    & filterIntent != FilterCommand.Hide)
+                {
+                    FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
+                    SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
+
+                    switch (filterNeed)
+                    {
+                        case FilterNeed.ApplyColor:
                             {
-                                SetStatus("filterLogTabItems:no change");
+                                this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
+                                SaveCurrentFilter(filterFileItems);
                                 return;
                             }
+                        case FilterNeed.Current:
+                            {
+                                if (this.PreviousIndex == this.SelectedIndex & filter == null)
+                                {
+                                    SetStatus("filterLogTabItems:no change");
+                                    return;
+                                }
 
+                                break;
+                            }
+
+                        case FilterNeed.ShowAll:
+                            {
+                                filterIntent = FilterCommand.ShowAll;
+                                break;
+                            }
+                        case FilterNeed.Filter:
                             break;
-                        }
 
-                    case FilterNeed.ShowAll:
-                        {
-                            filterIntent = FilterCommand.ShowAll;
-                            break;
-                        }
-                    case FilterNeed.Filter:
-                        break;
+                        case FilterNeed.Unknown:
 
-                    case FilterNeed.Unknown:
-
-                    default:
-                        SaveCurrentFilter(filterFileItems);
-                        return;
+                        default:
+                            SaveCurrentFilter(filterFileItems);
+                            return;
+                    }
                 }
-            }
 
-            switch (filterIntent)
+                switch (filterIntent)
+                {
+                    case FilterCommand.DynamicFilter:
+                        {
+                            SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
+                            filter.Include = true;
+                            filter.Regex = true;
+                            // quick find
+                            filterFileItems.Add(filter);
+                            goto case FilterCommand.Filter;
+                        }
+                    case FilterCommand.Reset:
+                    case FilterCommand.Filter:
+                        {
+                            SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
+                            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent), filterFileItems);
+
+                            break;
+                        }
+                    case FilterCommand.Hide:
+                        {
+                            SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
+                            // causes exception if no filter? FilterLogTabItems:exceptionSystem.ArgumentOutOfRangeException:
+                            this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
+                            break;
+                        }
+                    case FilterCommand.ShowAll:
+                        {
+                            SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
+                            this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
+                            break;
+                        }
+
+                    case FilterCommand.Unknown:
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                SaveCurrentFilter(filterFileItems);
+            }
+            catch (Exception e)
             {
-                case FilterCommand.DynamicFilter:
-                    {
-                        SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
-                        filter.Include = true;
-                        filter.Regex = true;
-                        // quick find
-                        filterFileItems.Add(filter);
-                        goto case FilterCommand.Filter;
-                    }
-                case FilterCommand.Reset:
-                case FilterCommand.Filter:
-                    {
-                        SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent), filterFileItems);
-
-                        break;
-                    }
-                case FilterCommand.Hide:
-                    {
-                        SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
-                        break;
-                    }
-                case FilterCommand.ShowAll:
-                    {
-                        SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                        this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
-                        break;
-                    }
-
-                case FilterCommand.Unknown:
-                default:
-                    {
-                        break;
-                    }
+                SetStatus("FilterLogTabItems:exception" + e.ToString());
             }
-
-            SaveCurrentFilter(filterFileItems);
         }
 
         public void GotoLineExecuted(object sender)
@@ -391,42 +399,48 @@ namespace RegexViewer
             SetStatus("opening file");
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
 
-            string logName = string.Empty;
+            string[] logNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.FileName = "";
             dlg.DefaultExt = ".csv";
             dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv|Text Files (*.txt)|*.txt";
+            dlg.Multiselect = true;
 
             Nullable<bool> result = false;
             // Show open file dialog box
             if (silent)
             {
                 result = true;
-                logName = (sender as string);
+                logNames = new string[1] { (sender as string) };
             }
             else
             {
                 result = dlg.ShowDialog();
-                logName = dlg.FileName;
+                logNames = dlg.FileNames;
             }
 
-            // Process open file dialog box results
-            if (result == true && File.Exists(logName))
+            if(result != true)
             {
-                // Open document
+                return;
+            }
 
-                SetStatus(string.Format("opening file:{0}", logName));
-                LogFile logFile = new LogFile();
-                if (String.IsNullOrEmpty((logFile = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
+            foreach (string logName in logNames)
+            {
+                // Process open file dialog box results
+                if (File.Exists(logName))
                 {
-                    return;
-                }
+                    // Open document
 
-                // make new tab
-                AddTabItem(logFile);
-            }
-            else
-            {
+                    SetStatus(string.Format("opening file:{0}", logName));
+                    LogFile logFile = new LogFile();
+                    if (String.IsNullOrEmpty((logFile = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
+                    {
+                        return;
+                    }
+
+                    // make new tab
+                    AddTabItem(logFile);
+                }
             }
         }
 
@@ -499,11 +513,7 @@ namespace RegexViewer
             Settings.AddFilterFile(logName);
         }
 
-        public override void SaveFile(object sender)
-        {
-            SetStatus("save file not implemented");
-            throw new NotImplementedException();
-        }
+       
 
         public override void SaveFileAs(object sender)
         {
@@ -532,7 +542,7 @@ namespace RegexViewer
                 dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
                 dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
 
-                string fileName = tabItem.Tag;
+                string fileName = Path.GetFileName(tabItem.Tag);
                 if(!fileName.ToLower().Contains(".filtered"))
                 {
                     fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
@@ -568,6 +578,7 @@ namespace RegexViewer
                         &&  !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
                     {
                         AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
+                        
                         
                     }
                     else

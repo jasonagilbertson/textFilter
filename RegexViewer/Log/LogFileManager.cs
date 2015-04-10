@@ -220,7 +220,7 @@ namespace RegexViewer
             }
 
             FileManager.Add(ManageFileProperties(LogName, logFile));
-
+            logFile.Modified = true;
             this.Settings.AddLogFile(LogName);
             OnPropertyChanged("LogFileManager");
             return logFile;

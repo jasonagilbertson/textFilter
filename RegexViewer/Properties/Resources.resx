@@ -125,8 +125,19 @@ Command line options are:
 /config:
 /filter:
 /log:
-/registerfta
-/unregisterfta
-/?</value>
+/register
+/unregister
+/?
+
+Example 1: open a specified filter file and specified log file
+	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: eventlog-filter.xml /log: ascii.txt
+	- For folders with spaces: C:\temp\regexViewer&gt;RegexViewer.exe /filter: "i love folder spaces\eventlog-filter5.xml" /log: "i love folder spaces\ascii5.txt"
+
+Example 2: open multiple specified filter files and multiple specified logs.
+	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: eventlog-filter.xml,eventlog-filter2.xml /log: ascii.txt,ascii2.txt
+	- For folders with spaces: C:\temp\regexViewer&gt;RegexViewer.exe /filter: "i love folder spaces\eventlog-filter5.xml","i love folder spaces\eventlog-filter6.xml" /log: "i love folder spaces\ascii5.txt","i love folder spaces\ascii6.txt"
+
+Example 3: open multiple filter files using wildcard and multiple log files using wildcard
+	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: %cd%\eventlog-filter*.xml /log: %cd%\ascii*.txt</value>
   </data>
 </root>

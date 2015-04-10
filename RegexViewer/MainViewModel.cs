@@ -35,40 +35,47 @@ namespace RegexViewer
 
         public MainViewModel()
         {
-            _settings = RegexViewerSettings.Settings;
-            if (!_settings.ReadConfigFile())
+            try
             {
-                Environment.Exit(1);
-                Application.Current.Shutdown(1);
-                return;
-            }
-
-            Base.NewStatus += HandleNewStatus;
-            _filterViewModel = new FilterViewModel();
-            _logViewModel = new LogViewModel(_filterViewModel);
-
-            _parser = new Parser(_filterViewModel, _logViewModel);
-
-            App.Current.MainWindow.Title = string.Format("{0} {1}", Process.GetCurrentProcess().MainModule.ModuleName, Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
-            SetStatus(App.Current.MainWindow.Title);
-
-            // to embed external libraries
-            // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
-            {
-                String resourceName = "RegexViewer." + new AssemblyName(args.Name).Name + ".dll";
-
-                using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                _settings = RegexViewerSettings.Settings;
+                if (!_settings.ReadConfigFile())
                 {
-                    Byte[] assemblyData = new Byte[stream.Length];
-
-                    stream.Read(assemblyData, 0, assemblyData.Length);
-
-                    return Assembly.Load(assemblyData);
+                    Environment.Exit(1);
+                    Application.Current.Shutdown(1);
+                    return;
                 }
-            };
 
-            SetStatus("loaded");
+                Base.NewStatus += HandleNewStatus;
+                _filterViewModel = new FilterViewModel();
+                _logViewModel = new LogViewModel(_filterViewModel);
+
+                _parser = new Parser(_filterViewModel, _logViewModel);
+
+                App.Current.MainWindow.Title = string.Format("{0} {1}", Process.GetCurrentProcess().MainModule.ModuleName, Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
+                SetStatus(App.Current.MainWindow.Title);
+
+                // to embed external libraries
+                // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
+                AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+                {
+                    String resourceName = "RegexViewer." + new AssemblyName(args.Name).Name + ".dll";
+
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                    {
+                        Byte[] assemblyData = new Byte[stream.Length];
+
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+
+                        return Assembly.Load(assemblyData);
+                    }
+                };
+
+                SetStatus("loaded");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception:" + e.ToString());
+            }
         }
 
         #endregion Public Constructors
@@ -238,6 +245,7 @@ namespace RegexViewer
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _filterViewModel.SaveModifiedFiles(sender);
+            _logViewModel.SaveModifiedFiles(sender);
             _settings.Save();
         }
 

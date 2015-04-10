@@ -163,30 +163,40 @@ namespace RegexViewer
                 silent = true;
             }
 
-            string logName = string.Empty;
+            string[] logNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".xml"; 
             dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*"; 
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
+            dlg.Multiselect = true;
+
             Nullable<bool> result = false;
             
             // Show open file dialog box
             if (silent)
             {
                 result = true;
-                logName = (sender as string);
+                logNames = new string[1]{(sender as string)};
             }
             else
             {
                 result = dlg.ShowDialog();
-                logName = dlg.FileName;
+                logNames = dlg.FileNames;
             }
 
-            // Process open file dialog box results
-            if (result == true && File.Exists(logName))
+            if(result != true)
             {
-                SetStatus(string.Format("opening file:{0}", logName));
-                VerifyAndOpenFile(logName);
+                return;
+            }
+
+            foreach (string logName in logNames)
+            {
+                // Process open file dialog box results
+                if (File.Exists(logName))
+                {
+                    SetStatus(string.Format("opening file:{0}", logName));
+                    VerifyAndOpenFile(logName);
+                }
             }
         }
 
@@ -202,13 +212,28 @@ namespace RegexViewer
 
         public override void SaveFileAs(object sender)
         {
+
+            ITabViewModel<FilterFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+            }
+
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
 
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".xml";
             dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
-            dlg.InitialDirectory = Settings.FilterDirectory ?? "";
+
+            dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? Settings.FilterDirectory;
+            dlg.FileName = Path.GetFileName(tabItem.Tag);
+
             Nullable<bool> result = false;
             
             // Show save file dialog box
@@ -240,86 +265,6 @@ namespace RegexViewer
             }
 
             return;
-        }
-
-        public override void SaveFile(object sender)
-        {
-            ITabViewModel<FilterFileItem> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
-            }
-            else
-            {
-                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
-                {
-                    tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
-                }
-                else
-                {
-                    // can get here by having no filters and hitting save file.
-                    // todo: disable save file if no tab items
-                    return;
-                }
-            }
-
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
-            {
-                SaveFileAs(tabItem);
-            }
-            else
-            {
-                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
-            }
-        }
-
-        //public override void SaveFileAs(object sender)
-        //{
-        //    // doing this so i can use bool return which 'Command' does not support
-        //    SaveAsFile(sender);
-        //}
-
-        public void SaveModifiedFiles(object sender)
-        {
-            foreach (IFile<FilterFileItem> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
-            {
-                // todo: prompt for saving?
-                if (!RegexViewerSettings.Settings.AutoSaveFilters)
-                {
-                    TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
-                    dialog.Enable();
-
-                    switch (dialog.WaitForResult())
-                    {
-                        case TimedSaveDialog.Results.Disable:
-                            RegexViewerSettings.Settings.AutoSaveFilters = true;
-                            break;
-
-                        case TimedSaveDialog.Results.DontSave:
-                            item.Modified = false;
-                            break;
-
-                        case TimedSaveDialog.Results.Save:
-                            this.SaveFile(item);
-                            item.Modified = false;
-                            break;
-
-                        case TimedSaveDialog.Results.SaveAs:
-                            this.SaveFileAs(item);
-                            break;
-
-                        case TimedSaveDialog.Results.Unknown:
-                            // dont worry about errors since we are closing.
-                            break;
-                    }
-                }
-                else
-                {
-                    this.SaveFile(item);
-                    item.Modified = false;
-                }
-            }
         }
 
         #endregion Public Methods

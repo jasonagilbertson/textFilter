@@ -3,6 +3,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Security.Principal;
 
 namespace RegexViewer
 {
@@ -11,15 +12,15 @@ namespace RegexViewer
         #region Private Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
-        private string _extension;
+        private string[] _extensions = new string[2] { ".rvf",".rvconfig"};
 
-        private string _extensionBackup;
+        //private string _extensionBackup;
 
-        private string _fileDescription;
+        //private string _fileDescription;
 
-        private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
+        //private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
 
-        private string _hkcuKeyExt;
+        //private string _hkcuKeyExt;
 
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
@@ -39,13 +40,14 @@ namespace RegexViewer
 
         public FileTypeAssociation()
         {
-            _extension = ".csv";
-            _extensionBackup = _extension + "_back";
-            _fileDescription = "RegexViewer";
-
-            _hkcuKeyExt = _hkcuKey + _extension;
+         
         }
-
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
         #endregion Public Constructors
 
         #region Public Properties
@@ -64,27 +66,39 @@ namespace RegexViewer
 
         public bool ConfigureFTA(bool set)
         {
+            if (!IsAdministrator())
+            {
+                Console.WriteLine("have to run elevated to set file type associations. exiting");
+                //SetStatus("have to run elevated to set file type associations. exiting");
+                return false;
+            }
             // set path to programfiles
             string ftaFolder = Directory.GetCurrentDirectory();
 
             if (set)
             {
                 // add
-                SetAssociation(string.Format("{0}\\{1}", ftaFolder, System.AppDomain.CurrentDomain.FriendlyName));
+                SetContextMenu();
+                foreach (string extension in _extensions)
+                {
+                    SetAssociation(extension, string.Format("{0}\\{1}", ftaFolder, System.AppDomain.CurrentDomain.FriendlyName));
+                }
                 SetStatus("registered using current configuration: " + ftaFolder);
                 return true;
             }
             else
             {
                 // remove
-
-                UnSetAssociation();
+                UnSetContextMenu();
+                foreach (string extension in _extensions)
+                {
+                    UnSetAssociation(extension);
+                }
                 return true;
             }
         }
 
-        public bool CopyKey(RegistryKey parentKey,
-            string keyNameToCopy, string newKeyName)
+        public bool CopyKey(RegistryKey parentKey, string keyNameToCopy, string newKeyName)
         {
             //Create new key
             RegistryKey destinationKey = parentKey.CreateSubKey(newKeyName);
@@ -104,18 +118,50 @@ namespace RegexViewer
             return true;
         }
 
-        public void SetAssociation(string file = null)
+        private void SetContextMenu()
+        {
+            RegistryKey baseKey;
+            
+            SetStatus("SeContextMenu:enter");
+            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
+            if (baseKey.OpenSubKey(_keyName) != null)
+            {
+                UnSetContextMenu();
+            }
+
+            baseKey.CreateSubKey(_keyName).CreateSubKey("command").SetValue("", "\"" + _openWith + "\"" + " \"%1\"");
+                        
+            baseKey.Close();
+            
+        }
+
+        private void UnSetContextMenu()
+        {
+            RegistryKey baseKey;
+
+            SetStatus("SeContextMenu:enter");
+            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
+            if (baseKey.OpenSubKey(_keyName) != null)
+            {
+                
+                baseKey.DeleteSubKeyTree(_keyName);
+            }
+
+            baseKey.Close();
+
+        }
+        public void SetAssociation(string extension, string file = null)
         {
             RegistryKey BaseKey;
             RegistryKey OpenMethod;
             RegistryKey Shell;
-            RenameSubKey(Registry.ClassesRoot, _extension, _extensionBackup);
+            RenameSubKey(Registry.ClassesRoot, extension, extension + "_back");
             SetStatus("SetAssociation:enter");
-            BaseKey = Registry.ClassesRoot.CreateSubKey(_extension);
+            BaseKey = Registry.ClassesRoot.CreateSubKey(extension);
             BaseKey.SetValue("", _keyName);
 
             OpenMethod = Registry.ClassesRoot.CreateSubKey(_keyName);
-            OpenMethod.SetValue("", _fileDescription);
+            OpenMethod.SetValue("", _keyName);//_fileDescription);
 
             if (!string.IsNullOrEmpty(file))
             {
@@ -130,15 +176,17 @@ namespace RegexViewer
             OpenMethod.Close();
             Shell.Close();
 
+
+
             // Tell explorer the file association has been changed
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
         }
 
-        public void UnSetAssociation()
+        public void UnSetAssociation(string extension)
         {
             DeleteKey(Registry.ClassesRoot, _keyName);
-            DeleteKey(Registry.ClassesRoot, _extension);
-            RenameSubKey(Registry.ClassesRoot, _extensionBackup, _extension);
+            DeleteKey(Registry.ClassesRoot, extension);
+            RenameSubKey(Registry.ClassesRoot, extension + "_back", extension);
 
             // Tell explorer the file association has been changed
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
