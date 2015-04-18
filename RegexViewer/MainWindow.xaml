@@ -30,33 +30,51 @@
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+R" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
 
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+O" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+N" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+S" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+Alt+R" />
     </Window.InputBindings>
 
     <DockPanel DataContext="{StaticResource mainViewModel}">
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="_Save Current View" Command="{Binding LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+S" />
                 <MenuItem Header="_Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
                 <MenuItem Header="_Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
-                <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
-                <MenuItem Header="Show / _Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
+                <MenuItem Header="Copy File _Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" InputGestureText="Ctrl+G" />
+                <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
+                <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
+                <MenuItem Header="R_ecent Files" ItemsSource="{Binding LogViewModel.RecentCollection}" >
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
+                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="_Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
+                <MenuItem Header="_Save Current View" Command="{Binding LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+S" />
+                <MenuItem Header="Show / _Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
             </MenuItem>
             <MenuItem Header="_Filter">
-                <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
                 <MenuItem Header="_Close Filter" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
                 <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+R" />
+                <MenuItem Header="Copy File _Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
+                <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
+                <MenuItem Header="R_ecent Filters" ItemsSource="{Binding FilterViewModel.RecentCollection}" >
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
+                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="_Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+R" />
                 <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
                 <MenuItem Header="_Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
             </MenuItem>
@@ -108,7 +126,7 @@
                           Grid.Row="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
@@ -116,7 +134,9 @@
                           Tag="{Binding}"
                           DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
                           DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
-                          DataGridCell.GotFocus="DataGrid_CellGotFocus">
+                          DataGridCell.GotFocus="DataGrid_CellGotFocus"
+                                  
+                                  >
                             
                             <DataGrid.CellStyle>
                                 
@@ -126,6 +146,7 @@
                                         <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
                                         <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                         <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
@@ -140,6 +161,7 @@
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
                                     <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
                                     <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
+                                    <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                                     <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
                                     <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
                                     <MenuItem Header="Reload Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
@@ -210,7 +232,16 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" />
+                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" >
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                        
+                                        
+                                </DataGridTextColumn>
+                                    
                             </DataGrid.Columns>
                         </DataGrid>
                     </DataTemplate>
@@ -219,6 +250,7 @@
                     <ContextMenu HasDropShadow="True">
                         <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
+                        <MenuItem Header="Copy File Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" />
                         <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N"/>
                         <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O"/>
                         <MenuItem Header="Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
@@ -262,27 +294,42 @@
                                  ScrollViewer.IsDeferredScrollingEnabled="False"
                                  SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
                                  IsSynchronizedWithCurrentItem="True"
-                                  
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                  >
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
+                                    <WrapPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Path=Index}"
                                                Margin="0,0,5,0"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
                                                Background="{Binding Path=Background}" 
-
+                                               Width="Auto" 
                                                    />
                                         <TextBlock Text="{Binding Path=Content}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
                                                Background="{Binding Path=Background}" 
+                                               TextWrapping="WrapWithOverflow"
                                                    />
-                                    </StackPanel>
+                                        <TextBlock Text="{Binding Path=Group1}"
+                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
+                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
+                                               Foreground="{Binding Path=Foreground}"
+                                               Background="{Binding Path=Background}" 
+                                               TextWrapping="WrapWithOverflow"
+                                                   />
+                                        <TextBlock Text="{Binding Path=Group2}"
+                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
+                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
+                                               Foreground="{Binding Path=Foreground}"
+                                               Background="{Binding Path=Background}" 
+                                               TextWrapping="WrapWithOverflow"
+                                                   />
+                                    </WrapPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
 
@@ -311,12 +358,13 @@
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="Close File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
-                                    <MenuItem Header="Save Current View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
                                     <MenuItem Header="Close All Files" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" />
-                                    <MenuItem Header="Open View in new Tab" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.NewCommand}" InputGestureText="Ctrl+N" />
-                                    <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
-                                    <MenuItem Header="Reload File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" InputGestureText="Ctrl+R" />
+                                    <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CopyFilePathCommand}" />
                                     <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
+                                    <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
+                                    <MenuItem Header="Open View in new Tab" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.NewCommand}" InputGestureText="Ctrl+N" />
+                                    <MenuItem Header="Reload File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" InputGestureText="Ctrl+R" />
+                                    <MenuItem Header="Save Current View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
                                     <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+H" />
                                     
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
@@ -330,6 +378,7 @@
                     <ContextMenu HasDropShadow="True">
                         <MenuItem Header="Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
                         <MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
+                        <MenuItem Header="Copy File Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                         <MenuItem Header="Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                         <MenuItem Header="Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
                     </ContextMenu>
@@ -337,14 +386,25 @@
             </TabControl>
 
             <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
+                
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Content="Status:" Width="50"  Height="25" />
+                <TextBox Name="textboxLineTotals"
+                    Height="25"
+                     Grid.Column="0"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Bottom"
+                     Margin="1,5,1,0"
+                     Text="{Binding Path=LogViewModel.LineTotals}"
+                         />
 
-                <ListBox x:Name="listboxStatus" Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
+                    <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Content="Status:" Width="50"  Height="25" Margin="1,1,1,3" />
+
+                <ListBox x:Name="listboxStatus" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
                      Margin="50,0,0,0"
                      SelectionMode="Extended"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -368,26 +428,18 @@
                         </ContextMenu>
                     </ListBox.ContextMenu>
                 </ListBox>
-                <GridSplitter Grid.Column="1" Height="25" Width="5" HorizontalAlignment="Center" />
-                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="2" Content="AND/Quick Filter:" Width="105" />
+                <GridSplitter Grid.Column="2" Height="25" Width="5" HorizontalAlignment="Center" />
+                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="3" Content="AND/Quick Filter:" Width="105" Margin="1,1,1,3" />
                 <TextBox Name="textboxQuickFind"
                     Height="25"
-                     Grid.Column="2"
+                     Grid.Column="3"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
                      Margin="105,0,0,0"
-                         
                          >
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
                     </TextBox.InputBindings>
-
-                    <!--<i:Interaction.Triggers>
-                        <i:EventTrigger EventName="TextChanged">
-                            --><!--<i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />--><!--
-                            <i:InvokeCommandAction Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>-->
                 </TextBox>
             </Grid>
         </Grid>

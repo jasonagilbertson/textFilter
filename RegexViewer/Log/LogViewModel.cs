@@ -24,7 +24,7 @@ namespace RegexViewer
 
         #region Private Fields
 
-        //private int _selectedItemIndex;
+        private string _lineTotals;
         private LogFileItem _filteredSelectedItem;
 
         private FilterViewModel _filterViewModel;
@@ -134,6 +134,21 @@ namespace RegexViewer
             set { _quickFindChangedCommand = value; }
         }
 
+        public string LineTotals
+        {
+            get
+            {
+                return _lineTotals;
+            }
+            set
+            {
+                if (_lineTotals != value)
+                {
+                    _lineTotals = value;
+                    OnPropertyChanged("LineTotals");
+                }
+            }
+        }
         public string QuickFindText
         {
             get
@@ -290,6 +305,9 @@ namespace RegexViewer
                         }
                 }
 
+                // update line total counts
+                LineTotals = string.Format("{0}/{1}", this.TabItems[SelectedIndex].ContentList.Count, logFile.ContentItems.Count);
+
                 SaveCurrentFilter(filterFileItems);
             }
             catch (Exception e)
@@ -298,6 +316,13 @@ namespace RegexViewer
             }
         }
 
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return (RecentCollectionBuilder(Settings.RecentLogFiles));
+            }
+        }
         public void GotoLineExecuted(object sender)
         {
             SetStatus("gotoLine");

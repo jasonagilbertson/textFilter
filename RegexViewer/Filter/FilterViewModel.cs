@@ -200,6 +200,13 @@ namespace RegexViewer
             }
         }
 
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return (RecentCollectionBuilder(Settings.RecentFilterFiles));
+            }
+        }
         public override void RenameTabItem(string logName)
         {
             // rename tab

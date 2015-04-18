@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
@@ -147,16 +148,20 @@ namespace RegexViewer
         {
             List<string> newList = new List<string>();
 
-            // return if already in list
             if (recentLogFiles.ToList().Contains(logFile))
             {
+                return recentLogFiles;
+            }
+
+            if(recentLogFiles.Length < settings.FileHistoryCount)
+            {
+                newList = recentLogFiles.ToList();
+                newList.Add(logFile);
                 return newList.ToArray();
             }
 
-            int i = Math.Min(recentLogFiles.Length, this.FileHistoryCount - 1) - 1;
-            for (; i >= 0; i--)
+            for (int i = 0; i < Math.Min(recentLogFiles.Length,settings.FileHistoryCount - 1); i++)
             {
-                Debug.Print("Removing RecentFile:" + recentLogFiles[i]);
                 newList.Add(recentLogFiles[i]);
             }
 
@@ -652,6 +657,7 @@ namespace RegexViewer
                 _appSettings["MaxMultiFileCount"].Value = value.ToString();
             }
         }
+
 
         public string[] RecentFilterFiles
         {

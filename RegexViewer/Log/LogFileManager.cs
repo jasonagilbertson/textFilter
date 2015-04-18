@@ -131,6 +131,19 @@ namespace RegexViewer
                         if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
                         {
                             match = true;
+                            //MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
+                            //foreach(Match m in mc)
+                            //{
+                            //    if(m.Groups.Count > 1)
+                            //    {
+                            //        logItem.Group1 = m.Groups[1].Value.ToString();
+                            //    }
+                                
+                            //    if(m.Groups.Count > 2)
+                            //    {
+                            //        logItem.Group2 = m.Groups[2].Value.ToString();
+                            //    }
+                            //}
                         }
                         else if(!filterItem.Regex)
                         {

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace RegexViewer
@@ -18,8 +20,10 @@ namespace RegexViewer
         #region Private Fields
         private Command _closeAllCommand;
         private Command _closeCommand;
+        private Command _copyFilePathCommand;
         private Command _newCommand;
         private Command _reloadCommand;
+        private Command _recentCommand;
         private Command _openCommand;
         private Command _gotFocusCommand;
         private bool _openDialogVisible;
@@ -54,6 +58,20 @@ namespace RegexViewer
             set { _closeCommand = value; }
         }
 
+        public Command CopyFilePathCommand
+        {
+            get
+            {
+                if (_copyFilePathCommand == null)
+                {
+                    _copyFilePathCommand = new Command(CopyFilePath);
+                }
+                _copyFilePathCommand.CanExecute = true;
+
+                return _copyFilePathCommand;
+            }
+            set { _copyFilePathCommand = value; }
+        }
         public Command DragDropCommand
         {
             get { return _openCommand ?? new Command(OpenDrop); }
@@ -140,6 +158,11 @@ namespace RegexViewer
             }
         }
 
+        public Command RecentCommand
+        {
+            get { return _recentCommand ?? new Command(RecentFile); }
+            set { _recentCommand = value; }
+        }
         public Command SaveAsCommand
         {
             get { return _saveAsCommand ?? new Command(SaveFileAs); }
@@ -226,7 +249,27 @@ namespace RegexViewer
                 RemoveTabItem(tabItem);
             }
         }
+        public ObservableCollection<WPFMenuItem> RecentCollectionBuilder(string[] files)
+        {
+            ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
 
+            foreach (string file in files)
+            {
+                WPFMenuItem menuItem = new WPFMenuItem()
+                {
+                    Command = RecentCommand,
+                    Text = file
+                };
+                fileCollection.Add(menuItem);
+            }
+
+            return fileCollection;
+        }
+        public void RecentFile(object sender)
+        {
+            SetStatus("RecentFile:enter");
+            OpenFile(sender);
+        }
         public void CloseFile(object sender)
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
@@ -238,6 +281,17 @@ namespace RegexViewer
                 }
 
                 RemoveTabItem(tabItem);
+            }
+        }
+
+        public void CopyFilePath(object sender)
+        {
+
+            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                Clipboard.Clear();
+                Clipboard.SetText(tabItem.Tag);
             }
         }
 
@@ -299,7 +353,7 @@ namespace RegexViewer
             if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
             {
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                if (!this.ViewManager.CloseFile(tabItem.Tag))
+                if (!this.ViewManager.CloseFile(tabItem.Tag) | !File.Exists(tabItem.Tag))
                 {
                     return;
                 }
