@@ -24,7 +24,6 @@ namespace RegexViewer
 
         #region Private Fields
 
-        private string _lineTotals;
         private LogFileItem _filteredSelectedItem;
 
         private FilterViewModel _filterViewModel;
@@ -34,6 +33,8 @@ namespace RegexViewer
         private Command _hideCommand;
 
         private Command _keyDownCommand;
+
+        private string _lineTotals;
 
         private LogFileManager _logFileManager;
 
@@ -119,21 +120,6 @@ namespace RegexViewer
             set { _keyDownCommand = value; }
         }
 
-        public Command QuickFindChangedCommand
-        {
-            get
-            {
-                if (_quickFindChangedCommand == null)
-                {
-                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
-                }
-                _quickFindChangedCommand.CanExecute = true;
-
-                return _quickFindChangedCommand;
-            }
-            set { _quickFindChangedCommand = value; }
-        }
-
         public string LineTotals
         {
             get
@@ -149,6 +135,22 @@ namespace RegexViewer
                 }
             }
         }
+
+        public Command QuickFindChangedCommand
+        {
+            get
+            {
+                if (_quickFindChangedCommand == null)
+                {
+                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
+                }
+                _quickFindChangedCommand.CanExecute = true;
+
+                return _quickFindChangedCommand;
+            }
+            set { _quickFindChangedCommand = value; }
+        }
+
         public string QuickFindText
         {
             get
@@ -162,6 +164,14 @@ namespace RegexViewer
                     _quickFindText = value;
                     // OnPropertyChanged("QuickFindText");
                 }
+            }
+        }
+
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return (RecentCollectionBuilder(Settings.RecentLogFiles));
             }
         }
 
@@ -184,7 +194,7 @@ namespace RegexViewer
                 TabItems.Add(tabItem);
 
                 this.SelectedIndex = this.TabItems.Count - 1;
-                _previousFilterFileItems  = new List<FilterFileItem>();
+                _previousFilterFileItems = new List<FilterFileItem>();
                 FilterLogTabItems(FilterCommand.Filter);
             }
         }
@@ -316,13 +326,6 @@ namespace RegexViewer
             }
         }
 
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
-            {
-                return (RecentCollectionBuilder(Settings.RecentLogFiles));
-            }
-        }
         public void GotoLineExecuted(object sender)
         {
             SetStatus("gotoLine");
@@ -344,7 +347,6 @@ namespace RegexViewer
                 listBox.ScrollIntoView(logFileItem);
                 listBox.SelectedItem = logFileItem;
                 listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
-             
             }
         }
 
@@ -444,7 +446,7 @@ namespace RegexViewer
                 logNames = dlg.FileNames;
             }
 
-            if(result != true)
+            if (result != true)
             {
                 return;
             }
@@ -538,8 +540,6 @@ namespace RegexViewer
             Settings.AddFilterFile(logName);
         }
 
-       
-
         public override void SaveFileAs(object sender)
         {
             ITabViewModel<LogFileItem> tabItem;
@@ -568,7 +568,7 @@ namespace RegexViewer
                 dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
 
                 string fileName = Path.GetFileName(tabItem.Tag);
-                if(!fileName.ToLower().Contains(".filtered"))
+                if (!fileName.ToLower().Contains(".filtered"))
                 {
                     fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
                 }
@@ -600,11 +600,9 @@ namespace RegexViewer
 
                     // open filtered view into new tab if not a '-new x-' tab
                     if (string.Compare(tabItem.Tag, logName, true) != 0
-                        &&  !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
+                        && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
                     {
                         AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
-                        
-                        
                     }
                     else
                     {
@@ -630,10 +628,10 @@ namespace RegexViewer
 
         private bool IsHiding()
         {
-           // if count the same then assume it is not filtered
-           try
+            // if count the same then assume it is not filtered
+            try
             {
-                 ListBox listBox = (ListBox)this.CurrentTab().Viewer;
+                ListBox listBox = (ListBox)this.CurrentTab().Viewer;
                 SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", listBox.Items.Count, CurrentFile().ContentItems.Count));
                 if (listBox.Items.Count == CurrentFile().ContentItems.Count)
                 {
@@ -653,8 +651,13 @@ namespace RegexViewer
 
         private void LogViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            SetStatus("LogViewModel.PropertyChanged" + e.PropertyName);
-            FilterLogTabItems();
+            SetStatus("LogViewModel.PropertyChanged: " + e.PropertyName);
+
+            // dont filter on form updates
+            if(e.PropertyName != "LineTotals")
+            {
+                FilterLogTabItems();
+            }
         }
 
         private void SaveCurrentFilter(List<FilterFileItem> filterFileItems)

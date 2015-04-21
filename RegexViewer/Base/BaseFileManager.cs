@@ -16,7 +16,6 @@ namespace RegexViewer
 
         public BaseFileManager()
         {
-
         }
 
         #endregion Public Constructors

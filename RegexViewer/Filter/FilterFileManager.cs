@@ -5,6 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 //using System.Windows.Media;
 using System.Xml;
 
@@ -133,8 +134,7 @@ namespace RegexViewer
 
         public override List<FilterFileItem> ReadFile(string logName)
         {
-            
-            if(Path.GetExtension(logName).ToLower().Contains("tat"))
+            if (Path.GetExtension(logName).ToLower().Contains("tat"))
             {
                 return ReadTatFile(logName);
             }
@@ -164,80 +164,6 @@ namespace RegexViewer
             return filterFileItems;
         }
 
-        private List<FilterFileItem> ReadTatFile(string logName)
-        {
-           
-
-            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(logName);
-
-            XmlNode root = doc.DocumentElement.ChildNodes[0];
-
-            for (int i = 0; i < root.ChildNodes.Count; i++)
-            {
-                FilterFileItem fileItem = new FilterFileItem();
-                fileItem.Count = 0;
-                                    
-                fileItem.BackgroundColor = FindColorName(ReadAttributeString(root, "backColor", i));
-                fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "foreColor", i));
-
-                fileItem.CaseSensitive = ReadAttributeBool(root, "case_sensitive", i);
-                fileItem.Enabled = ReadAttributeBool(root, "enabled", i);
-                fileItem.Exclude = ReadAttributeBool(root, "excluding", i);
-                fileItem.Regex = ReadAttributeBool(root, "regex", i);
-                fileItem.Filterpattern = ReadAttributeString(root, "text", i);
-                fileItem.TatType = ReadAttributeString(root, "type", i);
-                
-                fileItem.Index = i; // ReadIntNodeItem(root, "index", i);
-                //fileItem.Notes = ReadStringNodeItem(root, "notes", i);
-
-                filterFileItems.Add(fileItem);
-            }
-            return filterFileItems;
-        }
-
-        /// <summary>
-        /// Finds Color Name from string of RGB #(FFFFFF)
-        /// returns KnownColor color name
-        /// </summary>
-        /// <param name="rgbColor"></param>
-        /// <returns></returns>
-        private string FindColorName(string rgbColor)
-        {
-            SetStatus("FindColorName:" + rgbColor);
-
-            if(!Regex.IsMatch(rgbColor, "[0-9A-Fa-f]{6}"))
-            {
-                SetStatus("FindColorName: invalid. returning black");
-                return "black";
-            }
-
-            System.Array colorsArray = Enum.GetValues(typeof(KnownColor));
-            KnownColor[] allColors = new KnownColor[colorsArray.Length];
-            Array.Copy(colorsArray, allColors, colorsArray.Length);      
-
-            Color newColor = System.Drawing.Color.FromArgb(0xff,
-                                Convert.ToByte(rgbColor.Substring(0, 2), 16),
-                                Convert.ToByte(rgbColor.Substring(2, 2), 16),
-                                Convert.ToByte(rgbColor.Substring(4, 2), 16));
-
-            foreach (KnownColor color in allColors)
-            {
-                Color tempColor = Color.FromKnownColor(color);
-                if (!tempColor.IsSystemColor
-                    && tempColor.R == newColor.R
-                    && tempColor.G == newColor.G
-                    && tempColor.B == newColor.B)
-                {
-                    SetStatus("FindColorName return:" + color.ToString());
-                    return color.ToString();
-                }
-            }
-
-            return "white";
-        }
-
         public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
         {
             try
@@ -249,12 +175,10 @@ namespace RegexViewer
 
                 SetStatus("saving file:" + FileName);
 
-                if(Path.GetExtension(FileName).ToLower().Contains("tat") && SaveTatFile(FileName, fileItems))
+                if (Path.GetExtension(FileName).ToLower().Contains("tat") && SaveTatFile(FileName, fileItems))
                 {
-                    
                     return true;
                 }
-
 
                 XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
                 xmlw.Formatting = Formatting.Indented;
@@ -318,62 +242,6 @@ namespace RegexViewer
             }
         }
 
-        private bool SaveTatFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
-        {
-            try
-            {
-                XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
-                xmlw.Formatting = Formatting.Indented;
-                xmlw.WriteStartDocument();
-
-                xmlw.WriteStartElement("TextAnalysisTool.NET");
-                xmlw.WriteAttributeString("version", "2015-01-28");
-                xmlw.WriteAttributeString("showOnlyFilteredLines", "False");
-
-                xmlw.WriteStartElement("filters");
-
-                foreach (FilterFileItem item in fileItems.OrderBy(x => x.Index))
-                {
-                    xmlw.WriteStartElement("filter");
-
-                    xmlw.WriteAttributeString("enabled", item.Enabled ? "y" : "n");
-                    xmlw.WriteAttributeString("excluding", item.Exclude ? "y" : "n");
-                    
-                    string fColor = item.Foreground.ToString();
-                    fColor = fColor.Substring(fColor.Length - 6);
-                    
-                    string bColor = item.Background.ToString();
-                    bColor = bColor.Substring(bColor.Length - 6);
-
-                    xmlw.WriteAttributeString("foreColor", fColor);
-                    xmlw.WriteAttributeString("backColor", bColor);
-                    // tat may not support this setting
-                    // xmlw.WriteAttributeString("notes", item.Notes.ToString());
-                    
-                    // dont currently support marker and is not saved in regexviewer filter file
-                    xmlw.WriteAttributeString("type", item.TatType ?? "matches_text");
-                    
-                    // dont currently support 'y' in gui
-                    xmlw.WriteAttributeString("case_sensitive",item.CaseSensitive ? "y" : "n");
-                    xmlw.WriteAttributeString("regex", item.Regex ? "y" : "n");
-                    xmlw.WriteAttributeString("text", item.Filterpattern);
-
-                    xmlw.WriteEndElement();
-                }
-
-                xmlw.WriteEndElement();
-                xmlw.WriteEndDocument();
-
-                xmlw.Close();
-                return true;
-            }
-            catch (Exception e)
-            {
-                SetStatus("SaveAsTat exception:" + e.ToString());
-                return false;
-            }
-        }
-
         #endregion Public Methods
 
         #region Private Methods
@@ -388,6 +256,46 @@ namespace RegexViewer
             }
 
             OnPropertyChanged(sender, e);
+        }
+
+        /// <summary>
+        /// Finds Color Name from string of RGB #(FFFFFF) returns KnownColor color name
+        /// </summary>
+        /// <param name="rgbColor"></param>
+        /// <returns></returns>
+        private string FindColorName(string rgbColor)
+        {
+            SetStatus("FindColorName:" + rgbColor);
+
+            if (!Regex.IsMatch(rgbColor, "[0-9A-Fa-f]{6}"))
+            {
+                SetStatus("FindColorName: invalid. returning black");
+                return "black";
+            }
+
+            System.Array colorsArray = Enum.GetValues(typeof(KnownColor));
+            KnownColor[] allColors = new KnownColor[colorsArray.Length];
+            Array.Copy(colorsArray, allColors, colorsArray.Length);
+
+            Color newColor = System.Drawing.Color.FromArgb(0xff,
+                                Convert.ToByte(rgbColor.Substring(0, 2), 16),
+                                Convert.ToByte(rgbColor.Substring(2, 2), 16),
+                                Convert.ToByte(rgbColor.Substring(4, 2), 16));
+
+            foreach (KnownColor color in allColors)
+            {
+                Color tempColor = Color.FromKnownColor(color);
+                if (!tempColor.IsSystemColor
+                    && tempColor.R == newColor.R
+                    && tempColor.G == newColor.G
+                    && tempColor.B == newColor.B)
+                {
+                    SetStatus("FindColorName return:" + color.ToString());
+                    return color.ToString();
+                }
+            }
+
+            return "white";
         }
 
         private FilterFile ManageFileProperties(string LogName, FilterFile filterFile)
@@ -408,7 +316,7 @@ namespace RegexViewer
             {
                 // for tat files
                 string val = (node.ChildNodes.Item(item).Attributes[attName].Value.ToString());
-                if(val.ToLower() == "y" | val.ToLower() == "true")
+                if (val.ToLower() == "y" | val.ToLower() == "true")
                 {
                     return true;
                 }
@@ -424,6 +332,7 @@ namespace RegexViewer
                 return false;
             }
         }
+
         private string ReadAttributeString(XmlNode node, string attName, int item)
         {
             try
@@ -435,6 +344,7 @@ namespace RegexViewer
                 return string.Empty;
             }
         }
+
         private bool ReadBoolNodeItem(XmlNode node, string nodeName, int item)
         {
             try
@@ -468,6 +378,92 @@ namespace RegexViewer
             catch
             {
                 return string.Empty;
+            }
+        }
+
+        private List<FilterFileItem> ReadTatFile(string logName)
+        {
+            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+            XmlDocument doc = new XmlDocument();
+            doc.Load(logName);
+
+            XmlNode root = doc.DocumentElement.ChildNodes[0];
+
+            for (int i = 0; i < root.ChildNodes.Count; i++)
+            {
+                FilterFileItem fileItem = new FilterFileItem();
+                fileItem.Count = 0;
+
+                fileItem.BackgroundColor = FindColorName(ReadAttributeString(root, "backColor", i));
+                fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "foreColor", i));
+
+                fileItem.CaseSensitive = ReadAttributeBool(root, "case_sensitive", i);
+                fileItem.Enabled = ReadAttributeBool(root, "enabled", i);
+                fileItem.Exclude = ReadAttributeBool(root, "excluding", i);
+                fileItem.Regex = ReadAttributeBool(root, "regex", i);
+                fileItem.Filterpattern = ReadAttributeString(root, "text", i);
+                fileItem.TatType = ReadAttributeString(root, "type", i);
+
+                fileItem.Index = i; // ReadIntNodeItem(root, "index", i);
+                //fileItem.Notes = ReadStringNodeItem(root, "notes", i);
+
+                filterFileItems.Add(fileItem);
+            }
+            return filterFileItems;
+        }
+
+        private bool SaveTatFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
+        {
+            try
+            {
+                XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
+                xmlw.Formatting = Formatting.Indented;
+                xmlw.WriteStartDocument();
+
+                xmlw.WriteStartElement("TextAnalysisTool.NET");
+                xmlw.WriteAttributeString("version", "2015-01-28");
+                xmlw.WriteAttributeString("showOnlyFilteredLines", "False");
+
+                xmlw.WriteStartElement("filters");
+
+                foreach (FilterFileItem item in fileItems.OrderBy(x => x.Index))
+                {
+                    xmlw.WriteStartElement("filter");
+
+                    xmlw.WriteAttributeString("enabled", item.Enabled ? "y" : "n");
+                    xmlw.WriteAttributeString("excluding", item.Exclude ? "y" : "n");
+
+                    string fColor = item.Foreground.ToString();
+                    fColor = fColor.Substring(fColor.Length - 6);
+
+                    string bColor = item.Background.ToString();
+                    bColor = bColor.Substring(bColor.Length - 6);
+
+                    xmlw.WriteAttributeString("foreColor", fColor);
+                    xmlw.WriteAttributeString("backColor", bColor);
+                    // tat may not support this setting xmlw.WriteAttributeString("notes", item.Notes.ToString());
+
+                    // dont currently support marker and is not saved in regexviewer filter file
+                    xmlw.WriteAttributeString("type", item.TatType ?? "matches_text");
+
+                    // dont currently support 'y' in gui
+                    xmlw.WriteAttributeString("case_sensitive", item.CaseSensitive ? "y" : "n");
+                    xmlw.WriteAttributeString("regex", item.Regex ? "y" : "n");
+                    xmlw.WriteAttributeString("text", item.Filterpattern);
+
+                    xmlw.WriteEndElement();
+                }
+
+                xmlw.WriteEndElement();
+                xmlw.WriteEndDocument();
+
+                xmlw.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                SetStatus("SaveAsTat exception:" + e.ToString());
+                return false;
             }
         }
 

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Xml;
 
@@ -146,26 +146,26 @@ namespace RegexViewer
 
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
-            List<string> newList = new List<string>();
+            List<string> newList = new List<string>(recentLogFiles);
 
-            if (recentLogFiles.ToList().Contains(logFile))
+            // dont save temp names
+            if(Regex.IsMatch(logFile, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
             {
-                return recentLogFiles;
-            }
-
-            if(recentLogFiles.Length < settings.FileHistoryCount)
-            {
-                newList = recentLogFiles.ToList();
-                newList.Add(logFile);
                 return newList.ToArray();
             }
 
-            for (int i = 0; i < Math.Min(recentLogFiles.Length,settings.FileHistoryCount - 1); i++)
+            if (newList.Contains(logFile))
             {
-                newList.Add(recentLogFiles[i]);
+                newList.Remove(logFile);
+            }
+
+            while(newList.Count >= settings.FileHistoryCount)
+            {
+                newList.RemoveAt(0);
             }
 
             newList.Add(logFile);
+            
             return newList.ToArray();
         }
 
@@ -414,14 +414,14 @@ namespace RegexViewer
                             {
                                 _appSettings[name].Value = "10";
                                 break;
-                            } 
-                    
+                            }
+
                         case AppSettingNames.SaveSessionInformation:
                             {
                                 _appSettings[name].Value = "True";
                                 break;
                             }
-                
+
                         default:
                             {
                                 break;
@@ -657,7 +657,6 @@ namespace RegexViewer
                 _appSettings["MaxMultiFileCount"].Value = value.ToString();
             }
         }
-
 
         public string[] RecentFilterFiles
         {

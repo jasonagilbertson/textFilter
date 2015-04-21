@@ -24,8 +24,8 @@ namespace RegexViewer
         private List<T> _selectedContent = new List<T>();
         private int _selectedIndex;
         private Command _selectionChangedCommand;
-        private Command _sourceUpdatedCommand;
         private Command _setViewerCommand;
+        private Command _sourceUpdatedCommand;
         private string _tag;
 
         private object _viewer;
@@ -180,45 +180,6 @@ namespace RegexViewer
             }
         }
 
-        public Command SourceUpdatedCommand
-        {
-            get
-            {
-                if (_sourceUpdatedCommand == null)
-                {
-                    _sourceUpdatedCommand = new Command(SourceUpdatedExecuted);
-                }
-                _sourceUpdatedCommand.CanExecute = true;
-
-                return _sourceUpdatedCommand;
-            }
-            set { _sourceUpdatedCommand = value; }
-        }
-
-        private void SourceUpdatedExecuted(object sender)
-        {
-            SetStatus("SourceUpdatedExecuted: enter");
-            if(sender is ListBox)
-            {
-                // set keyboard focus on selecteditem
-                ListBox listBox = sender as ListBox;
-                if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
-                {
-
-                    int index = listBox.SelectedIndex;
-                    if (index >= 0)
-                    {
-                        SetStatus("SourceUpdatedExecuted: container generated, setting keyboard focus to index:" + index);
-                        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
-                        if (item != null) item.Focus();
-                    }
-                }
-                else
-                {
-                    SetStatus("SourceUpdatedExecuted: container NOT generated");
-                }
-            }
-        }
         public Command SelectionChangedCommand
         {
             get
@@ -247,6 +208,21 @@ namespace RegexViewer
                 return _setViewerCommand;
             }
             set { _setViewerCommand = value; }
+        }
+
+        public Command SourceUpdatedCommand
+        {
+            get
+            {
+                if (_sourceUpdatedCommand == null)
+                {
+                    _sourceUpdatedCommand = new Command(SourceUpdatedExecuted);
+                }
+                _sourceUpdatedCommand.CanExecute = true;
+
+                return _sourceUpdatedCommand;
+            }
+            set { _sourceUpdatedCommand = value; }
         }
 
         public string Tag
@@ -333,7 +309,6 @@ namespace RegexViewer
                 //// set keyboard focus on selecteditem
                 //if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
                 //{
-                    
                 //    int index = listBox.SelectedIndex;
                 //    if (index >= 0)
                 //    {
@@ -346,20 +321,17 @@ namespace RegexViewer
                 //{
                 //    SetStatus("SelectionChangedExecuted: container NOT generated");
                 //}
-
             }
             else if (sender is DataGrid)
             {
-          //      SetStatus("SelectionChangeExecuted:datagrid");
+                // SetStatus("SelectionChangeExecuted:datagrid");
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
             }
         }
 
         public void SetViewerExecuted(object sender)
         {
-            // cant setstatus here due to recursion?
-            // cant set when only null
-            // should be listbox for logfileData
+            // cant setstatus here due to recursion? cant set when only null should be listbox for logfileData
 
             if (sender is ListBox && _viewer != sender)
             {
@@ -372,17 +344,45 @@ namespace RegexViewer
                 //(sender as ListBox).ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
 
                 SetStatus(string.Format("tab viewer set: {0}", sender.GetType()));
-               // SetStatus("tab viewer set:");
+                // SetStatus("tab viewer set:");
                 _viewer = sender;
             }
         }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void SourceUpdatedExecuted(object sender)
+        {
+            SetStatus("SourceUpdatedExecuted: enter");
+            if (sender is ListBox)
+            {
+                // set keyboard focus on selecteditem
+                ListBox listBox = sender as ListBox;
+                if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                {
+                    int index = listBox.SelectedIndex;
+                    if (index >= 0)
+                    {
+                        SetStatus("SourceUpdatedExecuted: container generated, setting keyboard focus to index:" + index);
+                        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                        if (item != null) item.Focus();
+                    }
+                }
+                else
+                {
+                    SetStatus("SourceUpdatedExecuted: container NOT generated");
+                }
+            }
+        }
+
+        #endregion Private Methods
 
         //void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
         //{
         //    //throw new NotImplementedException();
         //    // set keyboard focus to listbox selecteditem
         //}
-
-        #endregion Public Methods
     }
 }

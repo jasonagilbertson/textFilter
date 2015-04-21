@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace RegexViewer
@@ -30,6 +28,15 @@ namespace RegexViewer
         #endregion Public Constructors
 
         #region Public Properties
+
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return (RecentCollectionBuilder(Settings.RecentFilterFiles));
+            }
+        }
+
         public TabControl TabControl { get; set; }
 
         #endregion Public Properties
@@ -43,13 +50,12 @@ namespace RegexViewer
                 SetStatus("adding tab:" + filterFile.Tag);
                 FilterTabViewModel tabItem = new FilterTabViewModel()
                 {
-                Name = filterFile.FileName,
-                ContentList = ((FilterFile)filterFile).ContentItems,
-                Tag = filterFile.Tag,
-                Header = filterFile.FileName,
-                Modified = false
-                
-            };
+                    Name = filterFile.FileName,
+                    ContentList = ((FilterFile)filterFile).ContentItems,
+                    Tag = filterFile.Tag,
+                    Header = filterFile.FileName,
+                    Modified = false
+                };
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
 
@@ -60,7 +66,7 @@ namespace RegexViewer
         public List<FilterFileItem> CleanFilterList(FilterFile filterFile)
         {
             List<FilterFileItem> fileItems = new List<FilterFileItem>();
-           
+
             // clean up list
             foreach (FilterFileItem fileItem in filterFile.ContentItems.OrderBy(x => x.Index))
             {
@@ -79,14 +85,14 @@ namespace RegexViewer
         {
             FilterNeed retval = FilterNeed.Unknown;
             List<FilterFileItem> currentItems = this.FilterList();
-            
+
             SetStatus("CompareFilterList: enter");
-                                    
-            if(previousFilterFileItems == null && currentItems != null)
+
+            if (previousFilterFileItems == null && currentItems != null)
             {
                 retval = FilterNeed.Filter;
             }
-            else if(currentItems == null)
+            else if (currentItems == null)
             {
                 retval = FilterNeed.ShowAll;
             }
@@ -109,7 +115,7 @@ namespace RegexViewer
                         || currentItem.CaseSensitive != currentItem.CaseSensitive)
                     {
                         retval = FilterNeed.Filter;
-                        
+
                         break;
                     }
                     else if (currentItem.BackgroundColor != fileItem.BackgroundColor
@@ -165,18 +171,18 @@ namespace RegexViewer
 
             string[] logNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.DefaultExt = ".xml"; 
-            dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*"; 
+            dlg.DefaultExt = ".xml";
+            dlg.Filter = "Xml Files (*.xml)|*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             dlg.Multiselect = true;
 
             Nullable<bool> result = false;
-            
+
             // Show open file dialog box
             if (silent)
             {
                 result = true;
-                logNames = new string[1]{(sender as string)};
+                logNames = new string[1] { (sender as string) };
             }
             else
             {
@@ -184,7 +190,7 @@ namespace RegexViewer
                 logNames = dlg.FileNames;
             }
 
-            if(result != true)
+            if (result != true)
             {
                 return;
             }
@@ -200,13 +206,6 @@ namespace RegexViewer
             }
         }
 
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
-            {
-                return (RecentCollectionBuilder(Settings.RecentFilterFiles));
-            }
-        }
         public override void RenameTabItem(string logName)
         {
             // rename tab
@@ -219,7 +218,6 @@ namespace RegexViewer
 
         public override void SaveFileAs(object sender)
         {
-
             ITabViewModel<FilterFileItem> tabItem;
 
             if (sender is TabItem)
@@ -242,7 +240,7 @@ namespace RegexViewer
             dlg.FileName = Path.GetFileName(tabItem.Tag);
 
             Nullable<bool> result = false;
-            
+
             // Show save file dialog box
             if (silent)
             {

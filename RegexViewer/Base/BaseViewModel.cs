@@ -11,23 +11,19 @@ namespace RegexViewer
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        #region Public Fields
-
-        public string _tempTabNameFormat = "-new {0}-";
-        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
-        #endregion Public Fields
-
+        
         #region Private Fields
+
         private Command _closeAllCommand;
         private Command _closeCommand;
         private Command _copyFilePathCommand;
-        private Command _newCommand;
-        private Command _reloadCommand;
-        private Command _recentCommand;
-        private Command _openCommand;
         private Command _gotFocusCommand;
+        private Command _newCommand;
+        private Command _openCommand;
         private bool _openDialogVisible;
         private int _previousIndex = -1;
+        private Command _recentCommand;
+        private Command _reloadCommand;
         private Command _saveAsCommand;
         private Command _saveCommand;
         private int _selectedIndex = -1;
@@ -72,6 +68,7 @@ namespace RegexViewer
             }
             set { _copyFilePathCommand = value; }
         }
+
         public Command DragDropCommand
         {
             get { return _openCommand ?? new Command(OpenDrop); }
@@ -106,21 +103,6 @@ namespace RegexViewer
                 return _newCommand;
             }
             set { _newCommand = value; }
-        }
-
-        public Command ReloadCommand
-        {
-            get
-            {
-                if (_reloadCommand == null)
-                {
-                    _reloadCommand = new Command(ReloadFile);
-                }
-                _reloadCommand.CanExecute = true;
-
-                return _reloadCommand;
-            }
-            set { _reloadCommand = value; }
         }
 
         public Command OpenCommand
@@ -163,6 +145,22 @@ namespace RegexViewer
             get { return _recentCommand ?? new Command(RecentFile); }
             set { _recentCommand = value; }
         }
+
+        public Command ReloadCommand
+        {
+            get
+            {
+                if (_reloadCommand == null)
+                {
+                    _reloadCommand = new Command(ReloadFile);
+                }
+                _reloadCommand.CanExecute = true;
+
+                return _reloadCommand;
+            }
+            set { _reloadCommand = value; }
+        }
+
         public Command SaveAsCommand
         {
             get { return _saveAsCommand ?? new Command(SaveFileAs); }
@@ -175,13 +173,6 @@ namespace RegexViewer
             set { _saveCommand = value; }
         }
 
-        public void GotFocusExecuted(object sender)
-        {
-            if (CurrentFile() != null)
-            {
-                App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
-            }
-        }
         public int SelectedIndex
         {
             get
@@ -196,7 +187,8 @@ namespace RegexViewer
                     SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
-                  //  App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
+                    // App.Current.MainWindow.Title = string.Format("{0} {1}",
+                    // System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
         }
@@ -249,27 +241,7 @@ namespace RegexViewer
                 RemoveTabItem(tabItem);
             }
         }
-        public ObservableCollection<WPFMenuItem> RecentCollectionBuilder(string[] files)
-        {
-            ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
 
-            foreach (string file in files)
-            {
-                WPFMenuItem menuItem = new WPFMenuItem()
-                {
-                    Command = RecentCommand,
-                    Text = file
-                };
-                fileCollection.Add(menuItem);
-            }
-
-            return fileCollection;
-        }
-        public void RecentFile(object sender)
-        {
-            SetStatus("RecentFile:enter");
-            OpenFile(sender);
-        }
         public void CloseFile(object sender)
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
@@ -286,7 +258,6 @@ namespace RegexViewer
 
         public void CopyFilePath(object sender)
         {
-
             if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
             {
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
@@ -318,6 +289,14 @@ namespace RegexViewer
             return default(ITabViewModel<T>);
         }
 
+        public void GotFocusExecuted(object sender)
+        {
+            if (CurrentFile() != null)
+            {
+                App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
+            }
+        }
+
         public void NewFile(object sender)
         {
             IFile<T> file = default(IFile<T>);
@@ -346,9 +325,43 @@ namespace RegexViewer
             AddTabItem(file);
         }
 
+        public void OpenDrop(object sender)
+        {
+            SetStatus("OpenDrop: " + sender.GetType().ToString());
+            SetStatus("OpenDrop: " + sender.ToString());
+            if (sender is string)
+            {
+                SetStatus("OpenDrop: " + (sender as string));
+            }
+        }
+
+        public abstract void OpenFile(object sender);
+
+        public ObservableCollection<WPFMenuItem> RecentCollectionBuilder(string[] files)
+        {
+            ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
+
+            foreach (string file in files)
+            {
+                WPFMenuItem menuItem = new WPFMenuItem()
+                {
+                    Command = RecentCommand,
+                    Text = file
+                };
+                fileCollection.Add(menuItem);
+            }
+
+            return fileCollection;
+        }
+
+        public void RecentFile(object sender)
+        {
+            SetStatus("RecentFile:enter");
+            OpenFile(sender);
+        }
+
         public void ReloadFile(object sender)
         {
-
             IFile<T> file = default(IFile<T>);
             if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
             {
@@ -364,18 +377,6 @@ namespace RegexViewer
             }
         }
 
-        public void OpenDrop(object sender)
-        {
-            SetStatus("OpenDrop: " + sender.GetType().ToString());
-            SetStatus("OpenDrop: " + sender.ToString());
-            if (sender is string)
-            {
-                SetStatus("OpenDrop: " + (sender as string));
-            }
-        }
-
-        public abstract void OpenFile(object sender);
-
         public void RemoveTabItem(ITabViewModel<T> tabItem)
         {
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
@@ -384,6 +385,43 @@ namespace RegexViewer
                 this.SelectedIndex = tabItems.Count - 1;
             }
         }
+
+        public abstract void RenameTabItem(string newName);
+
+        //public abstract void SaveFile(object sender);
+        public void SaveFile(object sender)
+        {
+            ITabViewModel<T> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<T>)(sender as TabItem);
+            }
+            else
+            {
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    // can get here by having no filters and hitting save file.
+                    // todo: disable save file if no tab items
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
+            {
+                SaveFileAs(tabItem);
+            }
+            else
+            {
+                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+            }
+        }
+
+        public abstract void SaveFileAs(object sender);
 
         public void SaveModifiedFiles(object sender)
         {
@@ -426,42 +464,6 @@ namespace RegexViewer
                 }
             }
         }
-        public abstract void RenameTabItem(string newName);
-
-        //public abstract void SaveFile(object sender);
-        public void SaveFile(object sender)
-        {
-            ITabViewModel<T> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<T>)(sender as TabItem);
-            }
-            else
-            {
-                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
-                {
-                    tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
-                }
-                else
-                {
-                    // can get here by having no filters and hitting save file.
-                    // todo: disable save file if no tab items
-                    return;
-                }
-            }
-
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
-            {
-                SaveFileAs(tabItem);
-            }
-            else
-            {
-                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
-            }
-        }
-
-        public abstract void SaveFileAs(object sender);
 
         #endregion Public Methods
     }

@@ -46,7 +46,7 @@
                 <MenuItem Header="_Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" InputGestureText="Ctrl+G" />
                 <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                 <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
-                <MenuItem Header="R_ecent Files" ItemsSource="{Binding LogViewModel.RecentCollection}" >
+                <MenuItem Header="R_ecent Files" ItemsSource="{Binding LogViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
                             <Setter Property="MenuItem.Header" Value="{Binding Text}" />
@@ -65,7 +65,7 @@
                 <MenuItem Header="Copy File _Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
                 <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
-                <MenuItem Header="R_ecent Filters" ItemsSource="{Binding FilterViewModel.RecentCollection}" >
+                <MenuItem Header="R_ecent Filters" ItemsSource="{Binding FilterViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
                             <Setter Property="MenuItem.Header" Value="{Binding Text}" />
@@ -101,9 +101,7 @@
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch"
-               
-                        >
+                        Margin="0,0,0,0" VerticalAlignment="Stretch">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
@@ -115,12 +113,12 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                    <ImageBrush ImageSource="Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
                 </TabControl.Background>
-                <TabControl.ContentTemplate x:Uid="tabContent" >
+                <TabControl.ContentTemplate x:Uid="tabContent">
                     <DataTemplate>
                         <DataGrid x:Name="dataGridFilter"
-                           
+
                             ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           Grid.Row="0"
@@ -134,12 +132,10 @@
                           Tag="{Binding}"
                           DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
                           DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
-                          DataGridCell.GotFocus="DataGrid_CellGotFocus"
-                                  
-                                  >
-                            
+                          DataGridCell.GotFocus="DataGrid_CellGotFocus">
+
                             <DataGrid.CellStyle>
-                                
+
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
                                         <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
@@ -154,7 +150,7 @@
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
-                          
+
                                     <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
@@ -232,16 +228,13 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*" >
+                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
-                                        
-                                        
                                 </DataGridTextColumn>
-                                    
                             </DataGrid.Columns>
                         </DataGrid>
                     </DataTemplate>
@@ -251,10 +244,10 @@
                         <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
                         <MenuItem Header="Copy File Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" />
-                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N"/>
-                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O"/>
+                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N" />
+                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O" />
                         <MenuItem Header="Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
-                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S"/>
+                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S" />
                         <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
                     </ContextMenu>
                 </TabControl.ContextMenu>
@@ -266,15 +259,14 @@
             <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        >
+                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None"/>
+                    <ImageBrush ImageSource="File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -294,8 +286,7 @@
                                  ScrollViewer.IsDeferredScrollingEnabled="False"
                                  SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
                                  IsSynchronizedWithCurrentItem="True"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                 >
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
 
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
@@ -305,30 +296,26 @@
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" 
-                                               Width="Auto" 
-                                                   />
+                                               Background="{Binding Path=Background}"
+                                               Width="Auto" />
                                         <TextBlock Text="{Binding Path=Content}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" 
-                                               TextWrapping="WrapWithOverflow"
-                                                   />
+                                               Background="{Binding Path=Background}"
+                                               TextWrapping="WrapWithOverflow" />
                                         <TextBlock Text="{Binding Path=Group1}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" 
-                                               TextWrapping="WrapWithOverflow"
-                                                   />
+                                               Background="{Binding Path=Background}"
+                                               TextWrapping="WrapWithOverflow" />
                                         <TextBlock Text="{Binding Path=Group2}"
                                                FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
                                                FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
                                                Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}" 
-                                               TextWrapping="WrapWithOverflow"
-                                                   />
+                                               Background="{Binding Path=Background}"
+                                               TextWrapping="WrapWithOverflow" />
                                     </WrapPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -351,7 +338,6 @@
 
                             <ListBox.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-                                
                             </ListBox.InputBindings>
 
                             <ListBox.ContextMenu>
@@ -366,7 +352,7 @@
                                     <MenuItem Header="Reload File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" InputGestureText="Ctrl+R" />
                                     <MenuItem Header="Save Current View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
                                     <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+H" />
-                                    
+
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
                             </ListBox.ContextMenu>
@@ -386,7 +372,7 @@
             </TabControl>
 
             <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="*" />
@@ -399,8 +385,7 @@
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
                      Margin="1,5,1,0"
-                     Text="{Binding Path=LogViewModel.LineTotals}"
-                         />
+                     Text="{Binding Path=LogViewModel.LineTotals}" />
 
                     <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Content="Status:" Width="50"  Height="25" Margin="1,1,1,3" />
 
@@ -435,8 +420,7 @@
                      Grid.Column="3"
                      HorizontalAlignment="Stretch"
                      VerticalAlignment="Bottom"
-                     Margin="105,0,0,0"
-                         >
+                     Margin="105,0,0,0">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter" Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
                     </TextBox.InputBindings>

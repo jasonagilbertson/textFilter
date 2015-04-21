@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -81,7 +79,8 @@ namespace RegexViewer
             SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
 
             List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
-            // Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
+            // Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}",
+            // Thread.CurrentThread.ManagedThreadId, filterItems.Count));
 
             try
             {
@@ -89,8 +88,9 @@ namespace RegexViewer
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        // Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId,logItem.Content));
-                        // used for goto line as it needs all line items
+                        // Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}",
+                        // Thread.CurrentThread.ManagedThreadId,logItem.Content)); used for goto
+                        // line as it needs all line items
                         logItem.FilterIndex = int.MinValue;
                         return;
                     }
@@ -118,15 +118,15 @@ namespace RegexViewer
                         }
                     }
 
-                    
                     bool matchSet = false;
 
                     for (int filterItemCount = 0; filterItemCount < filterItems.Count; filterItemCount++)
                     {
                         bool match = false;
                         FilterFileItem filterItem = filterItems[filterItemCount];
-                        // Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
-                        
+                        // Debug.Print(string.Format("ApplyFilter: loop:{0}
+                        // filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount,
+                        // Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
 
                         if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
                         {
@@ -138,16 +138,16 @@ namespace RegexViewer
                             //    {
                             //        logItem.Group1 = m.Groups[1].Value.ToString();
                             //    }
-                                
+
                             //    if(m.Groups.Count > 2)
                             //    {
                             //        logItem.Group2 = m.Groups[2].Value.ToString();
                             //    }
                             //}
                         }
-                        else if(!filterItem.Regex)
+                        else if (!filterItem.Regex)
                         {
-                            if(filterItem.CaseSensitive && logItem.Content.Contains(filterItem.Filterpattern))
+                            if (filterItem.CaseSensitive && logItem.Content.Contains(filterItem.Filterpattern))
                             {
                                 match = true;
                             }
@@ -157,30 +157,36 @@ namespace RegexViewer
                             }
                         }
 
-                        // Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem Match={1}:{2} **", filterItemCount, Thread.CurrentThread.ManagedThreadId, match));
+                        // Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem
+                        // Match={1}:{2} **", filterItemCount, Thread.CurrentThread.ManagedThreadId, match));
 
                         if (!matchSet)
                         {
-                           if (match && filterItem.Exclude)
-                           {
-                               
-                               filterIndex = (filterItemCount * -1) - 1;
-                               // Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Exclusion and match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
-                               matchSet = true;
-                              // break;
-                           }
-                           else if(!match && !filterItem.Exclude)
-                           {
-                               filterIndex = int.MinValue;
-                               // Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclusion and not match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
-                           }
-                           else if(match)
-                           {
-                               filterIndex = filterItemCount;
-                               // Debug.Print(string.Format("ApplyFilter: loop:{0} setting filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
-                               matchSet = true;
-                            //   break;
-                           }
+                            if (match && filterItem.Exclude)
+                            {
+                                filterIndex = (filterItemCount * -1) - 1;
+                                // Debug.Print(string.Format("ApplyFilter: loop:{0}
+                                // filterItem.Exclusion and match filterIndex={1}:{2}",
+                                // filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                matchSet = true;
+                                // break;
+                            }
+                            else if (!match && !filterItem.Exclude)
+                            {
+                                filterIndex = int.MinValue;
+                                // Debug.Print(string.Format("ApplyFilter: loop:{0} not
+                                // filterItem.Exclusion and not match filterIndex={1}:{2}",
+                                // filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                            }
+                            else if (match)
+                            {
+                                filterIndex = filterItemCount;
+                                // Debug.Print(string.Format("ApplyFilter: loop:{0} setting
+                                // filterIndex={1}:{2}", filterItemCount,
+                                // Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                matchSet = true;
+                                // break;
+                            }
                         }
                         else if (matchSet && match && Settings.CountMaskedMatches)
                         {
@@ -189,20 +195,22 @@ namespace RegexViewer
                             //filterIndex = (filterItemCount * -1) - 1;
                             // Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                         }
-                        
+
                         if (matchSet && !Settings.CountMaskedMatches)
                         {
-                            // Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, Settings.CountMaskedMatches));
+                            // Debug.Print(string.Format("ApplyFilter: loop:{0} not
+                            // filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemCount,
+                            // Thread.CurrentThread.ManagedThreadId, Settings.CountMaskedMatches));
                             break;
                         }
                     }
 
-                    // Debug.Print(string.Format("ApplyFilter: loop finished set filterIndex={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterIndex));
+                    // Debug.Print(string.Format("ApplyFilter: loop finished set
+                    // filterIndex={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterIndex));
                     logItem.FilterIndex = filterIndex;
                 });
 
-                // write totals 
-                // negative indexes arent displayed and are only used for counting
+                // write totals negative indexes arent displayed and are only used for counting
                 int filterCount = 0;
                 for (int i = 0; i < filterFileItems.Count; i++)
                 {
@@ -211,7 +219,7 @@ namespace RegexViewer
                     SetStatus(string.Format("ApplyFilter:filterItem counttotal: {0}", filterFileItems[i].Count));
                     filterCount += filterFileItems[i].Count;
                 }
-                
+
                 SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile total count: {1} logfile filter count: {2} log file: {3}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, filterCount, logFile.Tag));
                 Mouse.OverrideCursor = null;
                 return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
@@ -285,16 +293,15 @@ namespace RegexViewer
 
         public override List<LogFileItem> ReadFile(string logFile)
         {
-            // BOM UTF - 8 0xEF,0xBB,0xBF
-            // BOM UTF - 16 FE FF
-            // NO BOM assume ansi but utf-8 doesnt have to have one either
+            // BOM UTF - 8 0xEF,0xBB,0xBF BOM UTF - 16 FE FF NO BOM assume ansi but utf-8 doesnt
+            // have to have one either
             Encoding encoding = Encoding.Default;
 
             // find bom
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile,true))
+            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile, true))
             {
                 encoding = sr.CurrentEncoding;
-                
+
                 SetStatus("current encoding:" + encoding.EncodingName);
 
                 while (!sr.EndOfStream)
@@ -306,8 +313,8 @@ namespace RegexViewer
                     SetStatus(string.Format("check encoding: bytes:{0} string: {1}", bytes.Length, newLine.Length));
 
                     if (bytes.Length > 0 && newLine.Length > 0
-                        && ((bytes.Length - newLine.Length) * 2  - 1 == bytes.Length
-                            | (bytes.Length - newLine.Length) * 2  == bytes.Length))
+                        && ((bytes.Length - newLine.Length) * 2 - 1 == bytes.Length
+                            | (bytes.Length - newLine.Length) * 2 == bytes.Length))
                     {
                         SetStatus(string.Format("new encoding:Unicode bytes:{0} string: {1}", bytes.Length, newLine.Length));
 
@@ -319,17 +326,16 @@ namespace RegexViewer
                         break;
                     }
                 }
-
             }
 
             // todo: use mapped file only for large files?
             List<LogFileItem> logFileItems = new List<LogFileItem>();
-            
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile,encoding))
+
+            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile, encoding))
             {
                 string line;
                 int count = 0;
-                // http://cc.davelozinski.com/c-sharp/the-fastest-way-to-read-and-process-text-files
+                // http: //cc.davelozinski.com/c-sharp/the-fastest-way-to-read-and-process-text-files
                 while ((line = sr.ReadLine()) != null)
                 {
                     LogFileItem logFileItem = new LogFileItem();

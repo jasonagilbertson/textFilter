@@ -7,6 +7,10 @@ namespace RegexViewer
 {
     public class Base : INotifyPropertyChanged
     {
+
+        public string _tempTabNameFormat = "-new {0}-";
+        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+
         #region Public Events
 
         public static event EventHandler<string> NewStatus;
