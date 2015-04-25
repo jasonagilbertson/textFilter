@@ -15,7 +15,8 @@ namespace RegexViewer
         string Background { get; set; }
 
         ObservableCollection<T> ContentList { get; set; }
-
+        //bool Group1Visibility { get; set; }
+        //bool Group2Visibility { get; set; }
         Command CopyCommand { get; set; }
 
         string Header { get; set; }

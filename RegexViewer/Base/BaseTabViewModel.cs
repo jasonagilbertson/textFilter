@@ -58,7 +58,8 @@ namespace RegexViewer
                 }
             }
         }
-
+        //public abstract bool Group1Visibility { get; set; }
+        //public abstract bool Group2Visibility { get; set; }
         public ObservableCollection<T> ContentList
         {
             get { return _contentList; }
@@ -242,21 +243,6 @@ namespace RegexViewer
             }
         }
 
-        //public T SelectedIndexItem
-        //{
-        //    get
-        //    {
-        //        return _selectedIndexItem;
-        //    }
-        //    set
-        //    {
-        //        // if (_selectedItemIndex != value)
-        //        // {
-        //        _selectedIndexItem = value;
-        //        OnPropertyChanged("SelectedItemIndex");
-        //        // }
-        //    }
-        //}
         public object Viewer
         {
             get
@@ -297,7 +283,6 @@ namespace RegexViewer
 
         public void SelectionChangedExecuted(object sender)
         {
-            // SetStatus("SelectionChangeExecuted:enter");
             if (sender is System.Collections.IList)
             {
                 _selectedContent = (sender as IList).Cast<T>().ToList();
@@ -306,25 +291,10 @@ namespace RegexViewer
             {
                 ListBox listBox = (sender as ListBox);
                 _selectedContent = listBox.SelectedItems.Cast<T>().ToList();
-                //// set keyboard focus on selecteditem
-                //if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
-                //{
-                //    int index = listBox.SelectedIndex;
-                //    if (index >= 0)
-                //    {
-                //        SetStatus("SelectionChangedExecuted: container generated, setting keyboard focus to index:" + index);
-                //        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
-                //        if (item != null) item.Focus();
-                //    }
-                //}
-                //else
-                //{
-                //    SetStatus("SelectionChangedExecuted: container NOT generated");
-                //}
+       
             }
             else if (sender is DataGrid)
             {
-                // SetStatus("SelectionChangeExecuted:datagrid");
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
             }
         }
@@ -335,16 +305,7 @@ namespace RegexViewer
 
             if (sender is ListBox && _viewer != sender)
             {
-                // todo: remove old event and set new event to handle selectedindex change so keyboard focus can be set
-                //if(_viewer != null && _viewer is ListBox)
-                //{
-                //    (_viewer as ListBox).ItemContainerGenerator.StatusChanged -= ItemContainerGenerator_StatusChanged;
-                //}
-
-                //(sender as ListBox).ItemContainerGenerator.StatusChanged += ItemContainerGenerator_StatusChanged;
-
                 SetStatus(string.Format("tab viewer set: {0}", sender.GetType()));
-                // SetStatus("tab viewer set:");
                 _viewer = sender;
             }
         }
@@ -379,10 +340,5 @@ namespace RegexViewer
 
         #endregion Private Methods
 
-        //void ItemContainerGenerator_StatusChanged(object sender, EventArgs e)
-        //{
-        //    //throw new NotImplementedException();
-        //    // set keyboard focus to listbox selecteditem
-        //}
     }
 }

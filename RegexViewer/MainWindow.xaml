@@ -14,7 +14,7 @@
         <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
 
-        <BooleanToVisibilityConverter x:Key="boolToVis" />
+        <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
@@ -118,13 +118,12 @@
                 <TabControl.ContentTemplate x:Uid="tabContent">
                     <DataTemplate>
                         <DataGrid x:Name="dataGridFilter"
-
-                            ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
+                          ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
                           Grid.Row="0"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,0"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
@@ -133,16 +132,17 @@
                           DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
                           DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
                           DataGridCell.GotFocus="DataGrid_CellGotFocus">
+                            <DataGrid.Resources>
+                                <local:BindingProxy x:Key="proxyFilter" Data="{Binding}" />
+                            </DataGrid.Resources>
 
                             <DataGrid.CellStyle>
-
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
                                         <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                         <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
                                         <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                         <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
-                                        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
@@ -150,26 +150,26 @@
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
                             </DataGrid.InputBindings>
-
-                                    <DataGrid.ContextMenu>
-                                <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                                    <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                                    <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                                    <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
-                                    <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
-                                    <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
-                                    <MenuItem Header="Reload Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
-                                    <MenuItem Header="Save Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" InputGestureText="Ctrl+Alt+S" />
-                                    <MenuItem Header="Save Filter As" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu HasDropShadow="True">
+                                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
+                                        <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
+                                        <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
+                                        <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
+                                        <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
+                                        <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
+                                        <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
+                                        <MenuItem Header="Reload Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
+                                        <MenuItem Header="Save Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" InputGestureText="Ctrl+Alt+S" />
+                                        <MenuItem Header="Save Filter As" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
                                 <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
                                 <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
+                                
                                 <DataGridTextColumn Width="300" Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
@@ -183,14 +183,17 @@
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
+                                <DataGridTextColumn Header="MaskedCount" Binding="{Binding Path=MaskedCount}" Visibility="{Binding Data.MaskedVisibility, Source={StaticResource proxyFilter}, Converter={StaticResource  BoolToVis}}" />
+                                
                                 <DataGridTemplateColumn Header="Background Color">
                                     <DataGridTemplateColumn.CellTemplate>
-
                                         <DataTemplate>
                                             <ComboBox Name="backgroundColorCombo"
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
                                                   SelectedValuePath="Name"
                                                   SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  VirtualizingStackPanel.IsVirtualizing="True"
+                                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
                                                   GotFocus="colorCombo_Selected"
                                                   KeyDown="colorCombo_KeyDown">
                                                 <ComboBox.ItemTemplate>
@@ -214,6 +217,8 @@
                                                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
                                                   SelectedValuePath="Name"
                                                   SelectedValue="{Binding ForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  VirtualizingStackPanel.IsVirtualizing="True"
+                                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
                                                   GotFocus="colorCombo_Selected"
                                                   KeyDown="colorCombo_KeyDown">
                                                 <ComboBox.ItemTemplate>
@@ -228,6 +233,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
+                             
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
@@ -260,6 +266,7 @@
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
@@ -274,51 +281,51 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
+                    
                     <DataTemplate>
-                        <ListBox x:Name="logFileData"
+                        <DataGrid x:Name="logFileData"
+                          VirtualizingStackPanel.IsVirtualizing="True"
+                          VirtualizingStackPanel.VirtualizationMode="Recycling"
+                          ItemsSource="{Binding Path=ContentList}"
+                          AutoGenerateColumns="False"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,0"
+                          GridLinesVisibility="None"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          VerticalAlignment="Stretch"
+                          CanUserAddRows="False"
+                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                          Tag="{Binding}" >
+                            <DataGrid.Resources>
+                                <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
+                            </DataGrid.Resources>
+                            <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Setters>
+                                        <Setter Property="Background" Value="{Binding Path=Background}" />
+                                        <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
+                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                    <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                </Style.Setters>
+                            </Style>
+                        </DataGrid.CellStyle>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
+                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="*" >
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                          
+                                <DataGridTextColumn Header="Group1" Binding="{Binding Path=Group1}" Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
+                                <DataGridTextColumn Header="Group2" Binding="{Binding Path=Group2}" Visibility="{Binding Data.Group2Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
+                                <DataGridTextColumn Header="Group3" Binding="{Binding Path=Group3}" Visibility="{Binding Data.Group3Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
+                                <DataGridTextColumn Header="Group4" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
 
-                                 ItemsSource="{Binding Path=ContentList}"
-                                 SelectionMode="Extended"
-                                 FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
-                                 Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                                 VirtualizingStackPanel.IsVirtualizing="True"
-                                 VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                 ScrollViewer.IsDeferredScrollingEnabled="False"
-                                 SelectedIndex="{Binding Path=SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                                 IsSynchronizedWithCurrentItem="True"
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <WrapPanel Orientation="Horizontal">
-                                        <TextBlock Text="{Binding Path=Index}"
-                                               Margin="0,0,5,0"
-                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
-                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
-                                               Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}"
-                                               Width="Auto" />
-                                        <TextBlock Text="{Binding Path=Content}"
-                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
-                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
-                                               Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}"
-                                               TextWrapping="WrapWithOverflow" />
-                                        <TextBlock Text="{Binding Path=Group1}"
-                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
-                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
-                                               Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}"
-                                               TextWrapping="WrapWithOverflow" />
-                                        <TextBlock Text="{Binding Path=Group2}"
-                                               FontSize="{Binding Source={StaticResource settings}, Path=Settings.FontSize}"
-                                               FontFamily="{Binding Source={StaticResource settings}, Path=Settings.FontName}"
-                                               Foreground="{Binding Path=Foreground}"
-                                               Background="{Binding Path=Background}"
-                                               TextWrapping="WrapWithOverflow" />
-                                    </WrapPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
+                            </DataGrid.Columns>
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SourceUpdated">
@@ -336,11 +343,11 @@
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
-                            <ListBox.InputBindings>
+                            <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
-                            </ListBox.InputBindings>
+                            </DataGrid.InputBindings>
 
-                            <ListBox.ContextMenu>
+                            <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
                                     <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
                                     <MenuItem Header="Close File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
@@ -355,8 +362,8 @@
 
                                     <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
                                 </ContextMenu>
-                            </ListBox.ContextMenu>
-                        </ListBox>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
 

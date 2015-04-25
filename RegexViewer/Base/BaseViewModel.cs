@@ -211,6 +211,9 @@ namespace RegexViewer
             }
         }
 
+        //public abstract ITabViewModel<T> SelectedTabItem {get;set;}
+        
+
         public IFileManager<T> ViewManager { get; set; }
 
         #endregion Public Properties

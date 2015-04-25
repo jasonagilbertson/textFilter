@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -230,6 +231,7 @@ namespace RegexViewer
                 }
 
                 filterFileItems = _filterViewModel.FilterList();
+                LogTabViewModel logTab = (LogTabViewModel)this.TabItems[SelectedIndex];
 
                 // dont check filter need if intent is to reset list to current filter or to show all
                 if (filterIntent != FilterCommand.DynamicFilter
@@ -290,7 +292,7 @@ namespace RegexViewer
                     case FilterCommand.Filter:
                         {
                             SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                            this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logFile, filterFileItems, filterIntent), filterFileItems);
+                            logTab.ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logTab, logFile, filterFileItems, filterIntent), filterFileItems);
 
                             break;
                         }
@@ -316,8 +318,8 @@ namespace RegexViewer
                 }
 
                 // update line total counts
-                LineTotals = string.Format("{0}/{1}", this.TabItems[SelectedIndex].ContentList.Count, logFile.ContentItems.Count);
-
+                LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, logFile.ContentItems.Count);
+                               
                 SaveCurrentFilter(filterFileItems);
             }
             catch (Exception e)
@@ -350,6 +352,17 @@ namespace RegexViewer
             }
         }
 
+        public LogTabViewModel SelectedTab
+        {
+            get
+            {
+                return (LogTabViewModel)this.TabItems[SelectedIndex];
+            }
+            //set
+            //{
+            //    ((LogTabViewModel)TabItems[SelectedIndex]) = value;
+            //}
+        }
         public void HideExecuted(object sender)
         {
             ListBox listBox = (ListBox)this.CurrentTab().Viewer;
@@ -654,7 +667,7 @@ namespace RegexViewer
             SetStatus("LogViewModel.PropertyChanged: " + e.PropertyName);
 
             // dont filter on form updates
-            if(e.PropertyName != "LineTotals")
+            if(e.PropertyName != "LineTotals" & e.PropertyName != "Group1Visibility" & e.PropertyName != "Group2Visibility")
             {
                 FilterLogTabItems();
             }

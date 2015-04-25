@@ -49,6 +49,7 @@
         int SelectedIndex { get; set; }
 
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
+      //  ITabViewModel<T> SelectedTabItem { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
 

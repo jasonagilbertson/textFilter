@@ -351,11 +351,6 @@ namespace RegexViewer
             return files;
         }
 
-        private void RegisterFTA(bool p)
-        {
-            throw new NotImplementedException();
-        }
-
         private void VerifyAppSettings()
         {
             try

@@ -15,7 +15,7 @@ namespace RegexViewer
         public static string Enabled = "Enabled";
         public static string Exclue = "Exclude";
         public static string Filterpattern = "Filterpattern";
-
+        public static string MaskedCount = "MaskedCount";
         public static string Foreground = "Foreground";
         public static string ForegroundColor = "ForegroundColor";
 
@@ -116,6 +116,7 @@ namespace RegexViewer
         private int _index = 0;
         private string _notes = string.Empty;
         private bool _regex = false;
+        private int _maskedCount = 0;
 
         #endregion Private Fields
 
@@ -194,6 +195,23 @@ namespace RegexViewer
                 {
                     _count = value;
                     OnPropertyChanged(FilterFileItemEvents.Count);
+                }
+            }
+        }
+
+        public int MaskedCount
+        {
+            get
+            {
+                return _maskedCount;
+            }
+
+            set
+            {
+                if (_maskedCount != value)
+                {
+                    _maskedCount = value;
+                    OnPropertyChanged(FilterFileItemEvents.MaskedCount);
                 }
             }
         }
@@ -321,6 +339,8 @@ namespace RegexViewer
                 }
             }
         }
+
+        public int GroupCount { get; set; }
 
         // for tat 'type' text or marker
         public string TatType { get; set; }

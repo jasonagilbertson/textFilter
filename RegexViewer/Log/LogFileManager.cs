@@ -72,16 +72,16 @@ namespace RegexViewer
             }
         }
 
-        public ObservableCollection<LogFileItem> ApplyFilter(LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
+        public ObservableCollection<LogFileItem> ApplyFilter(LogTabViewModel logTab, LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
         {
             Mouse.OverrideCursor = Cursors.Wait;
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
 
-            List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems);
+            List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems, logTab);
             // Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}",
             // Thread.CurrentThread.ManagedThreadId, filterItems.Count));
-
+            
             try
             {
                 Parallel.ForEach(logFile.ContentItems, logItem =>
@@ -96,6 +96,16 @@ namespace RegexViewer
                     }
 
                     int filterIndex = int.MaxValue; // int.MinValue;
+
+                    if(Settings.CountMaskedMatches)
+                    {
+                        logItem.Masked = new int[filterItems.Count, 1];
+                    }
+                    // clear out groups
+                    logItem.Group1 = string.Empty;
+                    logItem.Group2 = string.Empty;
+                    logItem.Group3 = string.Empty;
+                    logItem.Group4 = string.Empty;
 
                     // make sure all matches have all includes
                     foreach (FilterFileItem item in filterItems.Where(x => x.Include == true))
@@ -127,23 +137,45 @@ namespace RegexViewer
                         // Debug.Print(string.Format("ApplyFilter: loop:{0}
                         // filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount,
                         // Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
+                        if (logTab.GroupCount > 0 && filterItem.Regex)
+                        {
+                            MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
+                            if(mc.Count == 0)
+                            {
+                                continue;
+                            }
+                            else
+                            {
+                                match = true;
+                            }
 
-                        if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
+                            foreach (Match m in mc)
+                            {   
+                                if(!string.IsNullOrEmpty(m.Groups[1].Value.ToString()))
+                                {
+                                    logItem.Group1 += (string.IsNullOrEmpty(logItem.Group1) ? "" : "\n") + m.Groups[1].Value.ToString();
+                                }
+
+                                if (!string.IsNullOrEmpty(m.Groups[2].Value.ToString()))
+                                {
+                                    logItem.Group2 += (string.IsNullOrEmpty(logItem.Group2) ? "" : "\n") + m.Groups[2].Value.ToString();
+                                }
+
+                                if (!string.IsNullOrEmpty(m.Groups[3].Value.ToString()))
+                                {
+                                    logItem.Group3 += (string.IsNullOrEmpty(logItem.Group3) ? "" : "\n") + m.Groups[3].Value.ToString();
+                                }
+
+                                if (!string.IsNullOrEmpty(m.Groups[4].Value.ToString()))
+                                {
+                                    logItem.Group4 += (string.IsNullOrEmpty(logItem.Group4) ? "" : "\n") + m.Groups[4].Value.ToString();
+                                }   
+                            }
+                        }
+                        else if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
                         {
                             match = true;
-                            //MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
-                            //foreach(Match m in mc)
-                            //{
-                            //    if(m.Groups.Count > 1)
-                            //    {
-                            //        logItem.Group1 = m.Groups[1].Value.ToString();
-                            //    }
-
-                            //    if(m.Groups.Count > 2)
-                            //    {
-                            //        logItem.Group2 = m.Groups[2].Value.ToString();
-                            //    }
-                            //}
+                            
                         }
                         else if (!filterItem.Regex)
                         {
@@ -193,6 +225,7 @@ namespace RegexViewer
                             // todo: need additional variable to set masked matches
                             // this is hiding a valid match adn cant be used
                             //filterIndex = (filterItemCount * -1) - 1;
+                            logItem.Masked[filterIndex, 0] = 1;
                             // Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
                         }
 
@@ -216,6 +249,7 @@ namespace RegexViewer
                 {
                     //filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == i);
                     filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == i | x.FilterIndex == (i * -1) - 1);
+                    filterFileItems[i].MaskedCount = logFile.ContentItems.Count(x => x.Masked[i,0] == 1);
                     SetStatus(string.Format("ApplyFilter:filterItem counttotal: {0}", filterFileItems[i].Count));
                     filterCount += filterFileItems[i].Count;
                 }
@@ -396,15 +430,18 @@ namespace RegexViewer
             return filterFile;
         }
 
-        private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems)
+        private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems, LogTabViewModel logTab = null)
         {
+            int groupCount = 0;
             List<FilterFileItem> filterItems = new List<FilterFileItem>();
+
             foreach (FilterFileItem filterItem in filterFileItems)
             {
                 if (string.IsNullOrEmpty(filterItem.Filterpattern))
                 {
                     continue;
                 }
+
                 FilterFileItem newFilter = new FilterFileItem()
                 {
                     Background = filterItem.Background,
@@ -421,6 +458,8 @@ namespace RegexViewer
                     try
                     {
                         Regex test = new Regex(filterItem.Filterpattern);
+                        newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
+                        groupCount = Math.Max(groupCount, newFilter.GroupCount);
                     }
                     catch
                     {
@@ -432,6 +471,12 @@ namespace RegexViewer
 
                 filterItems.Add(newFilter);
             }
+
+            if (logTab != null)
+            {
+                logTab.SetGroupCount(groupCount);
+            }
+
             return filterItems;
         }
 
