@@ -14,7 +14,14 @@ namespace RegexViewer
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
         #region Private Methods
+        public struct LogViewModelEvents
+        {
+            #region Public Fields
 
+            public static string LineTotals = "LineTotals";
+            
+            #endregion Public Fields
+        }
         private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SetStatus("_filterViewModel.CollectionChanged" + sender.ToString());
@@ -132,7 +139,7 @@ namespace RegexViewer
                 if (_lineTotals != value)
                 {
                     _lineTotals = value;
-                    OnPropertyChanged("LineTotals");
+                    OnPropertyChanged(LogViewModelEvents.LineTotals);
                 }
             }
         }
@@ -335,7 +342,7 @@ namespace RegexViewer
             int result = gotoDialog.WaitForResult();
             SetStatus("gotoLine:" + result.ToString());
 
-            ListBox listBox = (ListBox)CurrentTab().Viewer;
+            DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
 
             if (result >= 0)
             {
@@ -345,10 +352,10 @@ namespace RegexViewer
                     HideExecuted(null);
                 }
 
-                LogFileItem logFileItem = listBox.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
-                listBox.ScrollIntoView(logFileItem);
-                listBox.SelectedItem = logFileItem;
-                listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
+                LogFileItem logFileItem = dataGrid.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
+                dataGrid.ScrollIntoView(logFileItem);
+                dataGrid.SelectedItem = logFileItem;
+                dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
             }
         }
 
@@ -365,13 +372,13 @@ namespace RegexViewer
         }
         public void HideExecuted(object sender)
         {
-            ListBox listBox = (ListBox)this.CurrentTab().Viewer;
+            DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
             LogFileItem logFileItem;
 
             // if count the same then assume it is not filtered
             if (!IsHiding())
             {
-                logFileItem = _unFilteredSelectedItem = (LogFileItem)listBox.SelectedItem;
+                logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
 
                 // send empty function to reset to current filter in filterview
                 if (!string.IsNullOrEmpty(QuickFindText))
@@ -385,23 +392,23 @@ namespace RegexViewer
             }
             else
             {
-                logFileItem = _filteredSelectedItem = (LogFileItem)listBox.SelectedItem;
+                logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
 
                 this.FilterLogTabItems(FilterCommand.ShowAll);
             }
 
             try
             {
-                if (listBox != null)
+                if (dataGrid != null)
                 {
-                    if (listBox.Items.Contains(logFileItem))
+                    if (dataGrid.Items.Contains(logFileItem))
                     {
                     }
-                    else if (listBox.Items.Contains(_unFilteredSelectedItem))
+                    else if (dataGrid.Items.Contains(_unFilteredSelectedItem))
                     {
                         logFileItem = _unFilteredSelectedItem;
                     }
-                    else if (listBox.Items.Contains(_filteredSelectedItem))
+                    else if (dataGrid.Items.Contains(_filteredSelectedItem))
                     {
                         logFileItem = _filteredSelectedItem;
                     }
@@ -411,9 +418,9 @@ namespace RegexViewer
                     }
 
                     SetStatus("hiding:scrollingintoview:");
-                    listBox.ScrollIntoView(logFileItem);
-                    listBox.SelectedItem = logFileItem;
-                    listBox.SelectedIndex = listBox.Items.IndexOf(logFileItem);
+                    dataGrid.ScrollIntoView(logFileItem);
+                    dataGrid.SelectedItem = logFileItem;
+                    dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
                 }
             }
             catch (Exception e)
@@ -630,7 +637,7 @@ namespace RegexViewer
         private void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // dont handle count updates
-            SetStatus("_filterViewModel.PropertyChanged" + e.PropertyName);
+            SetStatus("_filterViewModel.PropertyChanged: " + e.PropertyName);
             FilterLogTabItems();
         }
 
@@ -644,9 +651,9 @@ namespace RegexViewer
             // if count the same then assume it is not filtered
             try
             {
-                ListBox listBox = (ListBox)this.CurrentTab().Viewer;
-                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", listBox.Items.Count, CurrentFile().ContentItems.Count));
-                if (listBox.Items.Count == CurrentFile().ContentItems.Count)
+                DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
+                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
+                if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
                 {
                     return false;
                 }
@@ -667,7 +674,11 @@ namespace RegexViewer
             SetStatus("LogViewModel.PropertyChanged: " + e.PropertyName);
 
             // dont filter on form updates
-            if(e.PropertyName != "LineTotals" & e.PropertyName != "Group1Visibility" & e.PropertyName != "Group2Visibility")
+            if(e.PropertyName != LogViewModelEvents.LineTotals
+                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group1Visibility
+                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group2Visibility
+                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group3Visibility
+                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group4Visibility)
             {
                 FilterLogTabItems();
             }

@@ -295,6 +295,8 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
+                          SelectionMode="Extended"
+                          SelectionUnit="FullRow"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}" >
                             <DataGrid.Resources>
@@ -309,8 +311,10 @@
                                     <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
                                 </Style.Setters>
                             </Style>
-                        </DataGrid.CellStyle>
+                            </DataGrid.CellStyle>
+                            
                             <DataGrid.Columns>
+                                
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
                                 <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="*" >
                                     <DataGridTextColumn.ElementStyle>

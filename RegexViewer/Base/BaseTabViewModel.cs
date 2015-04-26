@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
@@ -264,9 +265,41 @@ namespace RegexViewer
             try
             {
                 HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (IFileItem lbi in SelectedContent)
+                foreach (IFileItem lbi in this.SelectedContent)
                 {
-                    htmlFragment.AddClipToList(lbi.Content, lbi.Background, lbi.Foreground);
+                    // get all cells
+                    if (typeof(T) == typeof(LogFileItem))
+                    {
+                        LogFileItem lFI = (LogFileItem)lbi;
+                        StringBuilder sb = new StringBuilder(string.Format("{0},{1}", lFI.Index, lFI.Content));
+
+                        if (!string.IsNullOrEmpty(lFI.Group1))
+                        {
+                            sb.Append("," + lFI.Group1);
+                        }
+
+                        if (!string.IsNullOrEmpty(lFI.Group2))
+                        {
+                            sb.Append("," + lFI.Group2);
+                        }
+
+                        if (!string.IsNullOrEmpty(lFI.Group3))
+                        {
+                            sb.Append("," + lFI.Group3);
+                        }
+
+                        if (!string.IsNullOrEmpty(lFI.Group4))
+                        {
+                            sb.Append("," + lFI.Group4);
+                        }
+
+                        htmlFragment.AddClipToList(sb.ToString(), lbi.Background, lbi.Foreground);
+                    }
+                    else
+                    {
+
+                        htmlFragment.AddClipToList(lbi.Content, lbi.Background, lbi.Foreground);
+                    }
                 }
 
                 htmlFragment.CopyListToClipboard();
@@ -303,7 +336,7 @@ namespace RegexViewer
         {
             // cant setstatus here due to recursion? cant set when only null should be listbox for logfileData
 
-            if (sender is ListBox && _viewer != sender)
+            if (sender is DataGrid && _viewer != sender)
             {
                 SetStatus(string.Format("tab viewer set: {0}", sender.GetType()));
                 _viewer = sender;
@@ -317,17 +350,17 @@ namespace RegexViewer
         private void SourceUpdatedExecuted(object sender)
         {
             SetStatus("SourceUpdatedExecuted: enter");
-            if (sender is ListBox)
+            if (sender is DataGrid)
             {
                 // set keyboard focus on selecteditem
-                ListBox listBox = sender as ListBox;
-                if (listBox.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
+                DataGrid dataGrid = sender as DataGrid;
+                if (dataGrid.ItemContainerGenerator.Status == GeneratorStatus.ContainersGenerated)
                 {
-                    int index = listBox.SelectedIndex;
+                    int index = dataGrid.SelectedIndex;
                     if (index >= 0)
                     {
                         SetStatus("SourceUpdatedExecuted: container generated, setting keyboard focus to index:" + index);
-                        var item = listBox.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
+                        var item = dataGrid.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
                         if (item != null) item.Focus();
                     }
                 }

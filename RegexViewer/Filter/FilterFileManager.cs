@@ -249,7 +249,8 @@ namespace RegexViewer
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FilterFileItemEvents.Count |
-                e.PropertyName == FilterFileItemEvents.Notes)
+                e.PropertyName == FilterFileItemEvents.Notes |
+                e.PropertyName == FilterFileItemEvents.MaskedCount)
             {
                 // dont forward count updates
                 return;

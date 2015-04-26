@@ -13,6 +13,7 @@ namespace RegexViewer
 {
     public class RegexViewerSettings : Base
     {
+
         #region Public Methods
 
         public bool ReadConfigFile()
@@ -509,11 +510,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToBoolean(_appSettings["AutoSave"].Value));
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoSave).ToString()].Value));
             }
             set
             {
-                _appSettings["AutoSave"].Value = value.ToString();
+                _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
             }
         }
 
@@ -521,14 +522,14 @@ namespace RegexViewer
         {
             get
             {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["BackgroundColor"].Value));
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.BackgroundColor).ToString()].Value));
             }
             set
             {
-                if (value.ToString() != _appSettings["BackgroundColor"].Value.ToString())
+                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
                 {
-                    _appSettings["BackgroundColor"].Value = value.ToString();
-                    OnPropertyChanged("BackgroundColor");
+                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
                 }
             }
         }
@@ -539,11 +540,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToBoolean(_appSettings["CountMaskedMatches"].Value));
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value));
             }
             set
             {
-                _appSettings["CountMaskedMatches"].Value = value.ToString();
+                _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
             }
         }
 
@@ -551,12 +552,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["CurrentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
 
             set
             {
-                _appSettings["CurrentFilterFiles"].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value = string.Join(",", value);
             }
         }
 
@@ -564,12 +565,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["CurrentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
 
             set
             {
-                _appSettings["CurrentLogFiles"].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(",", value);
             }
         }
 
@@ -577,11 +578,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToInt32(_appSettings["FileHistoryCount"].Value));
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value));
             }
             set
             {
-                _appSettings["FileHistoryCount"].Value = value.ToString();
+                _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
             }
         }
 
@@ -589,14 +590,14 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["FilterDirectory"].Value;
+                return _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value;
             }
             set
             {
-                if (value.ToString() != _appSettings["FilterDirectory"].Value.ToString())
+                if (value.ToString() != _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value.ToString())
                 {
-                    _appSettings["FilterDirectory"].Value = value.ToString();
-                    OnPropertyChanged("FilterDirectory");
+                    _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FilterDirectory).ToString());
                 }
             }
         }
@@ -605,14 +606,14 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["FontName"].Value;
+                return _appSettings[(AppSettingNames.FontName).ToString()].Value;
             }
             set
             {
-                if (value.ToString() != _appSettings["FontName"].Value.ToString())
+                if (value.ToString() != _appSettings[(AppSettingNames.FontName).ToString()].Value.ToString())
                 {
-                    _appSettings["FontName"].Value = value.ToString();
-                    OnPropertyChanged("FontName");
+                    _appSettings[(AppSettingNames.FontName).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FontName).ToString());
                 }
             }
         }
@@ -621,11 +622,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToInt32(_appSettings["FontSize"].Value));
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.FontSize).ToString()].Value));
             }
             set
             {
-                _appSettings["FontSize"].Value = value.ToString();
+                _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
             }
         }
 
@@ -633,11 +634,11 @@ namespace RegexViewer
         {
             get
             {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings["ForegroundColor"].Value));
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.ForegroundColor).ToString()].Value));
             }
             set
             {
-                _appSettings["ForegroundColor"].Value = value.ToString();
+                _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
             }
         }
 
@@ -645,11 +646,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToInt32(_appSettings["MaxMultiFileCount"].Value));
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value));
             }
             set
             {
-                _appSettings["MaxMultiFileCount"].Value = value.ToString();
+                _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
             }
         }
 
@@ -657,12 +658,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["RecentFilterFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
             {
-                _appSettings["RecentFilterFiles"].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(",", value);
             }
         }
 
@@ -670,12 +671,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings["RecentLogFiles"].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
             {
-                _appSettings["RecentLogFiles"].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(",", value);
             }
         }
 
@@ -683,11 +684,11 @@ namespace RegexViewer
         {
             get
             {
-                return (Convert.ToBoolean(_appSettings["SaveSessionInformation"].Value));
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value));
             }
             set
             {
-                _appSettings["SaveSessionInformation"].Value = value.ToString();
+                _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value = value.ToString();
             }
         }
 

@@ -6,7 +6,18 @@ namespace RegexViewer
     public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
         #region Public Constructors
-        
+        public struct LogTabViewModelEvents
+        {
+            #region Public Fields
+
+            public static string Group1Visibility = "Group1Visibility";
+            public static string Group2Visibility = "Group2Visibility";
+            public static string Group3Visibility = "Group3Visibility";
+            public static string Group4Visibility = "Group4Visibility";
+
+            #endregion Public Fields
+        }
+
         private bool _group1Visibility = false;
         private bool _group2Visibility = false;
         private bool _group3Visibility = false;
@@ -69,7 +80,7 @@ namespace RegexViewer
                 if (_group1Visibility != value)
                 {
                     _group1Visibility = value;
-                    OnPropertyChanged("Group1Visibility");
+                    OnPropertyChanged(LogTabViewModelEvents.Group1Visibility);
                 }
             }
         }
@@ -86,7 +97,7 @@ namespace RegexViewer
                 if (_group2Visibility != value)
                 {
                     _group2Visibility = value;
-                    OnPropertyChanged("Group2Visibility");
+                    OnPropertyChanged(LogTabViewModelEvents.Group2Visibility);
                 }
             }
         }
@@ -102,7 +113,7 @@ namespace RegexViewer
                 if (_group3Visibility != value)
                 {
                     _group3Visibility = value;
-                    OnPropertyChanged("Group3Visibility");
+                    OnPropertyChanged(LogTabViewModelEvents.Group3Visibility);
                 }
             }
         }
@@ -117,7 +128,7 @@ namespace RegexViewer
                 if (_group4Visibility != value)
                 {
                     _group4Visibility = value;
-                    OnPropertyChanged("Group4Visibility");
+                    OnPropertyChanged(LogTabViewModelEvents.Group4Visibility);
                 }
             }
         }

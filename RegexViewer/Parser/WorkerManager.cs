@@ -141,9 +141,9 @@ namespace RegexViewer
             bgWorker = (System.ComponentModel.BackgroundWorker)sender;
 
             // Get the Words object and call the main method.
-            WorkerItem WC = (WorkerItem)e.Argument;
+            WorkerItem workerItem = (WorkerItem)e.Argument;
 
-            // WC.DoWork(worker, e);
+            SetStatus("WorkerManager:DoWork:notImplemented");
         }
 
         #endregion Private Methods
