@@ -291,7 +291,7 @@ namespace RegexViewer
             {
                 logFile.FileName = Path.GetFileName(LogName);
                 logFile.Tag = LogName;
-                logFile.ContentItems = new ObservableCollection<LogFileItem>(ReadFile(LogName));
+                logFile.ContentItems = ((LogFile)ReadFile(LogName)).ContentItems;
                 FileManager.Add(logFile);
                 this.Settings.AddLogFile(LogName);
             }
@@ -322,14 +322,15 @@ namespace RegexViewer
             return textBlockItems;
         }
 
-        public override List<LogFileItem> ReadFile(string logFile)
+        public override IFile<LogFileItem> ReadFile(string fileName)
         {
             // BOM UTF - 8 0xEF,0xBB,0xBF BOM UTF - 16 FE FF NO BOM assume ansi but utf-8 doesnt
             // have to have one either
             Encoding encoding = Encoding.Default;
-
+            LogFile logFile = new LogFile();
+            logFile.FileName = Path.GetFileName(fileName);
             // find bom
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile, true))
+            using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName, true))
             {
                 encoding = sr.CurrentEncoding;
 
@@ -362,7 +363,7 @@ namespace RegexViewer
             // todo: use mapped file only for large files?
             List<LogFileItem> logFileItems = new List<LogFileItem>();
 
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile, encoding))
+            using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName, encoding))
             {
                 string line;
                 int count = 0;
@@ -383,13 +384,17 @@ namespace RegexViewer
                 sr.Close();
             }
 
-            return logFileItems;
+            logFile.ContentItems = new ObservableCollection<LogFileItem>(logFileItems);
+
+            return logFile;
         }
 
-        public override bool SaveFile(string FileName, ObservableCollection<LogFileItem> list)
+        public override bool SaveFile(string FileName, IFile<LogFileItem> file)
         {
             try
             {
+                LogFile logFile = (LogFile)file;
+
                 if (File.Exists(FileName))
                 {
                     File.Delete(FileName);
@@ -397,7 +402,7 @@ namespace RegexViewer
 
                 using (StreamWriter writer = File.CreateText(FileName))
                 {
-                    foreach (LogFileItem item in list)
+                    foreach (LogFileItem item in logFile.ContentItems)
                     {
                         writer.WriteLine(item.Content);
                     }

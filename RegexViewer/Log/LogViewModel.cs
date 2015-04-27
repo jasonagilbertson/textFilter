@@ -337,25 +337,32 @@ namespace RegexViewer
 
         public void GotoLineExecuted(object sender)
         {
-            SetStatus("gotoLine");
-            GotoLineDialog gotoDialog = new GotoLineDialog();
-            int result = gotoDialog.WaitForResult();
-            SetStatus("gotoLine:" + result.ToString());
-
-            DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
-
-            if (result >= 0)
+            try
             {
-                // todo: currently only works when unfiltered
-                if (IsHiding())
-                {
-                    HideExecuted(null);
-                }
+                SetStatus("gotoLine");
+                GotoLineDialog gotoDialog = new GotoLineDialog();
+                int result = gotoDialog.WaitForResult();
+                SetStatus("gotoLine:" + result.ToString());
 
-                LogFileItem logFileItem = dataGrid.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
-                dataGrid.ScrollIntoView(logFileItem);
-                dataGrid.SelectedItem = logFileItem;
-                dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
+                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
+
+                if (dataGrid != null && result >= 0)
+                {
+                    // todo: currently only works when unfiltered
+                    if (IsHiding())
+                    {
+                        HideExecuted(null);
+                    }
+
+                    LogFileItem logFileItem = dataGrid.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
+                    dataGrid.ScrollIntoView(logFileItem);
+                    dataGrid.SelectedItem = logFileItem;
+                    dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("GotoLineExecuted:exception" + e.ToString());
             }
         }
 
@@ -372,33 +379,34 @@ namespace RegexViewer
         }
         public void HideExecuted(object sender)
         {
-            DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
-            LogFileItem logFileItem;
-
-            // if count the same then assume it is not filtered
-            if (!IsHiding())
+            try
             {
-                logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
+                DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
+                LogFileItem logFileItem;
 
-                // send empty function to reset to current filter in filterview
-                if (!string.IsNullOrEmpty(QuickFindText))
+                // if count the same then assume it is not filtered
+                if (!IsHiding())
                 {
-                    QuickFindChangedExecuted(null);
+                    logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
+
+                    // send empty function to reset to current filter in filterview
+                    if (!string.IsNullOrEmpty(QuickFindText))
+                    {
+                        QuickFindChangedExecuted(null);
+                    }
+                    else
+                    {
+                        this.FilterLogTabItems(FilterCommand.Hide);
+                    }
                 }
                 else
                 {
-                    this.FilterLogTabItems(FilterCommand.Hide);
+                    logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
+
+                    this.FilterLogTabItems(FilterCommand.ShowAll);
                 }
-            }
-            else
-            {
-                logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
 
-                this.FilterLogTabItems(FilterCommand.ShowAll);
-            }
-
-            try
-            {
+            
                 if (dataGrid != null)
                 {
                     if (dataGrid.Items.Contains(logFileItem))
@@ -441,7 +449,7 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        public override void OpenFile(object sender)
+        public override void OpenFileExecuted(object sender)
         {
             SetStatus("opening file");
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
@@ -560,7 +568,7 @@ namespace RegexViewer
             Settings.AddFilterFile(logName);
         }
 
-        public override void SaveFileAs(object sender)
+        public override void SaveFileAsExecuted(object sender)
         {
             ITabViewModel<LogFileItem> tabItem;
 
@@ -616,7 +624,9 @@ namespace RegexViewer
                 if (result == true)
                 {
                     // Save document
-                    this.ViewManager.SaveFile(logName, tabItem.ContentList);
+                    LogFile logFile = new LogFile();
+                    logFile.ContentItems = tabItem.ContentList;
+                    this.ViewManager.SaveFile(logName, logFile);
 
                     // open filtered view into new tab if not a '-new x-' tab
                     if (string.Compare(tabItem.Tag, logName, true) != 0

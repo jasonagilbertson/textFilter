@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace RegexViewer
 {
@@ -21,6 +22,24 @@ namespace RegexViewer
 
         #region Public Methods
 
+        public void CreateProcess(string process, string arguments = null)
+        {
+            try
+            {
+                ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.CreateNoWindow = false;
+                if (!string.IsNullOrEmpty(arguments))
+                {
+                    processInfo.Arguments = arguments;
+                }
+                processInfo.FileName = process;
+                Process.Start(processInfo);
+            }
+            catch (Exception e)
+            {
+                SetStatus("CreateProcess: exception" + e.ToString());
+            }
+        }
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;

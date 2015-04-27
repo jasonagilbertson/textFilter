@@ -20,6 +20,7 @@ namespace RegexViewer
         private Command _gotFocusCommand;
         private Command _newCommand;
         private Command _openCommand;
+        private Command _openFolderCommand;
         private bool _openDialogVisible;
         private int _previousIndex = -1;
         private Command _recentCommand;
@@ -44,13 +45,13 @@ namespace RegexViewer
 
         public Command CloseAllCommand
         {
-            get { return _closeAllCommand ?? new Command(CloseAllFiles); }
+            get { return _closeAllCommand ?? new Command(CloseAllFilesExecuted); }
             set { _closeAllCommand = value; }
         }
 
         public Command CloseCommand
         {
-            get { return _closeCommand ?? new Command(CloseFile); }
+            get { return _closeCommand ?? new Command(CloseFileExecuted); }
             set { _closeCommand = value; }
         }
 
@@ -60,7 +61,7 @@ namespace RegexViewer
             {
                 if (_copyFilePathCommand == null)
                 {
-                    _copyFilePathCommand = new Command(CopyFilePath);
+                    _copyFilePathCommand = new Command(CopyFilePathExecuted);
                 }
                 _copyFilePathCommand.CanExecute = true;
 
@@ -69,9 +70,33 @@ namespace RegexViewer
             set { _copyFilePathCommand = value; }
         }
 
+        public Command OpenFolderCommand
+        {
+            get
+            {
+                if (_openFolderCommand == null)
+                {
+                    _openFolderCommand = new Command(OpenFolderExecuted);
+                }
+                _openFolderCommand.CanExecute = true;
+
+                return _openFolderCommand;
+            }
+            set { _openFolderCommand = value; }
+        }
+
+        private void OpenFolderExecuted()
+        {
+            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                CreateProcess("explorer.exe", Path.GetDirectoryName(tabItem.Tag));
+            }
+        }
+
         public Command DragDropCommand
         {
-            get { return _openCommand ?? new Command(OpenDrop); }
+            get { return _openCommand ?? new Command(OpenDropExecuted); }
             set { _openCommand = value; }
         }
 
@@ -96,7 +121,7 @@ namespace RegexViewer
             {
                 if (_newCommand == null)
                 {
-                    _newCommand = new Command(NewFile);
+                    _newCommand = new Command(NewFileExecuted);
                 }
                 _newCommand.CanExecute = true;
 
@@ -107,7 +132,7 @@ namespace RegexViewer
 
         public Command OpenCommand
         {
-            get { return _openCommand ?? new Command(OpenFile); }
+            get { return _openCommand ?? new Command(OpenFileExecuted); }
             set { _openCommand = value; }
         }
 
@@ -142,7 +167,7 @@ namespace RegexViewer
 
         public Command RecentCommand
         {
-            get { return _recentCommand ?? new Command(RecentFile); }
+            get { return _recentCommand ?? new Command(RecentFileExecuted); }
             set { _recentCommand = value; }
         }
 
@@ -152,7 +177,7 @@ namespace RegexViewer
             {
                 if (_reloadCommand == null)
                 {
-                    _reloadCommand = new Command(ReloadFile);
+                    _reloadCommand = new Command(ReloadFileExecuted);
                 }
                 _reloadCommand.CanExecute = true;
 
@@ -163,13 +188,13 @@ namespace RegexViewer
 
         public Command SaveAsCommand
         {
-            get { return _saveAsCommand ?? new Command(SaveFileAs); }
+            get { return _saveAsCommand ?? new Command(SaveFileAsExecuted); }
             set { _saveAsCommand = value; }
         }
 
         public Command SaveCommand
         {
-            get { return _saveCommand ?? new Command(SaveFile); }
+            get { return _saveCommand ?? new Command(SaveFileExecuted); }
             set { _saveCommand = value; }
         }
 
@@ -187,8 +212,6 @@ namespace RegexViewer
                     SetStatus(string.Format("BaseViewModel:SelectedIndex changed old index: {0} new index: {1}", _selectedIndex, value));
                     _selectedIndex = value;
                     OnPropertyChanged("SelectedIndex");
-                    // App.Current.MainWindow.Title = string.Format("{0} {1}",
-                    // System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
                 }
             }
         }
@@ -210,10 +233,7 @@ namespace RegexViewer
                 tabItems = value;
             }
         }
-
-        //public abstract ITabViewModel<T> SelectedTabItem {get;set;}
         
-
         public IFileManager<T> ViewManager { get; set; }
 
         #endregion Public Properties
@@ -231,7 +251,7 @@ namespace RegexViewer
 
         public abstract void AddTabItem(IFile<T> fileProperties);
 
-        public void CloseAllFiles(object sender)
+        public void CloseAllFilesExecuted(object sender)
         {
             ObservableCollection<ITabViewModel<T>> items = new ObservableCollection<ITabViewModel<T>>(tabItems);
             foreach (ITabViewModel<T> tabItem in items)
@@ -245,7 +265,7 @@ namespace RegexViewer
             }
         }
 
-        public void CloseFile(object sender)
+        public void CloseFileExecuted(object sender)
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
@@ -259,7 +279,7 @@ namespace RegexViewer
             }
         }
 
-        public void CopyFilePath(object sender)
+        public void CopyFilePathExecuted(object sender)
         {
             if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
             {
@@ -273,7 +293,6 @@ namespace RegexViewer
         {
             if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
             {
-                //SetStatus(string.Format("CurrentFile: SelectedIndex: {0}", SelectedIndex));
                 return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
             }
 
@@ -300,7 +319,7 @@ namespace RegexViewer
             }
         }
 
-        public void NewFile(object sender)
+        public void NewFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
             // add temp name
@@ -328,7 +347,7 @@ namespace RegexViewer
             AddTabItem(file);
         }
 
-        public void OpenDrop(object sender)
+        public void OpenDropExecuted(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());
             SetStatus("OpenDrop: " + sender.ToString());
@@ -338,7 +357,7 @@ namespace RegexViewer
             }
         }
 
-        public abstract void OpenFile(object sender);
+        public abstract void OpenFileExecuted(object sender);
 
         public ObservableCollection<WPFMenuItem> RecentCollectionBuilder(string[] files)
         {
@@ -357,13 +376,13 @@ namespace RegexViewer
             return fileCollection;
         }
 
-        public void RecentFile(object sender)
+        public void RecentFileExecuted(object sender)
         {
             SetStatus("RecentFile:enter");
-            OpenFile(sender);
+            OpenFileExecuted(sender);
         }
 
-        public void ReloadFile(object sender)
+        public void ReloadFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
             if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
@@ -391,8 +410,7 @@ namespace RegexViewer
 
         public abstract void RenameTabItem(string newName);
 
-        //public abstract void SaveFile(object sender);
-        public void SaveFile(object sender)
+        public void SaveFileExecuted(object sender)
         {
             ITabViewModel<T> tabItem;
 
@@ -416,15 +434,27 @@ namespace RegexViewer
 
             if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
             {
-                SaveFileAs(tabItem);
+                SaveFileAsExecuted(tabItem);
             }
             else
             {
-                this.ViewManager.SaveFile(tabItem.Tag, tabItem.ContentList);
+                //IFile<T> file = (IFile<T>)new object();
+                IFile<T> file = default(IFile<T>);
+                if(typeof(T) == typeof(LogFileItem))
+                {
+                    file = (IFile<T>)new LogFile();
+                }
+                else if (typeof(T) == typeof(FilterFileItem))
+                {
+                    file = (IFile<T>)new FilterFile();
+                }
+                
+                file.ContentItems = tabItem.ContentList;
+                this.ViewManager.SaveFile(tabItem.Tag, file);
             }
         }
 
-        public abstract void SaveFileAs(object sender);
+        public abstract void SaveFileAsExecuted(object sender);
 
         public void SaveModifiedFiles(object sender)
         {
@@ -447,12 +477,12 @@ namespace RegexViewer
                             break;
 
                         case TimedSaveDialog.Results.Save:
-                            this.SaveFile(item);
+                            this.SaveFileExecuted(item);
                             item.Modified = false;
                             break;
 
                         case TimedSaveDialog.Results.SaveAs:
-                            this.SaveFileAs(item);
+                            this.SaveFileAsExecuted(item);
                             break;
 
                         case TimedSaveDialog.Results.Unknown:
@@ -462,7 +492,7 @@ namespace RegexViewer
                 }
                 else
                 {
-                    this.SaveFile(item);
+                    this.SaveFileExecuted(item);
                     item.Modified = false;
                 }
             }

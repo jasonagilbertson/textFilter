@@ -75,7 +75,7 @@ namespace RegexViewer
             {
                 return _group1Visibility;
             }
-            set
+            private set
             {
                 if (_group1Visibility != value)
                 {
@@ -92,7 +92,7 @@ namespace RegexViewer
             {
                 return _group2Visibility;
             }
-            set
+            private set
             {
                 if (_group2Visibility != value)
                 {
@@ -108,7 +108,7 @@ namespace RegexViewer
             {
                 return _group3Visibility;
             }
-            set
+            private set
             {
                 if (_group3Visibility != value)
                 {
@@ -123,7 +123,7 @@ namespace RegexViewer
             {
                 return _group4Visibility;
             }
-            set
+            private set
             {
                 if (_group4Visibility != value)
                 {

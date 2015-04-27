@@ -66,9 +66,9 @@ namespace RegexViewer
 
         public abstract List<IFile<T>> OpenFiles(string[] files);
 
-        public abstract List<T> ReadFile(string LogName);
+        public abstract IFile<T> ReadFile(string LogName);
 
-        public abstract bool SaveFile(string FileName, ObservableCollection<T> list);
+        public abstract bool SaveFile(string FileName, IFile<T> file);
 
         #endregion Public Methods
     }

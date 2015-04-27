@@ -17,6 +17,8 @@ namespace RegexViewer
         {
         }
 
+        public string FilterNotes { get; set; }
+        
         #endregion Public Constructors
 
         #region Public Properties
@@ -85,5 +87,7 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
+
+        public string FilterVersion { get; set; }
     }
 }

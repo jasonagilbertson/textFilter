@@ -221,7 +221,7 @@ namespace RegexViewer
                         }
                     }
                     // not a filter file
-                    this._mainViewModel.LogViewModel.OpenFile(filename);
+                    this._mainViewModel.LogViewModel.OpenFileExecuted(filename);
                 }
             }
         }

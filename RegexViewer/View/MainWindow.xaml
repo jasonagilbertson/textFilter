@@ -41,9 +41,10 @@
         <Menu DockPanel.Dock="Top">
             <MenuItem Header="_File">
                 <MenuItem Header="_Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
-                <MenuItem Header="_Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="Close _All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="Copy File _Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" InputGestureText="Ctrl+G" />
+                <MenuItem Header="Open Containing _Folder" Command="{Binding LogViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                 <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
                 <MenuItem Header="R_ecent Files" ItemsSource="{Binding LogViewModel.RecentCollection}">
@@ -61,9 +62,11 @@
             </MenuItem>
             <MenuItem Header="_Filter">
                 <MenuItem Header="_Close Filter" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                <MenuItem Header="_Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="Close _All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="Copy File _Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="_Filter Notes" Command="{Binding FilterViewModel.FilterNotesCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
+                <MenuItem Header="Open Containing _Folder" Command="{Binding FilterViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
                 <MenuItem Header="R_ecent Filters" ItemsSource="{Binding FilterViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
@@ -76,7 +79,7 @@
                 </MenuItem>
                 <MenuItem Header="_Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+R" />
                 <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
-                <MenuItem Header="_Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
             </MenuItem>
             <!--<MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />
@@ -113,7 +116,7 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
+                    <ImageBrush ImageSource="..\Resources\Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
                 </TabControl.Background>
                 <TabControl.ContentTemplate x:Uid="tabContent">
                     <DataTemplate>
@@ -158,6 +161,7 @@
                                         <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                                         <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
                                         <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
+                                        <MenuItem Header="Open Containing Folder" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenFolderCommand}" />
                                         <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
                                         <MenuItem Header="Reload Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
                                         <MenuItem Header="Save Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" InputGestureText="Ctrl+Alt+S" />
@@ -250,7 +254,9 @@
                         <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
                         <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
                         <MenuItem Header="Copy File Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" />
+                        <MenuItem Header="Filter Notes" Command="{Binding FilterViewModel.FilterNotesCommand}" />
                         <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N" />
+                        <MenuItem Header="Open Containing Folder" Command="{Binding FilterViewModel.OpenFolderCommand}" />
                         <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O" />
                         <MenuItem Header="Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
                         <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S" />
@@ -273,7 +279,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
+                    <ImageBrush ImageSource="..\Resources\File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -295,20 +301,25 @@
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
+                          CanUserReorderColumns="True"
+                          CanUserDeleteRows="False"        
+                          IsReadOnly="True"        
                           SelectionMode="Extended"
                           SelectionUnit="FullRow"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}" >
-                            <DataGrid.Resources>
-                                <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
-                            </DataGrid.Resources>
-                            <DataGrid.CellStyle>
+                        <DataGrid.Resources>
+                            <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
+                        </DataGrid.Resources>
+                        <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Style.Setters>
-                                        <Setter Property="Background" Value="{Binding Path=Background}" />
-                                        <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
-                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                    <Setter Property="Background" Value="{Binding Path=Background}" />
+                                    <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
+                                    <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                     <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="BorderBrush" Value="{Binding Path=Background}" />
                                 </Style.Setters>
                             </Style>
                             </DataGrid.CellStyle>
@@ -316,7 +327,7 @@
                             <DataGrid.Columns>
                                 
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
-                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="*" >
+                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="5*" >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
@@ -324,10 +335,34 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                           
-                                <DataGridTextColumn Header="Group1" Binding="{Binding Path=Group1}" Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
-                                <DataGridTextColumn Header="Group2" Binding="{Binding Path=Group2}" Visibility="{Binding Data.Group2Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
-                                <DataGridTextColumn Header="Group3" Binding="{Binding Path=Group3}" Visibility="{Binding Data.Group3Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
-                                <DataGridTextColumn Header="Group4" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" />
+                                <DataGridTextColumn Header="Group1" Width="*" Binding="{Binding Path=Group1}" Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Group2" Width="*" Binding="{Binding Path=Group2}" Visibility="{Binding Data.Group2Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                <DataGridTextColumn Header="Group3" Width="*" Binding="{Binding Path=Group3}" Visibility="{Binding Data.Group3Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Group4" Width="*" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" >
+                                        <DataGridTextColumn.ElementStyle>
+                                            <Style>
+                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            </Style>
+                                        </DataGridTextColumn.ElementStyle>
+                                    </DataGridTextColumn>
 
                             </DataGrid.Columns>
 
@@ -358,6 +393,7 @@
                                     <MenuItem Header="Close All Files" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" />
                                     <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CopyFilePathCommand}" />
                                     <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
+                                    <MenuItem Header="Open Containing Folder" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenFolderCommand}" />
                                     <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
                                     <MenuItem Header="Open View in new Tab" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.NewCommand}" InputGestureText="Ctrl+N" />
                                     <MenuItem Header="Reload File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" InputGestureText="Ctrl+R" />
@@ -376,6 +412,7 @@
                         <MenuItem Header="Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
                         <MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
                         <MenuItem Header="Copy File Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
+                        <MenuItem Header="Open Containing Folder" Command="{Binding LogViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
                         <MenuItem Header="Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                         <MenuItem Header="Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
                     </ContextMenu>

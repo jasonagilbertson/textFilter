@@ -85,31 +85,31 @@ namespace RegexViewer
             return filterFile;
         }
 
-        public override IFile<FilterFileItem> OpenFile(string logName)
+        public override IFile<FilterFileItem> OpenFile(string fileName)
         {
             FilterFile filterFile = new FilterFile();
 
             try
             {
-                if (FileManager.Exists(x => String.Compare(x.Tag, logName, true) == 0))
+                if (FileManager.Exists(x => String.Compare(x.Tag, fileName, true) == 0))
                 {
-                    SetStatus("file already open:" + logName);
+                    SetStatus("file already open:" + fileName);
                     return filterFile;
                 }
 
-                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadFile(logName));
+                filterFile= (FilterFile)ReadFile(fileName);
                 ManageNewFilterFileItem(filterFile);
 
-                ManageFileProperties(logName, filterFile);
+                ManageFileProperties(fileName, filterFile);
                 FileManager.Add(filterFile);
-                this.Settings.AddFilterFile(logName);
+                this.Settings.AddFilterFile(fileName);
                 OnPropertyChanged("FilterFileManager");
 
                 return filterFile;
             }
             catch (Exception e)
             {
-                SetStatus(string.Format("error opening filter file:{0}:{1}", logName, e.ToString()));
+                SetStatus(string.Format("error opening filter file:{0}:{1}", fileName, e.ToString()));
                 return filterFile;
             }
         }
@@ -132,42 +132,70 @@ namespace RegexViewer
             return filterFileItems;
         }
 
-        public override List<FilterFileItem> ReadFile(string logName)
+        public override IFile<FilterFileItem> ReadFile(string fileName)
         {
-            if (Path.GetExtension(logName).ToLower().Contains("tat"))
+            FilterFile filterFile = new FilterFile();
+            filterFile.FileName = Path.GetFileName(fileName);
+            if (Path.GetExtension(fileName).ToLower().Contains("tat"))
             {
-                return ReadTatFile(logName);
+                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadTatFile(fileName));
+                return filterFile;
             }
 
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
             XmlDocument doc = new XmlDocument();
-            doc.Load(logName);
+            doc.Load(fileName);
 
             XmlNode root = doc.DocumentElement;
+            
+            // for v2 documentelement is filterInfo
+            if(root.Name.ToLower() == "filterinfo")
+            {
+                filterFile.FilterVersion = ReadStringNodeItem(root, "filterversion");
+                filterFile.FilterNotes = ReadStringNodeItem(root, "filternotes");
+            }
+
+            if (root.Name.ToLower() != "filters")
+            {
+                foreach (XmlNode node in root.ChildNodes)
+                {
+                    if (node.Name.ToLower() == "filters")
+                    {
+                        root = node;
+                        break;
+                    }
+                }
+            }
 
             for (int i = 0; i < root.ChildNodes.Count; i++)
             {
                 FilterFileItem fileItem = new FilterFileItem();
                 fileItem.Count = 0;
-                fileItem.BackgroundColor = ReadStringNodeItem(root, "backgroundcolor", i);
-                fileItem.CaseSensitive = ReadBoolNodeItem(root, "casesensitive", i);
-                fileItem.Enabled = ReadBoolNodeItem(root, "enabled", i);
-                fileItem.Exclude = ReadBoolNodeItem(root, "exclude", i);
-                fileItem.Regex = ReadBoolNodeItem(root, "regex", i);
-                fileItem.Filterpattern = ReadStringNodeItem(root, "filterpattern", i);
-                fileItem.ForegroundColor = ReadStringNodeItem(root, "foregroundcolor", i);
-                fileItem.Index = ReadIntNodeItem(root, "index", i);
-                fileItem.Notes = ReadStringNodeItem(root, "notes", i);
+                fileItem.BackgroundColor = ReadStringNodeChildItem(root, "backgroundcolor", i);
+                fileItem.CaseSensitive = ReadBoolNodeChildItem(root, "casesensitive", i);
+                fileItem.Enabled = ReadBoolNodeChildItem(root, "enabled", i);
+                fileItem.Exclude = ReadBoolNodeChildItem(root, "exclude", i);
+                fileItem.Regex = ReadBoolNodeChildItem(root, "regex", i);
+                fileItem.Filterpattern = ReadStringNodeChildItem(root, "filterpattern", i);
+                fileItem.ForegroundColor = ReadStringNodeChildItem(root, "foregroundcolor", i);
+                fileItem.Index = ReadIntNodeChildItem(root, "index", i);
+                fileItem.Notes = ReadStringNodeChildItem(root, "notes", i);
 
                 filterFileItems.Add(fileItem);
             }
-            return filterFileItems;
+
+            filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterFileItems);
+            return filterFile;
         }
 
-        public override bool SaveFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
+        public override bool SaveFile(string FileName, IFile<FilterFileItem> file)
         {
             try
             {
+                FilterFile filterFile = (FilterFile)file;
+
+                // todo: check for uri / share filter???
+
                 if (File.Exists(FileName))
                 {
                     File.Delete(FileName);
@@ -175,7 +203,7 @@ namespace RegexViewer
 
                 SetStatus("saving file:" + FileName);
 
-                if (Path.GetExtension(FileName).ToLower().Contains("tat") && SaveTatFile(FileName, fileItems))
+                if (Path.GetExtension(FileName).ToLower().Contains("tat") && SaveTatFile(FileName, filterFile.ContentItems))
                 {
                     return true;
                 }
@@ -183,9 +211,19 @@ namespace RegexViewer
                 XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
                 xmlw.Formatting = Formatting.Indented;
                 xmlw.WriteStartDocument();
+                xmlw.WriteStartElement("filterinfo");
+
+                xmlw.WriteStartElement("filterversion");
+                xmlw.WriteString(DateTime.Now.ToString("yymmdd"));
+                xmlw.WriteEndElement();
+                
+                xmlw.WriteStartElement("filternotes");
+                xmlw.WriteString(filterFile.FilterNotes);
+                xmlw.WriteEndElement();
+                
                 xmlw.WriteStartElement("filters");
 
-                foreach (FilterFileItem item in fileItems)
+                foreach (FilterFileItem item in filterFile.ContentItems)
                 {
                     xmlw.WriteStartElement("filter");
 
@@ -228,6 +266,7 @@ namespace RegexViewer
                     xmlw.WriteEndElement();
                 }
 
+                xmlw.WriteEndElement();
                 xmlw.WriteEndElement();
                 xmlw.WriteEndDocument();
 
@@ -346,7 +385,7 @@ namespace RegexViewer
             }
         }
 
-        private bool ReadBoolNodeItem(XmlNode node, string nodeName, int item)
+        private bool ReadBoolNodeChildItem(XmlNode node, string nodeName, int item)
         {
             try
             {
@@ -358,7 +397,7 @@ namespace RegexViewer
             }
         }
 
-        private int ReadIntNodeItem(XmlNode node, string nodeName, int item)
+        private int ReadIntNodeChildItem(XmlNode node, string nodeName, int item)
         {
             try
             {
@@ -370,7 +409,7 @@ namespace RegexViewer
             }
         }
 
-        private string ReadStringNodeItem(XmlNode node, string nodeName, int item)
+        private string ReadStringNodeChildItem(XmlNode node, string nodeName, int item)
         {
             try
             {
@@ -382,6 +421,17 @@ namespace RegexViewer
             }
         }
 
+        private string ReadStringNodeItem(XmlNode node, string nodeName)
+        {
+            try
+            {
+                return (node.SelectSingleNode(nodeName)).InnerText;
+            }
+            catch
+            {
+                return string.Empty;
+            }
+        }
         private List<FilterFileItem> ReadTatFile(string logName)
         {
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();

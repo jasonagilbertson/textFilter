@@ -4,29 +4,29 @@
     {
         #region Public Methods
 
-        void CloseAllFiles(object sender);
+        void CloseAllFilesExecuted(object sender);
 
-        void CloseFile(object sender);
+        void CloseFileExecuted(object sender);
 
         IFile<T> CurrentFile();
 
         ITabViewModel<T> CurrentTab();
 
-        void NewFile(object sender);
+        void NewFileExecuted(object sender);
 
         void OnPropertyChanged(string name);
 
-        void OpenDrop(object sender);
+        void OpenDropExecuted(object sender);
 
-        void OpenFile(object sender);
+        void OpenFileExecuted(object sender);
 
         void RemoveTabItem(ITabViewModel<T> tabItem);
 
         void RenameTabItem(string newName);
 
-        void SaveFile(object sender);
+        void SaveFileExecuted(object sender);
 
-        void SaveFileAs(object sender);
+        void SaveFileAsExecuted(object sender);
 
         #endregion Public Methods
 

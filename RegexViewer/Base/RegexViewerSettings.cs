@@ -514,7 +514,12 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.AutoSave).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.AutoSave).ToString());
+                }
+                
             }
         }
 
@@ -582,7 +587,12 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FileHistoryCount).ToString());
+                }
+                
             }
         }
 
@@ -626,7 +636,12 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.FontSize).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FontSize).ToString());
+                }
+                
             }
         }
 
@@ -638,7 +653,12 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
+                }
+                
             }
         }
 
@@ -650,7 +670,12 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.MaxMultiFileCount).ToString());
+                }
+                
             }
         }
 
@@ -688,7 +713,11 @@ namespace RegexViewer
             }
             set
             {
-                _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.SaveSessionInformation).ToString());
+                }
             }
         }
 

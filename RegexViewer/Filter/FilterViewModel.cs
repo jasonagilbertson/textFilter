@@ -9,6 +9,48 @@ namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
+
+        private Command _filterNotesCommand;
+
+        public Command FilterNotesCommand
+        {
+            get
+            {
+                if (_filterNotesCommand == null)
+                {
+                    _filterNotesCommand = new Command(FilterNotesExecuted);
+                }
+                _filterNotesCommand.CanExecute = true;
+
+                return _filterNotesCommand;
+            }
+            set { _filterNotesCommand = value; }
+        }
+
+        private void FilterNotesExecuted()
+        {
+            bool canSave = false;
+            FilterFile filterFile = (FilterFile)this.ViewManager.ReadFile(CurrentFile().Tag);
+
+            FilterNotesDialog dialog = new FilterNotesDialog(filterFile.FilterNotes);
+
+            dialog.Title = string.Format("{0} version:{1}",filterFile.FileName,filterFile.FilterVersion);
+
+            if(((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile))
+            {
+                canSave = true;
+                dialog.DialogCanSave = true;
+            }
+
+            filterFile.FilterNotes = dialog.WaitForResult();
+
+            if(canSave)
+            {
+                ((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile);
+            }
+
+        }
+
         #region Public Constructors
 
         public FilterViewModel()
@@ -161,7 +203,7 @@ namespace RegexViewer
             }
         }
 
-        public override void OpenFile(object sender)
+        public override void OpenFileExecuted(object sender)
         {
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
             if (sender is string && !String.IsNullOrEmpty(sender as string))
@@ -216,7 +258,7 @@ namespace RegexViewer
             Settings.AddFilterFile(logName);
         }
 
-        public override void SaveFileAs(object sender)
+        public override void SaveFileAsExecuted(object sender)
         {
             ITabViewModel<FilterFileItem> tabItem;
 
@@ -266,7 +308,7 @@ namespace RegexViewer
 
                 RenameTabItem(logName);
 
-                SaveFile(null);
+                SaveFileExecuted(null);
             }
 
             return;

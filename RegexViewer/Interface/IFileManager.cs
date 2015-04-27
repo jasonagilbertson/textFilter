@@ -28,9 +28,9 @@ namespace RegexViewer
 
         List<IFile<T>> OpenFiles(string[] files);
 
-        List<T> ReadFile(string LogName);
+        IFile<T> ReadFile(string LogName);
 
-        bool SaveFile(string FileName, ObservableCollection<T> list);
+        bool SaveFile(string FileName, IFile<T> file);
 
         #endregion Public Methods
     }

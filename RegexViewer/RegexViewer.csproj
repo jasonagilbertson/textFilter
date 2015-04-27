@@ -17,7 +17,7 @@
     <PublishUrl>\\127.0.0.1\c%24\Users\jag\OneDrive\tools-home\JasonGi\RegexViewer\RegexViewer\bin\x64\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>30</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
@@ -30,7 +30,7 @@
     <SuiteName>jagilber</SuiteName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>16</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -92,10 +92,10 @@
     <ManifestKeyFile>RegexViewer_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <GenerateManifests>false</GenerateManifests>
+    <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -133,7 +133,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <ApplicationDefinition Include="View\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -162,7 +162,7 @@
     <Compile Include="Base\BaseFileManager.cs" />
     <Compile Include="Log\LogFileItem.cs" />
     <Compile Include="Log\LogTabViewModel.cs" />
-    <Compile Include="MainViewModel.cs" />
+    <Compile Include="Base\MainViewModel.cs" />
     <Compile Include="Parser\AsyncVirtualizingCollection.cs" />
     <Compile Include="Parser\WorkerItem.cs" />
     <Compile Include="Parser\IItemsProvider.cs" />
@@ -170,33 +170,40 @@
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
-    <Compile Include="GotoLineDialog.xaml.cs">
+    <Compile Include="View\GotoLineDialog.xaml.cs">
       <DependentUpon>GotoLineDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="TimedSaveDialog.xaml.cs">
+    <Compile Include="View\FilterNotesDialog.xaml.cs">
+      <DependentUpon>FilterNotesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\TimedSaveDialog.xaml.cs">
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parser\WorkerManager.cs" />
-    <Page Include="MainWindow.xaml">
+    <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="App.xaml.cs">
+    <Compile Include="View\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Filter\FilterFile.cs" />
     <Compile Include="Log\LogFileManager.cs" />
     <Compile Include="Log\LogFile.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="GotoLineDialog.xaml">
+    <Page Include="View\GotoLineDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="TimedSaveDialog.xaml">
+    <Page Include="View\FilterNotesDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TimedSaveDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -242,10 +249,10 @@
     <Resource Include="RegexViewer.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="filter.png" />
+    <Resource Include="Resources\filter.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="file.png" />
+    <Resource Include="Resources\file.png" />
   </ItemGroup>
   <ItemGroup>
     <PublishFile Include="de\System.Windows.Interactivity.resources">
