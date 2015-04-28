@@ -82,23 +82,22 @@ namespace RegexViewer
 
             List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems, logTab);
             Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
-            
+
             try
             {
                 Parallel.ForEach(logFile.ContentItems, logItem =>
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId,logItem.Content)); 
-                        // used for goto
-                        // line as it needs all line items
+                        Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId, logItem.Content));
+                        // used for goto line as it needs all line items
                         logItem.FilterIndex = int.MinValue;
                         return;
                     }
 
                     int filterIndex = int.MaxValue; // int.MinValue;
 
-                    if(logTab.GroupCount > 0)
+                    if (Settings.CountMaskedMatches)
                     {
                         logItem.Masked = new int[filterItems.Count, 1];
                     }
@@ -173,7 +172,6 @@ namespace RegexViewer
                         else if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
                         {
                             match = true;
-                            
                         }
                         else if (!filterItem.Regex)
                         {
@@ -240,13 +238,13 @@ namespace RegexViewer
                 {
                     filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == i | x.FilterIndex == (i * -1) - 1);
 
-                    if (logTab.GroupCount > 0)
+                    if (Settings.CountMaskedMatches)
                     {
-                        filterFileItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MinValue) && x.Masked[i, 0] == 1);
+                        filterFileItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue) & (x.FilterIndex != int.MinValue) && x.Masked[i, 0] == 1);
+                        SetStatus(string.Format("ApplyFilter:filterItem masked counttotal: {0}", filterFileItems[i].MaskedCount));
                     }
 
                     SetStatus(string.Format("ApplyFilter:filterItem counttotal: {0}", filterFileItems[i].Count));
-                    SetStatus(string.Format("ApplyFilter:filterItem masked counttotal: {0}", filterFileItems[i].MaskedCount));
 
                     filterCount += filterFileItems[i].Count;
                 }

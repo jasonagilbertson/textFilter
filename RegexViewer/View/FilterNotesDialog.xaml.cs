@@ -1,6 +1,5 @@
-﻿using System;
-using System.Windows;
-using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Media;
 
 namespace RegexViewer
 {
@@ -9,14 +8,13 @@ namespace RegexViewer
     /// </summary>
     public partial class FilterNotesDialog : Window
     {
-        private string _initialNotes;
-
         #region Private Fields
+
+        private string _initialNotes;
 
         #endregion Private Fields
 
-               
-        #region Public Methods
+        #region Public Constructors
 
         public FilterNotesDialog(string notes)
         {
@@ -24,8 +22,15 @@ namespace RegexViewer
             _initialNotes = notes;
             textBoxFilterNotes.Text = notes;
             textBoxFilterNotes.Focus();
+            textBoxFilterNotes.FontFamily = new FontFamily(RegexViewerSettings.Settings.FontName);
+            textBoxFilterNotes.FontSize = RegexViewerSettings.Settings.FontSize;
+            textBoxFilterNotes.Foreground = RegexViewerSettings.Settings.ForegroundColor;
+            textBoxFilterNotes.Background = RegexViewerSettings.Settings.BackgroundColor;
         }
 
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public bool DialogCanSave
         {
@@ -36,11 +41,21 @@ namespace RegexViewer
 
             set
             {
-                
                 textBoxFilterNotes.IsEnabled = value;
                 buttonSave.IsEnabled = value;
             }
         }
+
+        #endregion Public Properties
+
+        #region Public Methods
+
+        public void Disable()
+        {
+            this.Hide();
+            this.Close();
+        }
+
         public string WaitForResult()
         {
             this.ShowDialog();
@@ -57,10 +72,11 @@ namespace RegexViewer
         #endregion Public Methods
 
         #region Private Methods
-        public void Disable()
+
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            this.Hide();
-            this.Close();
+            textBoxFilterNotes.Text = _initialNotes;
+            Disable();
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
@@ -68,11 +84,6 @@ namespace RegexViewer
             Disable();
         }
 
-        private void buttonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            textBoxFilterNotes.Text = _initialNotes;
-            Disable();
-        }
         #endregion Private Methods
     }
 }

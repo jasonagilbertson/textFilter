@@ -11,7 +11,15 @@ namespace RegexViewer
     /// <typeparam name="T">The type of items in the collection</typeparam>
     public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        #region Constructors
+        #region Private Fields
+
+        private readonly SynchronizationContext _synchronizationContext;
+
+        private bool _isLoading;
+
+        #endregion Private Fields
+
+        #region Public Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AsyncVirtualizingCollection&lt;T&gt;"/> class.
@@ -46,25 +54,9 @@ namespace RegexViewer
             _synchronizationContext = SynchronizationContext.Current;
         }
 
-        #endregion
+        #endregion Public Constructors
 
-        #region SynchronizationContext
-
-        private readonly SynchronizationContext _synchronizationContext;
-
-        /// <summary>
-        /// Gets the synchronization context used for UI-related operations. This is obtained as
-        /// the current SynchronizationContext when the AsyncVirtualizingCollection is created.
-        /// </summary>
-        /// <value>The synchronization context.</value>
-        protected SynchronizationContext SynchronizationContext
-        {
-            get { return _synchronizationContext; }
-        }
-
-        #endregion
-
-        #region INotifyCollectionChanged
+        #region Public Events
 
         /// <summary>
         /// Occurs when the collection changes.
@@ -72,67 +64,18 @@ namespace RegexViewer
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         /// <summary>
-        /// Raises the <see cref="E:CollectionChanged"/> event.
-        /// </summary>
-        /// <param name="e">The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
-        {
-            NotifyCollectionChangedEventHandler h = CollectionChanged;
-            if (h != null)
-                h(this, e);
-        }
-
-        /// <summary>
-        /// Fires the collection reset event.
-        /// </summary>
-        private void FireCollectionReset()
-        {
-            NotifyCollectionChangedEventArgs e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
-            OnCollectionChanged(e);
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        /// <summary>
         /// Occurs when a property value changes.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
-        /// <summary>
-        /// Raises the <see cref="E:PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            PropertyChangedEventHandler h = PropertyChanged;
-            if (h != null)
-                h(this, e);
-        }
+        #endregion Public Events
 
-        /// <summary>
-        /// Fires the property changed event.
-        /// </summary>
-        /// <param name="propertyName">Name of the property.</param>
-        private void FirePropertyChanged(string propertyName)
-        {
-            PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
-            OnPropertyChanged(e);
-        }
-
-        #endregion
-
-        #region IsLoading
-
-        private bool _isLoading;
+        #region Public Properties
 
         /// <summary>
         /// Gets or sets a value indicating whether the collection is loading.
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this collection is loading; otherwise, <c>false</c>.
-        /// </value>
+        /// <value><c>true</c> if this collection is loading; otherwise, <c>false</c> .</value>
         public bool IsLoading
         {
             get
@@ -141,7 +84,7 @@ namespace RegexViewer
             }
             set
             {
-                if ( value != _isLoading )
+                if (value != _isLoading)
                 {
                     _isLoading = value;
                 }
@@ -149,9 +92,23 @@ namespace RegexViewer
             }
         }
 
-        #endregion
+        #endregion Public Properties
 
-        #region Load overrides
+        #region Protected Properties
+
+        /// <summary>
+        /// Gets the synchronization context used for UI-related operations. This is obtained as the
+        /// current SynchronizationContext when the AsyncVirtualizingCollection is created.
+        /// </summary>
+        /// <value>The synchronization context.</value>
+        protected SynchronizationContext SynchronizationContext
+        {
+            get { return _synchronizationContext; }
+        }
+
+        #endregion Protected Properties
+
+        #region Protected Methods
 
         /// <summary>
         /// Asynchronously loads the count of items.
@@ -164,13 +121,64 @@ namespace RegexViewer
         }
 
         /// <summary>
-        /// Performed on background thread.
+        /// Asynchronously loads the page.
         /// </summary>
-        /// <param name="args">None required.</param>
-        private void LoadCountWork(object args)
+        /// <param name="index">The index.</param>
+        protected override void LoadPage(int index)
         {
-            int count = FetchCount();
-            SynchronizationContext.Send(LoadCountCompleted, count);
+            IsLoading = true;
+            ThreadPool.QueueUserWorkItem(LoadPageWork, index);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:CollectionChanged"/> event.
+        /// </summary>
+        /// <param name="e">
+        /// The <see cref="System.Collections.Specialized.NotifyCollectionChangedEventArgs"/>
+        /// instance containing the event data.
+        /// </param>
+        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            NotifyCollectionChangedEventHandler h = CollectionChanged;
+            if (h != null)
+                h(this, e);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="E:PropertyChanged"/> event.
+        /// </summary>
+        /// <param name="e">
+        /// The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the
+        /// event data.
+        /// </param>
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            PropertyChangedEventHandler h = PropertyChanged;
+            if (h != null)
+                h(this, e);
+        }
+
+        #endregion Protected Methods
+
+        #region Private Methods
+
+        /// <summary>
+        /// Fires the collection reset event.
+        /// </summary>
+        private void FireCollectionReset()
+        {
+            NotifyCollectionChangedEventArgs e = new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset);
+            OnCollectionChanged(e);
+        }
+
+        /// <summary>
+        /// Fires the property changed event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
+        private void FirePropertyChanged(string propertyName)
+        {
+            PropertyChangedEventArgs e = new PropertyChangedEventArgs(propertyName);
+            OnPropertyChanged(e);
         }
 
         /// <summary>
@@ -185,13 +193,27 @@ namespace RegexViewer
         }
 
         /// <summary>
-        /// Asynchronously loads the page.
+        /// Performed on background thread.
         /// </summary>
-        /// <param name="index">The index.</param>
-        protected override void LoadPage(int index)
+        /// <param name="args">None required.</param>
+        private void LoadCountWork(object args)
         {
-            IsLoading = true;
-            ThreadPool.QueueUserWorkItem(LoadPageWork, index);
+            int count = FetchCount();
+            SynchronizationContext.Send(LoadCountCompleted, count);
+        }
+
+        /// <summary>
+        /// Performed on UI-thread after LoadPageWork.
+        /// </summary>
+        /// <param name="args">object[] { int pageIndex, IList(T) page }</param>
+        private void LoadPageCompleted(object args)
+        {
+            int pageIndex = (int)((object[])args)[0];
+            IList<T> page = (IList<T>)((object[])args)[1];
+
+            PopulatePage(pageIndex, page);
+            IsLoading = false;
+            FireCollectionReset();
         }
 
         /// <summary>
@@ -202,23 +224,9 @@ namespace RegexViewer
         {
             int pageIndex = (int)args;
             IList<T> page = FetchPage(pageIndex);
-            SynchronizationContext.Send(LoadPageCompleted, new object[]{ pageIndex, page });
+            SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
 
-        /// <summary>
-        /// Performed on UI-thread after LoadPageWork.
-        /// </summary>
-        /// <param name="args">object[] { int pageIndex, IList(T) page }</param>
-        private void LoadPageCompleted(object args)
-        {
-            int pageIndex = (int)((object[]) args)[0];
-            IList<T> page = (IList<T>)((object[])args)[1];
-
-            PopulatePage(pageIndex, page);
-            IsLoading = false;
-            FireCollectionReset();
-        }
-
-        #endregion
+        #endregion Private Methods
     }
 }

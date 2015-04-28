@@ -15,76 +15,18 @@ namespace RegexViewer
         public static string Enabled = "Enabled";
         public static string Exclue = "Exclude";
         public static string Filterpattern = "Filterpattern";
-        public static string MaskedCount = "MaskedCount";
         public static string Foreground = "Foreground";
         public static string ForegroundColor = "ForegroundColor";
-
         public static string Index = "Index";
+        public static string MaskedCount = "MaskedCount";
         public static string Notes = "Notes";
         public static string Regex = "Regex";
 
-        
         #endregion Public Fields
     }
 
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
-        #region Public Properties
-
-        public int Index
-        {
-            get
-            {
-                return _index;
-            }
-
-            set
-            {
-                if (_index != value)
-                {
-                    _index = value;
-                    OnPropertyChanged(FilterFileItemEvents.Index);
-                }
-            }
-        }
-
-        public string Notes
-        {
-            get
-            {
-                return _notes;
-            }
-
-            set
-            {
-                if (_notes != value)
-                {
-                    _notes = value;
-                    OnPropertyChanged(FilterFileItemEvents.Notes);
-                }
-            }
-        }
-
-        public bool Regex
-        {
-            get
-            {
-                return _regex;
-            }
-
-            set
-            {
-                if (_regex != value)
-                {
-                    _regex = value;
-
-                    OnPropertyChanged(FilterFileItemEvents.Regex);
-                }
-            }
-        }
-
-        #endregion Public Properties
-
         #region Public Methods
 
         public void OnPropertyChanged(string name)
@@ -107,16 +49,28 @@ namespace RegexViewer
         #region Private Fields
 
         private string _backgroundColor;
+
+        private bool _caseSensitive;
+
         private int _count = 0;
+
         private bool _enabled = false;
+
         private bool _exclude = false;
+
         private string _filterpattern = string.Empty;
+
         private string _foregroundColor;
+
         private bool _include = false;
+
         private int _index = 0;
-        private string _notes = string.Empty;
-        private bool _regex = false;
+
         private int _maskedCount = 0;
+
+        private string _notes = string.Empty;
+
+        private bool _regex = false;
 
         #endregion Private Fields
 
@@ -133,9 +87,10 @@ namespace RegexViewer
         #region Public Events
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private bool _caseSensitive;
 
         #endregion Public Events
+
+        #region Public Properties
 
         public new Brush Background
         {
@@ -170,6 +125,22 @@ namespace RegexViewer
             }
         }
 
+        public bool CaseSensitive
+        {
+            get
+            {
+                return _caseSensitive;
+            }
+            set
+            {
+                if (_caseSensitive != value)
+                {
+                    _caseSensitive = value;
+                    OnPropertyChanged("CaseSensitive");
+                }
+            }
+        }
+
         public new string Content
         {
             get
@@ -195,23 +166,6 @@ namespace RegexViewer
                 {
                     _count = value;
                     OnPropertyChanged(FilterFileItemEvents.Count);
-                }
-            }
-        }
-
-        public int MaskedCount
-        {
-            get
-            {
-                return _maskedCount;
-            }
-
-            set
-            {
-                if (_maskedCount != value)
-                {
-                    _maskedCount = value;
-                    OnPropertyChanged(FilterFileItemEvents.MaskedCount);
                 }
             }
         }
@@ -308,6 +262,8 @@ namespace RegexViewer
             }
         }
 
+        public int GroupCount { get; set; }
+
         public bool Include
         {
             get
@@ -324,26 +280,78 @@ namespace RegexViewer
             }
         }
 
-        public bool CaseSensitive
+        public int Index
         {
             get
             {
-                return _caseSensitive;
+                return _index;
             }
+
             set
             {
-                if (_caseSensitive != value)
+                if (_index != value)
                 {
-                    _caseSensitive = value;
-                    OnPropertyChanged("CaseSensitive");
+                    _index = value;
+                    OnPropertyChanged(FilterFileItemEvents.Index);
                 }
             }
         }
 
-        public int GroupCount { get; set; }
+        public int MaskedCount
+        {
+            get
+            {
+                return _maskedCount;
+            }
+
+            set
+            {
+                if (_maskedCount != value)
+                {
+                    _maskedCount = value;
+                    OnPropertyChanged(FilterFileItemEvents.MaskedCount);
+                }
+            }
+        }
+
+        public string Notes
+        {
+            get
+            {
+                return _notes;
+            }
+
+            set
+            {
+                if (_notes != value)
+                {
+                    _notes = value;
+                    OnPropertyChanged(FilterFileItemEvents.Notes);
+                }
+            }
+        }
+
+        public bool Regex
+        {
+            get
+            {
+                return _regex;
+            }
+
+            set
+            {
+                if (_regex != value)
+                {
+                    _regex = value;
+
+                    OnPropertyChanged(FilterFileItemEvents.Regex);
+                }
+            }
+        }
 
         // for tat 'type' text or marker
         public string TatType { get; set; }
-        
+
+        #endregion Public Properties
     }
 }

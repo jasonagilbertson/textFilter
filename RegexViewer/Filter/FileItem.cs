@@ -7,10 +7,15 @@ namespace RegexViewer
         #region Public Properties
 
         public Brush Background { get; set; }
+
         public string Content { get; set; }
+
         public FontFamily FontFamily { get; set; }
+
         public int FontSize { get; set; }
+
         public Brush Foreground { get; set; }
+
         public int Index { get; set; }
 
         #endregion Public Properties

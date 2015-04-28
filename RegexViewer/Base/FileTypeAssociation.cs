@@ -12,7 +12,7 @@ namespace RegexViewer
         #region Private Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
-        private string[] _extensions = new string[2] { ".rvf",".rvconfig"};
+        private string[] _extensions = new string[2] { ".rvf", ".rvconfig" };
 
         //private string _extensionBackup;
 
@@ -40,14 +40,8 @@ namespace RegexViewer
 
         public FileTypeAssociation()
         {
-         
         }
-        public static bool IsAdministrator()
-        {
-            WindowsIdentity identity = WindowsIdentity.GetCurrent();
-            WindowsPrincipal principal = new WindowsPrincipal(identity);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
-        }
+
         #endregion Public Constructors
 
         #region Public Properties
@@ -60,6 +54,13 @@ namespace RegexViewer
         #endregion Public Properties
 
         #region Public Methods
+
+        public static bool IsAdministrator()
+        {
+            WindowsIdentity identity = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
 
         [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern void SHChangeNotify(uint wEventId, uint uFlags, IntPtr dwItem1, IntPtr dwItem2);
@@ -118,38 +119,6 @@ namespace RegexViewer
             return true;
         }
 
-        private void SetContextMenu()
-        {
-            RegistryKey baseKey;
-            
-            SetStatus("SeContextMenu:enter");
-            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
-            if (baseKey.OpenSubKey(_keyName) != null)
-            {
-                UnSetContextMenu();
-            }
-
-            baseKey.CreateSubKey(_keyName).CreateSubKey("command").SetValue("", "\"" + _openWith + "\"" + " \"%1\"");
-                        
-            baseKey.Close();
-            
-        }
-
-        private void UnSetContextMenu()
-        {
-            RegistryKey baseKey;
-
-            SetStatus("SeContextMenu:enter");
-            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
-            if (baseKey.OpenSubKey(_keyName) != null)
-            {
-                
-                baseKey.DeleteSubKeyTree(_keyName);
-            }
-
-            baseKey.Close();
-
-        }
         public void SetAssociation(string extension, string file = null)
         {
             RegistryKey BaseKey;
@@ -175,8 +144,6 @@ namespace RegexViewer
             BaseKey.Close();
             OpenMethod.Close();
             Shell.Close();
-
-
 
             // Tell explorer the file association has been changed
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
@@ -220,6 +187,36 @@ namespace RegexViewer
                 RegistryKey destSubKey = destinationKey.CreateSubKey(sourceSubKeyName);
                 RecurseCopyKey(sourceSubKey, destSubKey);
             }
+        }
+
+        private void SetContextMenu()
+        {
+            RegistryKey baseKey;
+
+            SetStatus("SeContextMenu:enter");
+            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
+            if (baseKey.OpenSubKey(_keyName) != null)
+            {
+                UnSetContextMenu();
+            }
+
+            baseKey.CreateSubKey(_keyName).CreateSubKey("command").SetValue("", "\"" + _openWith + "\"" + " \"%1\"");
+
+            baseKey.Close();
+        }
+
+        private void UnSetContextMenu()
+        {
+            RegistryKey baseKey;
+
+            SetStatus("SeContextMenu:enter");
+            baseKey = Registry.ClassesRoot.CreateSubKey("*\\shell");
+            if (baseKey.OpenSubKey(_keyName) != null)
+            {
+                baseKey.DeleteSubKeyTree(_keyName);
+            }
+
+            baseKey.Close();
         }
 
         #endregion Private Methods

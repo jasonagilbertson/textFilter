@@ -6,49 +6,7 @@ namespace RegexViewer
 {
     public class WorkerManager : Base
     {
-        #region Private Fields
-
-        private static WorkerManager _workerManager;
-
-        #endregion Private Fields
-
-        #region Private Constructors
-
-        private WorkerManager()
-        {
-        }
-
-        #endregion Private Constructors
-
-        #region Public Properties
-
-        public static WorkerManager Instance
-        {
-            get
-            {
-                if (_workerManager == null)
-                {
-                    _workerManager = new WorkerManager();
-                }
-                return _workerManager;
-            }
-        }
-
-        public List<BGWorkerInfo> Workers { get; set; }
-
-        #endregion Public Properties
-
         #region Public Methods
-
-        public void CancelWorker(BGWorkerInfo bgWorker)
-        {
-            // Cancel the asynchronous operation.
-            bgWorker.BackGroundWorker.CancelAsync();
-            if (this.Workers.Contains(bgWorker))
-            {
-                this.Workers.Remove(bgWorker);
-            }
-        }
 
         public bool ProcessWorker(WorkerItem workerItem)
         {
@@ -163,9 +121,51 @@ namespace RegexViewer
 
         #endregion Public Classes
 
+        #region Private Fields
+
+        private static WorkerManager _workerManager;
+
+        #endregion Private Fields
+
+        #region Private Constructors
+
+        private WorkerManager()
+        {
+        }
+
+        #endregion Private Constructors
+
+        #region Public Properties
+
+        public static WorkerManager Instance
+        {
+            get
+            {
+                if (_workerManager == null)
+                {
+                    _workerManager = new WorkerManager();
+                }
+                return _workerManager;
+            }
+        }
+
+        public List<BGWorkerInfo> Workers { get; set; }
+
+        #endregion Public Properties
+
+        public void CancelWorker(BGWorkerInfo bgWorker)
+        {
+            // Cancel the asynchronous operation.
+            bgWorker.BackGroundWorker.CancelAsync();
+            if (this.Workers.Contains(bgWorker))
+            {
+                this.Workers.Remove(bgWorker);
+            }
+        }
+
         public List<WorkerItem> GetWorkers(WorkerItem workerItem)
         {
-            if(workerItem.FilterFile != null && workerItem.LogFile != null)
+            if (workerItem.FilterFile != null && workerItem.LogFile != null)
             {
                 return (List<WorkerItem>)_workerManager.Workers.Select(x => x.Worker)
                     .Where(x => x.FilterFile == workerItem.FilterFile && x.LogFile == workerItem.LogFile)
@@ -187,7 +187,6 @@ namespace RegexViewer
             {
                 return new List<WorkerItem>();
             }
-
         }
     }
 }

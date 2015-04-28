@@ -24,14 +24,15 @@
 
         void RenameTabItem(string newName);
 
-        void SaveFileExecuted(object sender);
-
         void SaveFileAsExecuted(object sender);
+
+        void SaveFileExecuted(object sender);
 
         #endregion Public Methods
 
         #region Public Events
 
+        // ITabViewModel<T> SelectedTabItem { get; set; }
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         #endregion Public Events
@@ -49,7 +50,6 @@
         int SelectedIndex { get; set; }
 
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
-      //  ITabViewModel<T> SelectedTabItem { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
 

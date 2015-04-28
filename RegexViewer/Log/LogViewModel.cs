@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -14,21 +13,27 @@ namespace RegexViewer
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
         #region Private Methods
+
+        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("_filterViewModel.CollectionChanged: " + sender.ToString());
+            FilterLogTabItems();
+        }
+
+        #endregion Private Methods
+
+        #region Public Structs
+
         public struct LogViewModelEvents
         {
             #region Public Fields
 
             public static string LineTotals = "LineTotals";
-            
+
             #endregion Public Fields
         }
-        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SetStatus("_filterViewModel.CollectionChanged" + sender.ToString());
-            FilterLogTabItems();
-        }
 
-        #endregion Private Methods
+        #endregion Public Structs
 
         #region Private Fields
 
@@ -61,6 +66,7 @@ namespace RegexViewer
 
         public LogViewModel(FilterViewModel filterViewModel)
         {
+            SetStatus("LogViewModel.ctor");
             _filterViewModel = filterViewModel;
             this.TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             this.ViewManager = new LogFileManager();
@@ -75,7 +81,7 @@ namespace RegexViewer
                 AddTabItem(logFile);
             }
 
-            FilterLogTabItems(FilterCommand.Reset);
+       //     FilterLogTabItems(FilterCommand.Reset);
             // FilterActiveTabItem();
         }
 
@@ -183,6 +189,18 @@ namespace RegexViewer
             }
         }
 
+        public LogTabViewModel SelectedTab
+        {
+            get
+            {
+                return (LogTabViewModel)this.TabItems[SelectedIndex];
+            }
+            //set
+            //{
+            //    ((LogTabViewModel)TabItems[SelectedIndex]) = value;
+            //}
+        }
+
         #endregion Public Properties
 
         #region Public Methods
@@ -203,7 +221,7 @@ namespace RegexViewer
 
                 this.SelectedIndex = this.TabItems.Count - 1;
                 _previousFilterFileItems = new List<FilterFileItem>();
-                FilterLogTabItems(FilterCommand.Filter);
+              //  FilterLogTabItems(FilterCommand.Filter);
             }
         }
 
@@ -326,7 +344,7 @@ namespace RegexViewer
 
                 // update line total counts
                 LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, logFile.ContentItems.Count);
-                               
+
                 SaveCurrentFilter(filterFileItems);
             }
             catch (Exception e)
@@ -366,21 +384,11 @@ namespace RegexViewer
             }
         }
 
-        public LogTabViewModel SelectedTab
-        {
-            get
-            {
-                return (LogTabViewModel)this.TabItems[SelectedIndex];
-            }
-            //set
-            //{
-            //    ((LogTabViewModel)TabItems[SelectedIndex]) = value;
-            //}
-        }
         public void HideExecuted(object sender)
         {
             try
             {
+                SetStatus("HideExecuted:enter");
                 DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
                 LogFileItem logFileItem;
 
@@ -406,7 +414,6 @@ namespace RegexViewer
                     this.FilterLogTabItems(FilterCommand.ShowAll);
                 }
 
-            
                 if (dataGrid != null)
                 {
                     if (dataGrid.Items.Contains(logFileItem))
@@ -630,7 +637,7 @@ namespace RegexViewer
 
                     // open filtered view into new tab if not a '-new x-' tab
                     if (string.Compare(tabItem.Tag, logName, true) != 0
-                        && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
+                        && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                     {
                         AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
                     }
@@ -638,6 +645,43 @@ namespace RegexViewer
                     {
                         RenameTabItem(logName);
                     }
+                }
+            }
+        }
+
+        public override void SaveFileExecuted(object sender)
+        {
+            ITabViewModel<LogFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<LogFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    // can get here by having no filters and hitting save file.
+                    // todo: disable save file if no tab items
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
+            {
+                SaveFileAsExecuted(tabItem);
+            }
+            else
+            {
+                LogFile file = (LogFile)CurrentFile();
+                if (file != null)
+                {
+                    file.ContentItems = tabItem.ContentList;
+                    this.ViewManager.SaveFile(tabItem.Tag, file);
                 }
             }
         }
@@ -684,14 +728,18 @@ namespace RegexViewer
             SetStatus("LogViewModel.PropertyChanged: " + e.PropertyName);
 
             // dont filter on form updates
-            if(e.PropertyName != LogViewModelEvents.LineTotals
-                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group1Visibility
-                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group2Visibility
-                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group3Visibility
-                & e.PropertyName != LogTabViewModel.LogTabViewModelEvents.Group4Visibility)
+            if (e.PropertyName == LogViewModelEvents.LineTotals
+                | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group1Visibility
+                | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group2Visibility
+                | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group3Visibility
+                | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group4Visibility)
             {
-                FilterLogTabItems();
+
+                return;
             }
+
+            SetStatus("LogViewModel.PropertyChanged Passing to filter: " + e.PropertyName);
+            FilterLogTabItems();
         }
 
         private void SaveCurrentFilter(List<FilterFileItem> filterFileItems)

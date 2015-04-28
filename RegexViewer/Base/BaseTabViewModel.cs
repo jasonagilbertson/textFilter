@@ -59,6 +59,7 @@ namespace RegexViewer
                 }
             }
         }
+
         //public abstract bool Group1Visibility { get; set; }
         //public abstract bool Group2Visibility { get; set; }
         public ObservableCollection<T> ContentList
@@ -297,7 +298,6 @@ namespace RegexViewer
                     }
                     else
                     {
-
                         htmlFragment.AddClipToList(lbi.Content, lbi.Background, lbi.Foreground);
                     }
                 }
@@ -324,7 +324,6 @@ namespace RegexViewer
             {
                 ListBox listBox = (sender as ListBox);
                 _selectedContent = listBox.SelectedItems.Cast<T>().ToList();
-       
             }
             else if (sender is DataGrid)
             {
@@ -372,6 +371,5 @@ namespace RegexViewer
         }
 
         #endregion Private Methods
-
     }
 }

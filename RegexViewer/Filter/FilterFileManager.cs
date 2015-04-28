@@ -22,6 +22,12 @@ namespace RegexViewer
 
         #endregion Public Constructors
 
+        #region Public Properties
+
+        public bool IsTatFile { get; set; }
+
+        #endregion Public Properties
+
         #region Public Methods
 
         public void ManageNewFilterFileItem(FilterFile filterFile)
@@ -97,7 +103,7 @@ namespace RegexViewer
                     return filterFile;
                 }
 
-                filterFile= (FilterFile)ReadFile(fileName);
+                filterFile = (FilterFile)ReadFile(fileName);
                 ManageNewFilterFileItem(filterFile);
 
                 ManageFileProperties(fileName, filterFile);
@@ -138,8 +144,13 @@ namespace RegexViewer
             filterFile.FileName = Path.GetFileName(fileName);
             if (Path.GetExtension(fileName).ToLower().Contains("tat"))
             {
+                this.IsTatFile = true;
                 filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadTatFile(fileName));
                 return filterFile;
+            }
+            else
+            {
+                this.IsTatFile = false;
             }
 
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
@@ -147,9 +158,9 @@ namespace RegexViewer
             doc.Load(fileName);
 
             XmlNode root = doc.DocumentElement;
-            
+
             // for v2 documentelement is filterInfo
-            if(root.Name.ToLower() == "filterinfo")
+            if (root.Name.ToLower() == "filterinfo")
             {
                 filterFile.FilterVersion = ReadStringNodeItem(root, "filterversion");
                 filterFile.FilterNotes = ReadStringNodeItem(root, "filternotes");
@@ -190,10 +201,10 @@ namespace RegexViewer
 
         public override bool SaveFile(string FileName, IFile<FilterFileItem> file)
         {
+            FilterFile filterFile = (FilterFile)file;
+
             try
             {
-                FilterFile filterFile = (FilterFile)file;
-
                 // todo: check for uri / share filter???
 
                 if (File.Exists(FileName))
@@ -203,9 +214,21 @@ namespace RegexViewer
 
                 SetStatus("saving file:" + FileName);
 
-                if (Path.GetExtension(FileName).ToLower().Contains("tat") && SaveTatFile(FileName, filterFile.ContentItems))
+                if (Path.GetExtension(FileName).ToLower().Contains("tat"))
                 {
-                    return true;
+                    this.IsTatFile = true;
+                    if (SaveTatFile(FileName, filterFile.ContentItems))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                else
+                {
+                    this.IsTatFile = false;
                 }
 
                 XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
@@ -216,11 +239,11 @@ namespace RegexViewer
                 xmlw.WriteStartElement("filterversion");
                 xmlw.WriteString(DateTime.Now.ToString("yymmdd"));
                 xmlw.WriteEndElement();
-                
+
                 xmlw.WriteStartElement("filternotes");
                 xmlw.WriteString(filterFile.FilterNotes);
                 xmlw.WriteEndElement();
-                
+
                 xmlw.WriteStartElement("filters");
 
                 foreach (FilterFileItem item in filterFile.ContentItems)
@@ -273,6 +296,11 @@ namespace RegexViewer
                 xmlw.Close();
 
                 return true;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                // filterFile.IsReadyOnly = true;
+                return false;
             }
             catch (Exception e)
             {
@@ -432,6 +460,7 @@ namespace RegexViewer
                 return string.Empty;
             }
         }
+
         private List<FilterFileItem> ReadTatFile(string logName)
         {
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();

@@ -3,15 +3,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
 
 namespace RegexViewer
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        
         #region Private Fields
 
         private Command _closeAllCommand;
@@ -20,8 +17,8 @@ namespace RegexViewer
         private Command _gotFocusCommand;
         private Command _newCommand;
         private Command _openCommand;
-        private Command _openFolderCommand;
         private bool _openDialogVisible;
+        private Command _openFolderCommand;
         private int _previousIndex = -1;
         private Command _recentCommand;
         private Command _reloadCommand;
@@ -68,30 +65,6 @@ namespace RegexViewer
                 return _copyFilePathCommand;
             }
             set { _copyFilePathCommand = value; }
-        }
-
-        public Command OpenFolderCommand
-        {
-            get
-            {
-                if (_openFolderCommand == null)
-                {
-                    _openFolderCommand = new Command(OpenFolderExecuted);
-                }
-                _openFolderCommand.CanExecute = true;
-
-                return _openFolderCommand;
-            }
-            set { _openFolderCommand = value; }
-        }
-
-        private void OpenFolderExecuted()
-        {
-            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
-            {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                CreateProcess("explorer.exe", Path.GetDirectoryName(tabItem.Tag));
-            }
         }
 
         public Command DragDropCommand
@@ -151,6 +124,21 @@ namespace RegexViewer
                     OnPropertyChanged("OpenDialogVisible");
                 }
             }
+        }
+
+        public Command OpenFolderCommand
+        {
+            get
+            {
+                if (_openFolderCommand == null)
+                {
+                    _openFolderCommand = new Command(OpenFolderExecuted);
+                }
+                _openFolderCommand.CanExecute = true;
+
+                return _openFolderCommand;
+            }
+            set { _openFolderCommand = value; }
         }
 
         public int PreviousIndex
@@ -233,7 +221,7 @@ namespace RegexViewer
                 tabItems = value;
             }
         }
-        
+
         public IFileManager<T> ViewManager { get; set; }
 
         #endregion Public Properties
@@ -410,52 +398,14 @@ namespace RegexViewer
 
         public abstract void RenameTabItem(string newName);
 
-        public void SaveFileExecuted(object sender)
-        {
-            ITabViewModel<T> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<T>)(sender as TabItem);
-            }
-            else
-            {
-                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
-                {
-                    tabItem = (ITabViewModel<T>)this.TabItems[this.SelectedIndex];
-                }
-                else
-                {
-                    // can get here by having no filters and hitting save file.
-                    // todo: disable save file if no tab items
-                    return;
-                }
-            }
-
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern))
-            {
-                SaveFileAsExecuted(tabItem);
-            }
-            else
-            {
-                //IFile<T> file = (IFile<T>)new object();
-                IFile<T> file = default(IFile<T>);
-                if(typeof(T) == typeof(LogFileItem))
-                {
-                    file = (IFile<T>)new LogFile();
-                }
-                else if (typeof(T) == typeof(FilterFileItem))
-                {
-                    file = (IFile<T>)new FilterFile();
-                }
-                
-                file.ContentItems = tabItem.ContentList;
-                this.ViewManager.SaveFile(tabItem.Tag, file);
-            }
-        }
-
         public abstract void SaveFileAsExecuted(object sender);
 
+        public abstract void SaveFileExecuted(object sender);
+
+        //        file.ContentItems = tabItem.ContentList;
+        //        this.ViewManager.SaveFile(tabItem.Tag, file);
+        //    }
+        //}
         public void SaveModifiedFiles(object sender)
         {
             foreach (IFile<T> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
@@ -499,5 +449,33 @@ namespace RegexViewer
         }
 
         #endregion Public Methods
+
+        #region Private Methods
+
+        private void OpenFolderExecuted()
+        {
+            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                CreateProcess("explorer.exe", Path.GetDirectoryName(tabItem.Tag));
+            }
+        }
+
+        #endregion Private Methods
+
+        //public void SaveFileExecuted(object sender)
+        //{
+        //    ITabViewModel<T> tabItem;
+
+        // if (sender is TabItem) { tabItem = (ITabViewModel<T>)(sender as TabItem); } else { if
+        // (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count) { tabItem =
+        // (ITabViewModel<T>)this.TabItems[this.SelectedIndex]; } else { // can get here by having
+        // no filters and hitting save file. // todo: disable save file if no tab items return; } }
+
+        // if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag,
+        // _tempTabNameFormatPattern, RegexOptions.IgnoreCase)) { SaveFileAsExecuted(tabItem); }
+        // else { //IFile<T> file = (IFile<T>)new object(); IFile<T> file = default(IFile<T>);
+        // if(typeof(T) == typeof(LogFileItem)) { file = (IFile<T>)new LogFile(); } else if
+        // (typeof(T) == typeof(FilterFileItem)) { file = (IFile<T>)new FilterFile(); }
     }
 }

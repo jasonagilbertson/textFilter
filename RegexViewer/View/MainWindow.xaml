@@ -173,7 +173,7 @@
                                 <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
                                 <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
                                 <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
-                                
+
                                 <DataGridTextColumn Width="300" Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
@@ -185,10 +185,15 @@
                                             </Style.Setters>
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="MaskedCount" Binding="{Binding Path=MaskedCount}" Visibility="{Binding Data.MaskedVisibility, Source={StaticResource proxyFilter}, Converter={StaticResource  BoolToVis}}" />
-                                
+
                                 <DataGridTemplateColumn Header="Background Color">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -237,7 +242,7 @@
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                             
+
                                 <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
@@ -272,7 +277,7 @@
                         Margin="0,0,0,0" VerticalAlignment="Stretch"
                         ItemsSource="{Binding Path=LogViewModel.TabItems}"
                         SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
-                
+
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
@@ -287,7 +292,7 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
-                    
+
                     <DataTemplate>
                         <DataGrid x:Name="logFileData"
                           VirtualizingStackPanel.IsVirtualizing="True"
@@ -302,15 +307,17 @@
                           VerticalAlignment="Stretch"
                           CanUserAddRows="False"
                           CanUserReorderColumns="True"
-                          CanUserDeleteRows="False"        
-                          IsReadOnly="True"        
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True"
+
                           SelectionMode="Extended"
                           SelectionUnit="FullRow"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Tag="{Binding}" >
+                          Tag="{Binding}">
                         <DataGrid.Resources>
                             <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
                         </DataGrid.Resources>
+
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Style.Setters>
@@ -318,23 +325,27 @@
                                     <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
                                     <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                     <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
-                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="BorderThickness" Value="1" />
                                     <Setter Property="BorderBrush" Value="{Binding Path=Background}" />
                                 </Style.Setters>
-                            </Style>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="BorderBrush" Value="{Binding Path=Foreground}" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
                             </DataGrid.CellStyle>
-                            
+
                             <DataGrid.Columns>
-                                
                                 <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
-                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="5*" >
+                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="5*">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
                                             <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                          
+
                                 <DataGridTextColumn Header="Group1" Width="*" Binding="{Binding Path=Group1}" Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style>
@@ -356,14 +367,13 @@
                                             </Style>
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Group4" Width="*" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}" >
+                                    <DataGridTextColumn Header="Group4" Width="*" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
                                         <DataGridTextColumn.ElementStyle>
                                             <Style>
                                                 <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
                                             </Style>
                                         </DataGridTextColumn.ElementStyle>
                                     </DataGridTextColumn>
-
                             </DataGrid.Columns>
 
                             <i:Interaction.Triggers>

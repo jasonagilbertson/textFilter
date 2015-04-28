@@ -15,7 +15,7 @@
 
     /// <summary>
     /// Helper class to decode HTML from the clipboard. See
-    /// http://blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
+    /// http: //blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
     /// </summary>
     internal class HtmlFragment
     {
@@ -266,7 +266,7 @@
                         break;
 
                     // Byte count from the beginning of the clipboard to the end of the context, or
-                    // -1 if no context.
+                    // - 1 if no context.
                     case "endhtml":
                         if (startHMTL == 0) throw new FormatException("StartHTML must be declared before endHTML");
                         endHTML = int.Parse(val);

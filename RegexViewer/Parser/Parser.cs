@@ -172,7 +172,7 @@ namespace RegexViewer
                 {
                     WorkerModification = WorkerItem.Modification.FilterIndex,
                     FilterFile = currentFilter,
-                   // LogFile = currentLog
+                    // LogFile = currentLog
                 };
 
                 FilterNeed filterNeed = FilterNeed.Unknown;
@@ -189,7 +189,7 @@ namespace RegexViewer
                 {
                     filterNeed = FilterNeed.Filter;
                 }
-                
+
                 switch (filterNeed)
                 {
                     case FilterNeed.Unknown:
@@ -319,18 +319,18 @@ namespace RegexViewer
             };
         }
 
+        #endregion Private Methods
+
         //private bool ParseFile(IFile<FilterFileItem> filterFile, IFile<LogFileItem> logFile)
         //{
         //    // http: //stackoverflow.com/questions/1207832/wpf-dispatcher-begininvoke-and-ui-background-threads
 
-        //    WorkerItem worker = new WorkerItem();
+        // WorkerItem worker = new WorkerItem();
 
-        //    _workerManager.StartWorker(worker);
+        // _workerManager.StartWorker(worker);
 
         //    return true;
         //}
-
-        #endregion Private Methods
 
         //private void logItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         //{

@@ -2,11 +2,21 @@
 {
     public class FilterTabViewModel : BaseTabViewModel<FilterFileItem>
     {
-        #region Public Constructors
+        #region Private Fields
+
         private bool _maskedVisibility = RegexViewerSettings.Settings.CountMaskedMatches;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
         public FilterTabViewModel()
         {
         }
+
+        #endregion Public Constructors
+
+        #region Public Properties
 
         public bool MaskedVisibility
         {
@@ -23,6 +33,7 @@
                 }
             }
         }
-        #endregion Public Constructors
+
+        #endregion Public Properties
     }
 }

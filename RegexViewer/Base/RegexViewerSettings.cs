@@ -13,7 +13,6 @@ namespace RegexViewer
 {
     public class RegexViewerSettings : Base
     {
-
         #region Public Methods
 
         public bool ReadConfigFile()
@@ -150,7 +149,7 @@ namespace RegexViewer
             List<string> newList = new List<string>(recentLogFiles);
 
             // dont save temp names
-            if(Regex.IsMatch(logFile, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
+            if (Regex.IsMatch(logFile, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
             {
                 return newList.ToArray();
             }
@@ -160,13 +159,13 @@ namespace RegexViewer
                 newList.Remove(logFile);
             }
 
-            while(newList.Count >= settings.FileHistoryCount)
+            while (newList.Count >= settings.FileHistoryCount)
             {
                 newList.RemoveAt(0);
             }
 
             newList.Add(logFile);
-            
+
             return newList.ToArray();
         }
 
@@ -519,7 +518,6 @@ namespace RegexViewer
                     _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.AutoSave).ToString());
                 }
-                
             }
         }
 
@@ -592,7 +590,6 @@ namespace RegexViewer
                     _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.FileHistoryCount).ToString());
                 }
-                
             }
         }
 
@@ -641,7 +638,6 @@ namespace RegexViewer
                     _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.FontSize).ToString());
                 }
-                
             }
         }
 
@@ -658,7 +654,6 @@ namespace RegexViewer
                     _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
                 }
-                
             }
         }
 
@@ -675,7 +670,6 @@ namespace RegexViewer
                     _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.MaxMultiFileCount).ToString());
                 }
-                
             }
         }
 

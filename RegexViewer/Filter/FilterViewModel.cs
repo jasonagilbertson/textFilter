@@ -3,53 +3,18 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Controls;
 
 namespace RegexViewer
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
+        #region Private Fields
 
         private Command _filterNotesCommand;
 
-        public Command FilterNotesCommand
-        {
-            get
-            {
-                if (_filterNotesCommand == null)
-                {
-                    _filterNotesCommand = new Command(FilterNotesExecuted);
-                }
-                _filterNotesCommand.CanExecute = true;
-
-                return _filterNotesCommand;
-            }
-            set { _filterNotesCommand = value; }
-        }
-
-        private void FilterNotesExecuted()
-        {
-            bool canSave = false;
-            FilterFile filterFile = (FilterFile)this.ViewManager.ReadFile(CurrentFile().Tag);
-
-            FilterNotesDialog dialog = new FilterNotesDialog(filterFile.FilterNotes);
-
-            dialog.Title = string.Format("{0} version:{1}",filterFile.FileName,filterFile.FilterVersion);
-
-            if(((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile))
-            {
-                canSave = true;
-                dialog.DialogCanSave = true;
-            }
-
-            filterFile.FilterNotes = dialog.WaitForResult();
-
-            if(canSave)
-            {
-                ((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile);
-            }
-
-        }
+        #endregion Private Fields
 
         #region Public Constructors
 
@@ -70,6 +35,21 @@ namespace RegexViewer
         #endregion Public Constructors
 
         #region Public Properties
+
+        public Command FilterNotesCommand
+        {
+            get
+            {
+                if (_filterNotesCommand == null)
+                {
+                    _filterNotesCommand = new Command(FilterNotesExecuted);
+                }
+                _filterNotesCommand.CanExecute = true;
+
+                return _filterNotesCommand;
+            }
+            set { _filterNotesCommand = value; }
+        }
 
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
@@ -314,6 +294,43 @@ namespace RegexViewer
             return;
         }
 
+        public override void SaveFileExecuted(object sender)
+        {
+            ITabViewModel<FilterFileItem> tabItem;
+
+            if (sender is TabItem)
+            {
+                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
+            }
+            else
+            {
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    // can get here by having no filters and hitting save file.
+                    // todo: disable save file if no tab items
+                    return;
+                }
+            }
+
+            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
+            {
+                SaveFileAsExecuted(tabItem);
+            }
+            else
+            {
+                FilterFile file = (FilterFile)CurrentFile();
+                if (file != null)
+                {
+                    file.ContentItems = tabItem.ContentList;
+                    this.ViewManager.SaveFile(tabItem.Tag, file);
+                }
+            }
+        }
+
         #endregion Public Methods
 
         #region Internal Methods
@@ -335,6 +352,39 @@ namespace RegexViewer
         #endregion Internal Methods
 
         #region Private Methods
+
+        private void FilterNotesExecuted()
+        {
+            bool canSave = false;
+            if (CurrentFile() == null)
+            {
+                return;
+            }
+
+            FilterFile filterFile = (FilterFile)this.ViewManager.ReadFile(CurrentFile().Tag);
+
+            FilterNotesDialog dialog = new FilterNotesDialog(filterFile.FilterNotes);
+
+            dialog.Title = string.Format("{0} version:{1}", filterFile.FileName, filterFile.FilterVersion);
+
+            // verify file can be written
+            if (((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile))
+            {
+                canSave = true;
+                dialog.DialogCanSave = true;
+            }
+
+            filterFile.FilterNotes = dialog.WaitForResult();
+
+            if (canSave)
+            {
+                // save new notes to current filter
+                ((FilterFile)CurrentFile()).FilterNotes = filterFile.FilterNotes;
+
+                // save only new notes to file.
+                ((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile);
+            }
+        }
 
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {

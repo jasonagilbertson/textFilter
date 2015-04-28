@@ -4,41 +4,6 @@ namespace RegexViewer
 {
     public class FilterFile : BaseFile<FilterFileItem>
     {
-        #region Private Fields
-
-        private ObservableCollection<FilterFileItem> _contentItems = new ObservableCollection<FilterFileItem>();
-        private bool _patternNotifications;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public FilterFile()
-        {
-        }
-
-        public string FilterNotes { get; set; }
-        
-        #endregion Public Constructors
-
-        #region Public Properties
-
-        public override ObservableCollection<FilterFileItem> ContentItems
-        {
-            get
-            {
-                return _contentItems;
-            }
-
-            set
-            {
-                _contentItems = value;
-                OnPropertyChanged("ContentItems");
-            }
-        }
-
-        #endregion Public Properties
-
         #region Public Methods
 
         public void EnablePatternNotifications(bool enable)
@@ -59,7 +24,7 @@ namespace RegexViewer
                 {
                     item.PropertyChanged -= item_PropertyChanged;
                 }
-              //  Modified = false;
+                // Modified = false;
             }
 
             _patternNotifications = enable;
@@ -88,6 +53,42 @@ namespace RegexViewer
 
         #endregion Private Methods
 
+        #region Private Fields
+
+        private ObservableCollection<FilterFileItem> _contentItems = new ObservableCollection<FilterFileItem>();
+
+        private bool _patternNotifications;
+
+        #endregion Private Fields
+
+        #region Public Constructors
+
+        public FilterFile()
+        {
+        }
+
+        #endregion Public Constructors
+
+        #region Public Properties
+
+        public override ObservableCollection<FilterFileItem> ContentItems
+        {
+            get
+            {
+                return _contentItems;
+            }
+
+            set
+            {
+                _contentItems = value;
+                OnPropertyChanged("ContentItems");
+            }
+        }
+
+        public string FilterNotes { get; set; }
+
         public string FilterVersion { get; set; }
+
+        #endregion Public Properties
     }
 }

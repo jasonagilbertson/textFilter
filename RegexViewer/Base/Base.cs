@@ -1,16 +1,19 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Media;
-using System.Diagnostics;
 
 namespace RegexViewer
 {
     public class Base : INotifyPropertyChanged
     {
+        #region Public Fields
 
         public string _tempTabNameFormat = "-new {0}-";
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+
+        #endregion Public Fields
 
         #region Public Events
 
@@ -40,6 +43,7 @@ namespace RegexViewer
                 SetStatus("CreateProcess: exception" + e.ToString());
             }
         }
+
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;
