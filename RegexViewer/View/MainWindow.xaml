@@ -105,6 +105,9 @@
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
                         Margin="0,0,0,0" VerticalAlignment="Stretch">
+                <TabControl.InputBindings>
+                    <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.InsertFilterItemCommand}" />
+                </TabControl.InputBindings>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
@@ -119,7 +122,8 @@
                     <ImageBrush ImageSource="..\Resources\Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
                 </TabControl.Background>
                 <TabControl.ContentTemplate x:Uid="tabContent">
-                    <DataTemplate>
+
+                <DataTemplate>
                         <DataGrid x:Name="dataGridFilter"
                           ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
                           AutoGenerateColumns="False"
@@ -132,9 +136,10 @@
                           CanUserAddRows="False"
                           Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                           Tag="{Binding}"
-                          DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
-                          DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"
                           DataGridCell.GotFocus="DataGrid_CellGotFocus">
+                          <!--DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
+                          DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"-->
+
                             <DataGrid.Resources>
                                 <local:BindingProxy x:Key="proxyFilter" Data="{Binding}" />
                             </DataGrid.Resources>
@@ -152,6 +157,7 @@
 
                             <DataGrid.InputBindings>
                                 <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
+                                <!--<KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.InsertFilterItemCommand}" />-->
                             </DataGrid.InputBindings>
                                 <DataGrid.ContextMenu>
                                     <ContextMenu HasDropShadow="True">

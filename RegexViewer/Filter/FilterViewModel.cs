@@ -14,6 +14,8 @@ namespace RegexViewer
 
         private Command _filterNotesCommand;
 
+        private Command _insertFilterItemCommand;
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -51,6 +53,24 @@ namespace RegexViewer
             set { _filterNotesCommand = value; }
         }
 
+        public Command InsertFilterItemCommand
+        {
+            get
+            {
+                if (_insertFilterItemCommand == null)
+                {
+                    _insertFilterItemCommand = new Command(InsertFilterItemExecuted);
+                }
+                _insertFilterItemCommand.CanExecute = true;
+
+                return _insertFilterItemCommand;
+            }
+            set
+            {
+                _insertFilterItemCommand = value;
+            }
+        }
+
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
@@ -78,6 +98,8 @@ namespace RegexViewer
                     Header = filterFile.FileName,
                     Modified = false
                 };
+
+                // tabItem.ContentList.CollectionChanged += ContentList_CollectionChanged;
                 tabItem.PropertyChanged += tabItem_PropertyChanged;
                 TabItems.Add(tabItem);
 
@@ -180,6 +202,16 @@ namespace RegexViewer
             {
                 SetStatus("Exception:FilterTabItem:" + e.ToString());
                 return filterFileItems;
+            }
+        }
+
+        public void InsertFilterItemExecuted(object sender)
+        {
+            SetStatus("InsertFilterItemExecuted");
+            FilterFile filterFile = (FilterFile)CurrentFile();
+            if (filterFile != null)
+            {
+                ((FilterFileManager)this.ViewManager).ManageNewFilterFileItem(filterFile);
             }
         }
 
@@ -410,61 +442,56 @@ namespace RegexViewer
 
                 bool dupes = false;
                 bool needsSorting = false;
+                bool needsReIndexing = false;
                 List<int> indexList = new List<int>();
 
                 for (int i = 0; i < sortedFilterItems.Count; i++)
                 {
-                    int index = sortedFilterItems[i].Index;
-                    if (index != filterItems[i].Index)
+                    int orderedFilterItemIndex = sortedFilterItems[i].Index;
+                    if (orderedFilterItemIndex != filterItems[i].Index)
                     {
+                        // original index does not equal sorted index
                         needsSorting = true;
                     }
 
-                    if (!indexList.Contains(index))
+                    if (!indexList.Contains(orderedFilterItemIndex))
                     {
-                        indexList.Add(index);
+                        // add filter item to temp list for compare
+                        indexList.Add(orderedFilterItemIndex);
                     }
                     else
                     {
+                        // item already exists in temp list based on filter index
                         dupes = true;
+                    }
+
+                    if (i != orderedFilterItemIndex)
+                    {
+                        needsReIndexing = true;
                     }
                 }
 
-                // does it need to be resorted
-                if (!needsSorting && !dupes)
+                // does index need to be modified?
+                if (!needsSorting && !dupes && !needsReIndexing)
                 {
                     // do nothing
                     return;
                 }
-                else if (needsSorting && !dupes)
+                else
                 {
-                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
-                }
-                else if (dupes)
-                {
-                    int currentIndex = -1;
-
+                    // needs sorting or has dupes or needs reindexing
                     if (filterFileItem != null && sortedFilterItems.Count(x => x.Index == filterFileItem.Index) > 1)
                     {
-                        // remove and insert selected item in list at lowest position in index of dupes
+                        // new / modifed filteritem index remove and insert selected item in list at
+                        // lowest position in index of dupes
                         sortedFilterItems.RemoveAt(sortedFilterItems.IndexOf(filterFileItem));
                         sortedFilterItems.Insert((int)(sortedFilterItems.IndexOf(sortedFilterItems.First(x => x.Index == filterFileItem.Index))), filterFileItem);
                     }
 
                     for (int i = 0; i < sortedFilterItems.Count; i++)
                     {
-                        int index = sortedFilterItems[i].Index;
-
-                        if (index <= currentIndex)
-                        {
-                            filterItems[i] = sortedFilterItems[i];
-                            filterItems[i].Index = ++currentIndex;
-                        }
-                        else
-                        {
-                            filterItems[i] = sortedFilterItems[i];
-                            currentIndex = index;
-                        }
+                        filterItems[i] = sortedFilterItems[i];
+                        filterItems[i].Index = i;
                     }
 
                     this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterItems);

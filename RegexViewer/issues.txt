@@ -1,4 +1,6 @@
-﻿
+﻿- deleting new filter row does not come back automatically
+
+- grouping from quick search doesnt work with other filters
 
 - only first save to exe.config works - have to make a class and use reflection
 

@@ -4,55 +4,6 @@ namespace RegexViewer
 {
     public class FilterFile : BaseFile<FilterFileItem>
     {
-        #region Public Methods
-
-        public void EnablePatternNotifications(bool enable)
-        {
-            if (enable & !_patternNotifications)
-            {
-                _contentItems.CollectionChanged += _contentItems_CollectionChanged;
-
-                foreach (FilterFileItem item in _contentItems)
-                {
-                    item.PropertyChanged += item_PropertyChanged;
-                }
-            }
-            else if (!enable & _patternNotifications)
-            {
-                _contentItems.CollectionChanged -= _contentItems_CollectionChanged;
-                foreach (FilterFileItem item in _contentItems)
-                {
-                    item.PropertyChanged -= item_PropertyChanged;
-                }
-                // Modified = false;
-            }
-
-            _patternNotifications = enable;
-        }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
-        private void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            Modified = true;
-            SetStatus("FilterFile:_contentItems_CollectionChanged");
-            OnPropertyChanged("_contentItems_CollectionChanged");
-        }
-
-        private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-        {
-            if ((sender is FilterFileItem) && e.PropertyName != FilterFileItemEvents.Count)
-            {
-                Modified = true;
-            }
-
-            OnPropertyChanged(sender, e);
-        }
-
-        #endregion Private Methods
-
         #region Private Fields
 
         private ObservableCollection<FilterFileItem> _contentItems = new ObservableCollection<FilterFileItem>();
@@ -90,5 +41,55 @@ namespace RegexViewer
         public string FilterVersion { get; set; }
 
         #endregion Public Properties
+
+        #region Public Methods
+
+        public void EnablePatternNotifications(bool enable)
+        {
+            if (enable & !_patternNotifications)
+            {
+                _contentItems.CollectionChanged += _contentItems_CollectionChanged;
+
+                foreach (FilterFileItem item in _contentItems)
+                {
+                    item.PropertyChanged += item_PropertyChanged;
+                }
+            }
+            else if (!enable & _patternNotifications)
+            {
+                _contentItems.CollectionChanged -= _contentItems_CollectionChanged;
+                foreach (FilterFileItem item in _contentItems)
+                {
+                    item.PropertyChanged -= item_PropertyChanged;
+                }
+                // Modified = false;
+            }
+
+            _patternNotifications = enable;
+        }
+
+        #endregion Public Methods
+
+        #region Private Methods
+
+        private void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            Modified = true;
+            SetStatus("FilterFile:_contentItems_CollectionChanged");
+
+            OnPropertyChanged("_contentItems_CollectionChanged");
+        }
+
+        private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if ((sender is FilterFileItem) && e.PropertyName != FilterFileItemEvents.Count)
+            {
+                Modified = true;
+            }
+
+            OnPropertyChanged(sender, e);
+        }
+
+        #endregion Private Methods
     }
 }

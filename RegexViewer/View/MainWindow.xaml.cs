@@ -45,8 +45,11 @@ namespace RegexViewer
         #region Private Fields
 
         private StringBuilder _color = new StringBuilder();
+
         private List<string> _colorNames = new List<string>();
+
         private bool _endEditing;
+
         private MainViewModel _mainViewModel;
 
         #endregion Private Fields
@@ -58,7 +61,7 @@ namespace RegexViewer
             InitializeComponent();
             this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
 
-            // https://msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
+            // https: //msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
 
             _colorNames = GetColorNames();
             Closing += _mainViewModel.OnWindowClosing;
@@ -83,6 +86,7 @@ namespace RegexViewer
             }
             return null;
         }
+
         public List<string> GetColorNames()
         {
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -152,55 +156,57 @@ namespace RegexViewer
 
         private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
         {
-            if (_endEditing)
-            {
-                return;
-            }
+            // inconsistent. makes deletion difficult not worth the convenience
+
+            //if (_endEditing)
+            //{
+            //    return;
+            //}
 
             // Lookup for the source to be DataGridCell
-            if (e.OriginalSource.GetType() == typeof(DataGridCell))
-            {
-                // Starts the Edit on the row;
-                DataGrid grd = (DataGrid)sender;
-                grd.BeginEdit(e);
+            //if (e.OriginalSource.GetType() == typeof(DataGridCell))
+            //{
+            //    // Starts the Edit on the row;
+            //    DataGrid grd = (DataGrid)sender;
+            //    grd.BeginEdit(e);
 
-                Control control = GetFirstChildByType<Control>(e.OriginalSource as DataGridCell);
-                if (control != null)
-                {
-                    if (control is CheckBox)
-                    {
-                        (control as CheckBox).IsChecked = !(control as CheckBox).IsChecked;
-                    }
-                    else
-                    {
-                        control.Focus();
-                    }
-                }
-            }
+            //    Control control = GetFirstChildByType<Control>(e.OriginalSource as DataGridCell);
+            //    if (control != null)
+            //    {
+            //        if (control is CheckBox)
+            //        {
+            //            (control as CheckBox).IsChecked = !(control as CheckBox).IsChecked;
+            //        }
+            //        else
+            //        {
+            //            control.Focus();
+            //        }
+            //    }
+            //}
         }
 
         private void DataGridCell_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                _endEditing = true;
-            }
-            else
-            {
-                _endEditing = false;
-            }
+            //if (e.Key == Key.Enter)
+            //{
+            //    _endEditing = true;
+            //}
+            //else
+            //{
+            //    _endEditing = false;
+            //}
         }
 
         private void DataGridCell_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.Key == Key.Enter)
-            {
-                _endEditing = false;
-            }
-            else
-            {
-                _endEditing = true;
-            }
+            //if (e.Key == Key.Enter)
+            //{
+            //    _endEditing = false;
+            //}
+            //else
+            //{
+            //    _endEditing = true;
+            //}
         }
 
         private void FileData_Drop(object sender, DragEventArgs e)

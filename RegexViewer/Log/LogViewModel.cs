@@ -81,8 +81,7 @@ namespace RegexViewer
                 AddTabItem(logFile);
             }
 
-       //     FilterLogTabItems(FilterCommand.Reset);
-            // FilterActiveTabItem();
+            // FilterLogTabItems(FilterCommand.Reset); FilterActiveTabItem();
         }
 
         #endregion Public Constructors
@@ -221,7 +220,7 @@ namespace RegexViewer
 
                 this.SelectedIndex = this.TabItems.Count - 1;
                 _previousFilterFileItems = new List<FilterFileItem>();
-              //  FilterLogTabItems(FilterCommand.Filter);
+                // FilterLogTabItems(FilterCommand.Filter);
             }
         }
 
@@ -734,7 +733,6 @@ namespace RegexViewer
                 | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group3Visibility
                 | e.PropertyName == LogTabViewModel.LogTabViewModelEvents.Group4Visibility)
             {
-
                 return;
             }
 

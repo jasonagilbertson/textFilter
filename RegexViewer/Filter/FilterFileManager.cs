@@ -131,7 +131,9 @@ namespace RegexViewer
                 {
                     continue;
                 }
-                filterFile.PropertyChanged += filterFile_PropertyChanged;
+
+                // filterFile.PropertyChanged += filterFile_PropertyChanged;
+
                 filterFileItems.Add(filterFile);
             }
 
