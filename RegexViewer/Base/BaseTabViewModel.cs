@@ -59,9 +59,6 @@ namespace RegexViewer
                 }
             }
         }
-
-        //public abstract bool Group1Visibility { get; set; }
-        //public abstract bool Group2Visibility { get; set; }
         public ObservableCollection<T> ContentList
         {
             get { return _contentList; }

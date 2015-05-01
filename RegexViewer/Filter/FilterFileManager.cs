@@ -53,19 +53,24 @@ namespace RegexViewer
             {
                 FilterFileItem fileItem = new FilterFileItem();
 
-                filterFile.EnablePatternNotifications(false);
+           //     filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
+                SetStatus("ManageNewFilterFileItem:adding new line");
+                //if(tab != null)
+                //{
+                //    tab.ContentList.Add(fileItem);
+                //}
 
                 filterFile.ContentItems.Add(fileItem);
-                filterFile.EnablePatternNotifications(true);
+            //    filterFile.EnablePatternNotifications(true);
             }
             else if (results.Count() == 1)
             {
                 if (results.ToList()[0].Index != indexMax)
                 {
-                    filterFile.EnablePatternNotifications(false);
+          //          filterFile.EnablePatternNotifications(false);
                     results.ToList()[0].Index = indexMax + 1;
-                    filterFile.EnablePatternNotifications(true);
+          //          filterFile.EnablePatternNotifications(true);
                 }
 
                 return;
@@ -143,68 +148,92 @@ namespace RegexViewer
         public override IFile<FilterFileItem> ReadFile(string fileName)
         {
             FilterFile filterFile = new FilterFile();
-            filterFile.FileName = Path.GetFileName(fileName);
-            if (Path.GetExtension(fileName).ToLower().Contains("tat"))
-            {
-                this.IsTatFile = true;
-                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadTatFile(fileName));
-                return filterFile;
-            }
-            else
-            {
-                this.IsTatFile = false;
-            }
 
-            List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(fileName);
-
-            XmlNode root = doc.DocumentElement;
-
-            // for v2 documentelement is filterInfo
-            if (root.Name.ToLower() == "filterinfo")
+            try
             {
-                filterFile.FilterVersion = ReadStringNodeItem(root, "filterversion");
-                filterFile.FilterNotes = ReadStringNodeItem(root, "filternotes");
-            }
-
-            if (root.Name.ToLower() != "filters")
-            {
-                foreach (XmlNode node in root.ChildNodes)
+                filterFile.FileName = Path.GetFileName(fileName);
+                if (Path.GetExtension(fileName).ToLower().Contains("tat"))
                 {
-                    if (node.Name.ToLower() == "filters")
+                    this.IsTatFile = true;
+                    filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadTatFile(fileName));
+                    filterFile.IsNew = false;
+                    return filterFile;
+                }
+                else
+                {
+                    this.IsTatFile = false;
+                }
+
+                List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
+
+                // see if file is readonly
+                try
+                {
+                    doc.Save(fileName);
+                }
+                catch
+                {
+                    filterFile.IsReadOnly = true;
+                }
+                
+                filterFile.IsNew = false;
+
+                XmlNode root = doc.DocumentElement;
+
+                // for v2 documentelement is filterInfo
+                if (root.Name.ToLower() == "filterinfo")
+                {
+                    filterFile.FilterVersion = ReadStringNodeItem(root, "filterversion");
+                    filterFile.FilterNotes = ReadStringNodeItem(root, "filternotes");
+                }
+
+                if (root.Name.ToLower() != "filters")
+                {
+                    foreach (XmlNode node in root.ChildNodes)
                     {
-                        root = node;
-                        break;
+                        if (node.Name.ToLower() == "filters")
+                        {
+                            root = node;
+                            break;
+                        }
                     }
                 }
-            }
 
-            for (int i = 0; i < root.ChildNodes.Count; i++)
+                for (int i = 0; i < root.ChildNodes.Count; i++)
+                {
+                    FilterFileItem fileItem = new FilterFileItem();
+                    fileItem.Count = 0;
+                    fileItem.BackgroundColor = ReadStringNodeChildItem(root, "backgroundcolor", i);
+                    fileItem.CaseSensitive = ReadBoolNodeChildItem(root, "casesensitive", i);
+                    fileItem.Enabled = ReadBoolNodeChildItem(root, "enabled", i);
+                    fileItem.Exclude = ReadBoolNodeChildItem(root, "exclude", i);
+                    fileItem.Regex = ReadBoolNodeChildItem(root, "regex", i);
+                    fileItem.Filterpattern = ReadStringNodeChildItem(root, "filterpattern", i);
+                    fileItem.ForegroundColor = ReadStringNodeChildItem(root, "foregroundcolor", i);
+                    fileItem.Index = ReadIntNodeChildItem(root, "index", i);
+                    fileItem.Notes = ReadStringNodeChildItem(root, "notes", i);
+
+                    filterFileItems.Add(fileItem);
+                }
+
+                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterFileItems);
+                return filterFile;
+            }
+            catch (Exception e)
             {
-                FilterFileItem fileItem = new FilterFileItem();
-                fileItem.Count = 0;
-                fileItem.BackgroundColor = ReadStringNodeChildItem(root, "backgroundcolor", i);
-                fileItem.CaseSensitive = ReadBoolNodeChildItem(root, "casesensitive", i);
-                fileItem.Enabled = ReadBoolNodeChildItem(root, "enabled", i);
-                fileItem.Exclude = ReadBoolNodeChildItem(root, "exclude", i);
-                fileItem.Regex = ReadBoolNodeChildItem(root, "regex", i);
-                fileItem.Filterpattern = ReadStringNodeChildItem(root, "filterpattern", i);
-                fileItem.ForegroundColor = ReadStringNodeChildItem(root, "foregroundcolor", i);
-                fileItem.Index = ReadIntNodeChildItem(root, "index", i);
-                fileItem.Notes = ReadStringNodeChildItem(root, "notes", i);
-
-                filterFileItems.Add(fileItem);
+                SetStatus("Readfile:exception" + e.ToString());
+                return filterFile;
             }
 
-            filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterFileItems);
-            return filterFile;
         }
 
         public override bool SaveFile(string FileName, IFile<FilterFileItem> file)
         {
             FilterFile filterFile = (FilterFile)file;
-
+            filterFile.IsNew = false;
+            
             try
             {
                 // todo: check for uri / share filter???
@@ -301,7 +330,7 @@ namespace RegexViewer
             }
             catch (UnauthorizedAccessException)
             {
-                // filterFile.IsReadyOnly = true;
+                filterFile.IsReadOnly = true;
                 return false;
             }
             catch (Exception e)
@@ -324,6 +353,7 @@ namespace RegexViewer
                 // dont forward count updates
                 return;
             }
+            SetStatus("FilterFileManager:filterFile_PropertChanged: " + e.PropertyName);
 
             OnPropertyChanged(sender, e);
         }

@@ -16,6 +16,8 @@ namespace RegexViewer
         public BaseFile()
         {
             this.Modified = false;
+            this.IsNew = true;
+            this.IsReadOnly = false;
         }
 
         #endregion Public Constructors
@@ -37,6 +39,9 @@ namespace RegexViewer
                 _modified = value;
             }
         }
+
+        public bool IsReadOnly { get; set; }
+        public bool IsNew { get; set; }
 
         public string Tag { get; set; }
 

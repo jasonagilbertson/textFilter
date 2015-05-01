@@ -170,6 +170,9 @@
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
+    <Compile Include="View\FileColumnSaveDialog.xaml.cs">
+      <DependentUpon>FileColumnSaveDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GotoLineDialog.xaml.cs">
       <DependentUpon>GotoLineDialog.xaml</DependentUpon>
     </Compile>
@@ -180,6 +183,10 @@
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parser\WorkerManager.cs" />
+    <Page Include="View\FileColumnSaveDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -225,6 +232,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.manifest">
       <SubType>Designer</SubType>

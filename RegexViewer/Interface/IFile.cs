@@ -14,6 +14,12 @@ namespace RegexViewer
 
         string Tag { get; set; }
 
+        bool IsNew { get; set; }
+
+        bool IsReadOnly { get; set; }
+
+
+
         #endregion Public Properties
     }
 }

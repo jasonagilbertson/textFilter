@@ -309,7 +309,7 @@ namespace RegexViewer
                             filter.Include = true;
                             filter.Regex = true;
                             // quick find
-                            filterFileItems.Add(filter);
+                            filterFileItems.Insert(0, filter);
                             goto case FilterCommand.Filter;
                         }
                     case FilterCommand.Reset:
@@ -584,7 +584,14 @@ namespace RegexViewer
             }
             else
             {
-                tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    return;
+                }
             }
 
             if (string.IsNullOrEmpty(tabItem.Tag))

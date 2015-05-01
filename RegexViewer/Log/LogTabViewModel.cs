@@ -5,7 +5,7 @@ namespace RegexViewer
     public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
         #region Private Fields
-
+        public int MaxGroupCount = 4;
         private bool _group1Visibility = false;
 
         private bool _group2Visibility = false;
@@ -135,6 +135,11 @@ namespace RegexViewer
             else
             {
                 Group4Visibility = false;
+            }
+
+            if(count > this.MaxGroupCount)
+            {
+                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}",this.MaxGroupCount, count));
             }
         }
 

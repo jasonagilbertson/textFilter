@@ -280,7 +280,14 @@ namespace RegexViewer
             }
             else
             {
-                tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                {
+                    tabItem = (ITabViewModel<FilterFileItem>)this.TabItems[this.SelectedIndex];
+                }
+                else
+                {
+                    return;
+                }
             }
 
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
@@ -387,34 +394,32 @@ namespace RegexViewer
 
         private void FilterNotesExecuted()
         {
-            bool canSave = false;
             if (CurrentFile() == null)
             {
                 return;
             }
 
-            FilterFile filterFile = (FilterFile)this.ViewManager.ReadFile(CurrentFile().Tag);
-
+            FilterFile filterFile = (FilterFile)CurrentFile();
             FilterNotesDialog dialog = new FilterNotesDialog(filterFile.FilterNotes);
 
             dialog.Title = string.Format("{0} version:{1}", filterFile.FileName, filterFile.FilterVersion);
-
-            // verify file can be written
-            if (((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile))
-            {
-                canSave = true;
-                dialog.DialogCanSave = true;
-            }
+            dialog.DialogCanSave = !filterFile.IsReadOnly;
 
             filterFile.FilterNotes = dialog.WaitForResult();
 
-            if (canSave)
+            if (!filterFile.IsReadOnly & !filterFile.IsNew)
             {
-                // save new notes to current filter
-                ((FilterFile)CurrentFile()).FilterNotes = filterFile.FilterNotes;
+                FilterFile tempFilterFile = (FilterFile)this.ViewManager.ReadFile(filterFile.Tag);
+                tempFilterFile.FilterNotes = filterFile.FilterNotes;
 
                 // save only new notes to file.
-                ((FilterFileManager)this.ViewManager).SaveFile(CurrentFile().Tag, filterFile);
+                ((FilterFileManager)this.ViewManager).SaveFile(tempFilterFile.Tag, tempFilterFile);
+            }
+            else if(!filterFile.IsReadOnly & filterFile.IsNew)
+            {
+                // save new notes to current filter
+                filterFile.FilterNotes = filterFile.FilterNotes;
+                filterFile.Modified = true;
             }
         }
 
@@ -432,14 +437,17 @@ namespace RegexViewer
 
         private void VerifyIndex(FilterFileItem filterFileItem = null)
         {
-            FilterFile filterFile = (FilterFile)CurrentFile();
+            FilterFile filterFile = new FilterFile();
 
             try
             {
-                filterFile.EnablePatternNotifications(false);
-                List<FilterFileItem> filterItems = filterFile.ContentItems.ToList();
-                List<FilterFileItem> sortedFilterItems = new List<FilterFileItem>(filterItems.OrderBy(x => x.Index));
+                filterFile = (FilterFile)CurrentFile();
+                ObservableCollection<FilterFileItem> contentList = this.TabItems[SelectedIndex].ContentList;
 
+                filterFile.EnablePatternNotifications(false);
+                ObservableCollection<FilterFileItem> contentItems = filterFile.ContentItems;
+                List<FilterFileItem> sortedFilterItems = new List<FilterFileItem>(contentItems.OrderBy(x => x.Index));
+                SetStatus(string.Format("VerifyIndex: contentList count: {0} contentItems count: {1}",contentList.Count,contentItems.Count));
                 bool dupes = false;
                 bool needsSorting = false;
                 bool needsReIndexing = false;
@@ -448,7 +456,7 @@ namespace RegexViewer
                 for (int i = 0; i < sortedFilterItems.Count; i++)
                 {
                     int orderedFilterItemIndex = sortedFilterItems[i].Index;
-                    if (orderedFilterItemIndex != filterItems[i].Index)
+                    if (orderedFilterItemIndex != contentItems[i].Index)
                     {
                         // original index does not equal sorted index
                         needsSorting = true;
@@ -488,13 +496,18 @@ namespace RegexViewer
                         sortedFilterItems.Insert((int)(sortedFilterItems.IndexOf(sortedFilterItems.First(x => x.Index == filterFileItem.Index))), filterFileItem);
                     }
 
+                    // sync contentList
                     for (int i = 0; i < sortedFilterItems.Count; i++)
                     {
-                        filterItems[i] = sortedFilterItems[i];
-                        filterItems[i].Index = i;
+                        contentList[i] = sortedFilterItems[i];
+                        contentItems[i] = sortedFilterItems[i];
+                        contentList[i].Index = i;
+                        contentItems[i].Index = i;
+                        //sortedFilterItems[i].Index = i;
                     }
 
-                    this.TabItems[SelectedIndex].ContentList = filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterItems);
+                    // sync contentitems
+                    //filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
                 }
             }
             catch (Exception ex)
@@ -509,8 +522,11 @@ namespace RegexViewer
 
         private void ViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
+            SetStatus("FilterViewModel.ViewManager_ProperyChanged: " + e.PropertyName);
+
             if (sender is FilterFileItem)
             {
+
                 FilterFile filterFile = (FilterFile)CurrentFile();
                 if (filterFile != null)
                 {
@@ -520,6 +536,7 @@ namespace RegexViewer
             }
 
             OnPropertyChanged(sender, e);
+
         }
 
         #endregion Private Methods

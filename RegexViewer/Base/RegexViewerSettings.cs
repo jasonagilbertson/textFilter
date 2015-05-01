@@ -194,7 +194,7 @@ namespace RegexViewer
                         args.Add(arguments[i].Trim());
                     }
 
-                    foreach (string arg in argument.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string arg in argument.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries))
                     {
                         args.Add(arg.Trim());
                     }
@@ -555,12 +555,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
 
             set
             {
-                _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value = string.Join(";", value);
             }
         }
 
@@ -568,12 +568,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries).ToList();
+                return _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
             }
 
             set
             {
-                _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(";", value);
             }
         }
 
@@ -677,12 +677,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
             {
-                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
             }
         }
 
@@ -690,12 +690,12 @@ namespace RegexViewer
         {
             get
             {
-                return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
+                return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             private set
             {
-                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(",", value);
+                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
             }
         }
 

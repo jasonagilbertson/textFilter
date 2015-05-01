@@ -138,6 +138,7 @@ namespace RegexViewer
                         Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount,
                             Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
 
+                        // unnamed and named groups
                         if (logTab.GroupCount > 0 && filterItem.Regex)
                         {
                             MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
@@ -149,22 +150,22 @@ namespace RegexViewer
                                 {
                                     if (!string.IsNullOrEmpty(m.Groups[1].Value.ToString()))
                                     {
-                                        logItem.Group1 += (string.IsNullOrEmpty(logItem.Group1) ? "" : "\n") + m.Groups[1].Value.ToString();
+                                        logItem.Group1 += (string.IsNullOrEmpty(logItem.Group1) ? "" : ";\n") + m.Groups[1].Value.ToString();
                                     }
 
                                     if (!string.IsNullOrEmpty(m.Groups[2].Value.ToString()))
                                     {
-                                        logItem.Group2 += (string.IsNullOrEmpty(logItem.Group2) ? "" : "\n") + m.Groups[2].Value.ToString();
+                                        logItem.Group2 += (string.IsNullOrEmpty(logItem.Group2) ? "" : ";\n") + m.Groups[2].Value.ToString();
                                     }
 
                                     if (!string.IsNullOrEmpty(m.Groups[3].Value.ToString()))
                                     {
-                                        logItem.Group3 += (string.IsNullOrEmpty(logItem.Group3) ? "" : "\n") + m.Groups[3].Value.ToString();
+                                        logItem.Group3 += (string.IsNullOrEmpty(logItem.Group3) ? "" : ";\n") + m.Groups[3].Value.ToString();
                                     }
 
                                     if (!string.IsNullOrEmpty(m.Groups[4].Value.ToString()))
                                     {
-                                        logItem.Group4 += (string.IsNullOrEmpty(logItem.Group4) ? "" : "\n") + m.Groups[4].Value.ToString();
+                                        logItem.Group4 += (string.IsNullOrEmpty(logItem.Group4) ? "" : ";\n") + m.Groups[4].Value.ToString();
                                     }
                                 }
                             }
@@ -432,7 +433,15 @@ namespace RegexViewer
 
         private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems, LogTabViewModel logTab = null)
         {
+            bool getGroups = false;
             int groupCount = 0;
+            List<string> groupNames = new List<string>();
+
+            if (logTab != null)
+            {
+                getGroups = true;
+            }
+
             List<FilterFileItem> filterItems = new List<FilterFileItem>();
 
             foreach (FilterFileItem filterItem in filterFileItems)
@@ -458,8 +467,23 @@ namespace RegexViewer
                     try
                     {
                         Regex test = new Regex(filterItem.Filterpattern);
-                        newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
-                        groupCount = Math.Max(groupCount, newFilter.GroupCount);
+                        if (getGroups)
+                        {
+                            // unnamed groups
+                            newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
+                            groupCount = Math.Max(groupCount, newFilter.GroupCount);
+
+                            // named groups group1 group2 group3 group4 and compare to groupCount which is unnamed
+                            //foreach (string name in test.GetGroupNames().Where(x => x.ToLower().StartsWith("group")))
+                            //{
+                            //    if (!groupNames.Contains(name))
+                            //    {
+                            //        groupNames.Add(name.ToLower());
+                            //    }
+                            //}
+
+                            
+                        }
                     }
                     catch
                     {
@@ -472,9 +496,9 @@ namespace RegexViewer
                 filterItems.Add(newFilter);
             }
 
-            if (logTab != null)
+            if (getGroups)
             {
-                logTab.SetGroupCount(groupCount);
+                logTab.SetGroupCount(Math.Max(groupCount,groupNames.Count));
             }
 
             return filterItems;
