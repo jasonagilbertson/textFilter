@@ -25,6 +25,7 @@
 
     <Window.InputBindings>
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" CommandParameter="{Binding}" Gesture="Ctrl+E" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+H" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+R" />
@@ -43,11 +44,12 @@
                 <MenuItem Header="_Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
                 <MenuItem Header="Close _All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="Copy File _Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="Export File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                 <MenuItem Header="_Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" InputGestureText="Ctrl+G" />
                 <MenuItem Header="Open Containing _Folder" Command="{Binding LogViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
                 <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
                 <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
-                <MenuItem Header="R_ecent Files" ItemsSource="{Binding LogViewModel.RecentCollection}">
+                <MenuItem Header="Recent Files" ItemsSource="{Binding LogViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
                             <Setter Property="MenuItem.Header" Value="{Binding Text}" />
@@ -408,6 +410,7 @@
                                     <MenuItem Header="Close File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
                                     <MenuItem Header="Close All Files" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" />
                                     <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CopyFilePathCommand}" />
+                                    <MenuItem Header="Export File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
                                     <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
                                     <MenuItem Header="Open Containing Folder" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenFolderCommand}" />
                                     <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />

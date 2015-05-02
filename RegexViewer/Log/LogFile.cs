@@ -9,6 +9,7 @@ namespace RegexViewer
         public LogFile()
         {
             this.ContentItems = new ObservableCollection<LogFileItem>();
+            this.ExportConfiguration = new ExportDialog.Results();
         }
 
         #endregion Public Constructors
@@ -18,5 +19,7 @@ namespace RegexViewer
         public override ObservableCollection<LogFileItem> ContentItems { get; set; }
 
         #endregion Public Properties
+
+        public ExportDialog.Results ExportConfiguration { get; set; }
     }
 }

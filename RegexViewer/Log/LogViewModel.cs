@@ -37,6 +37,8 @@ namespace RegexViewer
 
         #region Private Fields
 
+        private Command _exportCommand;
+
         private LogFileItem _filteredSelectedItem;
 
         private FilterViewModel _filterViewModel;
@@ -87,6 +89,21 @@ namespace RegexViewer
         #endregion Public Constructors
 
         #region Public Properties
+
+        public Command ExportCommand
+        {
+            get
+            {
+                if (_exportCommand == null)
+                {
+                    _exportCommand = new Command(ExportExecuted);
+                }
+                _exportCommand.CanExecute = true;
+
+                return _exportCommand;
+            }
+            set { _exportCommand = value; }
+        }
 
         public Command GotoLineCommand
         {
@@ -352,6 +369,30 @@ namespace RegexViewer
             }
         }
 
+        public void ExportExecuted(object sender)
+        {
+            try
+            {
+                SetStatus("export");
+
+                // determine which fields and separator to use /save
+                ExportDialog exportDialog = new ExportDialog();
+                ExportDialog.Results result = exportDialog.WaitForResult();
+                if(result.Cancel)
+                {
+                    return;
+                }
+
+                LogFile logFile = (LogFile)CurrentFile();
+                logFile.ExportConfiguration = result;
+                SaveFileAsExecuted(logFile);
+            }
+            catch (Exception e)
+            {
+                SetStatus("ExportExecuted:exception" + e.ToString());
+            }
+        }
+
         public void GotoLineExecuted(object sender)
         {
             try
@@ -576,7 +617,17 @@ namespace RegexViewer
 
         public override void SaveFileAsExecuted(object sender)
         {
+            bool exportConfg = false;
             ITabViewModel<LogFileItem> tabItem;
+            
+            LogFile logFile = new LogFile();
+
+            if (sender is LogFile)
+            {
+                // export configuration uses this
+                exportConfg = true;
+                logFile = sender as LogFile;
+            }
 
             if (sender is TabItem)
             {
@@ -637,15 +688,26 @@ namespace RegexViewer
                 if (result == true)
                 {
                     // Save document
-                    LogFile logFile = new LogFile();
-                    logFile.ContentItems = tabItem.ContentList;
+                    if (exportConfg)
+                    {
+                        // export configuration uses this
+                        logFile = sender as LogFile;
+                    }
+                    else
+                    {
+                        logFile.ContentItems = tabItem.ContentList;
+                    }
+
                     this.ViewManager.SaveFile(logName, logFile);
 
                     // open filtered view into new tab if not a '-new x-' tab
                     if (string.Compare(tabItem.Tag, logName, true) != 0
                         && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                     {
-                        AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
+                        if (!exportConfg)
+                        {
+                            AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
+                        }
                     }
                     else
                     {

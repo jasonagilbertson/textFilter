@@ -402,10 +402,6 @@ namespace RegexViewer
 
         public abstract void SaveFileExecuted(object sender);
 
-        //        file.ContentItems = tabItem.ContentList;
-        //        this.ViewManager.SaveFile(tabItem.Tag, file);
-        //    }
-        //}
         public void SaveModifiedFiles(object sender)
         {
             foreach (IFile<T> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
@@ -463,19 +459,6 @@ namespace RegexViewer
 
         #endregion Private Methods
 
-        //public void SaveFileExecuted(object sender)
-        //{
-        //    ITabViewModel<T> tabItem;
-
-        // if (sender is TabItem) { tabItem = (ITabViewModel<T>)(sender as TabItem); } else { if
-        // (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count) { tabItem =
-        // (ITabViewModel<T>)this.TabItems[this.SelectedIndex]; } else { // can get here by having
-        // no filters and hitting save file. // todo: disable save file if no tab items return; } }
-
-        // if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag,
-        // _tempTabNameFormatPattern, RegexOptions.IgnoreCase)) { SaveFileAsExecuted(tabItem); }
-        // else { //IFile<T> file = (IFile<T>)new object(); IFile<T> file = default(IFile<T>);
-        // if(typeof(T) == typeof(LogFileItem)) { file = (IFile<T>)new LogFile(); } else if
-        // (typeof(T) == typeof(FilterFileItem)) { file = (IFile<T>)new FilterFile(); }
+     
     }
 }

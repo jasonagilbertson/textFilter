@@ -399,13 +399,45 @@ namespace RegexViewer
                     File.Delete(FileName);
                 }
 
+                
                 using (StreamWriter writer = File.CreateText(FileName))
                 {
                     foreach (LogFileItem item in logFile.ContentItems)
                     {
-                        writer.WriteLine(item.Content);
-                    }
+                        StringBuilder sb = new StringBuilder();
+                        if(logFile.ExportConfiguration.Index)
+                        {
+                            sb.Append(item.Index);
+                        }
 
+                        if (logFile.ExportConfiguration.Content)
+                        {
+                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Content);
+                        }
+
+                        if (logFile.ExportConfiguration.Group1)
+                        {
+                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group1);
+                        }
+
+                        if (logFile.ExportConfiguration.Group2)
+                        {
+                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group2);
+                        }
+
+                        if (logFile.ExportConfiguration.Group3)
+                        {
+                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group3);
+                        }
+
+                        if (logFile.ExportConfiguration.Group4)
+                        {
+                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group4);
+                        }
+
+                        writer.WriteLine(sb.ToString());
+                    }
+                    
                     writer.Close();
                 }
 

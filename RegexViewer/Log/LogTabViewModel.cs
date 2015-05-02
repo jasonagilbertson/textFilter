@@ -20,7 +20,7 @@ namespace RegexViewer
 
         public LogTabViewModel()
         {
-            List<LogFileItem> ContentList = new List<LogFileItem>();
+         //   List<LogFileItem> ContentList = new List<LogFileItem>();
         }
 
         #endregion Public Constructors

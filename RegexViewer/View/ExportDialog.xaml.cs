@@ -6,18 +6,20 @@ namespace RegexViewer
     /// <summary>
     /// Interaction logic for TimedSaveDialog.xaml
     /// </summary>
-    public partial class FileColumnSaveDialog : Window
+    public partial class ExportDialog : Window
     {
         public class Results
         {
             public bool Index;
-            public bool Content;
+            public bool Content = true;
             public bool Group1;
             public bool Group2;
             public bool Group3;
             public bool Group4;
-            public string Separator;
+            public string Separator = ",";
             public bool Cancel;
+            public bool Copy;
+            public bool RemoveEmpty;
         }
         #region Private Fields
 
@@ -25,7 +27,7 @@ namespace RegexViewer
 
         #region Public Constructors
 
-        public FileColumnSaveDialog()
+        public ExportDialog()
         {
             InitializeComponent();
         }
@@ -56,7 +58,9 @@ namespace RegexViewer
                 Group3 = (bool)this.checkGroup3.IsChecked,
                 Group4 = (bool)this.checkGroup4.IsChecked,
                 Separator = (string)this.textSeparator.Text,
-                Cancel = _cancel
+                Cancel = _cancel,
+                Copy = _copy,
+                RemoveEmpty = (bool)this.checkRemoveEmptyRows.IsChecked
             };
         }
 
@@ -75,8 +79,15 @@ namespace RegexViewer
             Disable();
         }
 
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
+            _copy = true;
+            Disable();
+        }
+
         #endregion Private Methods
 
         private bool _cancel;
+        private bool _copy;
     }
 }
