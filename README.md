@@ -1,4 +1,4 @@
-![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/rv-image.png)  
+![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/RegexViewer_128x128.png)  
 # regexViewer  
 
 **Overview:**
@@ -26,4 +26,4 @@ RegexViewer is a utility designed to make filtering text files more efficient by
 - Definitely let me know if you experience issues with the tool itself
 - Lastly if you have suggestions for features you would like to see, please feel free to send them to me as well
 
-		
+![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/rv-04104-window-image-1.png)		
