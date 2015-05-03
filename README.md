@@ -1,6 +1,9 @@
 ![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/RegexViewer_128x128.png)  
 # regexViewer  
 
+**Current Download:**  
+[Download](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/download/regexViewer.0.4.105.zip)
+
 **Overview:**
 
 RegexViewer is a utility designed to make filtering text files more efficient by using either strings or regex patterns. What makes this utility unique as compared to other regex or text viewing utilities is the ability to have multiple filters in multiple filter tabs. This allows for quick toggling between different filters searching for the appropriate information. Creating filters in RegexViewer is simple and with the 'Notes' field, gives the ability to document the reasons for the filter. Filters can be local or remote as well as on a website for easy sharing. Other features that make parsing log files easier is being able to do a dynamic filter (at bottom of window) and the to create a new log tab base on the current tabs view just to name a few. 
