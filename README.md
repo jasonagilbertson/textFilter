@@ -2,7 +2,7 @@
 # regexViewer  
 
 **Current Download:**  
-[Download (right click and save as)](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/download/regexViewer.0.4.105.zip") 
+[Download (right click and save as)](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/download/regexViewer.0.4.105.zip) 
 
 **Overview:**
 
