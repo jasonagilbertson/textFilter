@@ -326,7 +326,8 @@ namespace RegexViewer
                             filter.Include = true;
                             filter.Regex = true;
                             // quick find
-                            filterFileItems.Insert(0, filter);
+                            //filterFileItems.Insert(0, filter);
+                            filterFileItems.Add(filter);
                             goto case FilterCommand.Filter;
                         }
                     case FilterCommand.Reset:

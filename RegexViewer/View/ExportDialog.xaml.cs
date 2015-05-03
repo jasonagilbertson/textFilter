@@ -79,7 +79,7 @@ namespace RegexViewer
             Disable();
         }
 
-        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        private void buttonCopy_Click(object sender, RoutedEventArgs e)
         {
             _copy = true;
             Disable();
