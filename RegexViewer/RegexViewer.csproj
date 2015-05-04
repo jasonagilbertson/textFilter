@@ -438,7 +438,9 @@
     <Resource Include="images\rv-04104-status-box-1.png" />
     <Resource Include="images\rv-04104-window-reference-1.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="download\filters\index.xml" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="download\filters\eventlog-filter.xml" />
   </ItemGroup>
