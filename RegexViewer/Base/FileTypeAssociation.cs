@@ -12,7 +12,7 @@ namespace RegexViewer
         #region Private Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
-        private string[] _extensions = new string[2] { ".rvf", ".rvconfig" };
+        private string[] _extensions = new string[4] { ".csv", ".log",".rvf", ".rvconfig" };
 
         //private string _extensionBackup;
 
