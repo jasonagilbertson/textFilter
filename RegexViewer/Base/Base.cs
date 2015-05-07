@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -44,6 +45,20 @@ namespace RegexViewer
             }
         }
 
+        public StringBuilder FormatExportItem(bool fileItemEnabled, string separator, bool removeEmpty, string fileItemValue, StringBuilder sb)
+        {
+            if (fileItemEnabled)
+            {
+                if (removeEmpty && String.IsNullOrEmpty(fileItemValue))
+                {
+                    return sb;
+                }
+
+                sb.Append(sb.Length > 0 ? separator : "" + fileItemValue);
+            }
+
+            return sb;
+        }
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;

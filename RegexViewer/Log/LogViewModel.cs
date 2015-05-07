@@ -377,20 +377,19 @@ namespace RegexViewer
                 SetStatus("export");
 
                 // determine which fields and separator to use /save
-                ExportDialog exportDialog = new ExportDialog();
-                ExportDialog.Results result = exportDialog.WaitForResult();
-                if(result.Cancel)
+                LogFile logFile = (LogFile)CurrentFile();
+                ExportDialog exportDialog = new ExportDialog(logFile.ExportConfiguration);
+                logFile.ExportConfiguration = exportDialog.WaitForResult();
+                if(logFile.ExportConfiguration.Cancel)
                 {
                     return;
                 }
-                if (result.Copy)
-                {
+                //if (logFile.ExportConfiguration.Copy)
+                //{
 
-                }
+                //}
                 else
                 {
-                    LogFile logFile = (LogFile)CurrentFile();
-                    logFile.ExportConfiguration = result;
                     SaveFileAsExecuted(logFile);
                 }
             }

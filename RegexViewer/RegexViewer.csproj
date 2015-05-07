@@ -171,6 +171,9 @@
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\RegexViewerSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
+    <Compile Include="View\OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
     </Compile>
@@ -184,6 +187,10 @@
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parser\WorkerManager.cs" />
+    <Page Include="View\OptionsDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\ExportDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

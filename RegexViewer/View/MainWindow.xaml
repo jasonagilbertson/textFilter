@@ -92,12 +92,12 @@
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
             </MenuItem>
-            <!--<MenuItem Header="_Options">
+            <MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />
             </MenuItem>
             <MenuItem Header="_Help">
                 <MenuItem Header="_Help" />
-            </MenuItem>-->
+            </MenuItem>
         </Menu>
 
         <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
@@ -115,7 +115,9 @@
                         HorizontalAlignment="Stretch"
                         ItemsSource="{Binding Path=FilterViewModel.TabItems}"
                         SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch">
+                        Margin="0,0,0,0" VerticalAlignment="Stretch"
+                        >
+                
                 <TabControl.InputBindings>
                     <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.InsertFilterItemCommand}" />
                 </TabControl.InputBindings>
@@ -130,7 +132,17 @@
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="..\Resources\Filter.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Grid 
+                                Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                >
+                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"/>
+                                <Image Source="../Resources/Filter.png" Opacity="1" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None" />
+                            </Grid>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
                 </TabControl.Background>
                 <TabControl.ContentTemplate x:Uid="tabContent">
 
@@ -301,7 +313,18 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.Background>
-                    <ImageBrush ImageSource="..\Resources\File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />
+                    <VisualBrush>
+                        <VisualBrush.Visual>
+                            <Grid 
+                                Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                >
+                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"/>
+                                <Image Source="../Resources/File.png" Opacity="1" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None" />
+                            </Grid>
+                        </VisualBrush.Visual>
+                    </VisualBrush>
+                    <!--<ImageBrush ImageSource="..\Resources\File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />-->
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>

@@ -402,38 +402,18 @@ namespace RegexViewer
                 
                 using (StreamWriter writer = File.CreateText(FileName))
                 {
+                    LogFile.ExportConfigurationInfo config = logFile.ExportConfiguration;
+
                     foreach (LogFileItem item in logFile.ContentItems)
                     {
                         StringBuilder sb = new StringBuilder();
-                        if(logFile.ExportConfiguration.Index)
-                        {
-                            sb.Append(item.Index);
-                        }
 
-                        if (logFile.ExportConfiguration.Content)
-                        {
-                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Content);
-                        }
-
-                        if (logFile.ExportConfiguration.Group1)
-                        {
-                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group1);
-                        }
-
-                        if (logFile.ExportConfiguration.Group2)
-                        {
-                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group2);
-                        }
-
-                        if (logFile.ExportConfiguration.Group3)
-                        {
-                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group3);
-                        }
-
-                        if (logFile.ExportConfiguration.Group4)
-                        {
-                            sb.Append(sb.Length > 0 ? logFile.ExportConfiguration.Separator : "" + item.Group4);
-                        }
+                        sb = FormatExportItem(config.Index, config.Separator, config.RemoveEmpty, item.Index.ToString(), sb);
+                        sb = FormatExportItem(config.Content, config.Separator, config.RemoveEmpty, item.Content, sb);
+                        sb = FormatExportItem(config.Group1, config.Separator, config.RemoveEmpty, item.Group1, sb);
+                        sb = FormatExportItem(config.Group2, config.Separator, config.RemoveEmpty, item.Group2, sb);
+                        sb = FormatExportItem(config.Group3, config.Separator, config.RemoveEmpty, item.Group3, sb);
+                        sb = FormatExportItem(config.Group4, config.Separator, config.RemoveEmpty, item.Group4, sb);
 
                         writer.WriteLine(sb.ToString());
                     }
@@ -450,6 +430,8 @@ namespace RegexViewer
                 return false;
             }
         }
+
+  
 
         #endregion Public Methods
 

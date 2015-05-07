@@ -8,28 +8,25 @@ namespace RegexViewer
     /// </summary>
     public partial class ExportDialog : Window
     {
-        public class Results
-        {
-            public bool Index;
-            public bool Content = true;
-            public bool Group1;
-            public bool Group2;
-            public bool Group3;
-            public bool Group4;
-            public string Separator = ",";
-            public bool Cancel;
-            public bool Copy;
-            public bool RemoveEmpty;
-        }
+     
         #region Private Fields
 
         #endregion Private Fields
 
         #region Public Constructors
 
-        public ExportDialog()
+        public ExportDialog(LogFile.ExportConfigurationInfo config)
         {
             InitializeComponent();
+            this.checkIndex.IsChecked = config.Index;
+            this.checkContent.IsChecked = config.Content;
+            this.checkGroup1.IsChecked = config.Group1;
+            this.checkGroup2.IsChecked = config.Group2;
+            this.checkGroup3.IsChecked = config.Group3;
+            this.checkGroup4.IsChecked = config.Group4;
+            this.checkRemoveEmptyRows.IsChecked = config.RemoveEmpty;
+            this.textSeparator.Text = config.Separator;
+            
         }
 
         #endregion Public Constructors
@@ -46,10 +43,10 @@ namespace RegexViewer
             this.Close();
         }
 
-        public Results WaitForResult()
+        public LogFile.ExportConfigurationInfo WaitForResult()
         {
             this.ShowDialog();
-            return new Results
+            return new LogFile.ExportConfigurationInfo
             {
                 Index = (bool)this.checkIndex.IsChecked,
                 Content = (bool)this.checkContent.IsChecked,
