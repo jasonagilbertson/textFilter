@@ -27,6 +27,7 @@ namespace RegexViewer
         private int _selectedIndex = -1;
         private RegexViewerSettings settings = RegexViewerSettings.Settings;
         private ObservableCollection<ITabViewModel<T>> tabItems;
+        private Command _sharedCommand;
 
         #endregion Private Fields
 
@@ -157,6 +158,12 @@ namespace RegexViewer
         {
             get { return _recentCommand ?? new Command(RecentFileExecuted); }
             set { _recentCommand = value; }
+        }
+
+        public Command SharedCommand
+        {
+            get { return _sharedCommand ?? new Command(SharedFileExecuted); }
+            set { _sharedCommand = value; }
         }
 
         public Command ReloadCommand
@@ -364,10 +371,32 @@ namespace RegexViewer
             return fileCollection;
         }
 
+        public ObservableCollection<WPFMenuItem> SharedCollectionBuilder(string[] files)
+        {
+            ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
+
+            foreach (string file in files)
+            {
+                WPFMenuItem menuItem = new WPFMenuItem()
+                {
+                    Command = SharedCommand,
+                    Text = file.Replace(RegexViewerSettings.Settings.SharedFilterDirectory,"")
+                };
+                fileCollection.Add(menuItem);
+            }
+
+            return fileCollection;
+        }
         public void RecentFileExecuted(object sender)
         {
             SetStatus("RecentFile:enter");
             OpenFileExecuted(sender);
+        }
+
+        public void SharedFileExecuted(object sender)
+        {
+            SetStatus("SharedFile:enter");
+            OpenFileExecuted(RegexViewerSettings.Settings.SharedFilterDirectory.TrimEnd(new char[] {'\\'}) + "\\" + sender);
         }
 
         public void ReloadFileExecuted(object sender)

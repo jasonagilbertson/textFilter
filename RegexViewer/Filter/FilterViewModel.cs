@@ -79,6 +79,13 @@ namespace RegexViewer
             }
         }
 
+        public ObservableCollection<WPFMenuItem> SharedCollection
+        {
+            get
+            {
+                return (SharedCollectionBuilder(Settings.SharedFilterFiles));
+            }
+        }
         public TabControl TabControl { get; set; }
 
         #endregion Public Properties

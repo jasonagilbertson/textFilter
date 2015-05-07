@@ -481,18 +481,19 @@ namespace RegexViewer
         {
             AutoSave,
             BackgroundColor,
-            FileHistoryCount,
-            FilterDirectory,
             CountMaskedMatches,
-            ForegroundColor,
-            FontName,
-            FontSize,
             CurrentFilterFiles,
             CurrentLogFiles,
+            FilterDirectory, 
+            FileHistoryCount,
+            FontName,
+            FontSize,
+            ForegroundColor,
+            MaxMultiFileCount, 
             RecentFilterFiles,
             RecentLogFiles,
-            MaxMultiFileCount,
-            SaveSessionInformation
+            SaveSessionInformation,
+            SharedFilterDirectory
         }
 
         #endregion Private Enums
@@ -715,6 +716,36 @@ namespace RegexViewer
             }
         }
 
+        public string SharedFilterDirectory
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.SharedFilterDirectory).ToString());
+                }
+            }
+        }
+
+        public string[] SharedFilterFiles
+        {
+            get
+            {
+                if(Directory.Exists(this.SharedFilterDirectory))
+                {
+                    return Directory.GetFiles(this.SharedFilterDirectory, "*.xml", SearchOption.AllDirectories);
+                }
+                else
+                {
+                    return new string[0];
+                }
+            }
+        }
         #endregion Public Properties
 
         public void AddFilterFile(string filterFile)

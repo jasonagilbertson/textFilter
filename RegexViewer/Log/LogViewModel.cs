@@ -383,10 +383,16 @@ namespace RegexViewer
                 {
                     return;
                 }
+                if (result.Copy)
+                {
 
-                LogFile logFile = (LogFile)CurrentFile();
-                logFile.ExportConfiguration = result;
-                SaveFileAsExecuted(logFile);
+                }
+                else
+                {
+                    LogFile logFile = (LogFile)CurrentFile();
+                    logFile.ExportConfiguration = result;
+                    SaveFileAsExecuted(logFile);
+                }
             }
             catch (Exception e)
             {

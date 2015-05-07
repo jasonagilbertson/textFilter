@@ -82,6 +82,15 @@
                 <MenuItem Header="_Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+R" />
                 <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
                 <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
+                <MenuItem Header="S_hared Filters" ItemsSource="{Binding FilterViewModel.SharedCollection}">
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
+                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
             </MenuItem>
             <!--<MenuItem Header="_Options">
                 <MenuItem Header="_Settings" />

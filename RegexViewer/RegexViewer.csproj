@@ -238,8 +238,6 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="download\filters\eventlog-filter.rvf" />
-    <None Include="download\regexViewer.0.4.105.zip" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -418,31 +416,6 @@
       <Progid>RegexViewer.txt</Progid>
       <DefaultIcon>RegexViewer.ico</DefaultIcon>
     </FileAssociation>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\RegexViewer_128x128.png" />
-    <Resource Include="images\RegexViewer_256x256.png" />
-    <Resource Include="images\RegexViewer_64x64.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\rv-04104-window-image-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="images\rv-04104-export-dialog-1.png" />
-    <Resource Include="images\rv-04104-file-pane-context-1.png" />
-    <Resource Include="images\rv-04104-file-view-context-1.png" />
-    <Resource Include="images\rv-04104-filter-notes-1.png" />
-    <Resource Include="images\rv-04104-filter-pane-context-1.png" />
-    <Resource Include="images\rv-04104-goto-line-1.png" />
-    <Resource Include="images\rv-04104-line-totals-1.png" />
-    <Resource Include="images\rv-04104-status-box-1.png" />
-    <Resource Include="images\rv-04104-window-reference-1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="download\filters\index.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="download\filters\eventlog-filter.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
