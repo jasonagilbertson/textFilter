@@ -14,14 +14,6 @@ namespace RegexViewer
         private static FileTypeAssociation _fileTypeAssociation;
         private string[] _extensions = new string[4] { ".csv", ".log",".rvf", ".rvconfig" };
 
-        //private string _extensionBackup;
-
-        //private string _fileDescription;
-
-        //private string _hkcuKey = @"Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\";
-
-        //private string _hkcuKeyExt;
-
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
         private string _openWith = Process.GetCurrentProcess().MainModule.FileName;

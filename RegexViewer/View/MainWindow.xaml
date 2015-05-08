@@ -324,7 +324,6 @@
                             </Grid>
                         </VisualBrush.Visual>
                     </VisualBrush>
-                    <!--<ImageBrush ImageSource="..\Resources\File.png" Opacity=".5" AlignmentX="Left" AlignmentY="Top" Stretch="None" />-->
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -423,7 +422,6 @@
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
-                                <!--<i:EventTrigger EventName="LayoutUpdated">-->
                                 <i:EventTrigger EventName="LayoutUpdated">
                                     <i:InvokeCommandAction Command="{Binding SetViewerCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
