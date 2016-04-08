@@ -1,4 +1,17 @@
-﻿using System.Collections.ObjectModel;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="FilterFile.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System.Collections.ObjectModel;
 
 namespace RegexViewer
 {
@@ -44,6 +57,18 @@ namespace RegexViewer
 
         #region Public Methods
 
+        public void AddPatternNotification(FilterFileItem filterFileItem, bool enable)
+        {
+            if (enable)
+            {
+                filterFileItem.PropertyChanged += item_PropertyChanged;
+            }
+            else
+            {
+                filterFileItem.PropertyChanged -= item_PropertyChanged;
+            }
+        }
+
         public void EnablePatternNotifications(bool enable)
         {
             if (enable & !_patternNotifications)
@@ -52,7 +77,7 @@ namespace RegexViewer
 
                 foreach (FilterFileItem item in _contentItems)
                 {
-                    item.PropertyChanged += item_PropertyChanged;
+                    AddPatternNotification(item, enable);
                 }
             }
             else if (!enable & _patternNotifications)
@@ -60,9 +85,8 @@ namespace RegexViewer
                 _contentItems.CollectionChanged -= _contentItems_CollectionChanged;
                 foreach (FilterFileItem item in _contentItems)
                 {
-                    item.PropertyChanged -= item_PropertyChanged;
+                    AddPatternNotification(item, enable);
                 }
-                // Modified = false;
             }
 
             _patternNotifications = enable;

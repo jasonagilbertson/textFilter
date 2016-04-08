@@ -6,9 +6,6 @@ using System.Windows.Threading;
 
 namespace RegexViewer
 {
-    /// <summary>
-    /// Interaction logic for TimedSaveDialog.xaml
-    /// </summary>
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
         #region Private Fields
@@ -26,6 +23,7 @@ namespace RegexViewer
 
         public TimedSaveDialog(string fileName)
         {
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
             labelDisplay.Content = fileName;
         }

@@ -1,4 +1,14 @@
-﻿using System;
+﻿// *********************************************************************** Assembly : RegexViewer
+// Author : jason Created : 09-06-2015
+//
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// <copyright file="LogViewModel.cs" company="">
+//     Copyright © 2015
+// </copyright>
+// <summary>
+// </summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -6,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace RegexViewer
@@ -16,7 +27,7 @@ namespace RegexViewer
 
         private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SetStatus("_filterViewModel.CollectionChanged: " + sender.ToString());
+            SetStatus("_FilterViewModel.CollectionChanged: " + sender.ToString());
             FilterLogTabItems();
         }
 
@@ -42,10 +53,7 @@ namespace RegexViewer
         private LogFileItem _filteredSelectedItem;
 
         private FilterViewModel _filterViewModel;
-
         private Command _gotoLineCommand;
-
-        private Command _hideCommand;
 
         private Command _keyDownCommand;
 
@@ -54,11 +62,6 @@ namespace RegexViewer
         private LogFileManager _logFileManager;
 
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
-
-        private Command _quickFindChangedCommand;
-
-        //private int _previousIndex;
-        private string _quickFindText = string.Empty;
 
         private LogFileItem _unFilteredSelectedItem;
 
@@ -69,21 +72,17 @@ namespace RegexViewer
         public LogViewModel(FilterViewModel filterViewModel)
         {
             SetStatus("LogViewModel.ctor");
-            _filterViewModel = filterViewModel;
-            this.TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
-            this.ViewManager = new LogFileManager();
-            _logFileManager = (LogFileManager)this.ViewManager;
 
-            _filterViewModel.PropertyChanged += _filterViewModel_PropertyChanged;
-            this.PropertyChanged += LogViewModel_PropertyChanged;
+            TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
+            ViewManager = new LogFileManager();
+            _logFileManager = (LogFileManager)ViewManager;
+            _filterViewModel = filterViewModel;
 
             // load tabs from last session
-            foreach (LogFile logFile in this.ViewManager.OpenFiles(this.Settings.CurrentLogFiles.ToArray()))
-            {
-                AddTabItem(logFile);
-            }
-
-            // FilterLogTabItems(FilterCommand.Reset); FilterActiveTabItem();
+            AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
+            _filterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
+            PropertyChanged += LogViewModel_PropertyChanged;
+            LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
         #endregion Public Constructors
@@ -120,21 +119,6 @@ namespace RegexViewer
             set { _gotoLineCommand = value; }
         }
 
-        public Command HideCommand
-        {
-            get
-            {
-                if (_hideCommand == null)
-                {
-                    _hideCommand = new Command(HideExecuted);
-                }
-                _hideCommand.CanExecute = true;
-
-                return _hideCommand;
-            }
-            set { _hideCommand = value; }
-        }
-
         public Command KeyDownCommand
         {
             get
@@ -166,37 +150,6 @@ namespace RegexViewer
             }
         }
 
-        public Command QuickFindChangedCommand
-        {
-            get
-            {
-                if (_quickFindChangedCommand == null)
-                {
-                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
-                }
-                _quickFindChangedCommand.CanExecute = true;
-
-                return _quickFindChangedCommand;
-            }
-            set { _quickFindChangedCommand = value; }
-        }
-
-        public string QuickFindText
-        {
-            get
-            {
-                return _quickFindText;
-            }
-            set
-            {
-                if (_quickFindText != value)
-                {
-                    _quickFindText = value;
-                    // OnPropertyChanged("QuickFindText");
-                }
-            }
-        }
-
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
@@ -209,12 +162,8 @@ namespace RegexViewer
         {
             get
             {
-                return (LogTabViewModel)this.TabItems[SelectedIndex];
+                return (LogTabViewModel)TabItems[SelectedIndex];
             }
-            //set
-            //{
-            //    ((LogTabViewModel)TabItems[SelectedIndex]) = value;
-            //}
         }
 
         #endregion Public Properties
@@ -223,21 +172,20 @@ namespace RegexViewer
 
         public override void AddTabItem(IFile<LogFileItem> logFile)
         {
-            if (!this.TabItems.Any(x => String.Compare((string)x.Tag, logFile.Tag, true) == 0))
+            if (!TabItems.Any(x => String.Compare((string)x.Tag, logFile.Tag, true) == 0))
             {
                 SetStatus("adding tab:" + logFile.Tag);
                 LogTabViewModel tabItem = new LogTabViewModel()
                 {
                     Name = logFile.FileName,
                     Tag = logFile.Tag,
-                    Header = logFile.FileName
+                    Header = logFile.FileName,
+                    IsNew = logFile.IsNew
                 };
 
                 TabItems.Add(tabItem);
 
-                this.SelectedIndex = this.TabItems.Count - 1;
-                _previousFilterFileItems = new List<FilterFileItem>();
-                // FilterLogTabItems(FilterCommand.Filter);
+                SelectedIndex = TabItems.Count - 1;
             }
         }
 
@@ -253,11 +201,41 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter, FilterFileItem filter = null)
+        public void ExportExecuted(object sender)
         {
             try
             {
-                List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+                SetStatus("export");
+
+                // determine which fields and separator to use /save
+                LogFile logFile = (LogFile)CurrentFile();
+                ExportDialog exportDialog = new ExportDialog(logFile.ExportConfiguration);
+
+                logFile.ExportConfiguration = exportDialog.WaitForResult();
+                if (logFile.ExportConfiguration.Cancel)
+                {
+                    return;
+                }
+                if (logFile.ExportConfiguration.Copy)
+                {
+                    CurrentTab().CopyExecuted(logFile.ExportConfiguration);
+                }
+                else
+                {
+                    SaveFileAsExecuted(logFile);
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("ExportExecuted:exception" + e.ToString());
+            }
+        }
+
+        public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter) 
+        {
+            try
+            {
+                List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;
 
@@ -271,14 +249,10 @@ namespace RegexViewer
                     return;
                 }
 
-                filterFileItems = _filterViewModel.FilterList();
-                LogTabViewModel logTab = (LogTabViewModel)this.TabItems[SelectedIndex];
+                LogTabViewModel logTab = (LogTabViewModel)TabItems[SelectedIndex];
 
                 // dont check filter need if intent is to reset list to current filter or to show all
-                if (filterIntent != FilterCommand.DynamicFilter
-                    & filterIntent != FilterCommand.Reset
-                    & filterIntent != FilterCommand.ShowAll
-                    & filterIntent != FilterCommand.Hide)
+                if (filterIntent == FilterCommand.Filter)
                 {
                     FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
                     SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
@@ -287,13 +261,13 @@ namespace RegexViewer
                     {
                         case FilterNeed.ApplyColor:
                             {
-                                this.TabItems[this.SelectedIndex].ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
+                                logTab.ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
                                 SaveCurrentFilter(filterFileItems);
                                 return;
                             }
                         case FilterNeed.Current:
                             {
-                                if (this.PreviousIndex == this.SelectedIndex & filter == null)
+                                if (PreviousIndex == SelectedIndex)
                                 {
                                     SetStatus("filterLogTabItems:no change");
                                     return;
@@ -320,35 +294,28 @@ namespace RegexViewer
 
                 switch (filterIntent)
                 {
-                    case FilterCommand.DynamicFilter:
-                        {
-                            SetStatus(string.Format("switch:DynamicFilter: filterIntent:{0}", filterIntent));
-                            filter.Include = true;
-                            filter.Regex = true;
-                            // quick find
-                            //filterFileItems.Insert(0, filter);
-                            filterFileItems.Add(filter);
-                            goto case FilterCommand.Filter;
-                        }
-                    case FilterCommand.Reset:
                     case FilterCommand.Filter:
                         {
                             SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = _logFileManager.ApplyColor(_logFileManager.ApplyFilter(logTab, logFile, filterFileItems, filterIntent), filterFileItems);
-
+                            logTab.ContentList = _logFileManager.ApplyColor(
+                                _logFileManager.ApplyFilter(
+                                    logTab, 
+                                    logFile, 
+                                    filterFileItems, 
+                                    filterIntent), 
+                                filterFileItems);
                             break;
                         }
                     case FilterCommand.Hide:
                         {
                             SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
-                            // causes exception if no filter? FilterLogTabItems:exceptionSystem.ArgumentOutOfRangeException:
-                            this.TabItems[this.SelectedIndex].ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
+                            logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
                             break;
                         }
                     case FilterCommand.ShowAll:
                         {
                             SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                            this.TabItems[this.SelectedIndex].ContentList = logFile.ContentItems;
+                            logTab.ContentList = logFile.ContentItems;
                             break;
                         }
 
@@ -370,32 +337,60 @@ namespace RegexViewer
             }
         }
 
-        public void ExportExecuted(object sender)
+        public override void FindNextExecuted(object sender)
         {
             try
             {
-                SetStatus("export");
+                int filterIndex = -1;
+                int index = 0;
 
-                // determine which fields and separator to use /save
-                LogFile logFile = (LogFile)CurrentFile();
-                ExportDialog exportDialog = new ExportDialog(logFile.ExportConfiguration);
-                logFile.ExportConfiguration = exportDialog.WaitForResult();
-                if(logFile.ExportConfiguration.Cancel)
+                if (((Selector)CurrentTab().Viewer).SelectedItem != null)
                 {
-                    return;
+                    filterIndex = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).FilterIndex ?? 0;
+                    index = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).Index ?? 0;
+                    SetStatus(string.Format("LogViewModel.FindNextExecuted: setting log file index. filterindex: {0} index: {1} ", filterIndex, index));
                 }
-                //if (logFile.ExportConfiguration.Copy)
-                //{
 
-                //}
+                if ((sender is int))
+                {
+                    filterIndex = Convert.ToInt32(sender);
+                    SetStatus(string.Format("LogViewModel.FindNextExecuted: sender is filter. filterindex: {0} index: {1} ", filterIndex, index));
+                }
+
+                LogFileItem nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
+                        x => x.FilterIndex == filterIndex && x.Index > index);
+                if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
+                {
+                    SetStatus(string.Format("LogViewModel.FindNextExecuted: find next. filterindex: {0} index: {1} ", filterIndex, nextLogFileItem.Index));
+                    GotoLineExecuted(nextLogFileItem.Index);
+                }
                 else
                 {
-                    SaveFileAsExecuted(logFile);
+                    // try from beginning
+                    nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
+                        x => x.FilterIndex == filterIndex && x.Index >= 0);
+                    if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
+                    {
+                        SetStatus(string.Format("LogViewModel.FindNextExecuted: find first. filterindex: {0} index: {1} ", filterIndex, nextLogFileItem.Index));
+                        GotoLineExecuted(nextLogFileItem.Index);
+                    }
+                    else
+                    {
+                        SetStatus(string.Format("LogViewModel.FindNextExecuted: not found! filterindex: {0} index: {1} ", filterIndex, index));
+                        SetStatus(string.Format("QuickFindItem: filter pattern: {0} include: {1} exclude: {2}",
+                            _filterViewModel.QuickFindItem.Filterpattern, 
+                            _filterViewModel.QuickFindItem.Include, 
+                            _filterViewModel.QuickFindItem.Exclude));
+                        foreach(FilterFileItem item in _filterViewModel.FilterList())
+                        {
+                            SetStatus(string.Format("file item:{0}:{1}:{2}", item.Index, item.Filterpattern, item.Exclude, item.Include));
+                        }
+                    }
                 }
             }
             catch (Exception e)
             {
-                SetStatus("ExportExecuted:exception" + e.ToString());
+                SetStatus("LogViewModel.FindNextExecuted:exception" + e.ToString());
             }
         }
 
@@ -404,22 +399,35 @@ namespace RegexViewer
             try
             {
                 SetStatus("gotoLine");
-                GotoLineDialog gotoDialog = new GotoLineDialog();
-                int result = gotoDialog.WaitForResult();
-                SetStatus("gotoLine:" + result.ToString());
+                int index = 0;
 
+                if ((sender is int))
+                {
+                    index = Convert.ToInt32(sender);
+                }
+                else
+                {
+                    GotoLineDialog gotoDialog = new GotoLineDialog();
+
+                    index = gotoDialog.WaitForResult();
+                }
+
+                SetStatus("gotoLine:" + index.ToString());
                 DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
 
-                if (dataGrid != null && result >= 0)
+                if (dataGrid != null && index >= 0)
                 {
-                    // todo: currently only works when unfiltered
-                    if (IsHiding())
+                    // try without unhiding
+                    LogFileItem logFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.Index == index);
+
+                    if (logFileItem == null | logFileItem != null && logFileItem.FilterIndex < -1 && IsHiding())
                     {
                         HideExecuted(null);
+                        logFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.Index == index);
                     }
 
-                    LogFileItem logFileItem = dataGrid.Items.Cast<LogFileItem>().FirstOrDefault(x => x.Index == result);
                     dataGrid.ScrollIntoView(logFileItem);
+
                     dataGrid.SelectedItem = logFileItem;
                     dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
                 }
@@ -430,34 +438,26 @@ namespace RegexViewer
             }
         }
 
-        public void HideExecuted(object sender)
+        public override void HideExecuted(object sender)
         {
             try
             {
                 SetStatus("HideExecuted:enter");
-                DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
+                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
                 LogFileItem logFileItem;
 
                 // if count the same then assume it is not filtered
                 if (!IsHiding())
                 {
                     logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-
-                    // send empty function to reset to current filter in filterview
-                    if (!string.IsNullOrEmpty(QuickFindText))
-                    {
-                        QuickFindChangedExecuted(null);
-                    }
-                    else
-                    {
-                        this.FilterLogTabItems(FilterCommand.Hide);
-                    }
+                    
+                        FilterLogTabItems(FilterCommand.Hide);
                 }
                 else
                 {
                     logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
 
-                    this.FilterLogTabItems(FilterCommand.ShowAll);
+                    FilterLogTabItems(FilterCommand.ShowAll);
                 }
 
                 if (dataGrid != null)
@@ -538,10 +538,9 @@ namespace RegexViewer
                 if (File.Exists(logName))
                 {
                     // Open document
-
                     SetStatus(string.Format("opening file:{0}", logName));
                     LogFile logFile = new LogFile();
-                    if (String.IsNullOrEmpty((logFile = (LogFile)this.ViewManager.OpenFile(logName)).Tag))
+                    if (String.IsNullOrEmpty((logFile = (LogFile)ViewManager.OpenFile(logName)).Tag))
                     {
                         return;
                     }
@@ -564,68 +563,53 @@ namespace RegexViewer
             throw new NotImplementedException();
         }
 
-        public void QuickFindChangedExecuted(object sender)
+        public override void PasteText(object sender)
         {
-            FilterFileItem fileItem = new FilterFileItem();
-            SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is string)));
-            if (sender is string)
+            SetStatus("paste text");
+            string rawText = System.Windows.Clipboard.GetText();
+            if (string.IsNullOrEmpty(rawText))
             {
-                string filter = (sender as string);
-                SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", (sender as string).Length));
-                if (string.IsNullOrEmpty(filter))
-                {
-                    if (_filterViewModel.FilterList().Count > 0)
-                    {
-                        // send empty function to reset to current filter in filterview this.FilterLogTabItems(FilterCommand.Reset);
-                        this.FilterLogTabItems(FilterCommand.Filter);
-                    }
-                    else
-                    {
-                        // no filter show all
-                        this.FilterLogTabItems(FilterCommand.ShowAll);
-                    }
-
-                    QuickFindText = string.Empty;
-                    return;
-                }
-
-                fileItem.Filterpattern = QuickFindText = (sender as string);
-            }
-            else
-            {
-                fileItem.Filterpattern = QuickFindText;
+                return;
             }
 
-            try
+            ObservableCollection<LogFileItem> logFileItems = new ObservableCollection<LogFileItem>();
+            int index = 0;
+            foreach (string line in rawText.Split(new string[] { "\r\n" }, StringSplitOptions.None))
             {
-                Regex test = new Regex(fileItem.Filterpattern);
-                fileItem.Regex = true;
-            }
-            catch
-            {
-                SetStatus("quick find not a regex:" + fileItem.Filterpattern);
-                fileItem.Regex = false;
+                LogFileItem logFileItem = new LogFileItem();
+                logFileItem.Index = ++index;
+                logFileItem.Content = line;
+                logFileItem.Background = Settings.BackgroundColor;
+                logFileItem.Foreground = Settings.ForegroundColor;
+                logFileItems.Add(logFileItem);
             }
 
-            fileItem.Enabled = true;
-            this.FilterLogTabItems(FilterCommand.DynamicFilter, fileItem);
+            NewFileExecuted(logFileItems);
         }
 
         public override void RenameTabItem(string logName)
         {
             // rename tab
-            ITabViewModel<LogFileItem> tabItem = this.TabItems[SelectedIndex];
+            ITabViewModel<LogFileItem> tabItem = TabItems[SelectedIndex];
             Settings.RemoveLogFile(tabItem.Tag);
-            tabItem.Tag = CurrentFile().Tag = logName;
-            CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
-            Settings.AddFilterFile(logName);
+            if (CurrentFile() != null)
+            {
+                tabItem.Tag = CurrentFile().Tag = logName;
+                CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
+            }
+            else
+            {
+                SetStatus("RenameTabItem:error: current file is null: " + logName);
+            }
+
+            Settings.AddLogFile(logName);
         }
 
         public override void SaveFileAsExecuted(object sender)
         {
             bool exportConfg = false;
             ITabViewModel<LogFileItem> tabItem;
-            
+
             LogFile logFile = new LogFile();
 
             if (sender is LogFile)
@@ -641,9 +625,9 @@ namespace RegexViewer
             }
             else
             {
-                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                if (IsValidTabIndex())
                 {
-                    tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+                    tabItem = (ITabViewModel<LogFileItem>)TabItems[SelectedIndex];
                 }
                 else
                 {
@@ -653,7 +637,7 @@ namespace RegexViewer
 
             if (string.IsNullOrEmpty(tabItem.Tag))
             {
-                this.TabItems.Remove(tabItem);
+                TabItems.Remove(tabItem);
             }
             else
             {
@@ -665,10 +649,12 @@ namespace RegexViewer
                 dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
                 dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
 
-                string fileName = Path.GetFileName(tabItem.Tag);
+                string extension = string.IsNullOrEmpty(Path.GetExtension(tabItem.Tag)) ? ".csv" : Path.GetExtension(tabItem.Tag);
+                string fileName = Path.GetFileNameWithoutExtension(tabItem.Tag) + extension;
+
                 if (!fileName.ToLower().Contains(".filtered"))
                 {
-                    fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), Path.GetExtension(tabItem.Tag));
+                    fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), extension);
                 }
 
                 dlg.FileName = fileName;
@@ -704,9 +690,10 @@ namespace RegexViewer
                         logFile.ContentItems = tabItem.ContentList;
                     }
 
-                    this.ViewManager.SaveFile(logName, logFile);
+                    tabItem.IsNew = false;
+                    ViewManager.SaveFile(logName, logFile);
 
-                    // open filtered view into new tab if not a '-new x-' tab
+                    // open filtered view into new tab if not a '-new ##-' tab
                     if (string.Compare(tabItem.Tag, logName, true) != 0
                         && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                     {
@@ -733,9 +720,9 @@ namespace RegexViewer
             }
             else
             {
-                if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+                if (IsValidTabIndex())
                 {
-                    tabItem = (ITabViewModel<LogFileItem>)this.TabItems[this.SelectedIndex];
+                    tabItem = (ITabViewModel<LogFileItem>)TabItems[SelectedIndex];
                 }
                 else
                 {
@@ -745,8 +732,12 @@ namespace RegexViewer
                 }
             }
 
-            if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
+            SetStatus(string.Format("LogViewModel.SaveFileExecuted:header: {0} tag: {1}", tabItem.Header, tabItem.Tag, tabItem.Name));
+
+            //if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
+            if (tabItem.IsNew)
             {
+                // if saving new file
                 SaveFileAsExecuted(tabItem);
             }
             else
@@ -754,23 +745,25 @@ namespace RegexViewer
                 LogFile file = (LogFile)CurrentFile();
                 if (file != null)
                 {
+                    tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
-                    this.ViewManager.SaveFile(tabItem.Tag, file);
+                    ViewManager.SaveFile(tabItem.Tag, file);
                 }
             }
         }
 
         #endregion Public Methods
 
-        private void _filterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             // dont handle count updates
-            SetStatus("_filterViewModel.PropertyChanged: " + e.PropertyName);
+            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
             FilterLogTabItems();
         }
 
         private List<FilterFileItem> GetPreviousFilter()
         {
+            SetStatus("GetPreviousFilter item count: " + _previousFilterFileItems.Count);
             return _previousFilterFileItems;
         }
 
@@ -779,7 +772,7 @@ namespace RegexViewer
             // if count the same then assume it is not filtered
             try
             {
-                DataGrid dataGrid = (DataGrid)this.CurrentTab().Viewer;
+                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
                 SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
                 if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
                 {
@@ -817,13 +810,14 @@ namespace RegexViewer
 
         private void SaveCurrentFilter(List<FilterFileItem> filterFileItems)
         {
-            // save filter for next applyfilter compare
+            // save filter for next applyfilter compare shallow copy keeps color
+
             _previousFilterFileItems.Clear();
             foreach (FilterFileItem item in filterFileItems)
             {
                 _previousFilterFileItems.Add((FilterFileItem)item.ShallowCopy());
             }
-
+            SetStatus("SaveCurrentFilter item count: " + _previousFilterFileItems.Count);
             PreviousIndex = SelectedIndex;
         }
     }

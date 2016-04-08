@@ -1,11 +1,29 @@
-﻿using System.Collections.Generic;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-09-2015
+// ***********************************************************************
+// <copyright file="LogTabViewModel.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
 
 namespace RegexViewer
 {
     public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
-        #region Private Fields
+        #region Public Fields
+
         public int MaxGroupCount = 4;
+
+        #endregion Public Fields
+
+        #region Private Fields
+
         private bool _group1Visibility = false;
 
         private bool _group2Visibility = false;
@@ -20,7 +38,7 @@ namespace RegexViewer
 
         public LogTabViewModel()
         {
-         //   List<LogFileItem> ContentList = new List<LogFileItem>();
+            // List<LogFileItem> ContentList = new List<LogFileItem>();
         }
 
         #endregion Public Constructors
@@ -99,7 +117,7 @@ namespace RegexViewer
 
         public void SetGroupCount(int count)
         {
-            this.GroupCount = count;
+            GroupCount = count;
 
             if (count > 0)
             {
@@ -137,9 +155,9 @@ namespace RegexViewer
                 Group4Visibility = false;
             }
 
-            if(count > this.MaxGroupCount)
+            if (count > MaxGroupCount)
             {
-                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}",this.MaxGroupCount, count));
+                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}", MaxGroupCount, count));
             }
         }
 
@@ -152,8 +170,11 @@ namespace RegexViewer
             #region Public Fields
 
             public static string Group1Visibility = "Group1Visibility";
+
             public static string Group2Visibility = "Group2Visibility";
+
             public static string Group3Visibility = "Group3Visibility";
+
             public static string Group4Visibility = "Group4Visibility";
 
             #endregion Public Fields

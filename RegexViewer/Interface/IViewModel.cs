@@ -1,24 +1,22 @@
-﻿namespace RegexViewer
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="IViewModel.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+
+namespace RegexViewer
 {
     public interface IViewModel<T>
     {
         #region Public Methods
-
-        void CloseAllFilesExecuted(object sender);
-
-        void CloseFileExecuted(object sender);
-
-        IFile<T> CurrentFile();
-
-        ITabViewModel<T> CurrentTab();
-
-        void NewFileExecuted(object sender);
-
-        void OnPropertyChanged(string name);
-
-        void OpenDropExecuted(object sender);
-
-        void OpenFileExecuted(object sender);
 
         void RemoveTabItem(ITabViewModel<T> tabItem);
 
@@ -43,9 +41,15 @@
 
         Command DragDropCommand { get; set; }
 
+        Command FindNextCommand { get; set; }
+
+        Command HideCommand { get; set; }
+
         Command OpenCommand { get; set; }
 
         bool OpenDialogVisible { get; set; }
+
+        Command PasteCommand { get; set; }
 
         int SelectedIndex { get; set; }
 
@@ -56,5 +60,28 @@
         #endregion Public Properties
 
         void AddTabItem(IFile<T> fileProperties);
+
+        void CloseAllFilesExecuted(object sender);
+
+        void CloseFileExecuted(object sender);
+
+        IFile<T> CurrentFile();
+
+        ITabViewModel<T> CurrentTab();
+
+        void FindNextExecuted(object sender);
+        void HideExecuted(object sender);
+
+        bool IsValidTabIndex();
+
+        void NewFileExecuted(object sender);
+
+        void OnPropertyChanged(string name);
+
+        void OpenDropExecuted(object sender);
+
+        void OpenFileExecuted(object sender);
+
+        void PasteText(object sender);
     }
 }

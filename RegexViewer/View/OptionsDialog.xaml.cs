@@ -1,30 +1,18 @@
 ﻿using System.Windows;
-using System.Windows.Media;
 
 namespace RegexViewer
 {
-    /// <summary>
-    /// Interaction logic for TimedSaveDialog.xaml
-    /// </summary>
     public partial class OptionsDialog : Window
     {
-     
-        #region Private Fields
-
-        #endregion Private Fields
-
         #region Public Constructors
 
         public OptionsDialog()
         {
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
         }
 
         #endregion Public Constructors
-
-        #region Public Properties
-
-        #endregion Public Properties
 
         #region Public Methods
 
@@ -46,7 +34,7 @@ namespace RegexViewer
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
-            _cancel = true;
+            //_cancel = true;
             Disable();
         }
 
@@ -55,10 +43,6 @@ namespace RegexViewer
             Disable();
         }
 
-      
         #endregion Private Methods
-
-        private bool _cancel;
-       
     }
 }

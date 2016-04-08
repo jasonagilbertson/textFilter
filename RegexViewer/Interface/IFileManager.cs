@@ -1,4 +1,17 @@
-﻿using System.Collections.Generic;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="IFileManager.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -21,6 +34,8 @@ namespace RegexViewer
         #region Public Methods
 
         bool CloseFile(string LogName);
+
+        IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
 
         IFile<T> NewFile(string LogName, ObservableCollection<T> items = null);
 

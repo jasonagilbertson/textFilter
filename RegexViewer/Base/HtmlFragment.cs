@@ -1,4 +1,18 @@
-﻿namespace RegexViewer
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-09-2015
+// ***********************************************************************
+// <copyright file="HtmlFragment.cs" company="http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+
+namespace RegexViewer
 {
     // Sample class for Copying and Pasting HTML fragments to and from the clipboard.
     //
@@ -13,20 +27,20 @@
     using System.Windows;
     using System.Windows.Media;
 
-    /// <summary>
-    /// Helper class to decode HTML from the clipboard. See
-    /// http: //blogs.msdn.com/jmstall/archive/2007/01/21/html-clipboard.aspx for details.
-    /// </summary>
     internal class HtmlFragment
     {
         #region Private Fields
 
         private StringBuilder htmlClipBuilder;
+
         private string m_fragment;
+
         private string m_fullText;
+
         private System.Uri m_source;
 
         // Data. See properties for descriptions.
+
         private string m_version;
 
         private StringBuilder textClipBuilder;
@@ -42,11 +56,6 @@
             Clipboard.Clear();
         }
 
-        /// <summary>
-        /// Create an HTML fragment decoder around raw HTML text from the clipboard. This text
-        /// should have the header.
-        /// </summary>
-        /// <param name="rawClipboardText">raw html text, with header.</param>
         public HtmlFragment(string rawClipboardText)
         {
             ProcessFragment(rawClipboardText);
@@ -56,35 +65,21 @@
 
         #region Public Properties
 
-        /// <summary>
-        /// Get the full text (context) of the HTML fragment. This includes tags that the HTML is
-        /// enclosed in. May be null if context is not specified.
-        /// </summary>
         public string Context
         {
             get { return m_fullText; }
         }
 
-        /// <summary>
-        /// Get just the fragment of HTML text.
-        /// </summary>
         public string Fragment
         {
             get { return m_fragment; }
         }
 
-        /// <summary>
-        /// Get the Source URL of the HTML. May be null if no SourceUrl is specified. This is useful
-        /// for resolving relative urls.
-        /// </summary>
         public System.Uri SourceUrl
         {
             get { return m_source; }
         }
 
-        /// <summary>
-        /// Get the Version of the html. Usually something like "1.0".
-        /// </summary>
         public string Version
         {
             get { return m_version; }
@@ -94,24 +89,11 @@
 
         #region Public Methods
 
-        /// <summary>
-        /// Clears clipboard and copy a HTML fragment to the clipboard. This generates the header.
-        /// </summary>
-        /// <param name="htmlFragment">A html fragment.</param>
-        /// <example>HtmlFragment.CopyToClipboard(" <b>Hello!</b> ");</example>
         public static void CopyToClipboard(string htmlFragment, string textFragment)
         {
             CopyToClipboard(htmlFragment, textFragment, null, null);
         }
 
-        /// <summary>
-        /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
-        /// </summary>
-        /// <param name="htmlFragment">a html fragment</param>
-        /// <param name="title">optional title of the HTML document (can be null)</param>
-        /// <param name="sourceUrl">
-        /// optional Source URL of the HTML document, for resolving relative links (can be null)
-        /// </param>
         public static void CopyToClipboard(string htmlFragment, string textFragment, string title, Uri sourceUrl)
         {
             if (title == null) title = "From Clipboard";
@@ -175,13 +157,6 @@
             //Clipboard.SetText(data, TextDataFormat.Html);
         }
 
-        /// <summary>
-        /// Get a HTML fragment from the clipboard.
-        /// </summary>
-        /// <example>
-        /// string html = " <b>Hello!</b> "; HtmlFragment.CopyToClipboard(html); HtmlFragment html2
-        /// = HtmlFragment.FromClipboard(); Debug.Assert(html2.Fragment == html);
-        /// </example>
         static public HtmlFragment FromClipboard()
         {
             string rawClipboardText = Clipboard.GetText(TextDataFormat.Html);
@@ -200,16 +175,16 @@
             string colorText = HttpUtility.HtmlEncode(fragment);
             colorText = string.Format("<p><span style=\"background-color:{0};color:{1}\">{2}</span></p>", bColor, fColor, colorText);
 
-            this.htmlClipBuilder.AppendLine(colorText);
-            this.textClipBuilder.AppendLine(fragment);
+            htmlClipBuilder.AppendLine(colorText);
+            textClipBuilder.AppendLine(fragment);
         }
 
         public void CopyListToClipboard()
         {
             // ProcessFragment(htmlClipBuilder.ToString());
             CopyToClipboard(htmlClipBuilder.ToString(), textClipBuilder.ToString());
-            this.htmlClipBuilder.Clear();
-            this.textClipBuilder.Clear();
+            htmlClipBuilder.Clear();
+            textClipBuilder.Clear();
         }
 
         #endregion Public Methods
@@ -218,6 +193,7 @@
 
         // Helper to convert an integer into an 8 digit string. String must be 8 characters, because
         // it will be used to replace an 8 character string within a larger string.
+
         private static string To8DigitString(int x)
         {
             return String.Format("{0,8}", x);

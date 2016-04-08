@@ -1,10 +1,24 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-13-2015
+// ***********************************************************************
+// <copyright file="FilterFileManager.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 //using System.Windows.Media;
 using System.Xml;
@@ -17,20 +31,74 @@ namespace RegexViewer
 
         public FilterFileManager()
         {
-            this.FileManager = new List<IFile<FilterFileItem>>();
+            FileManager = new List<IFile<FilterFileItem>>();
         }
 
         #endregion Public Constructors
 
-        #region Public Properties
+        #region Public Enums
 
-        public bool IsTatFile { get; set; }
+        public enum FilterFileVersionResult
+        {
+            Version1,
 
-        #endregion Public Properties
+            Version2,
+
+            NotAFilterFile
+        }
+
+        #endregion Public Enums
 
         #region Public Methods
 
-        public void ManageNewFilterFileItem(FilterFile filterFile)
+        public FilterFileVersionResult FilterFileVersion(string fileName)
+        {
+            try
+            {
+                FilterFileVersionResult result = FilterFileVersionResult.NotAFilterFile;
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
+                XmlNode root = doc.DocumentElement;
+
+                // for v2 documentelement is filterInfo
+                if (root.Name.ToLower() == "filterinfo")
+                {
+                    result = FilterFileVersionResult.Version2;
+                }
+                else if (root.Name.ToLower() == "filters")
+                {
+                    result = FilterFileVersionResult.Version1;
+                }
+
+                if (root.Name.ToLower() != "filters")
+                {
+                    foreach (XmlNode node in root.ChildNodes)
+                    {
+                        if (node.Name.ToLower() == "filters")
+                        {
+                            root = node;
+                            break;
+                        }
+                    }
+                }
+
+                if (root.Name.ToLower() != "filters")
+                {
+                    // not regexViewer filter
+                    result = FilterFileVersionResult.NotAFilterFile;
+                }
+
+                SetStatus(string.Format("FilterFileVersion: filter: {0} version: {1}", fileName, result.ToString()));
+                return result;
+            }
+            catch (Exception e)
+            {
+                SetStatus(string.Format("Exception: FilterFileVersion: filter: {0}, {1}", fileName, e));
+                return FilterFileVersionResult.NotAFilterFile;
+            }
+        }
+
+        public void ManageNewFilterFileItem(FilterFile filterFile, int filterIndex = -1)
         {
             // add blank new item so defaults / modifications can be set some type of bug
             IEnumerable<FilterFileItem> results = null;
@@ -46,31 +114,43 @@ namespace RegexViewer
 
             if (filterFile.ContentItems.Count > 0)
             {
+                // valid enabled filter count
                 indexMax = filterFile.ContentItems.Max(x => x.Index);
             }
 
-            if (results == null | results != null && results.Count() == 0)
+            if (results == null | results != null && results.Count() == 0 | filterIndex >= 0)
             {
+                // no valid filters
                 FilterFileItem fileItem = new FilterFileItem();
 
-           //     filterFile.EnablePatternNotifications(false);
+                filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
-                SetStatus("ManageNewFilterFileItem:adding new line");
-                //if(tab != null)
-                //{
-                //    tab.ContentList.Add(fileItem);
-                //}
 
-                filterFile.ContentItems.Add(fileItem);
-            //    filterFile.EnablePatternNotifications(true);
+    
+
+                SetStatus("ManageNewFilterFileItem:adding new line");
+                filterFile.AddPatternNotification(fileItem, true);
+                if (filterIndex >= 0)
+                {
+                    // insert in new enabled filter item at specified index
+                    fileItem.Enabled = true;
+                    fileItem.Index = filterIndex;
+                    filterFile.ContentItems.Insert(filterIndex, fileItem);
+                }
+                else
+                {
+                    filterFile.ContentItems.Add(fileItem);
+                }
+
+                filterFile.EnablePatternNotifications(true);
             }
             else if (results.Count() == 1)
             {
                 if (results.ToList()[0].Index != indexMax)
                 {
-          //          filterFile.EnablePatternNotifications(false);
+                    filterFile.EnablePatternNotifications(false);
                     results.ToList()[0].Index = indexMax + 1;
-          //          filterFile.EnablePatternNotifications(true);
+                    filterFile.EnablePatternNotifications(true);
                 }
 
                 return;
@@ -91,7 +171,7 @@ namespace RegexViewer
 
             FileManager.Add(ManageFileProperties(LogName, filterFile));
 
-            this.Settings.AddFilterFile(LogName);
+            Settings.AddFilterFile(LogName);
             OnPropertyChanged("FilterFileManager");
             return filterFile;
         }
@@ -99,7 +179,7 @@ namespace RegexViewer
         public override IFile<FilterFileItem> OpenFile(string fileName)
         {
             FilterFile filterFile = new FilterFile();
-
+            SetStatus("OpenFile:enter: " + fileName);
             try
             {
                 if (FileManager.Exists(x => String.Compare(x.Tag, fileName, true) == 0))
@@ -113,9 +193,9 @@ namespace RegexViewer
 
                 ManageFileProperties(fileName, filterFile);
                 FileManager.Add(filterFile);
-                this.Settings.AddFilterFile(fileName);
+                Settings.AddFilterFile(fileName);
                 OnPropertyChanged("FilterFileManager");
-
+                SetStatus("OpenFile:exit: " + fileName);
                 return filterFile;
             }
             catch (Exception e)
@@ -137,8 +217,6 @@ namespace RegexViewer
                     continue;
                 }
 
-                // filterFile.PropertyChanged += filterFile_PropertyChanged;
-
                 filterFileItems.Add(filterFile);
             }
 
@@ -151,20 +229,24 @@ namespace RegexViewer
 
             try
             {
+                SetStatus("ReadFile:enter: " + fileName);
+
                 filterFile.FileName = Path.GetFileName(fileName);
                 if (Path.GetExtension(fileName).ToLower().Contains("tat"))
                 {
-                    this.IsTatFile = true;
                     filterFile.ContentItems = new ObservableCollection<FilterFileItem>(ReadTatFile(fileName));
                     filterFile.IsNew = false;
                     return filterFile;
                 }
-                else
-                {
-                    this.IsTatFile = false;
-                }
 
                 List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
+                FilterFileVersionResult filterFileVersion = FilterFileVersion(fileName);
+
+                if (filterFileVersion == FilterFileVersionResult.NotAFilterFile)
+                {
+                    return filterFile;
+                }
+
                 XmlDocument doc = new XmlDocument();
                 doc.Load(fileName);
 
@@ -177,13 +259,11 @@ namespace RegexViewer
                 {
                     filterFile.IsReadOnly = true;
                 }
-                
-                filterFile.IsNew = false;
 
                 XmlNode root = doc.DocumentElement;
 
                 // for v2 documentelement is filterInfo
-                if (root.Name.ToLower() == "filterinfo")
+                if (filterFileVersion != FilterFileVersionResult.Version1)
                 {
                     filterFile.FilterVersion = ReadStringNodeItem(root, "filterversion");
                     filterFile.FilterNotes = ReadStringNodeItem(root, "filternotes");
@@ -200,6 +280,8 @@ namespace RegexViewer
                         }
                     }
                 }
+
+                filterFile.IsNew = false;
 
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
@@ -219,36 +301,41 @@ namespace RegexViewer
                 }
 
                 filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterFileItems);
+                SetStatus("ReadFile:exit: " + fileName);
                 return filterFile;
             }
             catch (Exception e)
             {
-                SetStatus("Readfile:exception" + e.ToString());
+                SetStatus("Fatal:Readfile:exception" + e.ToString());
                 return filterFile;
             }
-
         }
 
-        public override bool SaveFile(string FileName, IFile<FilterFileItem> file)
+        public override bool SaveFile(string fileName, IFile<FilterFileItem> file)
         {
             FilterFile filterFile = (FilterFile)file;
             filterFile.IsNew = false;
-            
+            SetStatus("SaveFile:enter: " + fileName);
+
+            if (string.IsNullOrEmpty(fileName))
+            {
+                fileName = filterFile.FileName;
+            }
+
             try
             {
                 // todo: check for uri / share filter???
 
-                if (File.Exists(FileName))
-                {
-                    File.Delete(FileName);
-                }
+                //if (File.Exists(fileName))
+                //{
+                //    File.Delete(fileName);
+                //}
 
-                SetStatus("saving file:" + FileName);
+                SetStatus("saving file:" + fileName);
 
-                if (Path.GetExtension(FileName).ToLower().Contains("tat"))
+                if (Path.GetExtension(fileName).ToLower().Contains("tat"))
                 {
-                    this.IsTatFile = true;
-                    if (SaveTatFile(FileName, filterFile.ContentItems))
+                    if (SaveTatFile(fileName, filterFile.ContentItems))
                     {
                         return true;
                     }
@@ -257,12 +344,8 @@ namespace RegexViewer
                         return false;
                     }
                 }
-                else
-                {
-                    this.IsTatFile = false;
-                }
 
-                XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
+                XmlTextWriter xmlw = new XmlTextWriter(fileName, System.Text.Encoding.UTF8);
                 xmlw.Formatting = Formatting.Indented;
                 xmlw.WriteStartDocument();
                 xmlw.WriteStartElement("filterinfo");
@@ -325,17 +408,18 @@ namespace RegexViewer
                 xmlw.WriteEndDocument();
 
                 xmlw.Close();
-
+                SetStatus("SaveFile:exit: " + fileName);
                 return true;
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
                 filterFile.IsReadOnly = true;
+                SetStatus("Fatal:SaveFile:exception" + ex.ToString());
                 return false;
             }
             catch (Exception e)
             {
-                SetStatus("SaveFile:exception: " + e.ToString());
+                SetStatus("Fatal:SaveFile:exception: " + e.ToString());
                 return false;
             }
         }
@@ -353,16 +437,11 @@ namespace RegexViewer
                 // dont forward count updates
                 return;
             }
-            SetStatus("FilterFileManager:filterFile_PropertChanged: " + e.PropertyName);
+            SetStatus("FilterFileManager:filterFile_PropertyChanged: " + e.PropertyName);
 
             OnPropertyChanged(sender, e);
         }
 
-        /// <summary>
-        /// Finds Color Name from string of RGB #(FFFFFF) returns KnownColor color name
-        /// </summary>
-        /// <param name="rgbColor"></param>
-        /// <returns></returns>
         private string FindColorName(string rgbColor)
         {
             SetStatus("FindColorName:" + rgbColor);
@@ -398,15 +477,15 @@ namespace RegexViewer
             return "white";
         }
 
-        private FilterFile ManageFileProperties(string LogName, FilterFile filterFile)
+        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
         {
             filterFile.FileName = Path.GetFileName(LogName);
             filterFile.Tag = LogName;
 
             // todo rework this:
-            filterFile.EnablePatternNotifications(false);
-            filterFile.EnablePatternNotifications(true);
-            filterFile.PropertyChanged += filterFile_PropertyChanged;
+            ((FilterFile)filterFile).EnablePatternNotifications(false);
+            ((FilterFile)filterFile).EnablePatternNotifications(true);
+            ((FilterFile)filterFile).PropertyChanged += filterFile_PropertyChanged;
             return filterFile;
         }
 
@@ -493,47 +572,108 @@ namespace RegexViewer
             }
         }
 
-        private List<FilterFileItem> ReadTatFile(string logName)
+        private List<FilterFileItem> ReadTatFile(string fileName)
         {
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
-            XmlDocument doc = new XmlDocument();
-            doc.Load(logName);
 
-            XmlNode root = doc.DocumentElement.ChildNodes[0];
-
-            for (int i = 0; i < root.ChildNodes.Count; i++)
+            try
             {
-                FilterFileItem fileItem = new FilterFileItem();
-                fileItem.Count = 0;
+                SetStatus("ReadTatFile:enter: " + fileName);
 
-                fileItem.BackgroundColor = FindColorName(ReadAttributeString(root, "backColor", i));
-                fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "foreColor", i));
+                XmlDocument doc = new XmlDocument();
+                doc.Load(fileName);
 
-                fileItem.CaseSensitive = ReadAttributeBool(root, "case_sensitive", i);
-                fileItem.Enabled = ReadAttributeBool(root, "enabled", i);
-                fileItem.Exclude = ReadAttributeBool(root, "excluding", i);
-                fileItem.Regex = ReadAttributeBool(root, "regex", i);
-                fileItem.Filterpattern = ReadAttributeString(root, "text", i);
-                fileItem.TatType = ReadAttributeString(root, "type", i);
+                XmlNode root = doc.DocumentElement.ChildNodes[0];
 
-                fileItem.Index = i; // ReadIntNodeItem(root, "index", i);
-                //fileItem.Notes = ReadStringNodeItem(root, "notes", i);
+                for (int i = 0; i < root.ChildNodes.Count; i++)
+                {
+                    FilterFileItem fileItem = new FilterFileItem();
+                    fileItem.Count = 0;
 
-                filterFileItems.Add(fileItem);
+                    // for backward compatibility
+                    if (!string.IsNullOrEmpty(ReadAttributeString(root, "color", i)))
+                    {
+                        fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "color", i));
+                        fileItem.BackgroundColor = "White";
+                    }
+                    else
+                    {
+                        fileItem.BackgroundColor = FindColorName(ReadAttributeString(root, "backColor", i));
+                        fileItem.ForegroundColor = FindColorName(ReadAttributeString(root, "foreColor", i));
+                    }
+
+                    fileItem.CaseSensitive = ReadAttributeBool(root, "case_sensitive", i);
+                    fileItem.Enabled = ReadAttributeBool(root, "enabled", i);
+                    fileItem.Exclude = ReadAttributeBool(root, "excluding", i);
+                    fileItem.Regex = ReadAttributeBool(root, "regex", i);
+                    fileItem.Filterpattern = ReadAttributeString(root, "text", i);
+                    fileItem.TatType = ReadAttributeString(root, "type", i);
+
+                    fileItem.Index = i; // ReadIntNodeItem(root, "index", i);
+                    //fileItem.Notes = ReadStringNodeItem(root, "notes", i);
+
+                    filterFileItems.Add(fileItem);
+                }
+                return filterFileItems;
             }
-            return filterFileItems;
+            catch (Exception e)
+            {
+                SetStatus("ReadTatFile:exception: " + e.ToString());
+                return filterFileItems;
+            }
         }
 
-        private bool SaveTatFile(string FileName, ObservableCollection<FilterFileItem> fileItems)
+        private bool SaveTatFile(string fileName, ObservableCollection<FilterFileItem> fileItems)
         {
             try
             {
-                XmlTextWriter xmlw = new XmlTextWriter(FileName, System.Text.Encoding.UTF8);
+                // check version of tat file for color differences
+                SetStatus("SaveTatFile:enter: " + fileName);
+
+                // first version supporting foreColor and backColor
+                string currentVersion = string.Empty;
+                bool legacyVersion = false;
+
+                // read file and try to get version
+                try
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(fileName);
+                    currentVersion = doc.DocumentElement.GetAttribute("version");
+                }
+                catch { }
+
+                if (string.IsNullOrEmpty(currentVersion))
+                {
+                    MessageBoxResult mbResult = MessageBox.Show("Do you want to save Tat filter as new version that supports background color?\nTextAnalysisTool.NET builds before 2015 do not support background color.", "TatVersion", MessageBoxButton.YesNo);
+                    if (mbResult != MessageBoxResult.Yes)
+                    {
+                        legacyVersion = true;
+                        currentVersion = "2014-04-22";
+                    }
+                    else
+                    {
+                        legacyVersion = false;
+                        currentVersion = "2015-01-28";
+                    }
+                }
+                else if (currentVersion.Contains("2015"))
+                {
+                    legacyVersion = false;
+                    currentVersion = "2015-01-28";
+                }
+                else
+                {
+                    legacyVersion = true;
+                    currentVersion = "2014-04-22";
+                }
+
+                XmlTextWriter xmlw = new XmlTextWriter(fileName, System.Text.Encoding.UTF8);
                 xmlw.Formatting = Formatting.Indented;
                 xmlw.WriteStartDocument();
 
                 xmlw.WriteStartElement("TextAnalysisTool.NET");
-                xmlw.WriteAttributeString("version", "2015-01-28");
+                xmlw.WriteAttributeString("version", currentVersion);
                 xmlw.WriteAttributeString("showOnlyFilteredLines", "False");
 
                 xmlw.WriteStartElement("filters");
@@ -551,9 +691,19 @@ namespace RegexViewer
                     string bColor = item.Background.ToString();
                     bColor = bColor.Substring(bColor.Length - 6);
 
-                    xmlw.WriteAttributeString("foreColor", fColor);
-                    xmlw.WriteAttributeString("backColor", bColor);
-                    // tat may not support this setting xmlw.WriteAttributeString("notes", item.Notes.ToString());
+                    if (legacyVersion)
+                    {
+                        // for legacy
+                        xmlw.WriteAttributeString("color", fColor);
+                    }
+                    else
+                    {
+                        // for newest version
+                        xmlw.WriteAttributeString("foreColor", fColor);
+                        xmlw.WriteAttributeString("backColor", bColor);
+                    }
+
+                    // tat does not support this setting xmlw.WriteAttributeString("notes", item.Notes.ToString());
 
                     // dont currently support marker and is not saved in regexviewer filter file
                     xmlw.WriteAttributeString("type", item.TatType ?? "matches_text");
@@ -570,6 +720,7 @@ namespace RegexViewer
                 xmlw.WriteEndDocument();
 
                 xmlw.Close();
+                SetStatus("SaveTatFile:exit: " + fileName);
                 return true;
             }
             catch (Exception e)

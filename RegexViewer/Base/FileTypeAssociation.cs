@@ -1,4 +1,17 @@
-﻿using Microsoft.Win32;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 09-06-2015
+// ***********************************************************************
+// <copyright file="FileTypeAssociation.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using Microsoft.Win32;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -12,7 +25,8 @@ namespace RegexViewer
         #region Private Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
-        private string[] _extensions = new string[4] { ".csv", ".log",".rvf", ".rvconfig" };
+
+        private string[] _extensions = new string[4] { ".csv", ".log", ".rvf", ".rvconfig" };
 
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 

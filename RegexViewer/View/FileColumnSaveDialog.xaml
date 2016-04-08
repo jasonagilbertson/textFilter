@@ -1,0 +1,25 @@
+﻿<Window x:Class="RegexViewer.FileColumnSaveDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="File Save Columns" Height="182.043" Width="463.769">
+    <Grid>
+        <CheckBox Name="checkIndex" IsChecked="False" HorizontalAlignment="Left" Margin="35,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelIndex" HorizontalAlignment="Left" Margin="30,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Index" FontSize="15"/>
+        <CheckBox Name="checkContent" IsChecked="True" HorizontalAlignment="Left" Margin="105,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelContent" HorizontalAlignment="Left" Margin="100,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Content" FontSize="15"/>
+        <CheckBox Name="checkGroup1" IsChecked="False" HorizontalAlignment="Left" Margin="175,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelGroup1" HorizontalAlignment="Left" Margin="170,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Group1" FontSize="15"/>
+        <CheckBox Name="checkGroup2" IsChecked="False" HorizontalAlignment="Left" Margin="245,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelGroup2" HorizontalAlignment="Left" Margin="240,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Group2" FontSize="15"/>
+        <CheckBox Name="checkGroup3" IsChecked="False" HorizontalAlignment="Left" Margin="315,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelGroup3" HorizontalAlignment="Left" Margin="310,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Group3" FontSize="15"/>
+        <CheckBox Name="checkGroup4" IsChecked="False" HorizontalAlignment="Left" Margin="385,0,10,100" VerticalAlignment="Bottom" />
+        <Label Name="labelGroup4" HorizontalAlignment="Left" Margin="380,0,0,60" VerticalAlignment="Bottom" Width="75" Height="35" Content="Group4" FontSize="15"/>
+        <TextBox Name="textSeparator" Text="," HorizontalAlignment="Left" Margin="385,0,0,20" VerticalAlignment="Bottom" Width="25" Height="35" />
+        <Label Name="labelSeparator" HorizontalAlignment="Left" Margin="300,0,0,20" VerticalAlignment="Bottom" Width="75" Height="35" Content="Separator:" FontSize="15"/>
+
+        <Button Name="buttonSave" Content="Save" HorizontalAlignment="Left" Margin="10,0,10,10" VerticalAlignment="Bottom" Width="75" Click="buttonSave_Click" />
+        <Button Name="buttonCancel" Content="Cancel" HorizontalAlignment="Left" Margin="100,0,10,10" VerticalAlignment="Bottom" Width="75" Click="buttonCancel_Click" />
+
+    </Grid>
+</Window>

@@ -1,16 +1,17 @@
-﻿<Window x:Class="RegexViewer.GotoLineDialog"
+﻿<Window x:Class="RegexViewer.RenameDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RegexViewer"
-        Title="Go To Line Number"
-        Width="215"
-        Height="100"
+        Title="Rename Tab"
+        Width="263"
+        Height="128"
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <local:RegexViewerSettings x:Key="settings" />
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+
         <Label Name="labelGotoLine"
                Width="115"
                Height="25"
@@ -21,10 +22,10 @@
                Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-               Content="Enter Line Number:"
+               Content="Enter new name:"
                Visibility="Visible" />
-        <TextBox Name="textBoxLineNumber"
-                 Width="100"
+        <TextBox Name="textBoxNewName"
+                 Width="164"
                  Height="25"
                  Margin="5,30,0,0"
                  HorizontalAlignment="Left"
@@ -33,18 +34,30 @@
                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                  Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                  BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                 KeyDown="textBoxLineNumber_KeyDown"
+                 KeyDown="textBoxNewName_KeyDown"
                  Visibility="Visible" />
-        <Button Name="buttonGotoLine"
+        <Button Name="buttonSave"
                 Width="75"
-                Margin="115,34,0,0"
+                Margin="10,67,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Style="{DynamicResource ButtonStyle1}"
                 Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                 Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                 BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                Click="buttonGotoLine_Click"
-                Content="Go to Line" />
+                Click="buttonSave_Click"
+                Content="Save" />
+        <Button x:Name="buttonCancel"
+                Width="75"
+                Margin="94,67,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Style="{DynamicResource ButtonStyle1}"
+                Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                Click="buttonCancel_Click"
+                Content="Cancel"
+                RenderTransformOrigin="1.693,0.85" />
     </Grid>
 </Window>

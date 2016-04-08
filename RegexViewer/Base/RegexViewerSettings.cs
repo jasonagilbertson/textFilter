@@ -1,11 +1,23 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-31-2015
+// ***********************************************************************
+// <copyright file="RegexViewerSettings.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Windows.Media;
 using System.Xml;
 
@@ -24,11 +36,11 @@ namespace RegexViewer
                 Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
             }
 
-            this.ConfigFile = !string.IsNullOrEmpty(this.ConfigFile) ? this.ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
+            ConfigFile = !string.IsNullOrEmpty(ConfigFile) ? ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
             _ConfigFileMap = new ExeConfigurationFileMap();
-            if (!File.Exists(this.ConfigFile))
+            if (!File.Exists(ConfigFile))
             {
-                XmlTextWriter xmlw = new XmlTextWriter(this.ConfigFile, System.Text.Encoding.UTF8);
+                XmlTextWriter xmlw = new XmlTextWriter(ConfigFile, System.Text.Encoding.UTF8);
                 xmlw.Formatting = Formatting.Indented;
                 xmlw.WriteStartDocument();
                 xmlw.WriteStartElement("configuration");
@@ -46,7 +58,7 @@ namespace RegexViewer
                 xmlw.Close();
             }
 
-            _ConfigFileMap.ExeConfigFilename = this.ConfigFile;
+            _ConfigFileMap.ExeConfigFilename = ConfigFile;
 
             // Get the mapped configuration file.
             _Config = ConfigurationManager.OpenMappedExeConfiguration(_ConfigFileMap, ConfigurationUserLevel.None);
@@ -55,8 +67,8 @@ namespace RegexViewer
             VerifyAppSettings();
 
             // verify files
-            this.CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
-            this.CurrentLogFiles = ProcessFiles(CurrentLogFiles);
+            CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
+            CurrentLogFiles = ProcessFiles(CurrentLogFiles);
 
             if (!ProcessCommandLine())
             {
@@ -121,7 +133,7 @@ namespace RegexViewer
                     } */
             try
             {
-                if (this.SaveSessionInformation)
+                if (SaveSessionInformation)
                 {
                     _Config.Save(ConfigurationSaveMode.Full);
                 }
@@ -148,12 +160,6 @@ namespace RegexViewer
         {
             List<string> newList = new List<string>(recentLogFiles);
 
-            // dont save temp names
-            if (Regex.IsMatch(logFile, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
-            {
-                return newList.ToArray();
-            }
-
             if (newList.Contains(logFile))
             {
                 newList.Remove(logFile);
@@ -163,7 +169,13 @@ namespace RegexViewer
             {
                 newList.RemoveAt(0);
             }
-
+            if (GetPathType(logFile) != ResourceType.Url)
+            {
+                if (!File.Exists(logFile))
+                {
+                    return (newList.ToArray());
+                }
+            }
             newList.Add(logFile);
 
             return newList.ToArray();
@@ -220,9 +232,26 @@ namespace RegexViewer
                 && File.Exists(arguments[1]))
             {
                 Settings.RemoveAllLogs();
-                Settings.AddLogFile(Environment.ExpandEnvironmentVariables(arguments[1]));
+
+                if (arguments[1] != null)
+                {
+                    string filename = arguments[1];
+                    if ((Path.GetExtension(filename).ToLower() == ".xml"
+                        | Path.GetExtension(filename).ToLower() == ".rvf"
+                        | Path.GetExtension(filename).ToLower() == ".tat")
+                        && new FilterFileManager().FilterFileVersion(filename) != FilterFileManager.FilterFileVersionResult.NotAFilterFile)
+                    {
+                        Settings.AddFilterFile(Environment.ExpandEnvironmentVariables(filename));
+                    }
+                    else
+                    {
+                        // not a filter file
+                        Settings.AddLogFile(Environment.ExpandEnvironmentVariables(filename));
+                    }
+                }
             }
-            else if (arguments.Length == 2 && arguments[1].Contains("/?"))
+            else if (arguments.Length == 2 && arguments[1].Contains("/?")
+                | (arguments.Length == 2 && arguments[1].Contains("-?")))
             {
                 DisplayHelp();
                 retval = false;
@@ -377,7 +406,7 @@ namespace RegexViewer
                             }
                         case AppSettingNames.BackgroundColor:
                             {
-                                _appSettings[name].Value = "Black";
+                                _appSettings[name].Value = "AliceBlue";
                                 break;
                             }
                         case AppSettingNames.CountMaskedMatches:
@@ -390,19 +419,24 @@ namespace RegexViewer
                                 _appSettings[name].Value = "20";
                                 break;
                             }
+                        case AppSettingNames.FilterHide:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
                         case AppSettingNames.FontName:
                             {
-                                _appSettings[name].Value = "Courier New";
+                                _appSettings[name].Value = "Lucida Console";
                                 break;
                             }
                         case AppSettingNames.FontSize:
                             {
-                                _appSettings[name].Value = "10";
+                                _appSettings[name].Value = "12";
                                 break;
                             }
                         case AppSettingNames.ForegroundColor:
                             {
-                                _appSettings[name].Value = "Cyan";
+                                _appSettings[name].Value = "Black";
                                 break;
                             }
                         case AppSettingNames.MaxMultiFileCount:
@@ -414,6 +448,12 @@ namespace RegexViewer
                         case AppSettingNames.SaveSessionInformation:
                             {
                                 _appSettings[name].Value = "True";
+                                break;
+                            }
+
+                        case AppSettingNames.WordWrap:
+                            {
+                                _appSettings[name].Value = "Wrap";
                                 break;
                             }
 
@@ -467,9 +507,13 @@ namespace RegexViewer
         public enum ResourceType
         {
             Error,
+
             Local,
+
             Unc,
+
             Unknown,
+
             Url
         }
 
@@ -480,20 +524,42 @@ namespace RegexViewer
         private enum AppSettingNames
         {
             AutoSave,
+
             BackgroundColor,
+
             CountMaskedMatches,
+
             CurrentFilterFiles,
+
             CurrentLogFiles,
-            FilterDirectory, 
+
+            FilterDirectory,
+
+            FilterHide,
+
             FileHistoryCount,
+
             FontName,
+
             FontSize,
+
             ForegroundColor,
-            MaxMultiFileCount, 
+
+            HelpUrl,
+
+            MaxMultiFileCount,
+
             RecentFilterFiles,
+
             RecentLogFiles,
+
             SaveSessionInformation,
-            SharedFilterDirectory
+
+            SharedFilterDirectory,
+
+            VersionCheckFile,
+
+            WordWrap
         }
 
         #endregion Private Enums
@@ -610,6 +676,22 @@ namespace RegexViewer
             }
         }
 
+        public bool FilterHide
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString()));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FilterHide).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FilterHide).ToString());
+                }
+            }
+        }
+
         public string FontName
         {
             get
@@ -654,6 +736,22 @@ namespace RegexViewer
                 {
                     _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
+                }
+            }
+        }
+
+        public string HelpUrl
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.HelpUrl).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.HelpUrl).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.HelpUrl).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.HelpUrl).ToString());
                 }
             }
         }
@@ -732,20 +830,62 @@ namespace RegexViewer
             }
         }
 
-        public string[] SharedFilterFiles
+        public string VersionCheckFile
         {
             get
             {
-                if(Directory.Exists(this.SharedFilterDirectory))
+                return _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value.ToString())
                 {
-                    return Directory.GetFiles(this.SharedFilterDirectory, "*.xml", SearchOption.AllDirectories);
-                }
-                else
-                {
-                    return new string[0];
+                    _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.VersionCheckFile).ToString());
                 }
             }
         }
+
+        public string ContentColumnSize
+        {
+            // used to dynamically set logview content field tied to 'WordWrap' config setting is
+            // not a config file setting
+            get
+            {
+                if (this.WordWrap.ToLower() == "wrap")
+                {
+                    return "300*";
+                }
+                else
+                {
+                    return "Auto";
+                }
+            }
+        }
+
+        public string WordWrap
+        {
+            // Wrap or NoWrap
+            get
+            {
+                return (_appSettings[(AppSettingNames.WordWrap).ToString()].Value);
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.WordWrap).ToString()].Value.ToString())
+                {
+                    if (value.ToLower() != "wrap" & value.ToLower() != "nowrap")
+                    {
+                        SetStatus("error:WordWrap:invalid value: " + value);
+                        value = "Wrap";
+                    }
+
+                    _appSettings[(AppSettingNames.WordWrap).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.WordWrap).ToString());
+                }
+            }
+        }
+
         #endregion Public Properties
 
         public void AddFilterFile(string filterFile)

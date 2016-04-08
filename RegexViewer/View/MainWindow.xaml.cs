@@ -13,13 +13,9 @@ using System.Windows.Media;
 
 namespace RegexViewer
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         #region Private Methods
-
         private T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)
@@ -47,8 +43,6 @@ namespace RegexViewer
         private StringBuilder _color = new StringBuilder();
 
         private List<string> _colorNames = new List<string>();
-
-        private bool _endEditing;
 
         private MainViewModel _mainViewModel;
 
@@ -219,6 +213,7 @@ namespace RegexViewer
                 foreach (string filename in fileNames)
                 {
                     if (Path.GetExtension(filename).ToLower() == ".xml"
+                        | Path.GetExtension(filename).ToLower() == ".rvf"
                         | Path.GetExtension(filename).ToLower() == ".tat")
                     {
                         if (this._mainViewModel.FilterViewModel.VerifyAndOpenFile(filename))

@@ -1,18 +1,17 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace RegexViewer
 {
-    public partial class GotoLineDialog : Window
+    public partial class RenameDialog : Window
     {
         #region Public Constructors
 
-        public GotoLineDialog()
+        public RenameDialog()
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
-            textBoxLineNumber.Focus();
+            textBoxNewName.Focus();
         }
 
         #endregion Public Constructors
@@ -25,34 +24,37 @@ namespace RegexViewer
             this.Close();
         }
 
-        public int WaitForResult()
+        public string WaitForResult()
         {
             this.ShowDialog();
-            int result = 0;
-            if (Int32.TryParse(textBoxLineNumber.Text, out result))
-            {
-                return result;
-            }
-            return 0;
+
+            return textBoxNewName.Text;
         }
 
         #endregion Public Methods
 
         #region Private Methods
 
-        private void buttonGotoLine_Click(object sender, RoutedEventArgs e)
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             Disable();
         }
 
-        private void textBoxLineNumber_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void buttonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            textBoxNewName.Text = string.Empty;
+            Disable();
+        }
+
+        private void textBoxNewName_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                buttonGotoLine_Click(null, null);
+                buttonSave_Click(null, null);
             }
             else if (e.Key == Key.Escape)
             {
+                textBoxNewName.Text = string.Empty;
                 Disable();
             }
         }

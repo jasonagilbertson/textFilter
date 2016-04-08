@@ -1,8 +1,21 @@
-﻿using System;
+﻿// *********************************************************************** Assembly : RegexViewer
+// Author : jason Created : 09-06-2015
+//
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// <copyright file="LogFileManager.cs" company="">
+//     Copyright © 2015
+// </copyright>
+// <summary>
+// </summary>
+// ***********************************************************************
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.MemoryMappedFiles;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -18,7 +31,7 @@ namespace RegexViewer
 
         public LogFileManager()
         {
-            this.FileManager = new List<IFile<LogFileItem>>();
+            FileManager = new List<IFile<LogFileItem>>();
         }
 
         #endregion Public Constructors
@@ -48,11 +61,12 @@ namespace RegexViewer
                     }
                     else
                     {
-                        item.Foreground = filterItems[item.FilterIndex].Foreground;
-                        item.Background = filterItems[item.FilterIndex].Background;
+                        FilterFileItem filterItem = filterItems.FirstOrDefault(x => x.Index == item.FilterIndex);
+                        item.Foreground = filterItem.Foreground;
+                        item.Background = filterItem.Background;
                     }
 
-                    item.FontSize = Settings.FontSize;
+                    // item.FontSize = Settings.FontSize;
                 }//);
 
                 SetStatus(string.Format("ApplyColor:total time in seconds: {0}", DateTime.Now.Subtract(timer).TotalSeconds));
@@ -63,7 +77,7 @@ namespace RegexViewer
                 }
                 else
                 {
-                    return new ObservableCollection<LogFileItem>(logFileItems.Where(x => x.FilterIndex > -1));
+                    return new ObservableCollection<LogFileItem>(logFileItems.Where(x => x.FilterIndex > -2));
                 }
             }
             catch (Exception e)
@@ -83,6 +97,12 @@ namespace RegexViewer
             List<FilterFileItem> filterItems = VerifyFilterPatterns(filterFileItems, logTab);
             Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
 
+            // set regex cache size to number of filter items for better performance
+            // https: //msdn.microsoft.com/en-us/library/gg578045(v=vs.110).aspx
+            Regex.CacheSize = filterItems.Count;
+
+            int inclusionFilterCount = filterItems.Count(x => x.Include == true);
+
             try
             {
                 Parallel.ForEach(logFile.ContentItems, logItem =>
@@ -96,6 +116,7 @@ namespace RegexViewer
                     }
 
                     int filterIndex = int.MaxValue; // int.MinValue;
+                    int includeFilters = inclusionFilterCount;
 
                     if (Settings.CountMaskedMatches)
                     {
@@ -108,40 +129,21 @@ namespace RegexViewer
                     logItem.Group3 = string.Empty;
                     logItem.Group4 = string.Empty;
 
-                    // make sure all matches have all includes
-                    foreach (FilterFileItem item in filterItems.Where(x => x.Include == true))
-                    {
-                        if (item.Regex)
-                        {
-                            if (!Regex.IsMatch(logItem.Content, item.Filterpattern, item.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
-                            {
-                                logItem.FilterIndex = int.MinValue;
-                                return;
-                            }
-                        }
-                        else
-                        {
-                            if (!logItem.Content.ToLower().Contains(item.Filterpattern.ToLower()))
-                            {
-                                logItem.FilterIndex = int.MinValue;
-                                return;
-                            }
-                        }
-                    }
-
                     bool matchSet = false;
 
-                    for (int filterItemCount = 0; filterItemCount < filterItems.Count; filterItemCount++)
+                    for (int fItem = 0; fItem < filterItems.Count; fItem++)
                     {
+                        int filterItemIndex = filterFileItems[fItem].Index;
                         bool match = false;
-                        FilterFileItem filterItem = filterItems[filterItemCount];
-                        Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemCount,
+                        FilterFileItem filterItem = filterItems[fItem];
+                        Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Pattern={1}:{2} logItem.Content:{3}", filterItemIndex,
                             Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
 
                         // unnamed and named groups
-                        if (logTab.GroupCount > 0 && filterItem.Regex)
+                        //if (logTab.GroupCount > 0 && filterItem.Regex)
+                        if (filterItem.GroupCount > 0 && filterItem.Regex)
                         {
-                            MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase);
+                            MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, RegexOptions.Singleline | (filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase));
                             if (mc.Count > 0)
                             {
                                 match = true;
@@ -170,30 +172,197 @@ namespace RegexViewer
                                 }
                             }
                         }
-                        else if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase))
+                        else if (filterItem.Regex && Regex.IsMatch(logItem.Content, filterItem.Filterpattern, RegexOptions.Singleline | (filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase)))
                         {
                             match = true;
                         }
                         else if (!filterItem.Regex)
                         {
-                            if (filterItem.CaseSensitive && logItem.Content.Contains(filterItem.Filterpattern))
+                            bool andMatch = true;
+                            if (filterItem.StringOperators)
                             {
-                                match = true;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} string with operators "
+                                   + "thread id:{1} filter index:{2} filter string: {3}",
+                                   filterItemIndex,
+                                   Thread.CurrentThread.ManagedThreadId,
+                                   filterIndex,
+                                   filterItem.Filterpattern));
+                                // check for ' AND ' and ' OR ' operators
+                                foreach (string andPattern in Regex.Split(filterItem.Filterpattern, " AND "))
+                                {
+                                    Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern "
+                                        + "thread id:{1} filter index:{2} filter string: {3}",
+                                        filterItemIndex,
+                                        Thread.CurrentThread.ManagedThreadId,
+                                        filterIndex,
+                                        andPattern));
+
+                                    match = false;
+                                    string[] ors = Regex.Split(andPattern, " OR ");
+                                    if (ors.Length > 1)
+                                    {
+                                        foreach (string orPattern in ors)
+                                        {
+                                            Debug.Print(string.Format("ApplyFilter: loop:{0} string orPattern "
+                                                + "thread id:{1} filter index:{2} filter string: {3}",
+                                                filterItemIndex,
+                                                Thread.CurrentThread.ManagedThreadId,
+                                                filterIndex,
+                                                orPattern));
+                                            // only match one
+                                            if (filterItem.CaseSensitive && logItem.Content.Contains(orPattern))
+                                            {
+                                                match = true;
+                                                Debug.Print(string.Format("ApplyFilter: loop:{0} string orPattern match "
+                                                    + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                    filterItemIndex,
+                                                    Thread.CurrentThread.ManagedThreadId,
+                                                    filterIndex,
+                                                    orPattern,
+                                                    logItem.Content));
+                                                break;
+                                            }
+                                            else if (logItem.Content.ToLower().Contains(orPattern.ToLower()))
+                                            {
+                                                match = true;
+                                                Debug.Print(string.Format("ApplyFilter: loop:{0} string orPattern match "
+                                                    + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                    filterItemIndex,
+                                                    Thread.CurrentThread.ManagedThreadId,
+                                                    filterIndex,
+                                                    orPattern,
+                                                    logItem.Content));
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Debug.Print(string.Format("ApplyFilter: loop:{0} string orPattern NO match "
+                                                    + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                    filterItemIndex,
+                                                    Thread.CurrentThread.ManagedThreadId,
+                                                    filterIndex,
+                                                    orPattern,
+                                                    logItem.Content));
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // match all
+                                        if (filterItem.CaseSensitive && logItem.Content.Contains(andPattern))
+                                        {
+                                            match = true;
+                                            Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern all match "
+                                                + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                filterItemIndex,
+                                                Thread.CurrentThread.ManagedThreadId,
+                                                filterIndex,
+                                                andPattern,
+                                                logItem.Content));
+                                        }
+                                        else if (logItem.Content.ToLower().Contains(andPattern.ToLower()))
+                                        {
+                                            match = true;
+                                            Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern all match "
+                                                + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                filterItemIndex,
+                                                Thread.CurrentThread.ManagedThreadId,
+                                                filterIndex,
+                                                andPattern,
+                                                logItem.Content));
+                                        }
+                                        else
+                                        {
+                                            Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern all NO match "
+                                                + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                                filterItemIndex,
+                                                Thread.CurrentThread.ManagedThreadId,
+                                                filterIndex,
+                                                andPattern,
+                                                logItem.Content));
+                                        }
+                                    }
+
+                                    andMatch &= match;
+                                }
+
+                                match = andMatch;
                             }
-                            else if (logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
+                            else
                             {
-                                match = true;
+                                // normal string match
+                                if (filterItem.CaseSensitive && logItem.Content.Contains(filterItem.Filterpattern))
+                                {
+                                    match = true;
+                                    Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern one match "
+                                        + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                        filterItemIndex,
+                                        Thread.CurrentThread.ManagedThreadId,
+                                        filterIndex,
+                                        filterItem.Filterpattern,
+                                        logItem.Content));
+                                }
+                                else if (logItem.Content.ToLower().Contains(filterItem.Filterpattern.ToLower()))
+                                {
+                                    match = true;
+                                    Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern one match "
+                                        + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                        filterItemIndex,
+                                        Thread.CurrentThread.ManagedThreadId,
+                                        filterIndex,
+                                        filterItem.Filterpattern,
+                                        logItem.Content));
+                                }
+                                else
+                                {
+                                    Debug.Print(string.Format("ApplyFilter: loop:{0} string andPattern one NO match "
+                                        + "thread id:{1} filter index:{2} filter string: {3} logItem content: {4}",
+                                        filterItemIndex,
+                                        Thread.CurrentThread.ManagedThreadId,
+                                        filterIndex,
+                                        filterItem.Filterpattern,
+                                        logItem.Content));
+                                }
                             }
                         }
 
-                        Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem Match={1}:{2} **", filterItemCount, Thread.CurrentThread.ManagedThreadId, match));
+                        Debug.Print(string.Format("ApplyFilter:** loop:{0} filterItem Match={1}:{2} **", filterItemIndex, Thread.CurrentThread.ManagedThreadId, match));
 
                         if (!matchSet)
                         {
-                            if (match && filterItem.Exclude)
+                            if (match && filterItem.Include && !filterItem.Exclude)
                             {
-                                filterIndex = (filterItemCount * -1) - 1;
-                                Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Exclusion and match filterIndex={1}:{2}", filterItemCount,
+                                filterIndex = filterItemIndex;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Include not exclude setting filterIndex={1}:{2}", filterItemIndex,
+                                    Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                matchSet = true;
+                                includeFilters--;
+                                // break;
+                            }
+                            else if (!match && filterItem.Include && filterItem.Exclude)
+                            {
+                                // dynamic filter with and quickfindand but no match so exit
+                                filterIndex = int.MinValue;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} no match filterItem.Include and exclude setting filterIndex={1}:{2}", filterItemIndex,
+                                    Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                matchSet = true;
+                                includeFilters = 0;
+                                // break;
+                            }
+                            else if (match && filterItem.Include && filterItem.Exclude)
+                            {
+                                // dynamic filter with and quickfindand but with match
+                                filterIndex = int.MinValue;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} match filterItem.Include and exlude setting filterIndex={1}:{2}", filterItemIndex,
+                                    Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                matchSet = false;
+                                includeFilters = 0;
+                                // break;
+                            }
+                            else if (match && filterItem.Exclude)
+                            {
+                                filterIndex = (fItem * -1) - 2;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} filterItem.Exclude and match filterIndex={1}:{2}", filterItemIndex,
                                     Thread.CurrentThread.ManagedThreadId, filterIndex));
 
                                 matchSet = true;
@@ -202,30 +371,38 @@ namespace RegexViewer
                             else if (!match && !filterItem.Exclude)
                             {
                                 filterIndex = int.MinValue;
-                                Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclusion and not match filterIndex={1}:{2}",
-                                    filterItemCount, Thread.CurrentThread.ManagedThreadId, filterIndex));
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude and not match filterIndex={1}:{2}",
+                                    filterItemIndex, Thread.CurrentThread.ManagedThreadId, filterIndex));
                             }
                             else if (match)
                             {
-                                filterIndex = filterItemCount;
-                                Debug.Print(string.Format("ApplyFilter: loop:{0} setting filterIndex={1}:{2}", filterItemCount,
+                                filterIndex = filterItemIndex;
+                                Debug.Print(string.Format("ApplyFilter: loop:{0} setting filterIndex={1}:{2}", filterItemIndex,
                                     Thread.CurrentThread.ManagedThreadId, filterIndex));
                                 matchSet = true;
                                 // break;
                             }
+                            else if (filterItem.Include)
+                            {
+                                includeFilters--;
+                            }
                         }
                         else if (matchSet && match && Settings.CountMaskedMatches)
                         {
-                            logItem.Masked[filterItemCount, 0] = 1;
-                            Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemCount,
-                                Thread.CurrentThread.ManagedThreadId, filterItemCount));
+                            logItem.Masked[fItem, 0] = 1;
+                            Debug.Print(string.Format("ApplyFilter: loop:{0} masked match filterIndex={1}:{2}", filterItemIndex,
+                                 Thread.CurrentThread.ManagedThreadId, filterItemIndex));
                         }
 
                         if (matchSet && !Settings.CountMaskedMatches)
                         {
-                            Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemCount,
+                            Debug.Print(string.Format("ApplyFilter: loop:{0} not filterItem.Exclude CountMaskedMatches={1}:{2}", filterItemIndex,
                                 Thread.CurrentThread.ManagedThreadId, Settings.CountMaskedMatches));
-                            break;
+
+                            if (includeFilters == 0)
+                            {
+                                break;
+                            }
                         }
                     }
 
@@ -237,7 +414,8 @@ namespace RegexViewer
                 int filterCount = 0;
                 for (int i = 0; i < filterFileItems.Count; i++)
                 {
-                    filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == i | x.FilterIndex == (i * -1) - 1);
+                    int filterItemIndex = filterFileItems[i].Index;
+                    filterFileItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == filterItemIndex | x.FilterIndex == (i * -1) - 2);
 
                     if (Settings.CountMaskedMatches)
                     {
@@ -250,9 +428,17 @@ namespace RegexViewer
                     filterCount += filterFileItems[i].Count;
                 }
 
-                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} logfile total count: {1} logfile filter count: {2} log file: {3}", DateTime.Now.Subtract(timer).TotalSeconds, logFile.ContentItems.Count, filterCount, logFile.Tag));
+                double totalSeconds = DateTime.Now.Subtract(timer).TotalSeconds;
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} lines per second: {1} "
+                    + "logfile total count: {2} logfile filter count: {3} log file: {4}",
+                    totalSeconds,
+                    logFile.ContentItems.Count / totalSeconds,
+                    logFile.ContentItems.Count,
+                    filterCount,
+                    logFile.Tag));
+
                 Mouse.OverrideCursor = null;
-                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -1));
+                return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
             }
             catch (Exception e)
             {
@@ -262,45 +448,59 @@ namespace RegexViewer
             }
         }
 
-        public override IFile<LogFileItem> NewFile(string LogName, ObservableCollection<LogFileItem> logFileItems = null)
+        public override IFile<LogFileItem> NewFile(string fileName, ObservableCollection<LogFileItem> logFileItems = null)
         {
+            SetStatus("NewFile:enter: " + fileName);
             LogFile logFile = new LogFile();
             if (logFileItems != null)
             {
                 logFile.ContentItems = logFileItems;
             }
 
-            FileManager.Add(ManageFileProperties(LogName, logFile));
+            FileManager.Add(ManageFileProperties(fileName, logFile));
             logFile.Modified = true;
-            this.Settings.AddLogFile(LogName);
+            Settings.AddLogFile(fileName);
             OnPropertyChanged("LogFileManager");
+            SetStatus("NewFile:exit: " + fileName);
             return logFile;
         }
 
-        public override IFile<LogFileItem> OpenFile(string LogName)
+        public override IFile<LogFileItem> OpenFile(string fileName)
         {
             IFile<LogFileItem> logFile = new LogFile();
-            if (FileManager.Exists(x => String.Compare(x.Tag, LogName, true) == 0))
+
+            try
             {
-                SetStatus("file already open:" + LogName);
+                SetStatus("OpenFile:enter: " + fileName);
+
+                if (FileManager.Exists(x => String.Compare(x.Tag, fileName, true) == 0))
+                {
+                    SetStatus("file already open:" + fileName);
+                    return logFile;
+                }
+
+                if (File.Exists(fileName))
+                {
+                    logFile.FileName = Path.GetFileName(fileName);
+                    logFile.Tag = fileName;
+                    logFile.ContentItems = ((LogFile)ReadFile(fileName)).ContentItems;
+                    FileManager.Add(logFile);
+                    Settings.AddLogFile(fileName);
+                }
+                else
+                {
+                    SetStatus("log file does not exist:" + fileName);
+                    Settings.RemoveLogFile(fileName);
+                }
+
+                SetStatus("OpenFile:exit: " + fileName);
                 return logFile;
             }
-
-            if (File.Exists(LogName))
+            catch (Exception e)
             {
-                logFile.FileName = Path.GetFileName(LogName);
-                logFile.Tag = LogName;
-                logFile.ContentItems = ((LogFile)ReadFile(LogName)).ContentItems;
-                FileManager.Add(logFile);
-                this.Settings.AddLogFile(LogName);
+                SetStatus("OpenFile:exception: " + e.ToString());
+                return logFile;
             }
-            else
-            {
-                SetStatus("log file does not exist:" + LogName);
-                this.Settings.RemoveLogFile(LogName);
-            }
-
-            return logFile;
         }
 
         public override List<IFile<LogFileItem>> OpenFiles(string[] files)
@@ -323,84 +523,92 @@ namespace RegexViewer
 
         public override IFile<LogFileItem> ReadFile(string fileName)
         {
-            // BOM UTF - 8 0xEF,0xBB,0xBF BOM UTF - 16 FE FF NO BOM assume ansi but utf-8 doesnt
-            // have to have one either
-            Encoding encoding = Encoding.Default;
+            // BOM UTF - 8 0xEF,0xBB,0xBF BOM UTF - 16 FE FF NO BOM assume ansi but utf-8 doesnt have
+            // to have one either
+
             LogFile logFile = new LogFile();
-            logFile.FileName = Path.GetFileName(fileName);
-            // find bom
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName, true))
+
+            try
             {
-                encoding = sr.CurrentEncoding;
+                SetStatus("ReadFile:enter: " + fileName);
+                Encoding encoding = Encoding.Default;
 
-                SetStatus("current encoding:" + encoding.EncodingName);
-
-                while (!sr.EndOfStream)
+                logFile.FileName = Path.GetFileName(fileName);
+                // find bom
+                using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName, true))
                 {
-                    // if bom not supplied, try to determine utf-16 (unicode)
-                    string line = sr.ReadLine();
-                    byte[] bytes = Encoding.UTF8.GetBytes(line);
-                    string newLine = Encoding.UTF8.GetString(bytes).Replace("\0", "");
-                    SetStatus(string.Format("check encoding: bytes:{0} string: {1}", bytes.Length, newLine.Length));
+                    encoding = sr.CurrentEncoding;
 
-                    if (bytes.Length > 0 && newLine.Length > 0
-                        && ((bytes.Length - newLine.Length) * 2 - 1 == bytes.Length
-                            | (bytes.Length - newLine.Length) * 2 == bytes.Length))
-                    {
-                        SetStatus(string.Format("new encoding:Unicode bytes:{0} string: {1}", bytes.Length, newLine.Length));
+                    SetStatus("current encoding:" + encoding.EncodingName);
 
-                        encoding = Encoding.Unicode;
-                        break;
-                    }
-                    else if (bytes.Length > 0 && newLine.Length > 0)
+                    while (!sr.EndOfStream)
                     {
-                        break;
+                        // if bom not supplied, try to determine utf-16 (unicode)
+                        string line = sr.ReadLine();
+                        byte[] bytes = Encoding.UTF8.GetBytes(line);
+                        string newLine = Encoding.UTF8.GetString(bytes).Replace("\0", "");
+                        SetStatus(string.Format("check encoding: bytes:{0} string: {1}", bytes.Length, newLine.Length));
+
+                        if (bytes.Length > 0 && newLine.Length > 0
+                            && ((bytes.Length - newLine.Length) * 2 - 1 == bytes.Length
+                                | (bytes.Length - newLine.Length) * 2 == bytes.Length))
+                        {
+                            SetStatus(string.Format("new encoding:Unicode bytes:{0} string: {1}", bytes.Length, newLine.Length));
+
+                            encoding = Encoding.Unicode;
+                            break;
+                        }
+                        else if (bytes.Length > 0 && newLine.Length > 0)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
 
-            // todo: use mapped file only for large files?
-            List<LogFileItem> logFileItems = new List<LogFileItem>();
+                // todo: use mapped file only for large files?
 
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(fileName, encoding))
-            {
-                string line;
-                int count = 0;
-                // http: //cc.davelozinski.com/c-sharp/the-fastest-way-to-read-and-process-text-files
-                while ((line = sr.ReadLine()) != null)
+                string[] lines = File.ReadAllLines(fileName, encoding);
+                ConcurrentBag<LogFileItem> cLogFileItems = new ConcurrentBag<LogFileItem>();
+
+                Parallel.For(0, lines.Length, x =>
                 {
-                    LogFileItem logFileItem = new LogFileItem();
-                    //logFileItem.Content = line;
-                    logFileItem.Content = line;
-                    logFileItem.Background = Settings.BackgroundColor;
-                    logFileItem.Foreground = Settings.ForegroundColor;
-                    logFileItem.FontSize = Settings.FontSize;
-                    logFileItem.FontFamily = new System.Windows.Media.FontFamily(Settings.FontName);
-                    logFileItem.Index = count++;
-                    logFileItems.Add(logFileItem);
-                }
+                    LogFileItem logFileItem = new LogFileItem()
+                    {
+                        Content = lines[x],
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor,
+                        Index = x + 1
+                    };
 
-                sr.Close();
+                    cLogFileItems.Add(logFileItem);
+                });
+
+                logFile.ContentItems = new ObservableCollection<LogFileItem>(cLogFileItems.OrderBy(x => x.Index));
+                SetStatus("ReadFile:exit: " + fileName);
+                logFile.IsNew = false;
+                return logFile;
             }
-
-            logFile.ContentItems = new ObservableCollection<LogFileItem>(logFileItems);
-
-            return logFile;
+            catch (Exception e)
+            {
+                SetStatus("Fatal:ReadFile:exception: " + e.ToString());
+                return logFile;
+            }
         }
 
-        public override bool SaveFile(string FileName, IFile<LogFileItem> file)
+        public override bool SaveFile(string fileName, IFile<LogFileItem> file)
         {
             try
             {
+                SetStatus("SaveFile:enter: " + fileName);
+                file.IsNew = false;
                 LogFile logFile = (LogFile)file;
 
-                if (File.Exists(FileName))
+                if (File.Exists(fileName))
                 {
-                    File.Delete(FileName);
+                    File.Delete(fileName);
                 }
 
-                
-                using (StreamWriter writer = File.CreateText(FileName))
+                using (StreamWriter writer = File.CreateText(fileName))
                 {
                     LogFile.ExportConfigurationInfo config = logFile.ExportConfiguration;
 
@@ -417,32 +625,33 @@ namespace RegexViewer
 
                         writer.WriteLine(sb.ToString());
                     }
-                    
+
                     writer.Close();
                 }
 
-                SetStatus("saving file:" + FileName);
+                SetStatus("SaveFile:exit: " + fileName);
                 return true;
             }
             catch (Exception e)
             {
-                SetStatus("SaveFile:exception: " + e.ToString());
+                SetStatus("Fatal:SaveFile:exception: " + e.ToString());
                 return false;
             }
         }
-
-  
 
         #endregion Public Methods
 
         #region Private Methods
 
-        private LogFile ManageFileProperties(string LogName, LogFile filterFile)
+        public override IFile<LogFileItem> ManageFileProperties(string LogName, IFile<LogFileItem> logFile)
         {
-            filterFile.FileName = Path.GetFileName(LogName);
-            filterFile.Tag = LogName;
+            // filename is used to name tab
+            logFile.FileName = Path.GetFileName(LogName);
 
-            return filterFile;
+            // tag is used to keep complete file name and path
+            logFile.Tag = LogName;
+
+            return logFile;
         }
 
         private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems, LogTabViewModel logTab = null)
@@ -473,7 +682,8 @@ namespace RegexViewer
                     Filterpattern = filterItem.Filterpattern,
                     Foreground = filterItem.Foreground,
                     Include = filterItem.Include,
-                    Regex = filterItem.Regex
+                    Regex = filterItem.Regex,
+                    Index = filterItem.Index
                 };
 
                 if (newFilter.Regex)
@@ -486,17 +696,6 @@ namespace RegexViewer
                             // unnamed groups
                             newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
                             groupCount = Math.Max(groupCount, newFilter.GroupCount);
-
-                            // named groups group1 group2 group3 group4 and compare to groupCount which is unnamed
-                            //foreach (string name in test.GetGroupNames().Where(x => x.ToLower().StartsWith("group")))
-                            //{
-                            //    if (!groupNames.Contains(name))
-                            //    {
-                            //        groupNames.Add(name.ToLower());
-                            //    }
-                            //}
-
-                            
                         }
                     }
                     catch
@@ -506,18 +705,57 @@ namespace RegexViewer
                         newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
                     }
                 }
+                else
+                {
+                    // check for string operators and flag
+                    if (newFilter.Filterpattern.Contains(" AND ") | newFilter.Filterpattern.Contains(" OR "))
+                    {
+                        newFilter.StringOperators = true;
+                    }
+                }
 
                 filterItems.Add(newFilter);
             }
 
             if (getGroups)
             {
-                logTab.SetGroupCount(Math.Max(groupCount,groupNames.Count));
+                logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
             }
 
             return filterItems;
         }
 
         #endregion Private Methods
+
+        #region Public Classes
+
+        public class TaskMMFInfo
+        {
+            #region Public Fields
+
+            public BackgroundWorker bgWorker;
+
+            public Int32 length;
+
+            public LogFile logFile;
+
+            public MemoryMappedFile mmf;
+
+            public Int32 position;
+
+            public List<LogFileItem> stringList;
+
+            #endregion Public Fields
+
+            #region Public Properties
+
+            public ManualResetEvent completedEvent { get; set; }
+
+            #endregion Public Properties
+
+            //public string fileName { get; set; }
+        }
+
+        #endregion Public Classes
     }
 }

@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="Base.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
@@ -11,7 +24,10 @@ namespace RegexViewer
     {
         #region Public Fields
 
+        public bool _transitioning;
+
         public string _tempTabNameFormat = "-new {0}-";
+
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
 
         #endregion Public Fields
@@ -31,6 +47,7 @@ namespace RegexViewer
             try
             {
                 ProcessStartInfo processInfo = new ProcessStartInfo();
+                processInfo.UseShellExecute = true;
                 processInfo.CreateNoWindow = false;
                 if (!string.IsNullOrEmpty(arguments))
                 {
@@ -45,20 +62,6 @@ namespace RegexViewer
             }
         }
 
-        public StringBuilder FormatExportItem(bool fileItemEnabled, string separator, bool removeEmpty, string fileItemValue, StringBuilder sb)
-        {
-            if (fileItemEnabled)
-            {
-                if (removeEmpty && String.IsNullOrEmpty(fileItemValue))
-                {
-                    return sb;
-                }
-
-                sb.Append(sb.Length > 0 ? separator : "" + fileItemValue);
-            }
-
-            return sb;
-        }
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;
@@ -73,6 +76,21 @@ namespace RegexViewer
                 parent = VisualTreeHelper.GetParent(parent) as UIElement;
             }
             return null;
+        }
+
+        public StringBuilder FormatExportItem(bool fileItemEnabled, string separator, bool removeEmpty, string fileItemValue, StringBuilder sb)
+        {
+            if (fileItemEnabled)
+            {
+                if (removeEmpty && String.IsNullOrEmpty(fileItemValue))
+                {
+                    return sb;
+                }
+
+                sb.Append((sb.Length > 0 ? separator : "") + fileItemValue);
+            }
+
+            return sb;
         }
 
         public T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
@@ -111,6 +129,11 @@ namespace RegexViewer
 
         public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
+            if(_transitioning)
+            {
+                return;
+            }
+
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
@@ -120,6 +143,11 @@ namespace RegexViewer
 
         public void SetStatus(string status)
         {
+            if (status.ToLower().StartsWith("fatal:"))
+            {
+                MessageBox.Show(status, "Oh Snap! regexViewer exception", MessageBoxButton.OK);
+            }
+
             OnNewStatus(status);
         }
 

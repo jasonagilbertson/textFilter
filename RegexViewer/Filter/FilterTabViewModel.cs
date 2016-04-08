@@ -1,4 +1,18 @@
-﻿namespace RegexViewer
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 09-06-2015
+// ***********************************************************************
+// <copyright file="FilterTabViewModel.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+
+namespace RegexViewer
 {
     public class FilterTabViewModel : BaseTabViewModel<FilterFileItem>
     {

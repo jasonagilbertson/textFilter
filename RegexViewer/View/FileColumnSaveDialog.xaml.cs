@@ -1,26 +1,40 @@
 ﻿using System.Windows;
+using System.Windows.Media;
 
 namespace RegexViewer
 {
-    public partial class ExportDialog : Window
+    /// <summary>
+    /// Interaction logic for TimedSaveDialog.xaml
+    /// </summary>
+    public partial class FileColumnSaveDialog : Window
     {
+        public class Results
+        {
+            public bool Index;
+            public bool Content;
+            public bool Group1;
+            public bool Group2;
+            public bool Group3;
+            public bool Group4;
+            public string Separator;
+            public bool Cancel;
+        }
+        #region Private Fields
+
+        #endregion Private Fields
+
         #region Public Constructors
 
-        public ExportDialog(LogFile.ExportConfigurationInfo config)
+        public FileColumnSaveDialog()
         {
-            Owner = Application.Current.MainWindow;
             InitializeComponent();
-            this.checkIndex.IsChecked = config.Index;
-            this.checkContent.IsChecked = config.Content;
-            this.checkGroup1.IsChecked = config.Group1;
-            this.checkGroup2.IsChecked = config.Group2;
-            this.checkGroup3.IsChecked = config.Group3;
-            this.checkGroup4.IsChecked = config.Group4;
-            this.checkRemoveEmptyRows.IsChecked = config.RemoveEmpty;
-            this.textSeparator.Text = config.Separator;
         }
 
         #endregion Public Constructors
+
+        #region Public Properties
+
+        #endregion Public Properties
 
         #region Public Methods
 
@@ -30,10 +44,10 @@ namespace RegexViewer
             this.Close();
         }
 
-        public LogFile.ExportConfigurationInfo WaitForResult()
+        public Results WaitForResult()
         {
             this.ShowDialog();
-            return new LogFile.ExportConfigurationInfo
+            return new Results
             {
                 Index = (bool)this.checkIndex.IsChecked,
                 Content = (bool)this.checkContent.IsChecked,
@@ -42,9 +56,7 @@ namespace RegexViewer
                 Group3 = (bool)this.checkGroup3.IsChecked,
                 Group4 = (bool)this.checkGroup4.IsChecked,
                 Separator = (string)this.textSeparator.Text,
-                Cancel = _cancel,
-                Copy = _copy,
-                RemoveEmpty = (bool)this.checkRemoveEmptyRows.IsChecked
+                Cancel = _cancel
             };
         }
 
@@ -63,15 +75,8 @@ namespace RegexViewer
             Disable();
         }
 
-        private void buttonCopy_Click(object sender, RoutedEventArgs e)
-        {
-            _copy = true;
-            Disable();
-        }
-
         #endregion Private Methods
 
         private bool _cancel;
-        private bool _copy;
     }
 }

@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-31-2015
+// ***********************************************************************
+// <copyright file="ItemsProvider.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+
+using System.Collections.Generic;
 
 namespace RegexViewer
 {
-    /// <summary>
-    /// Represents a provider of collection details.
-    /// </summary>
-    /// <typeparam name="T">The type of items in the collection.</typeparam>
     public interface IItemsProvider<T>
     {
         #region Public Methods
 
-        /// <summary>
-        /// Fetches the total number of items available.
-        /// </summary>
-        /// <returns></returns>
         int FetchCount();
 
-        /// <summary>
-        /// Fetches a range of items.
-        /// </summary>
-        /// <param name="startIndex">The start index.</param>
-        /// <param name="count">The number of items to fetch.</param>
-        /// <returns></returns>
         IList<T> FetchRange(int startIndex, int count);
 
         #endregion Public Methods

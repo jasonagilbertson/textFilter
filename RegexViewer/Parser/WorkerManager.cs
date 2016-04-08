@@ -1,4 +1,18 @@
-﻿using System.Collections.Generic;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-31-2015
+// ***********************************************************************
+// <copyright file="WorkerManager.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 

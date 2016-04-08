@@ -1,9 +1,21 @@
-﻿using System;
+﻿// *********************************************************************** Assembly : RegexViewer
+// Author : jason Created : 09-06-2015
+//
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// <copyright file="BaseViewModel.cs" company="">
+//     Copyright © 2015
+// </copyright>
+// <summary>
+// </summary>
+// ***********************************************************************
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace RegexViewer
 {
@@ -12,22 +24,46 @@ namespace RegexViewer
         #region Private Fields
 
         private Command _closeAllCommand;
+
         private Command _closeCommand;
+
         private Command _copyFilePathCommand;
+
+        private Command _findNextCommand;
+
         private Command _gotFocusCommand;
+
+        private Command _hideCommand;
+
         private Command _newCommand;
+
         private Command _openCommand;
+
         private bool _openDialogVisible;
+
         private Command _openFolderCommand;
+
+        private Command _pasteCommand;
+
         private int _previousIndex = -1;
+
         private Command _recentCommand;
+
         private Command _reloadCommand;
+
+        private Command _renameCommand;
+
         private Command _saveAsCommand;
+
         private Command _saveCommand;
+
         private int _selectedIndex = -1;
-        private RegexViewerSettings settings = RegexViewerSettings.Settings;
-        private ObservableCollection<ITabViewModel<T>> tabItems;
+
         private Command _sharedCommand;
+
+        private RegexViewerSettings settings = RegexViewerSettings.Settings;
+
+        private ObservableCollection<ITabViewModel<T>> tabItems;
 
         #endregion Private Fields
 
@@ -74,6 +110,21 @@ namespace RegexViewer
             set { _openCommand = value; }
         }
 
+        public Command FindNextCommand
+        {
+            get
+            {
+                if (_findNextCommand == null)
+                {
+                    _findNextCommand = new Command(FindNextExecuted);
+                }
+                _findNextCommand.CanExecute = true;
+
+                return _findNextCommand;
+            }
+            set { _findNextCommand = value; }
+        }
+
         public Command GotFocusCommand
         {
             get
@@ -87,6 +138,21 @@ namespace RegexViewer
                 return _gotFocusCommand;
             }
             set { _gotFocusCommand = value; }
+        }
+
+        public Command HideCommand
+        {
+            get
+            {
+                if (_hideCommand == null)
+                {
+                    _hideCommand = new Command(HideExecuted);
+                }
+                _hideCommand.CanExecute = true;
+
+                return _hideCommand;
+            }
+            set { _hideCommand = value; }
         }
 
         public Command NewCommand
@@ -142,6 +208,21 @@ namespace RegexViewer
             set { _openFolderCommand = value; }
         }
 
+        public Command PasteCommand
+        {
+            get
+            {
+                if (_pasteCommand == null)
+                {
+                    _pasteCommand = new Command(PasteText);
+                }
+                _pasteCommand.CanExecute = true;
+
+                return _pasteCommand;
+            }
+            set { _pasteCommand = value; }
+        }
+
         public int PreviousIndex
         {
             get
@@ -160,12 +241,6 @@ namespace RegexViewer
             set { _recentCommand = value; }
         }
 
-        public Command SharedCommand
-        {
-            get { return _sharedCommand ?? new Command(SharedFileExecuted); }
-            set { _sharedCommand = value; }
-        }
-
         public Command ReloadCommand
         {
             get
@@ -179,6 +254,21 @@ namespace RegexViewer
                 return _reloadCommand;
             }
             set { _reloadCommand = value; }
+        }
+
+        public Command RenameCommand
+        {
+            get
+            {
+                if (_renameCommand == null)
+                {
+                    _renameCommand = new Command(RenameFileExecuted);
+                }
+                _renameCommand.CanExecute = true;
+
+                return _renameCommand;
+            }
+            set { _renameCommand = value; }
         }
 
         public Command SaveAsCommand
@@ -217,11 +307,17 @@ namespace RegexViewer
             set { settings = value; }
         }
 
+        public Command SharedCommand
+        {
+            get { return _sharedCommand ?? new Command(SharedFileExecuted); }
+            set { _sharedCommand = value; }
+        }
+
         public ObservableCollection<ITabViewModel<T>> TabItems
         {
             get
             {
-                return this.tabItems;
+                return tabItems;
             }
             set
             {
@@ -240,32 +336,40 @@ namespace RegexViewer
             if (!tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
                 tabItems.Add(tabItem);
-                this.SelectedIndex = tabItems.Count - 1;
+                SelectedIndex = tabItems.Count - 1;
             }
         }
 
         public abstract void AddTabItem(IFile<T> fileProperties);
 
+        public void AddTabItems(List<IFile<T>> items)
+        {
+            // remove _transitioning when using parser _transitioning = true;
+            for (int i = 0; i < items.Count; i++)
+            {
+                if (i == items.Count - 1)
+                {
+                    _transitioning = false;
+                }
+
+                AddTabItem(items[i]);
+            }
+        }
+
         public void CloseAllFilesExecuted(object sender)
         {
             ObservableCollection<ITabViewModel<T>> items = new ObservableCollection<ITabViewModel<T>>(tabItems);
-            foreach (ITabViewModel<T> tabItem in items)
-            {
-                if (!this.ViewManager.CloseFile(tabItem.Tag))
-                {
-                    continue;
-                }
-
-                RemoveTabItem(tabItem);
-            }
+            RemoveTabItems(items.ToList());
         }
 
         public void CloseFileExecuted(object sender)
         {
-            if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+            if (IsValidTabIndex())
             {
+                DeleteIfTempFile(CurrentFile());
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                if (!this.ViewManager.CloseFile(tabItem.Tag))
+
+                if (!ViewManager.CloseFile(tabItem.Tag))
                 {
                     return;
                 }
@@ -276,7 +380,7 @@ namespace RegexViewer
 
         public void CopyFilePathExecuted(object sender)
         {
-            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            if (IsValidTabIndex())
             {
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
                 Clipboard.Clear();
@@ -286,9 +390,9 @@ namespace RegexViewer
 
         public IFile<T> CurrentFile()
         {
-            if (SelectedIndex >= 0 && SelectedIndex < this.TabItems.Count)
+            if (IsValidTabIndex())
             {
-                return this.ViewManager.FileManager.FirstOrDefault(x => x.Tag == this.TabItems[SelectedIndex].Tag);
+                return ViewManager.FileManager.FirstOrDefault(x => x.Tag == TabItems[SelectedIndex].Tag);
             }
 
             SetStatus(string.Format("CurrentFile: warning: returning default T SelectedIndex: {0}", SelectedIndex));
@@ -299,12 +403,14 @@ namespace RegexViewer
         {
             if (SelectedIndex >= 0)
             {
-                return this.TabItems[SelectedIndex];
+                return TabItems[SelectedIndex];
             }
 
             SetStatus(string.Format("CurrentTab: warning: returning default T SelectedTab: {0}", SelectedIndex));
             return default(ITabViewModel<T>);
         }
+
+        public abstract void FindNextExecuted(object sender);
 
         public void GotFocusExecuted(object sender)
         {
@@ -312,6 +418,25 @@ namespace RegexViewer
             {
                 App.Current.MainWindow.Title = string.Format("{0} {1}", System.AppDomain.CurrentDomain.FriendlyName, CurrentFile().Tag);
             }
+        }
+
+        public abstract void HideExecuted(object sender);
+
+        public bool IsValidTabIndex()
+        {
+            bool retVal = false;
+            if (SelectedIndex >= 0 && SelectedIndex < TabItems.Count)
+            {
+                retVal = true;
+            }
+
+            // noisy
+            if (!retVal)
+            {
+                SetStatus(string.Format("IsValidTabIndex: return: {0}, {1}", retVal, SelectedIndex));
+            }
+
+            return retVal;
         }
 
         public void NewFileExecuted(object sender)
@@ -327,7 +452,11 @@ namespace RegexViewer
                 }
                 else
                 {
-                    if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+                    if (sender is ObservableCollection<T>)
+                    {
+                        file = this.ViewManager.NewFile(tempTag, (sender as ObservableCollection<T>));
+                    }
+                    else if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
                     {
                         file = this.ViewManager.NewFile(tempTag, this.TabItems[SelectedIndex].ContentList);
                     }
@@ -354,6 +483,8 @@ namespace RegexViewer
 
         public abstract void OpenFileExecuted(object sender);
 
+        public abstract void PasteText(object sender);
+
         public ObservableCollection<WPFMenuItem> RecentCollectionBuilder(string[] files)
         {
             ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
@@ -371,48 +502,31 @@ namespace RegexViewer
             return fileCollection;
         }
 
-        public ObservableCollection<WPFMenuItem> SharedCollectionBuilder(string[] files)
-        {
-            ObservableCollection<WPFMenuItem> fileCollection = new ObservableCollection<WPFMenuItem>();
-
-            foreach (string file in files)
-            {
-                WPFMenuItem menuItem = new WPFMenuItem()
-                {
-                    Command = SharedCommand,
-                    Text = file.Replace(RegexViewerSettings.Settings.SharedFilterDirectory,"")
-                };
-                fileCollection.Add(menuItem);
-            }
-
-            return fileCollection;
-        }
         public void RecentFileExecuted(object sender)
         {
             SetStatus("RecentFile:enter");
             OpenFileExecuted(sender);
         }
 
-        public void SharedFileExecuted(object sender)
-        {
-            SetStatus("SharedFile:enter");
-            OpenFileExecuted(RegexViewerSettings.Settings.SharedFilterDirectory.TrimEnd(new char[] {'\\'}) + "\\" + sender);
-        }
-
         public void ReloadFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
-            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            SetStatus("ReloadFile:enter");
+
+            if (IsValidTabIndex())
             {
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                if (!this.ViewManager.CloseFile(tabItem.Tag) | !File.Exists(tabItem.Tag))
+                if (!File.Exists(tabItem.Tag))
                 {
+                    SetStatus("ReloadFile:returning: file does not exist: " + tabItem.Tag);
                     return;
                 }
 
+                ViewManager.CloseFile(tabItem.Tag);
                 RemoveTabItem(tabItem);
-                file = this.ViewManager.OpenFile(tabItem.Tag);
+                file = ViewManager.OpenFile(tabItem.Tag);
                 AddTabItem(file);
+                SetStatus("ReloadFile:exit");
             }
         }
 
@@ -421,7 +535,47 @@ namespace RegexViewer
             if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
                 tabItems.Remove(tabItem);
-                this.SelectedIndex = tabItems.Count - 1;
+                SelectedIndex = tabItems.Count - 1;
+            }
+        }
+
+        public void RemoveTabItems(List<ITabViewModel<T>> items)
+        {
+            // remove _transitioning when using parser
+            _transitioning = true;
+            for (int i = 0; i < items.Count; i++)
+            {
+                DeleteIfTempFile(ViewManager.FileManager.FirstOrDefault(x => x.Tag == items[i].Tag));
+                if (!ViewManager.CloseFile(items[i].Tag))
+                {
+                    continue;
+                }
+
+                if (i == items.Count - 1)
+                {
+                    _transitioning = false;
+                }
+
+                RemoveTabItem(items[i]);
+            }
+        }
+
+        public void RenameFileExecuted(object sender)
+        {
+            SetStatus("RenameFile:enter");
+
+            if (IsValidTabIndex())
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                RenameDialog dialog = new RenameDialog();
+                string result = dialog.WaitForResult();
+                if (!string.IsNullOrEmpty(result))
+                {
+                    tabItem.Modified = true;
+                    RenameTabItem(result);
+                }
+
+                SetStatus("RenameFile:exit");
             }
         }
 
@@ -433,43 +587,142 @@ namespace RegexViewer
 
         public void SaveModifiedFiles(object sender)
         {
-            foreach (IFile<T> item in this.ViewManager.FileManager.Where(x => x.Modified == true))
+            List<string> delList = new List<string>();
+            try
             {
-                // todo: prompt for saving?
-                if (!RegexViewerSettings.Settings.AutoSave)
+                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
                 {
-                    TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
-                    dialog.Enable();
-
-                    switch (dialog.WaitForResult())
+                    // set tab index to current
+                    SelectedIndex = TabItems.IndexOf(TabItems.First(x => x.Tag == item.Tag));
+                    if (!IsValidTabIndex())
                     {
-                        case TimedSaveDialog.Results.Disable:
-                            RegexViewerSettings.Settings.AutoSave = true;
-                            break;
-
-                        case TimedSaveDialog.Results.DontSave:
-                            item.Modified = false;
-                            break;
-
-                        case TimedSaveDialog.Results.Save:
-                            this.SaveFileExecuted(item);
-                            item.Modified = false;
-                            break;
-
-                        case TimedSaveDialog.Results.SaveAs:
-                            this.SaveFileAsExecuted(item);
-                            break;
-
-                        case TimedSaveDialog.Results.Unknown:
-                            // dont worry about errors since we are closing.
-                            break;
+                        continue;
                     }
+
+                    // prompt for saving
+                    if (!RegexViewerSettings.Settings.AutoSave)
+                    {
+                        TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
+
+                        dialog.Enable();
+
+                        switch (dialog.WaitForResult())
+                        {
+                            case TimedSaveDialog.Results.Disable:
+                                RegexViewerSettings.Settings.AutoSave = true;
+                                break;
+
+                            case TimedSaveDialog.Results.DontSave:
+                                item.Modified = false;
+                                break;
+
+                            case TimedSaveDialog.Results.Save:
+                                SaveFileExecuted(item);
+                                item.Modified = false;
+                                break;
+
+                            case TimedSaveDialog.Results.SaveAs:
+                                SaveFileAsExecuted(item);
+                                item.Modified = false;
+                                break;
+
+                            case TimedSaveDialog.Results.Unknown:
+                                // dont worry about errors since we are closing.
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        SaveFileExecuted(item);
+                        item.Modified = false;
+                    }
+
+                    DeleteIfTempFile(item);
                 }
-                else
+            }
+            catch (Exception e)
+            {
+                SetStatus("SaveModifiedFiles: exception: " + e.ToString());
+            }
+        }
+
+        public ObservableCollection<MenuItem> SharedCollectionBuilder(string directory)
+        {
+            ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
+
+            try
+            {
+                if (string.IsNullOrEmpty(directory))
                 {
-                    this.SaveFileExecuted(item);
-                    item.Modified = false;
+                    SetStatus("SharedCollectionBuilder:exit: directory not specified.");
+                    return menuCollection;
                 }
+
+                List<string> files = Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly).Where(x => x.ToLower().EndsWith("tat") || x.ToLower().EndsWith("rvf")).ToList();
+                List<string> dirs = Directory.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly).ToList();
+                foreach (string file in files)
+                {
+                    MenuItem wpfMenuItem = new MenuItem()
+                    {
+                        Command = SharedCommand,
+                        CommandParameter = file,
+                        Header = file.Replace(directory, "").TrimStart('\\')
+                    };
+
+                    menuCollection.Add(wpfMenuItem);
+                }
+
+                foreach (string dir in new List<string>(dirs))
+                {
+                    MenuItem dItem = new MenuItem();
+                    dItem.Header = dir.Replace(directory, "").TrimStart('\\');
+                    dItem.ItemsSource = new ObservableCollection<MenuItem>();
+
+                    foreach (MenuItem item in SharedCollectionBuilder(dir))
+                    {
+                        ((ObservableCollection<MenuItem>)dItem.ItemsSource).Add(item);
+                    }
+
+                    menuCollection.Add(dItem);
+                }
+
+                return menuCollection;
+            }
+            catch (Exception e)
+            {
+                SetStatus("Exception:SharedCollectionBuilder: " + e.ToString());
+                return new ObservableCollection<MenuItem>();
+            }
+        }
+
+        public void SharedFileExecuted(object sender)
+        {
+            SetStatus("SharedFile:enter");
+            OpenFileExecuted(sender);
+        }
+
+        private bool DeleteIfTempFile(IFile<T> item)
+        {
+            try
+            {
+                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp"))
+                {
+                    Settings.RemoveLogFile(item.Tag);
+                    Settings.RemoveFilterFile(item.Tag);
+                    if (File.Exists(item.Tag))
+                    {
+                        SetStatus("DeleteTempFile: deleting temporary file:" + item.Tag);
+                        File.Delete(item.Tag);
+                    }
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                SetStatus("DeleteTempFile: exception:" + e.ToString());
+                return false;
             }
         }
 
@@ -479,15 +732,13 @@ namespace RegexViewer
 
         private void OpenFolderExecuted()
         {
-            if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
+            if (IsValidTabIndex())
             {
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                CreateProcess("explorer.exe", Path.GetDirectoryName(tabItem.Tag));
+                CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
             }
         }
 
         #endregion Private Methods
-
-     
     }
 }

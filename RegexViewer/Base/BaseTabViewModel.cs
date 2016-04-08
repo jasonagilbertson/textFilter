@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="BaseTabViewModel.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,16 +30,25 @@ namespace RegexViewer
         private string _background;
 
         private ObservableCollection<T> _contentList = new ObservableCollection<T>();
+
         private Command _copyCommand;
+
         private string _header;
+
         private bool _modified;
+
         private string _name;
-        private Command _pasteCommand;
+
         private List<T> _selectedContent = new List<T>();
+
         private int _selectedIndex;
+
         private Command _selectionChangedCommand;
+
         private Command _setViewerCommand;
+
         private Command _sourceUpdatedCommand;
+
         private string _tag;
 
         private object _viewer;
@@ -37,6 +59,7 @@ namespace RegexViewer
 
         public BaseTabViewModel()
         {
+            //IsNew = true;
         }
 
         #endregion Public Constructors
@@ -59,6 +82,7 @@ namespace RegexViewer
                 }
             }
         }
+
         public ObservableCollection<T> ContentList
         {
             get { return _contentList; }
@@ -105,6 +129,8 @@ namespace RegexViewer
             }
         }
 
+        public bool IsNew { get; set; }
+
         public bool Modified
         {
             get
@@ -137,21 +163,6 @@ namespace RegexViewer
                     OnPropertyChanged("Name");
                 }
             }
-        }
-
-        public Command PasteCommand
-        {
-            get
-            {
-                if (_pasteCommand == null)
-                {
-                    _pasteCommand = new Command(PasteText);
-                }
-                _pasteCommand.CanExecute = true;
-
-                return _pasteCommand;
-            }
-            set { _pasteCommand = value; }
         }
 
         public List<T> SelectedContent
@@ -258,38 +269,32 @@ namespace RegexViewer
 
         #region Public Methods
 
-        public void CopyExecuted(object contentList)
+        public void CopyExecuted(object sender)
         {
             try
             {
+                // for configuration of fields to export from file view
+                LogFile.ExportConfigurationInfo config = new LogFile.ExportConfigurationInfo();
+                if (sender is LogFile.ExportConfigurationInfo)
+                {
+                    config = (sender as LogFile.ExportConfigurationInfo);
+                }
+
                 HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (IFileItem lbi in this.SelectedContent)
+                foreach (IFileItem lbi in SelectedContent)
                 {
                     // get all cells
                     if (typeof(T) == typeof(LogFileItem))
                     {
-                        LogFileItem lFI = (LogFileItem)lbi;
-                        StringBuilder sb = new StringBuilder(string.Format("{0},{1}", lFI.Index, lFI.Content));
+                        LogFileItem item = (LogFileItem)lbi;
+                        StringBuilder sb = new StringBuilder();
 
-                        if (!string.IsNullOrEmpty(lFI.Group1))
-                        {
-                            sb.Append("," + lFI.Group1);
-                        }
-
-                        if (!string.IsNullOrEmpty(lFI.Group2))
-                        {
-                            sb.Append("," + lFI.Group2);
-                        }
-
-                        if (!string.IsNullOrEmpty(lFI.Group3))
-                        {
-                            sb.Append("," + lFI.Group3);
-                        }
-
-                        if (!string.IsNullOrEmpty(lFI.Group4))
-                        {
-                            sb.Append("," + lFI.Group4);
-                        }
+                        sb = FormatExportItem(config.Index, config.Separator, config.RemoveEmpty, item.Index.ToString(), sb);
+                        sb = FormatExportItem(config.Content, config.Separator, config.RemoveEmpty, item.Content, sb);
+                        sb = FormatExportItem(config.Group1, config.Separator, config.RemoveEmpty, item.Group1, sb);
+                        sb = FormatExportItem(config.Group2, config.Separator, config.RemoveEmpty, item.Group2, sb);
+                        sb = FormatExportItem(config.Group3, config.Separator, config.RemoveEmpty, item.Group3, sb);
+                        sb = FormatExportItem(config.Group4, config.Separator, config.RemoveEmpty, item.Group4, sb);
 
                         htmlFragment.AddClipToList(sb.ToString(), lbi.Background, lbi.Foreground);
                     }
@@ -307,10 +312,6 @@ namespace RegexViewer
             }
         }
 
-        public void PasteText()
-        {
-        }
-
         public void SelectionChangedExecuted(object sender)
         {
             if (sender is System.Collections.IList)
@@ -319,8 +320,7 @@ namespace RegexViewer
             }
             else if (sender is ListBox)
             {
-                ListBox listBox = (sender as ListBox);
-                _selectedContent = listBox.SelectedItems.Cast<T>().ToList();
+                _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
             }
             else if (sender is DataGrid)
             {

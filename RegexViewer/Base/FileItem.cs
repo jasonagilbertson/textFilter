@@ -4,27 +4,37 @@
 // Created          : 09-06-2015
 //
 // Last Modified By : jason
-// Last Modified On : 09-06-2015
+// Last Modified On : 10-31-2015
 // ***********************************************************************
-// <copyright file="IMainViewModel.cs" company="">
+// <copyright file="FileItem.cs" company="">
 //     Copyright ©  2015
 // </copyright>
 // <summary></summary>
 // ***********************************************************************
+using System.Windows.Media;
 
 namespace RegexViewer
 {
-    public interface IMainViewModel
+    public class FileItem : IFileItem
     {
-        #region Public Events
+        #region Public Properties
 
-        event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public Brush Background { get; set; }
 
-        #endregion Public Events
+        public string Content { get; set; }
+
+        public Brush Foreground { get; set; }
+
+        public int Index { get; set; }
+
+        #endregion Public Properties
 
         #region Public Methods
 
-        void SetViewStatus(string statusData);
+        public IFileItem ShallowCopy()
+        {
+            return (IFileItem)MemberwiseClone();
+        }
 
         #endregion Public Methods
     }

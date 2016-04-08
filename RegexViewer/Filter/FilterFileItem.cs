@@ -1,4 +1,17 @@
-﻿using System.ComponentModel;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="FilterFileItem.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 
@@ -9,17 +22,29 @@ namespace RegexViewer
         #region Public Fields
 
         public static string Background = "Background";
+
         public static string BackgroundColor = "BackgroundColor";
+
         public static string CaseSensitive = "CaseSensitive";
+
         public static string Count = "Count";
+
         public static string Enabled = "Enabled";
-        public static string Exclue = "Exclude";
+
+        public static string Exclude = "Exclude";
+
         public static string Filterpattern = "Filterpattern";
+
         public static string Foreground = "Foreground";
+
         public static string ForegroundColor = "ForegroundColor";
+
         public static string Index = "Index";
+
         public static string MaskedCount = "MaskedCount";
+
         public static string Notes = "Notes";
+
         public static string Regex = "Regex";
 
         #endregion Public Fields
@@ -27,25 +52,6 @@ namespace RegexViewer
 
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
-        #region Public Methods
-
-        public void OnPropertyChanged(string name)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
-        }
-
-        // public event PropertyChangedEventHandler PropertyChanged;
-        public IFileItem ShallowCopy()
-        {
-            return (FilterFileItem)this.MemberwiseClone();
-        }
-
-        #endregion Public Methods
-
         #region Private Fields
 
         private string _backgroundColor;
@@ -71,6 +77,7 @@ namespace RegexViewer
         private string _notes = string.Empty;
 
         private bool _regex = false;
+        private bool _stringOperators = false;
 
         #endregion Private Fields
 
@@ -78,8 +85,8 @@ namespace RegexViewer
 
         public FilterFileItem()
         {
-            this.BackgroundColor = RegexViewerSettings.Settings.BackgroundColor.ToString();
-            this.ForegroundColor = RegexViewerSettings.Settings.ForegroundColor.ToString();
+            BackgroundColor = RegexViewerSettings.Settings.BackgroundColor.ToString();
+            ForegroundColor = RegexViewerSettings.Settings.ForegroundColor.ToString();
         }
 
         #endregion Public Constructors
@@ -119,7 +126,7 @@ namespace RegexViewer
                 if (_backgroundColor != value)
                 {
                     _backgroundColor = value;
-                    this.Background = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
+                    Background = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
                     OnPropertyChanged(FilterFileItemEvents.BackgroundColor);
                 }
             }
@@ -186,7 +193,7 @@ namespace RegexViewer
                     // clear counter
                     if (!_enabled)
                     {
-                        this.Count = 0;
+                        Count = 0;
                     }
 
                     OnPropertyChanged(FilterFileItemEvents.Enabled);
@@ -206,7 +213,7 @@ namespace RegexViewer
                 if (_exclude != value)
                 {
                     _exclude = value;
-                    OnPropertyChanged(FilterFileItemEvents.Exclue);
+                    OnPropertyChanged(FilterFileItemEvents.Exclude);
                 }
             }
         }
@@ -256,7 +263,7 @@ namespace RegexViewer
                 if (_foregroundColor != value)
                 {
                     _foregroundColor = value;
-                    this.Foreground = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
+                    Foreground = ((SolidColorBrush)new BrushConverter().ConvertFromString(value));
                     OnPropertyChanged(FilterFileItemEvents.ForegroundColor);
                 }
             }
@@ -349,9 +356,46 @@ namespace RegexViewer
             }
         }
 
+        public bool StringOperators
+        {
+            get
+            {
+                return _stringOperators;
+            }
+
+            set
+            {
+                if (_stringOperators != value)
+                {
+                    _stringOperators = value;
+
+                }
+            }
+        }
         // for tat 'type' text or marker
+
         public string TatType { get; set; }
 
         #endregion Public Properties
+
+        #region Public Methods
+
+        public void OnPropertyChanged(string name)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, new PropertyChangedEventArgs(name));
+            }
+        }
+
+        // public event PropertyChangedEventHandler PropertyChanged;
+
+        public IFileItem ShallowCopy()
+        {
+            return (FilterFileItem)MemberwiseClone();
+        }
+
+        #endregion Public Methods
     }
 }

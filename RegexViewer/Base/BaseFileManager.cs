@@ -1,4 +1,17 @@
-﻿using System;
+﻿// ***********************************************************************
+// Assembly         : RegexViewer
+// Author           : jason
+// Created          : 09-06-2015
+//
+// Last Modified By : jason
+// Last Modified On : 10-25-2015
+// ***********************************************************************
+// <copyright file="BaseFileManager.cs" company="">
+//     Copyright ©  2015
+// </copyright>
+// <summary></summary>
+// ***********************************************************************
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
@@ -7,6 +20,8 @@ namespace RegexViewer
     public abstract class BaseFileManager<T> : Base, IFileManager<T>
     {
         #region Public Fields
+
+        public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
 
         public RegexViewerSettings Settings = RegexViewerSettings.Settings;
 
@@ -38,11 +53,11 @@ namespace RegexViewer
                     FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
                     if (typeof(T) == typeof(FilterFileItem))
                     {
-                        this.Settings.RemoveFilterFile(FileName);
+                        Settings.RemoveFilterFile(FileName);
                     }
                     if (typeof(T) == typeof(LogFileItem))
                     {
-                        this.Settings.RemoveLogFile(FileName);
+                        Settings.RemoveLogFile(FileName);
                     }
                     return true;
                 }

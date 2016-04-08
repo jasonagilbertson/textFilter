@@ -3,9 +3,6 @@ using System.Windows.Media;
 
 namespace RegexViewer
 {
-    /// <summary>
-    /// Interaction logic for TimedSaveDialog.xaml
-    /// </summary>
     public partial class FilterNotesDialog : Window
     {
         #region Private Fields
@@ -18,6 +15,7 @@ namespace RegexViewer
 
         public FilterNotesDialog(string notes)
         {
+            Owner = Application.Current.MainWindow;
             InitializeComponent();
             _initialNotes = notes;
             textBoxFilterNotes.Text = notes;

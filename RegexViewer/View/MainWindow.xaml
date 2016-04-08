@@ -1,12 +1,16 @@
-﻿<Window x:Class="RegexViewer.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:local="clr-namespace:RegexViewer"
-        AllowDrop="True"
-        Drop="FileData_Drop"
-        Title="RegexViewer" Height="600" Width="900">
+﻿<Window
+    x:Class="RegexViewer.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:local="clr-namespace:RegexViewer"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Title="RegexViewer"
+    Width="900"
+    Height="600"
+    AllowDrop="True"
+    Drop="FileData_Drop"
+    WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <local:MainViewModel x:Key="mainViewModel" />
@@ -15,153 +19,660 @@
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <ObjectDataProvider MethodName="GetType"  ObjectType="{x:Type sys:Type}" x:Key="colorsTypeOdp">
+        <ObjectDataProvider
+            x:Key="colorsTypeOdp"
+            MethodName="GetType"
+            ObjectType="{x:Type sys:Type}">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider ObjectInstance="{StaticResource colorsTypeOdp}" MethodName="GetProperties" x:Key="colorPropertiesOdp" />
+        <ObjectDataProvider
+            x:Key="colorPropertiesOdp"
+            MethodName="GetProperties"
+            ObjectInstance="{StaticResource colorsTypeOdp}" />
     </Window.Resources>
 
     <Window.InputBindings>
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+F4" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" CommandParameter="{Binding}" Gesture="Ctrl+E" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+H" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+G" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" CommandParameter="{Binding ElementName=listboxStatus}" Gesture="Ctrl+R" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+O" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="Ctrl+S" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+F4" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+E" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+H" />
+        <!--<KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding}" Gesture="F5" />-->
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+G" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+R" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+O" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.RenameCommand}" Gesture="F2" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+S" />
 
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+F4" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+O" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+N" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" CommandParameter="{Binding}" Gesture="Ctrl+Alt+S" />
+        <KeyBinding
+            Key="V"
+            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.PasteCommand}"
+            CommandParameter="{Binding}"
+            Modifiers="Control" />
+
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}" Gesture="Insert" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}" Gesture="Ctrl+Alt+A" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+Alt+F4" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterviewModel.HideCommand}" CommandParameter="{Binding}" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+Alt+O" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+Alt+N" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+Alt+R" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}"
+            CommandParameter="{Binding}"
+            Gesture="F5" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RenameCommand}" Gesture="Alt+F2" />
+        <KeyBinding
+            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}"
+            CommandParameter="{Binding}"
+            Gesture="Ctrl+Alt+S" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.HideCommand}" Gesture="Ctrl+Alt+H" />
     </Window.InputBindings>
 
-    <DockPanel DataContext="{StaticResource mainViewModel}">
-        <Menu DockPanel.Dock="Top">
+    <DockPanel Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" DataContext="{StaticResource mainViewModel}">
+        <Menu
+            Style="{DynamicResource MenuStyle1}"
+            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+            DockPanel.Dock="Top">
             <MenuItem Header="_File">
-                <MenuItem Header="_Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
-                <MenuItem Header="Close _All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="Copy File _Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="Export File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
-                <MenuItem Header="_Goto Line Number" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" InputGestureText="Ctrl+G" />
-                <MenuItem Header="Open Containing _Folder" Command="{Binding LogViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
-                <MenuItem Header="Open View in _New Tab" Command="{Binding LogViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+N" />
-                <MenuItem Header="Recent Files" ItemsSource="{Binding LogViewModel.RecentCollection}">
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.CloseCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Close File"
+                    InputGestureText="Ctrl+F4" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.CloseAllCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Close _All Files" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.CopyFilePathCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Copy File _Path" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}"
+                    Header="Export File"
+                    InputGestureText="Ctrl+E" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}"
+                    Header="_Goto Line Number"
+                    InputGestureText="Ctrl+G" />
+                <MenuItem
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.OpenFolderCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Open Containing _Folder" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.OpenCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Open File"
+                    InputGestureText="Ctrl+O" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.NewCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Open View in _New Tab"
+                    InputGestureText="Ctrl+N" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Header="Recent Files"
+                    ItemsSource="{Binding LogViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
-                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
+                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Command" Value="{Binding Command}" />
                             <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+
+                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="_Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
-                <MenuItem Header="_Save Current View" Command="{Binding LogViewModel.SaveAsCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+S" />
-                <MenuItem Header="Show / _Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" InputGestureText="Ctrl+H" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.ReloadCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Reload File"
+                    InputGestureText="Ctrl+R" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.RenameCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Rename File"
+                    InputGestureText="F2" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding LogViewModel.SaveAsCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Save Current View"
+                    InputGestureText="Ctrl+S" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}"
+                    Header="Show / _Hide All Items"
+                    InputGestureText="Ctrl+H" />
             </MenuItem>
             <MenuItem Header="_Filter">
-                <MenuItem Header="_Close Filter" Command="{Binding FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                <MenuItem Header="Close _All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="Copy File _Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Filter Notes" Command="{Binding FilterViewModel.FilterNotesCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_New Filter" Command="{Binding FilterViewModel.NewCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+N" />
-                <MenuItem Header="Open Containing _Folder" Command="{Binding FilterViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="_Open Filter" Command="{Binding FilterViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+O" />
-                <MenuItem Header="R_ecent Filters" ItemsSource="{Binding FilterViewModel.RecentCollection}">
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.CloseCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Close Filter"
+                    InputGestureText="Ctrl+Alt+F4" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.CloseAllCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Close _All Filters" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.CopyFilePathCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Copy File _Path" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.FilterNotesCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Filter Notes" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.AddFilterItemCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Insert Filter Item"
+                    InputGestureText="Ctrl+Alt+A" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.NewCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_New Filter"
+                    InputGestureText="Ctrl+Alt+N" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.OpenFolderCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Open Containing _Folder" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.OpenCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Open Filter"
+                    InputGestureText="Ctrl+Alt+O" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Header="R_ecent Filters"
+                    ItemsSource="{Binding FilterViewModel.RecentCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
-                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
+                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Command" Value="{Binding Command}" />
                             <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
-                <MenuItem Header="_Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+R" />
-                <MenuItem Header="_Save Filter" Command="{Binding FilterViewModel.SaveCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+S" />
-                <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
-                <MenuItem Header="S_hared Filters" ItemsSource="{Binding FilterViewModel.SharedCollection}">
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.ReloadCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Reload Filter"
+                    InputGestureText="Ctrl+Alt+R" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.RenameCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Rename Filter"
+                    InputGestureText="Alt+F2" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.SaveCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Save Filter"
+                    InputGestureText="Ctrl+Alt+S" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.SaveAsCommand}"
+                    CommandParameter="{Binding}"
+                    Header="Save Filter As" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Header="Shared Filters"
+                    ItemsSource="{Binding FilterViewModel.SharedCollection}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
-                            <Setter Property="MenuItem.Command"  Value="{Binding Command}" />
-                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.HideCommand}"
+                    Header="Show / _Hide Filter View"
+                    InputGestureText="Ctrl+Alt+H" />
             </MenuItem>
             <MenuItem Header="_Options">
-                <MenuItem Header="_Settings" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=SettingsCommand}"
+                    Header="_Settings" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_Help" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=HelpCommand}"
+                    Header="_Online Content" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding Source={StaticResource mainViewModel}, Path=VersionCheckCommand}"
+                    Header="_Check For New Version" />
             </MenuItem>
         </Menu>
 
-        <Grid x:Name="GridMain" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0">
+        <Grid
+            x:Name="GridMain"
+            Margin="0,0,0,0"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch"
+            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
             <Grid.RowDefinitions>
-                <RowDefinition Height="25*" />
+                <RowDefinition Height="25" />
+                <RowDefinition Height="{Binding Path=FilterViewModel.FilterHide, Mode=TwoWay}" />
                 <RowDefinition Height="5" />
                 <RowDefinition Height="75*" />
-                <RowDefinition Height="25" />
             </Grid.RowDefinitions>
 
-<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+            <!--  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv STATUS / QUICK FILTER BOX vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  -->
 
-            <TabControl x:Name="tabFilters"
-                        Grid.Row="0"
-                        HorizontalAlignment="Stretch"
-                        ItemsSource="{Binding Path=FilterViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay , NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch"
-                        >
-                
+            <Grid
+                x:Name="GridStatus"
+                Grid.Row="0"
+                Height="25"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Top"
+                Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="300" />
+                    <ColumnDefinition Width="100" />
+                </Grid.ColumnDefinitions>
+                <Grid.InputBindings>
+                    <KeyBinding
+                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.FindNextCommand}"
+                        CommandParameter="QUICKFIND"
+                        Gesture="F3" />
+                </Grid.InputBindings>
+                <Label
+                    Name="labelQuickFind"
+                    Grid.Column="0"
+                    Width="75"
+                    Height="25"
+                    Margin="1,1,1,3"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Style="{DynamicResource LabelStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Content="Quick Filter:" />
+                <ComboBox
+                    x:Name="comboboxQuickFind"
+                    Grid.Column="0"
+                    Height="25"
+                    Margin="75,0,138,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    Style="{DynamicResource ComboBoxStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    IsEditable="True"
+                    IsTextSearchEnabled="True"
+                    ItemsSource="{Binding Path=QuickFindList}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedIndex="{Binding Path=QuickFindIndex}">
+                    <ComboBox.InputBindings>
+                        <KeyBinding
+                            Key="Enter"
+                            Command="{Binding FilterViewModel.QuickFindChangedCommand}"
+                            CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                    </ComboBox.InputBindings>
+                </ComboBox>
+                <ToggleButton
+                    Name="toggleButtonRegex"
+                    Width="40"
+                    Height="25"
+                    Margin="0,0,96,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Style="{DynamicResource ToggleButtonStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Content="Regex"
+                    IsChecked="{Binding Path=FilterViewModel.QuickFindRegex, Mode=TwoWay}" />
+                <ToggleButton
+                    Name="toggleButtonAND"
+                    Width="30"
+                    Height="25"
+                    Margin="0,0,64,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Style="{DynamicResource ToggleButtonStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Command="{Binding FilterViewModel.QuickFindChangedCommand}"
+                    CommandParameter="{Binding ElementName=comboboxQuickFind}"
+                    Content="AND"
+                    IsChecked="{Binding Path=FilterViewModel.QuickFindAnd, Mode=TwoWay}" />
+                <ToggleButton
+                    Name="toggleButtonOR"
+                    Width="30"
+                    Height="25"
+                    Margin="0,0,32,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Style="{DynamicResource ToggleButtonStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Command="{Binding FilterViewModel.QuickFindChangedCommand}"
+                    CommandParameter="{Binding ElementName=comboboxQuickFind}"
+                    Content="OR"
+                    IsChecked="{Binding Path=FilterViewModel.QuickFindOr, Mode=TwoWay}" />
+                <ToggleButton
+                    Name="toggleButtonNOT"
+                    Width="30"
+                    Height="25"
+                    Margin="0,0,0,0"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Top"
+                    Style="{DynamicResource ToggleButtonStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Command="{Binding FilterViewModel.QuickFindChangedCommand}"
+                    CommandParameter="{Binding ElementName=comboboxQuickFind}"
+                    Content="NOT"
+                    IsChecked="{Binding Path=FilterViewModel.QuickFindNot, Mode=TwoWay}" />
+                <GridSplitter
+                    Grid.Column="1"
+                    Width="5"
+                    Height="25"
+                    HorizontalAlignment="Center"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+
+                <Label
+                    Name="labelStatus"
+                    Grid.Column="2"
+                    Width="50"
+                    Height="25"
+                    Margin="1,1,1,3"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom"
+                    Style="{DynamicResource LabelStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Content="Status:" />
+
+                <ListBox
+                    x:Name="listboxStatus"
+                    Grid.Column="2"
+                    Height="25"
+                    Margin="50,0,0,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Style="{DynamicResource ListBoxStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    ItemsSource="{Binding Path=Status}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    SelectedIndex="{Binding Path=StatusIndex}"
+                    SelectionMode="Extended">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding StatusChangedCommand}" CommandParameter="{Binding ElementName=listboxStatus}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                    <ListBox.InputBindings>
+                        <KeyBinding
+                            Key="C"
+                            Command="{Binding CopyCommand}"
+                            CommandParameter="{Binding Path=Status}"
+                            Modifiers="Control" />
+                    </ListBox.InputBindings>
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu HasDropShadow="True">
+                            <MenuItem
+                                Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                Command="{Binding CopyCommand}"
+                                CommandParameter="{Binding Path=Status}"
+                                Header="Copy"
+                                InputGestureText="Ctrl+C" />
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+
+                <TextBox
+                    Name="textboxLineTotals"
+                    Grid.Column="3"
+                    Height="25"
+                    Margin="1,0,1,0"
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Bottom"
+                    Style="{DynamicResource TextBoxStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderThickness="1"
+                    IsReadOnly="True"
+                    Text="{Binding Path=LogViewModel.LineTotals}" />
+            </Grid>
+
+            <!--  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  -->
+            <TabControl
+                x:Name="tabFilters"
+                Grid.Row="1"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                ItemsSource="{Binding Path=FilterViewModel.TabItems}"
+                SelectedIndex="{Binding Path=FilterViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+
                 <TabControl.InputBindings>
-                    <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.InsertFilterItemCommand}" />
+                    <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.AddFilterItemCommand}" />
                 </TabControl.InputBindings>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
-                        <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}" CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Header}" />
+
+                        <TextBlock
+                            Margin="-4,0,-4,-2"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Grid 
-                                Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
-                                Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
-                                >
-                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"/>
-                                <Image Source="../Resources/Filter.png" Opacity="1" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None" />
+                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
+                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                <Image
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Opacity="1"
+                                    Source="../Resources/Filter.png"
+                                    Stretch="None" />
                             </Grid>
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </TabControl.Background>
                 <TabControl.ContentTemplate x:Uid="tabContent">
 
-                <DataTemplate>
-                        <DataGrid x:Name="dataGridFilter"
-                          ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
-                          AutoGenerateColumns="False"
-                          Grid.Row="0"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,0"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          VerticalAlignment="Stretch"
-                          CanUserAddRows="False"
-                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Tag="{Binding}"
-                          DataGridCell.GotFocus="DataGrid_CellGotFocus">
-                          <!--DataGridCell.PreviewKeyUp="DataGridCell_KeyUp"
-                          DataGridCell.PreviewKeyDown="DataGridCell_KeyDown"-->
+                    <DataTemplate>
+                        <DataGrid
+                            x:Name="filterFileData"
+                            Grid.Row="0"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            DataGridCell.GotFocus="DataGrid_CellGotFocus"
+                            ItemsSource="{Binding Path=ContentList, Mode=TwoWay}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Tag="{Binding}">
 
                             <DataGrid.Resources>
                                 <local:BindingProxy x:Key="proxyFilter" Data="{Binding}" />
@@ -179,31 +690,147 @@
                             </DataGrid.CellStyle>
 
                             <DataGrid.InputBindings>
-                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" />
-                                <!--<KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.InsertFilterItemCommand}" />-->
+                                <KeyBinding
+                                    Key="C"
+                                    Command="{Binding CopyCommand}"
+                                    CommandParameter="{Binding Path=ContentList}"
+                                    Modifiers="Control" />
+                                <KeyBinding
+                                    Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.FindNextCommand}"
+                                    CommandParameter="{Binding}"
+                                    Gesture="F3" />
                             </DataGrid.InputBindings>
-                                <DataGrid.ContextMenu>
-                                    <ContextMenu HasDropShadow="True">
-                                        <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                        <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                                        <MenuItem Header="Close Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Alt+F4" />
-                                        <MenuItem Header="Close All Filters" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}" CommandParameter="{Binding}" />
-                                        <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
-                                        <MenuItem Header="New Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}" InputGestureText="Ctrl+Alt+N" />
-                                        <MenuItem Header="Open Containing Folder" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenFolderCommand}" />
-                                        <MenuItem Header="Open Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}" InputGestureText="Ctrl+Alt+O" />
-                                        <MenuItem Header="Reload Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
-                                        <MenuItem Header="Save Filter" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}" InputGestureText="Ctrl+Alt+S" />
-                                        <MenuItem Header="Save Filter As" Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
-                                    </ContextMenu>
-                                </DataGrid.ContextMenu>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu HasDropShadow="True">
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding CopyCommand}"
+                                        CommandParameter="{Binding Path=ContentList}"
+                                        Header="Copy"
+                                        InputGestureText="Ctrl+C" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Close Filter"
+                                        InputGestureText="Ctrl+Alt+F4" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseAllCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Close All Filters" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CopyFilePathCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Copy File Path" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.FindNextCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Find Next"
+                                        InputGestureText="F3" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}"
+                                        Header="Insert Filter Item"
+                                        InputGestureText="Ctrl+Alt+A" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.NewCommand}"
+                                        Header="New Filter"
+                                        InputGestureText="Ctrl+Alt+N" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenFolderCommand}"
+                                        Header="Open Containing Folder" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.OpenCommand}"
+                                        Header="Open Filter"
+                                        InputGestureText="Ctrl+Alt+O" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding PasteCommand}"
+                                        CommandParameter="{Binding Path=ContentList}"
+                                        Header="Paste"
+                                        InputGestureText="Ctrl+V" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}"
+                                        Header="Reload Filter"
+                                        InputGestureText="Ctrl+Alt+R" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveCommand}"
+                                        Header="Save Filter"
+                                        InputGestureText="Ctrl+Alt+S" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SaveAsCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Save Filter As" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Header="Shared Filters"
+                                        ItemsSource="{Binding FilterViewModel.SharedCollection}" />
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
-                                <DataGridCheckBoxColumn Header="Enabled" Binding="{Binding Path=Enabled}" />
-                                <DataGridCheckBoxColumn Header="Exclude" Binding="{Binding Path=Exclude}" />
-                                <DataGridCheckBoxColumn Header="Regex" Binding="{Binding Path=Regex}" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Path=Index}"
+                                    Header="Index"
+                                    SortDirection="Ascending" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Enabled}" Header="Enabled" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Exclude}" Header="Exclude" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Regex}" Header="Regex" />
 
-                                <DataGridTextColumn Width="300" Header="Filter Pattern" Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+                                <DataGridTextColumn
+                                    Width="{Binding Source={StaticResource settings}, Path=Settings.ContentColumnSize}"
+                                    Binding="{Binding Path=Filterpattern, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}"
+                                    Header="Filter Pattern">
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Style.Setters>
@@ -216,29 +843,43 @@
                                     </DataGridTextColumn.CellStyle>
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Count" Binding="{Binding Path=Count}" IsReadOnly="True" />
-                                <DataGridTextColumn Header="MaskedCount" Binding="{Binding Path=MaskedCount}" Visibility="{Binding Data.MaskedVisibility, Source={StaticResource proxyFilter}, Converter={StaticResource  BoolToVis}}" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Path=Count}"
+                                    Header="Count"
+                                    IsReadOnly="True" />
+                                <DataGridTextColumn
+                                    Binding="{Binding Path=MaskedCount}"
+                                    Header="MaskedCount"
+                                    Visibility="{Binding Data.MaskedVisibility, Source={StaticResource proxyFilter}, Converter={StaticResource BoolToVis}}" />
 
                                 <DataGridTemplateColumn Header="Background Color">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox Name="backgroundColorCombo"
-                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
-                                                  SelectedValuePath="Name"
-                                                  SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  VirtualizingStackPanel.IsVirtualizing="True"
-                                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                                  GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown">
+                                            <ComboBox
+                                                Name="backgroundColorCombo"
+                                                GotFocus="colorCombo_Selected"
+                                                ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
+                                                KeyDown="colorCombo_KeyDown"
+                                                SelectedValue="{Binding BackgroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="Name"
+                                                VirtualizingStackPanel.IsVirtualizing="True"
+                                                VirtualizingStackPanel.VirtualizationMode="Recycling">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Width="20" Height="15" Margin="0,0,5,0" Background="{Binding Name}" />
-                                                            <TextBlock Name="backgroundColorText" Text="{Binding Name}" />
+                                                            <TextBlock
+                                                                Width="20"
+                                                                Height="15"
+                                                                Margin="0,0,5,0"
+                                                                Background="{Binding Name}" />
+                                                            <TextBlock
+                                                                Name="backgroundColorText"
+                                                                FontSize="12"
+                                                                Text="{Binding Name}" />
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
@@ -250,20 +891,24 @@
                                 <DataGridTemplateColumn Header="Foreground Color">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox Name="foregroundColorCombo"
-
-                                                  ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
-                                                  SelectedValuePath="Name"
-                                                  SelectedValue="{Binding ForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                  VirtualizingStackPanel.IsVirtualizing="True"
-                                                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                                                  GotFocus="colorCombo_Selected"
-                                                  KeyDown="colorCombo_KeyDown">
+                                            <ComboBox
+                                                Name="foregroundColorCombo"
+                                                GotFocus="colorCombo_Selected"
+                                                ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
+                                                KeyDown="colorCombo_KeyDown"
+                                                SelectedValue="{Binding ForegroundColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                SelectedValuePath="Name"
+                                                VirtualizingStackPanel.IsVirtualizing="True"
+                                                VirtualizingStackPanel.VirtualizationMode="Recycling">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Width="20" Height="15" Margin="0,0,5,0" Background="{Binding Name}" />
-                                                            <TextBlock  Text="{Binding Name}" />
+                                                            <TextBlock
+                                                                Width="20"
+                                                                Height="15"
+                                                                Margin="0,0,5,0"
+                                                                Background="{Binding Name}" />
+                                                            <TextBlock FontSize="12" Text="{Binding Name}" />
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
@@ -272,101 +917,227 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTextColumn Header="Notes" Binding="{Binding Path=Notes}" Width="*">
+                                <DataGridTextColumn
+                                    Width="{Binding Source={StaticResource settings}, Path=Settings.ContentColumnSize}"
+                                    Binding="{Binding Path=Notes}"
+                                    Header="Notes">
+
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SourceUpdated">
+                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="LayoutUpdated">
+                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                </i:EventTrigger>
+                                <i:EventTrigger EventName="PreviewKeyDown">
+                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" CommandParameter="{Binding}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
                         </DataGrid>
                     </DataTemplate>
                 </TabControl.ContentTemplate>
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-                        <MenuItem Header="Close Filter" Command="{Binding FilterViewModel.CloseCommand}"  InputGestureText="Ctrl+Alt+F4" />
-                        <MenuItem Header="Close All Filters" Command="{Binding FilterViewModel.CloseAllCommand}" />
-                        <MenuItem Header="Copy File Path" Command="{Binding FilterViewModel.CopyFilePathCommand}" />
-                        <MenuItem Header="Filter Notes" Command="{Binding FilterViewModel.FilterNotesCommand}" />
-                        <MenuItem Header="New Filter" Command="{Binding FilterViewModel.NewCommand}"  InputGestureText="Ctrl+Alt+N" />
-                        <MenuItem Header="Open Containing Folder" Command="{Binding FilterViewModel.OpenFolderCommand}" />
-                        <MenuItem Header="Open Filter" Command="{Binding FilterViewModel.OpenCommand}"  InputGestureText="Ctrl+Alt+O" />
-                        <MenuItem Header="Reload Filter" Command="{Binding FilterViewModel.ReloadCommand}" InputGestureText="Ctrl+Alt+R" />
-                        <MenuItem Header="Save Filter" Command="{Binding FilterViewModel.SaveCommand}"  InputGestureText="Ctrl+Alt+S" />
-                        <MenuItem Header="Save Filter As" Command="{Binding FilterViewModel.SaveAsCommand}" CommandParameter="{Binding}" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.CloseCommand}"
+                            Header="Close Filter"
+                            InputGestureText="Ctrl+Alt+F4" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.CloseAllCommand}"
+                            Header="Close All Filters" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.CopyFilePathCommand}"
+                            Header="Copy File Path" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.FilterNotesCommand}"
+                            Header="Filter Notes" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.FindNextCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Find Next"
+                            InputGestureText="F3" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.NewCommand}"
+                            Header="New Filter"
+                            InputGestureText="Ctrl+Alt+N" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.OpenFolderCommand}"
+                            Header="Open Containing Folder" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.OpenCommand}"
+                            Header="Open Filter"
+                            InputGestureText="Ctrl+Alt+O" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.ReloadCommand}"
+                            Header="Reload Filter"
+                            InputGestureText="Ctrl+Alt+R" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.RenameCommand}"
+                            Header="Rename Filter"
+                            InputGestureText="Alt+F2" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.SaveCommand}"
+                            Header="Save Filter"
+                            InputGestureText="Ctrl+Alt+S" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding FilterViewModel.SaveAsCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Save Filter As" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Header="Shared Filters"
+                            ItemsSource="{Binding FilterViewModel.SharedCollection}" />
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
-            <GridSplitter Grid.Row="1" HorizontalAlignment="Stretch" Height="10" />
+            <GridSplitter
+                Grid.Row="2"
+                Height="10"
+                HorizontalAlignment="Stretch"
+                Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
 
-<!-- vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv -->
+            <!--  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv LOG FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  -->
 
-            <TabControl x:Name="tabLogs" Grid.Row="2" HorizontalAlignment="Stretch"
-                        Margin="0,0,0,0" VerticalAlignment="Stretch"
-                        ItemsSource="{Binding Path=LogViewModel.TabItems}"
-                        SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
+            <TabControl
+                x:Name="tabLogs"
+                Grid.Row="3"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                ItemsSource="{Binding Path=LogViewModel.TabItems}"
+                SelectedIndex="{Binding Path=LogViewModel.SelectedIndex, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}">
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
-                        <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"  CommandParameter="{Binding}" />
+                        <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}" CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Grid 
-                                Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
-                                Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
-                                >
-                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"/>
-                                <Image Source="../Resources/File.png" Opacity="1" HorizontalAlignment="Left" VerticalAlignment="Top" Stretch="None" />
+                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
+                                <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                <Image
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    Opacity="1"
+                                    Source="../Resources/File.png"
+                                    Stretch="None" />
                             </Grid>
                         </VisualBrush.Visual>
                     </VisualBrush>
                 </TabControl.Background>
                 <TabControl.ItemTemplate>
+
                     <DataTemplate>
-                        <TextBlock Text="{Binding Path=Header}" />
+                        <TextBlock
+                            Margin="-4,0,-4,-2"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Text="{Binding Path=Header}" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
 
                     <DataTemplate>
-                        <DataGrid x:Name="logFileData"
-                          VirtualizingStackPanel.IsVirtualizing="True"
-                          VirtualizingStackPanel.VirtualizationMode="Recycling"
-                          ItemsSource="{Binding Path=ContentList}"
-                          AutoGenerateColumns="False"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,0"
-                          GridLinesVisibility="None"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          VerticalAlignment="Stretch"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="True"
-                          CanUserDeleteRows="False"
-                          IsReadOnly="True"
+                        <DataGrid
+                            x:Name="logFileData"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Stretch"
+                            VerticalAlignment="Stretch"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            AutoGenerateColumns="False"
+                            CanUserAddRows="False"
+                            CanUserDeleteRows="False"
+                            CanUserReorderColumns="True"
+                            GridLinesVisibility="None"
+                            IsReadOnly="False"
+                            ItemsSource="{Binding Path=ContentList}"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            SelectionMode="Extended"
+                            SelectionUnit="FullRow"
+                            Tag="{Binding}"
+                            VirtualizingStackPanel.IsVirtualizing="True"
+                            VirtualizingStackPanel.VirtualizationMode="Recycling">
 
-                          SelectionMode="Extended"
-                          SelectionUnit="FullRow"
-                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Tag="{Binding}">
-                        <DataGrid.Resources>
-                            <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
-                        </DataGrid.Resources>
+                            <DataGrid.Resources>
+                                <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
+                            </DataGrid.Resources>
 
-                        <DataGrid.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Style.Setters>
-                                    <Setter Property="Background" Value="{Binding Path=Background}" />
-                                    <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
-                                    <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-                                    <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
-                                    <Setter Property="BorderThickness" Value="1" />
-                                    <Setter Property="BorderBrush" Value="{Binding Path=Background}" />
-                                </Style.Setters>
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Setters>
+                                        <Setter Property="Background" Value="{Binding Path=Background}" />
+                                        <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
+                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                        <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                        <Setter Property="BorderThickness" Value="1" />
+                                        <Setter Property="BorderBrush" Value="{Binding Path=Background}" />
+                                    </Style.Setters>
                                     <Style.Triggers>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter Property="BorderBrush" Value="{Binding Path=Foreground}" />
@@ -376,80 +1147,210 @@
                             </DataGrid.CellStyle>
 
                             <DataGrid.Columns>
-                                <DataGridTextColumn Header="Index" Binding="{Binding Path=Index}" SortDirection="Ascending" />
-                                <DataGridTextColumn Header="Content" Binding="{Binding Path=Content}" Width="5*">
+                                <DataGridTextColumn
+                                    Binding="{Binding Path=Index}"
+                                    Header="Index"
+                                    SortDirection="Ascending" />
+                                <DataGridTextColumn
+                                    Width="{Binding Source={StaticResource settings}, Path=Settings.ContentColumnSize}"
+                                    Binding="{Binding Path=Content}"
+                                    Header="Content">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
-                                <DataGridTextColumn Header="Group1" Width="*" Binding="{Binding Path=Group1}" Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Group2" Width="*" Binding="{Binding Path=Group2}" Visibility="{Binding Data.Group2Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                <DataGridTextColumn Header="Group3" Width="*" Binding="{Binding Path=Group3}" Visibility="{Binding Data.Group3Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Group4" Width="*" Binding="{Binding Path=Group4}" Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource  BoolToVis}}">
-                                        <DataGridTextColumn.ElementStyle>
-                                            <Style>
-                                                <Setter Property="TextBlock.TextWrapping" Value="WrapWithOverflow" />
-                                            </Style>
-                                        </DataGridTextColumn.ElementStyle>
-                                    </DataGridTextColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=Group1}"
+                                    Header="Group1"
+                                    Visibility="{Binding Data.Group1Visibility, Source={StaticResource proxyLog}, Converter={StaticResource BoolToVis}}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=Group2}"
+                                    Header="Group2"
+                                    Visibility="{Binding Data.Group2Visibility, Source={StaticResource proxyLog}, Converter={StaticResource BoolToVis}}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=Group3}"
+                                    Header="Group3"
+                                    Visibility="{Binding Data.Group3Visibility, Source={StaticResource proxyLog}, Converter={StaticResource BoolToVis}}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Path=Group4}"
+                                    Header="Group4"
+                                    Visibility="{Binding Data.Group4Visibility, Source={StaticResource proxyLog}, Converter={StaticResource BoolToVis}}">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style>
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
                             </DataGrid.Columns>
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SourceUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}" CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="LayoutUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}"  CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}" CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="PreviewKeyDown">
-                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}"  CommandParameter="{Binding}" />
+                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" CommandParameter="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
                             <DataGrid.InputBindings>
-                                <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}" />
+                                <KeyBinding
+                                    Key="C"
+                                    Command="{Binding CopyCommand}"
+                                    Modifiers="Control" />
+                                <KeyBinding
+                                    Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.FindNextCommand}"
+                                    CommandParameter="{Binding}"
+                                    Gesture="F3" />
                             </DataGrid.InputBindings>
 
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
-                                    <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=ContentList}" InputGestureText="Ctrl+C" />
-                                    <MenuItem Header="Close File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}" InputGestureText="Ctrl+F4" />
-                                    <MenuItem Header="Close All Files" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}" />
-                                    <MenuItem Header="Copy File Path" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CopyFilePathCommand}" />
-                                    <MenuItem Header="Export File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}" InputGestureText="Ctrl+E" />
-                                    <MenuItem Header="Goto Line" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+G" />
-                                    <MenuItem Header="Open Containing Folder" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenFolderCommand}" />
-                                    <MenuItem Header="Open File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}" InputGestureText="Ctrl+O" />
-                                    <MenuItem Header="Open View in new Tab" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.NewCommand}" InputGestureText="Ctrl+N" />
-                                    <MenuItem Header="Reload File" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}" InputGestureText="Ctrl+R" />
-                                    <MenuItem Header="Save Current View" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}" InputGestureText="Ctrl+S" />
-                                    <MenuItem Header="Show / Hide All Items" Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}" CommandParameter="{Binding ElementName=listboxStatus}" InputGestureText="Ctrl+H" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding CopyCommand}"
+                                        CommandParameter="{Binding Path=ContentList}"
+                                        Header="Copy"
+                                        InputGestureText="Ctrl+C" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseCommand}"
+                                        Header="Close File"
+                                        InputGestureText="Ctrl+F4" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CloseAllCommand}"
+                                        Header="Close All Files" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.CopyFilePathCommand}"
+                                        Header="Copy File Path" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ExportCommand}"
+                                        Header="Export File"
+                                        InputGestureText="Ctrl+E" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.FindNextCommand}"
+                                        CommandParameter="{Binding}"
+                                        Header="Find Next"
+                                        InputGestureText="F3" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}"
+                                        CommandParameter="{Binding ElementName=listboxStatus}"
+                                        Header="Goto Line"
+                                        InputGestureText="Ctrl+G" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenFolderCommand}"
+                                        Header="Open Containing Folder" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.OpenCommand}"
+                                        Header="Open File"
+                                        InputGestureText="Ctrl+O" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.NewCommand}"
+                                        Header="Open View in new Tab"
+                                        InputGestureText="Ctrl+N" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.PasteCommand}"
+                                        Header="Paste"
+                                        InputGestureText="Ctrl+V" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.ReloadCommand}"
+                                        Header="Reload File"
+                                        InputGestureText="Ctrl+R" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SaveAsCommand}"
+                                        Header="Save Current View"
+                                        InputGestureText="Ctrl+S" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}"
+                                        CommandParameter="{Binding ElementName=listboxStatus}"
+                                        Header="Show / Hide All Items"
+                                        InputGestureText="Ctrl+H" />
 
-                                    <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />
+                                    <!--<MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />-->
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
@@ -458,71 +1359,96 @@
 
                 <TabControl.ContextMenu>
                     <ContextMenu HasDropShadow="True">
-                        <MenuItem Header="Close File" Command="{Binding LogViewModel.CloseCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+F4" />
-                        <MenuItem Header="Close All Files" Command="{Binding LogViewModel.CloseAllCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+Shift+F4" />
-                        <MenuItem Header="Copy File Path" Command="{Binding LogViewModel.CopyFilePathCommand}" CommandParameter="{Binding}" />
-                        <MenuItem Header="Open Containing Folder" Command="{Binding LogViewModel.OpenFolderCommand}" CommandParameter="{Binding}" />
-                        <MenuItem Header="Open File" Command="{Binding LogViewModel.OpenCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+O" />
-                        <MenuItem Header="Reload File" Command="{Binding LogViewModel.ReloadCommand}" CommandParameter="{Binding}" InputGestureText="Ctrl+R" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.CloseCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Close File"
+                            InputGestureText="Ctrl+F4" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.CloseAllCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Close All Files"
+                            InputGestureText="Ctrl+Shift+F4" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.CopyFilePathCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Copy File Path" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.FindNextCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Find Next"
+                            InputGestureText="F3" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.OpenFolderCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Open Containing Folder" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.OpenCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Open File"
+                            InputGestureText="Ctrl+O" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.PasteCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Paste"
+                            InputGestureText="Ctrl+V" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.ReloadCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Reload File"
+                            InputGestureText="Ctrl+R" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.RenameCommand}"
+                            Header="Rename File"
+                            InputGestureText="F2" />
+                        <MenuItem
+                            Style="{DynamicResource MenuItemStyle1}"
+                            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                            Command="{Binding LogViewModel.SaveAsCommand}"
+                            CommandParameter="{Binding}"
+                            Header="Save Current View"
+                            InputGestureText="Ctrl+S" />
                     </ContextMenu>
                 </TabControl.ContextMenu>
             </TabControl>
-
-            <Grid x:Name="GridStatus" Grid.Row="3" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Stretch">
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <TextBox Name="textboxLineTotals"
-                    Height="25"
-                     Grid.Column="0"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Bottom"
-                     Margin="1,5,1,0"
-                     Text="{Binding Path=LogViewModel.LineTotals}" />
-
-                    <Label Name="labelStatus" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="1" Content="Status:" Width="50"  Height="25" Margin="1,1,1,3" />
-
-                <ListBox x:Name="listboxStatus" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom"
-                     Margin="50,0,0,0"
-                     SelectionMode="Extended"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     SelectedIndex="{Binding Path=StatusIndex}"
-                     Height="25"
-                     ItemsSource="{Binding Path=Status}">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <i:InvokeCommandAction Command="{Binding StatusChangedCommand}"  CommandParameter="{Binding ElementName=listboxStatus}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                    <ListBox.InputBindings>
-                        <KeyBinding Key="C" Modifiers="Control" Command="{Binding CopyCommand}"  CommandParameter="{Binding Path=Status}" />
-                    </ListBox.InputBindings>
-
-                    <ListBox.ContextMenu>
-                        <ContextMenu HasDropShadow="True">
-                            <MenuItem Header="Copy" Command="{Binding CopyCommand}" CommandParameter="{Binding Path=Status}" InputGestureText="Ctrl+C" />
-
-                            <MenuItem Header="Select All" Command="{Binding SelectAllCommand}" />
-                        </ContextMenu>
-                    </ListBox.ContextMenu>
-                </ListBox>
-                <GridSplitter Grid.Column="2" Height="25" Width="5" HorizontalAlignment="Center" />
-                <Label Name="labelQuickFind" HorizontalAlignment="Left" Height="25" VerticalAlignment="Bottom" Grid.Column="3" Content="AND/Quick Filter:" Width="105" Margin="1,1,1,3" />
-                <TextBox Name="textboxQuickFind"
-                    Height="25"
-                     Grid.Column="3"
-                     HorizontalAlignment="Stretch"
-                     VerticalAlignment="Bottom"
-                     Margin="105,0,0,0">
-                    <TextBox.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding LogViewModel.QuickFindChangedCommand}"  CommandParameter="{Binding ElementName=textboxQuickFind, Path=Text}" />
-                    </TextBox.InputBindings>
-                </TextBox>
-            </Grid>
         </Grid>
     </DockPanel>
 </Window>
