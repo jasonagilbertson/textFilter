@@ -436,32 +436,32 @@
     <Resource Include="version.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\ico.png" />
-    <Resource Include="Images\RegexViewer_128x128.png" />
-    <Resource Include="Images\RegexViewer_256x256.png" />
-    <Resource Include="Images\RegexViewer_64x64.png" />
-    <Resource Include="Images\rv-04104-export-dialog-1.png" />
-    <Resource Include="Images\rv-04104-file-pane-context-1.png" />
-    <Resource Include="Images\rv-04104-file-view-context-1.png" />
-    <Resource Include="Images\rv-04104-filter-notes-1.png" />
-    <Resource Include="Images\rv-04104-filter-pane-context-1.png" />
-    <Resource Include="Images\rv-04104-goto-line-1.png" />
-    <Resource Include="Images\rv-04104-line-totals-1.png" />
-    <Resource Include="Images\rv-04104-status-box-1.png" />
-    <Resource Include="Images\rv-04104-window-image-1.png" />
-    <Resource Include="Images\rv-04104-window-reference-1.png" />
-    <Resource Include="Images\rv-05412-window-image-1.png" />
+    <Resource Include="images\ico.png" />
+    <Resource Include="images\RegexViewer_128x128.png" />
+    <Resource Include="images\RegexViewer_256x256.png" />
+    <Resource Include="images\RegexViewer_64x64.png" />
+    <Resource Include="images\rv-04104-export-dialog-1.png" />
+    <Resource Include="images\rv-04104-file-pane-context-1.png" />
+    <Resource Include="images\rv-04104-file-view-context-1.png" />
+    <Resource Include="images\rv-04104-filter-notes-1.png" />
+    <Resource Include="images\rv-04104-filter-pane-context-1.png" />
+    <Resource Include="images\rv-04104-goto-line-1.png" />
+    <Resource Include="images\rv-04104-line-totals-1.png" />
+    <Resource Include="images\rv-04104-status-box-1.png" />
+    <Resource Include="images\rv-04104-window-image-1.png" />
+    <Resource Include="images\rv-04104-window-reference-1.png" />
+    <Resource Include="images\rv-05412-window-image-1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\rv-05412-export-dialog-1.png" />
-    <Resource Include="Images\rv-05412-file-view-context-1.png" />
-    <Resource Include="Images\rv-05412-filter-notes-1.png" />
-    <Resource Include="Images\rv-05412-filter-pane-context-1.png" />
-    <Resource Include="Images\rv-05412-goto-line-1.png" />
-    <Resource Include="Images\rv-05412-line-totals-1.png" />
-    <Resource Include="Images\rv-05412-status-box-1.png" />
-    <Resource Include="Images\rv-05412-window-clean-image-1.png" />
-    <Resource Include="Images\rv-05412-window-reference-1.png" />
+    <Resource Include="images\rv-05412-export-dialog-1.png" />
+    <Resource Include="images\rv-05412-file-view-context-1.png" />
+    <Resource Include="images\rv-05412-filter-notes-1.png" />
+    <Resource Include="images\rv-05412-filter-pane-context-1.png" />
+    <Resource Include="images\rv-05412-goto-line-1.png" />
+    <Resource Include="images\rv-05412-line-totals-1.png" />
+    <Resource Include="images\rv-05412-status-box-1.png" />
+    <Resource Include="images\rv-05412-window-clean-image-1.png" />
+    <Resource Include="images\rv-05412-window-reference-1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
