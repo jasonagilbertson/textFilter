@@ -2,7 +2,9 @@
 # regexViewer  
 
 **Current Download:**  
-[Download (right click and save as)](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/download/regexViewer.0.4.105.zip) 
+[RegexViewer.0.5.412.zip](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/download/regexViewer.0.4.105.zip) 
+
+![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/rv-05412-window-image-1.png)		
 
 **Overview:**
 
@@ -19,14 +21,10 @@ RegexViewer is a utility designed to make filtering text files more efficient by
 - Window customization - setting some of the window features such as default background and foreground colors, font and font size.
 - Opening current file view into new view - this is another way to reduce the data set that is being parsed. An example of this is if you have a multi gigabyte log file but are only interested in a small portion of it. Create a filter like a time filter to narrow down to the area of interest, and open into a new view. Now all new filtering can be done on just the new view which will be faster and use less RAM.
 
-**Current Limitations:**
-- This is very much beta. Having said that it is stable and fairly quick. 
-- All functions are single thread except for the actual text parsing function which is multithread. What does this mean? Since I have not had time to move all lengthy functions to a background thread, you may notice delays in loading files or may notice what appears to be application hangs but hopefully this is minimal.  
-- The text files currently load into RAM regardless of size. This is both good and bad. The good is its fast to parse but the bad is depending on size of file the amount of RAM it uses can be sizeable. A 1GB file may take up to 4GB RAM.
+**Notes:**
+- The text files currently load into RAM regardless of size using standard .net. This is good as its fast to parse but can be bad depending on size of file the amount of RAM it uses can be sizeable. A 1GB file averages around 2GB of RAM.
 
 **Feedback:**
-- Please let me know what you like and don’t like
-- Definitely let me know if you experience issues with the tool itself
-- Lastly if you have suggestions for features you would like to see, please feel free to send them to me as well
+- If you have suggestions for features you would like to see or any issues, please let me know
 
-![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/rv-04104-window-image-1.png)		
+
