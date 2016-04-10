@@ -141,6 +141,40 @@ namespace RegexViewer
             }
         }
 
+        public Command RemoveFilterItemCommand
+        {
+            get
+            {
+                if (_removeFilterItemCommand == null)
+                {
+                    _removeFilterItemCommand = new Command(RemoveFilterItemExecuted);
+                }
+                _removeFilterItemCommand.CanExecute = true;
+
+                return _removeFilterItemCommand;
+            }
+            set
+            {
+                _removeFilterItemCommand = value;
+            }
+        }
+
+        private void RemoveFilterItemExecuted(object sender)
+        {
+            SetStatus("RemoveeFilterItemExecuted");
+            FilterFile filterFile = (FilterFile)CurrentFile();
+
+            if (filterFile != null)
+            {
+                int filterIndex = 0;
+                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
+
+                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex, true);
+                VerifyIndex();
+            }
+        }
+
+
         public ObservableCollection<MenuItem> SharedCollection
         {
             get
@@ -284,6 +318,7 @@ namespace RegexViewer
             return retval;
         }
 
+      
         public List<FilterFileItem> FilterList()
         {
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
@@ -377,11 +412,9 @@ namespace RegexViewer
             if (filterFile != null)
             {
                 int filterIndex = 0;
-                // if (((Selector)CurrentTab().Viewer).IsFocused) {
                 filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
-                // }
 
-                ((FilterFileManager)ViewManager).ManageNewFilterFileItem(filterFile, filterIndex);
+                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex);
                 VerifyIndex();
             }
         }
@@ -435,6 +468,7 @@ namespace RegexViewer
         {
             SetStatus("paste text");
         }
+
 
         public override void RenameTabItem(string logName)
         {
@@ -755,7 +789,7 @@ namespace RegexViewer
                 FilterFile filterFile = (FilterFile)CurrentFile();
                 if (filterFile != null)
                 {
-                    ((FilterFileManager)ViewManager).ManageNewFilterFileItem(filterFile);
+                    ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile);
                     if (e.PropertyName == FilterFileItemEvents.Index)
                     {
                         VerifyIndex((sender as FilterFileItem));
@@ -789,6 +823,7 @@ namespace RegexViewer
         private Command _quickFindChangedCommand;
 
         private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
+        private Command _removeFilterItemCommand;
 
         public LogViewModel _LogViewModel { get; internal set; }
 

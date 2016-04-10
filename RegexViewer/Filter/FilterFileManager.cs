@@ -98,7 +98,7 @@ namespace RegexViewer
             }
         }
 
-        public void ManageNewFilterFileItem(FilterFile filterFile, int filterIndex = -1)
+        public void ManageFilterFileItem(FilterFile filterFile, int filterIndex = -1, bool remove = false)
         {
             // add blank new item so defaults / modifications can be set some type of bug
             IEnumerable<FilterFileItem> results = null;
@@ -129,16 +129,24 @@ namespace RegexViewer
     
 
                 SetStatus("ManageNewFilterFileItem:adding new line");
-                filterFile.AddPatternNotification(fileItem, true);
-                if (filterIndex >= 0)
+                //filterFile.AddPatternNotification(fileItem, true);
+                if (filterIndex >= 0 && !remove)
                 {
                     // insert in new enabled filter item at specified index
                     fileItem.Enabled = true;
                     fileItem.Index = filterIndex;
+                    filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Insert(filterIndex, fileItem);
+                }
+                else if (filterIndex >= 0 && remove)
+                {
+                    // remove old filter item at specified index
+                    filterFile.AddPatternNotification(fileItem, false);
+                    filterFile.ContentItems.RemoveAt(filterIndex);
                 }
                 else
                 {
+                    filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Add(fileItem);
                 }
 
@@ -167,7 +175,7 @@ namespace RegexViewer
         public override IFile<FilterFileItem> NewFile(string LogName, ObservableCollection<FilterFileItem> fileItems = null)
         {
             FilterFile filterFile = new FilterFile();
-            ManageNewFilterFileItem(filterFile);
+            ManageFilterFileItem(filterFile);
 
             FileManager.Add(ManageFileProperties(LogName, filterFile));
 
@@ -189,7 +197,7 @@ namespace RegexViewer
                 }
 
                 filterFile = (FilterFile)ReadFile(fileName);
-                ManageNewFilterFileItem(filterFile);
+                ManageFilterFileItem(filterFile);
 
                 ManageFileProperties(fileName, filterFile);
                 FileManager.Add(filterFile);
