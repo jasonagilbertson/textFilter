@@ -1,11 +1,11 @@
-![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/ico.png)  
+![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/ico.png)  
 
 # regexViewer  
 
 **Current Download:**  
-[RegexViewer.0.5.412.zip](https://github.com/jagilber/regexViewer/releases/download/0.5.412/RegexViewer.0.5.412.zip) 
+[RegexViewer.0.5.412.zip](https://github.com/jasonagilbertson/regexViewer/releases/download/0.5.412/RegexViewer.0.5.412.zip) 
 
-![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/rv-05412-window-image-1.png)		
+![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/rv-05412-window-image-1.png)		
 
 **Overview:**
 
@@ -18,6 +18,7 @@ RegexViewer is a utility designed to make filtering text files more efficient by
 - Hotkeys - most of the common commands have associated hotkeys that are documented in the context and application menus.
 - Cut and paste - keeps the background and foreground colors for the filter patterns for example when pasting into OneNote.
 - Quick filter - at top of window, allows a quick search that can either override current filters in filter view, compliment filters in filter view, or filter for lines that match both Quick filter and individual filters in filter view.
+- Regex Grouping - ability to use the regex built-in functionality of grouping to extract data into separate columns. Up to 4 different grouping columns (Group1 -4) are available for this. Once data is in the column, it can be sorted or exported.
 - Window customization - setting some of the window features such as default background and foreground colors, font and font size.
 - Opening current file view into new view - this is another way to reduce the data set that is being parsed. An example of this is if you have a multi gigabyte log file but are only interested in a small portion of it. Create a filter like a time filter to narrow down to the area of interest, and open into a new view. Now all new filtering can be done on just the new view which will be faster and use less RAM.
 
