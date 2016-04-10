@@ -1,4 +1,5 @@
-![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/RegexViewer_128x128.png)  
+![](https://github.com/jagilber/regexViewer/blob/master/RegexViewer/images/ico.png)  
+
 # regexViewer  
 
 **Current Download:**  
