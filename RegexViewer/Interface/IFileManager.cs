@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public interface IFileManager<T>
     {

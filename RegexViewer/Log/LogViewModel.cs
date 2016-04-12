@@ -1,4 +1,4 @@
-﻿// *********************************************************************** Assembly : RegexViewer
+﻿// *********************************************************************** Assembly : TextFilter
 // Author : jason Created : 09-06-2015
 //
 // Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
@@ -19,7 +19,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {

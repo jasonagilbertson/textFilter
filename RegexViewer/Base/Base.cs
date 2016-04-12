@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -18,7 +18,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
@@ -145,7 +145,7 @@ namespace RegexViewer
         {
             if (status.ToLower().StartsWith("fatal:"))
             {
-                MessageBox.Show(status, "Oh Snap! regexViewer exception", MessageBoxButton.OK);
+                MessageBox.Show(status, "Oh Snap! TextFilter exception", MessageBoxButton.OK);
             }
 
             OnNewStatus(status);

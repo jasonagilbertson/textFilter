@@ -11,7 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public partial class MainWindow : Window
     {

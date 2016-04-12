@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -21,7 +21,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
@@ -39,7 +39,7 @@ namespace RegexViewer
 
         private Parser _parser;
 
-        private RegexViewerSettings _settings;
+        private TextFilterSettings _settings;
 
         private Command _settingsCommand;
 
@@ -61,7 +61,7 @@ namespace RegexViewer
         {
             try
             {
-                _settings = RegexViewerSettings.Settings;
+                _settings = TextFilterSettings.Settings;
                 if (!_settings.ReadConfigFile())
                 {
                     Environment.Exit(1);
@@ -88,7 +88,7 @@ namespace RegexViewer
                 // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
                 AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
                 {
-                    String resourceName = "RegexViewer." + new AssemblyName(args.Name).Name + ".dll";
+                    String resourceName = "TextFilter." + new AssemblyName(args.Name).Name + ".dll";
 
                     using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
                     {
@@ -165,7 +165,7 @@ namespace RegexViewer
             set { _logViewModel = value; }
         }
 
-        public RegexViewerSettings Settings
+        public TextFilterSettings Settings
         {
             get { return _settings; }
             set { _settings = value; }
@@ -296,12 +296,12 @@ namespace RegexViewer
         public void SettingsExecuted(object sender)
         {
             string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            CreateProcess("notepad.exe", workingDir + "\\regexviewer.exe.config");
-            MessageBox.Show("RegexViewer window settings are not in gui yet.\n\n"
+            CreateProcess("notepad.exe", workingDir + "\\TextFilter.exe.config");
+            MessageBox.Show("TextFilter window settings are not in gui yet.\n\n"
                 + "To change settings:\n"
-                + " 1. Close regexviewer.exe as it can overwrite on close.\n"
-                + " 2. Make changes in regexviewer.exe.config.\n"
-                + " 3. Restart RegexViewer.exe.", "RegexViewer Window Settings", MessageBoxButton.OK);
+                + " 1. Close TextFilter.exe as it can overwrite on close.\n"
+                + " 2. Make changes in TextFilter.exe.config.\n"
+                + " 3. Restart TextFilter.exe.", "TextFilter Window Settings", MessageBoxButton.OK);
             // OptionsDialog dialog = new OptionsDialog();
             //dialog.WaitForResult();
         }

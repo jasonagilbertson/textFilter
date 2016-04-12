@@ -1,4 +1,4 @@
-﻿// *********************************************************************** Assembly : RegexViewer
+﻿// *********************************************************************** Assembly : TextFilter
 // Author : jason Created : 09-06-2015
 //
 // Last Modified By : jason Last Modified On : 10-13-2015 ***********************************************************************
@@ -21,7 +21,7 @@ using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {

@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public abstract class BaseFileManager<T> : Base, IFileManager<T>
     {
@@ -23,7 +23,7 @@ namespace RegexViewer
 
         public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
 
-        public RegexViewerSettings Settings = RegexViewerSettings.Settings;
+        public TextFilterSettings Settings = TextFilterSettings.Settings;
 
         #endregion Public Fields
 

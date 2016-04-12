@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -18,7 +18,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {

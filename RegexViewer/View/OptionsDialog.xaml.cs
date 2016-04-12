@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public partial class OptionsDialog : Window
     {

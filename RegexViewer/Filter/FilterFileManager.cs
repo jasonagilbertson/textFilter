@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -23,7 +23,7 @@ using System.Windows;
 //using System.Windows.Media;
 using System.Xml;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
@@ -84,7 +84,7 @@ namespace RegexViewer
 
                 if (root.Name.ToLower() != "filters")
                 {
-                    // not regexViewer filter
+                    // not TextFilter filter
                     result = FilterFileVersionResult.NotAFilterFile;
                 }
 
@@ -713,7 +713,7 @@ namespace RegexViewer
 
                     // tat does not support this setting xmlw.WriteAttributeString("notes", item.Notes.ToString());
 
-                    // dont currently support marker and is not saved in regexviewer filter file
+                    // dont currently support marker and is not saved in TextFilter filter file
                     xmlw.WriteAttributeString("type", item.TatType ?? "matches_text");
 
                     // dont currently support 'y' in gui

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public partial class FilterNotesDialog : Window
     {
@@ -20,10 +20,10 @@ namespace RegexViewer
             _initialNotes = notes;
             textBoxFilterNotes.Text = notes;
             textBoxFilterNotes.Focus();
-            textBoxFilterNotes.FontFamily = new FontFamily(RegexViewerSettings.Settings.FontName);
-            textBoxFilterNotes.FontSize = RegexViewerSettings.Settings.FontSize;
-            textBoxFilterNotes.Foreground = RegexViewerSettings.Settings.ForegroundColor;
-            textBoxFilterNotes.Background = RegexViewerSettings.Settings.BackgroundColor;
+            textBoxFilterNotes.FontFamily = new FontFamily(TextFilterSettings.Settings.FontName);
+            textBoxFilterNotes.FontSize = TextFilterSettings.Settings.FontSize;
+            textBoxFilterNotes.Foreground = TextFilterSettings.Settings.ForegroundColor;
+            textBoxFilterNotes.Background = TextFilterSettings.Settings.BackgroundColor;
         }
 
         #endregion Public Constructors

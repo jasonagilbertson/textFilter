@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -12,13 +12,13 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class FilterTabViewModel : BaseTabViewModel<FilterFileItem>
     {
         #region Private Fields
 
-        private bool _maskedVisibility = RegexViewerSettings.Settings.CountMaskedMatches;
+        private bool _maskedVisibility = TextFilterSettings.Settings.CountMaskedMatches;
 
         #endregion Private Fields
 

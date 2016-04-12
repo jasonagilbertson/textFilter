@@ -1,14 +1,14 @@
-﻿<Window x:Class="RegexViewer.RenameDialog"
+﻿<Window x:Class="TextFilter.RenameDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:RegexViewer"
+        xmlns:local="clr-namespace:TextFilter"
         Title="Rename Tab"
         Width="263"
         Height="128"
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
-        <local:RegexViewerSettings x:Key="settings" />
+        <local:TextFilterSettings x:Key="settings" />
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
 

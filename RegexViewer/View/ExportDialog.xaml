@@ -1,14 +1,14 @@
-﻿<Window x:Class="RegexViewer.ExportDialog"
+﻿<Window x:Class="TextFilter.ExportDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:local="clr-namespace:RegexViewer"
+        xmlns:local="clr-namespace:TextFilter"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         Title="Export Dialog"
         Width="463.769"
         Height="210.043"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
-        <local:RegexViewerSettings x:Key="settings" />
+        <local:TextFilterSettings x:Key="settings" />
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
         <CheckBox Name="checkIndex"

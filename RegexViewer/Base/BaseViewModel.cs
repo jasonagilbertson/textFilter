@@ -1,4 +1,4 @@
-﻿// *********************************************************************** Assembly : RegexViewer
+﻿// *********************************************************************** Assembly : TextFilter
 // Author : jason Created : 09-06-2015
 //
 // Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
@@ -61,7 +61,7 @@ namespace RegexViewer
 
         private Command _sharedCommand;
 
-        private RegexViewerSettings settings = RegexViewerSettings.Settings;
+        private TextFilterSettings settings = TextFilterSettings.Settings;
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
 
@@ -301,7 +301,7 @@ namespace RegexViewer
             }
         }
 
-        public RegexViewerSettings Settings
+        public TextFilterSettings Settings
         {
             get { return settings; }
             set { settings = value; }
@@ -600,7 +600,7 @@ namespace RegexViewer
                     }
 
                     // prompt for saving
-                    if (!RegexViewerSettings.Settings.AutoSave)
+                    if (!TextFilterSettings.Settings.AutoSave)
                     {
                         TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
 
@@ -609,7 +609,7 @@ namespace RegexViewer
                         switch (dialog.WaitForResult())
                         {
                             case TimedSaveDialog.Results.Disable:
-                                RegexViewerSettings.Settings.AutoSave = true;
+                                TextFilterSettings.Settings.AutoSave = true;
                                 break;
 
                             case TimedSaveDialog.Results.DontSave:

@@ -1,4 +1,4 @@
-﻿// *********************************************************************** Assembly : RegexViewer
+﻿// *********************************************************************** Assembly : TextFilter
 // Author : jason Created : 09-06-2015
 //
 // Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
@@ -23,7 +23,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {

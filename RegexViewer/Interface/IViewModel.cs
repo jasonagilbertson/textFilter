@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -12,7 +12,7 @@
 // <summary></summary>
 // ***********************************************************************
 
-namespace RegexViewer
+namespace TextFilter
 {
     public interface IViewModel<T>
     {

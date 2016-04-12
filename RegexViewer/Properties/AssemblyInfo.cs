@@ -5,11 +5,11 @@ using System.Windows;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("RegexViewer")]
+[assembly: AssemblyTitle("TextFilter")]
 [assembly: AssemblyDescription("filters text files in viewer for matched strings / regular expressions")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("RegexViewer")]
+[assembly: AssemblyProduct("TextFilter")]
 [assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -47,6 +47,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.5.0.412")]
-[assembly: AssemblyFileVersion("0.5.0.412")]
+[assembly: AssemblyVersion("0.7.0.001")]
+[assembly: AssemblyFileVersion("0.7.0.001")]
 [assembly: GuidAttribute("9BD5B347-AF37-414D-AE8B-2D6FA05B051D")]

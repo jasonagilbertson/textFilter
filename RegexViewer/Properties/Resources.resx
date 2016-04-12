@@ -130,14 +130,14 @@ Command line options are:
 /?
 
 Example 1: open a specified filter file and specified log file
-	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: eventlog-filter.rvf /log: ascii.txt
-	- For folders with spaces: C:\temp\regexViewer&gt;RegexViewer.exe /filter: "i love folder spaces\eventlog-filter5.rvf" /log: "i love folder spaces\ascii5.txt"
+	- C:\temp\TextFilter&gt;TextFilter.exe /filter: eventlog-filter.rvf /log: ascii.txt
+	- For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: "i love folder spaces\eventlog-filter5.rvf" /log: "i love folder spaces\ascii5.txt"
 
 Example 2: open multiple specified filter files and multiple specified logs.
-	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: eventlog-filter.rvf,eventlog-filter2.rvf /log: ascii.txt,ascii2.txt
-	- For folders with spaces: C:\temp\regexViewer&gt;RegexViewer.exe /filter: "i love folder spaces\eventlog-filter5.rvf";"i love folder spaces\eventlog-filter6.rvf" /log: "i love folder spaces\ascii5.txt","i love folder spaces\ascii6.txt"
+	- C:\temp\TextFilter&gt;TextFilter.exe /filter: eventlog-filter.rvf,eventlog-filter2.rvf /log: ascii.txt,ascii2.txt
+	- For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: "i love folder spaces\eventlog-filter5.rvf";"i love folder spaces\eventlog-filter6.rvf" /log: "i love folder spaces\ascii5.txt","i love folder spaces\ascii6.txt"
 
 Example 3: open multiple filter files using wildcard and multiple log files using wildcard
-	- C:\temp\regexViewer&gt;RegexViewer.exe /filter: %cd%\eventlog-filter*.rvf /log: %cd%\ascii*.txt</value>
+	- C:\temp\TextFilter&gt;TextFilter.exe /filter: %cd%\eventlog-filter*.rvf /log: %cd%\ascii*.txt</value>
   </data>
 </root>

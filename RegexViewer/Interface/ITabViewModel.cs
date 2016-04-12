@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -13,7 +13,7 @@
 // ***********************************************************************
 using System.Collections.ObjectModel;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public interface ITabViewModel<T>
     {

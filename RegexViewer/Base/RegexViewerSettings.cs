@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
 // Last Modified By : jason
 // Last Modified On : 10-31-2015
 // ***********************************************************************
-// <copyright file="RegexViewerSettings.cs" company="">
+// <copyright file="TextFilterSettings.cs" company="">
 //     Copyright ©  2015
 // </copyright>
 // <summary></summary>
@@ -21,9 +21,9 @@ using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Xml;
 
-namespace RegexViewer
+namespace TextFilter
 {
-    public class RegexViewerSettings : Base
+    public class TextFilterSettings : Base
     {
         #region Public Methods
 
@@ -476,7 +476,7 @@ namespace RegexViewer
 
         private const int ATTACH_PARENT_PROCESS = -1;
 
-        private static RegexViewerSettings settings;
+        private static TextFilterSettings settings;
 
         private KeyValueConfigurationCollection _appSettings;
 
@@ -488,15 +488,15 @@ namespace RegexViewer
 
         #region Public Constructors
 
-        static RegexViewerSettings()
+        static TextFilterSettings()
         {
             if (settings == null)
             {
-                settings = new RegexViewerSettings();
+                settings = new TextFilterSettings();
             }
         }
 
-        public RegexViewerSettings()
+        public TextFilterSettings()
         {
         }
 
@@ -566,10 +566,10 @@ namespace RegexViewer
 
         #region Public Properties
 
-        public static RegexViewerSettings Settings
+        public static TextFilterSettings Settings
         {
-            get { return RegexViewerSettings.settings; }
-            set { RegexViewerSettings.settings = value; }
+            get { return TextFilterSettings.settings; }
+            set { TextFilterSettings.settings = value; }
         }
 
         public bool AutoSave

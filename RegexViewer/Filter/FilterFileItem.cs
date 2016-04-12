@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -15,7 +15,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public struct FilterFileItemEvents
     {
@@ -85,8 +85,8 @@ namespace RegexViewer
 
         public FilterFileItem()
         {
-            BackgroundColor = RegexViewerSettings.Settings.BackgroundColor.ToString();
-            ForegroundColor = RegexViewerSettings.Settings.ForegroundColor.ToString();
+            BackgroundColor = TextFilterSettings.Settings.BackgroundColor.ToString();
+            ForegroundColor = TextFilterSettings.Settings.ForegroundColor.ToString();
         }
 
         #endregion Public Constructors

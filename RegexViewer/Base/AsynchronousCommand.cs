@@ -1,5 +1,5 @@
 ﻿// ***********************************************************************
-// Assembly         : RegexViewer
+// Assembly         : TextFilter
 // Author           : jason
 // Created          : 09-06-2015
 //
@@ -16,7 +16,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows.Threading;
 
-namespace RegexViewer
+namespace TextFilter
 {
     public class AsynchronousCommand : Command, INotifyPropertyChanged
     {
