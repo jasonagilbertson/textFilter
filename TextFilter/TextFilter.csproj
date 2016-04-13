@@ -434,19 +434,20 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\ico.png" />
-    <Resource Include="Images\rv-05412-export-dialog-1.png" />
-    <Resource Include="Images\rv-05412-file-pane-context-1.png" />
-    <Resource Include="Images\rv-05412-filter-notes-1.png" />
-    <Resource Include="Images\rv-05412-filter-pane-context-1.png" />
-    <Resource Include="Images\rv-05412-goto-line-1.png" />
-    <Resource Include="Images\rv-05412-line-totals-1.png" />
-    <Resource Include="Images\rv-05412-status-box-1.png" />
-    <Resource Include="Images\rv-05412-window-clean-image-1.png" />
-    <Resource Include="Images\rv-05412-window-image-1.png" />
-    <Resource Include="Images\rv-05412-window-reference-1.png" />
+    <Resource Include="Images\tf-export-dialog-1.png" />
+    <Resource Include="Images\tf-file-pane-context-1.png" />
+    <Resource Include="Images\tf-filter-notes-1.png" />
+    <Resource Include="Images\tf-filter-pane-context-1.png" />
+    <Resource Include="Images\tf-goto-line-1.png" />
+    <Resource Include="Images\tf-line-totals-1.png" />
+    <Resource Include="Images\tf-status-box-1.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="textFilter.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\tf-window-image-1.png" />
+    <Resource Include="Images\tf-window-reference-1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
