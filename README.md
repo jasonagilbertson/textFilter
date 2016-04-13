@@ -1,15 +1,15 @@
-![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/ico.png)  
+![](https://github.com/jasonagilbertson/textFilter/blob/master/textFilter/images/ico.png)  
 
-# regexViewer  
+# textFilter  
 
 **Current Download:**  
-[RegexViewer.0.5.412.zip](https://github.com/jasonagilbertson/regexViewer/releases/download/0.5.412/RegexViewer.0.5.412.zip) 
+[textFilter.0.7.001.zip](https://github.com/jasonagilbertson/textFilter/releases/download/0.7.001/textFilter.0.7.001.zip) 
 
-![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/rv-05412-window-image-1.png)		
+![](https://github.com/jasonagilbertson/textFilter/blob/master/textFilter/images/tf-window-image-1.png)		
 
 **Overview:**
 
-RegexViewer is a utility designed to make filtering text files more efficient by using either strings or regex patterns. What makes this utility unique as compared to other regex or text viewing utilities is the ability to have multiple filters in multiple filter tabs. This allows for quick toggling between different filters searching for the appropriate information. Creating filters in RegexViewer is simple and with the 'Notes' field, gives the ability to document the reasons for the filter. Filters can be local or remote as well as on a website for easy sharing. Other features that make parsing log files easier is being able to do a Quick Filter at top of window with string search operators. Optionally enable central file location of filter files (shared filters)  to be shared with team.
+textFilter is a utility designed to make filtering text files more efficient by using either strings or regex patterns. What makes this utility unique as compared to other regex or text viewing utilities is the ability to have multiple filters in multiple filter tabs. This allows for quick toggling between different filters searching for the appropriate information. Creating filters in textFilter is simple and with the 'Notes' field, gives the ability to document the reasons for the filter. Filters can be local or remote as well as on a website for easy sharing. Other features that make parsing log files easier is being able to do a Quick Filter at top of window with string search operators. Optionally enable central file location of filter files (shared filters)  to be shared with team.
 
 **Features:**
 - Command line capability - filters and files can be opened from command line.
@@ -29,5 +29,6 @@ RegexViewer is a utility designed to make filtering text files more efficient by
 - If you have suggestions for features you would like to see or have any issues, please let me know.
 
 thanks
+
 
 
