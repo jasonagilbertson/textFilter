@@ -1,11 +1,11 @@
-![](https://github.com/jasonagilbertson/textFilter/blob/master/textFilter/images/ico.png)  
+![](https://github.com/jasonagilbertson/textFilter/blob/master/TextFilter/images/ico.png)  
 
 # textFilter  
 
 **Current Download:**  
-[textFilter.0.7.001.zip](https://github.com/jasonagilbertson/textFilter/releases/download/0.7.001/textFilter.0.7.001.zip) 
+[textFilter.0.7.001.zip](https://github.com/jasonagilbertson/TextFilter/releases/download/0.7.001/textFilter.0.7.001.zip) 
 
-![](https://github.com/jasonagilbertson/textFilter/blob/master/textFilter/images/tf-window-image-1.png)		
+![](https://github.com/jasonagilbertson/textFilter/blob/master/TextFilter/images/tf-window-image-1.png)		
 
 **Overview:**
 
