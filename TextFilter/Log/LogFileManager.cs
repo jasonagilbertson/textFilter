@@ -54,7 +54,7 @@ namespace TextFilter
                 //        ()
                 //        item =>
                 {
-                    if (item.FilterIndex < 0 | item.FilterIndex >= filterItems.Count)
+                    if (item.FilterIndex < 0 | item.FilterIndex > filterItems.Count)
                     {
                         item.Background = Settings.BackgroundColor;
                         item.Foreground = Settings.ForegroundColor;
