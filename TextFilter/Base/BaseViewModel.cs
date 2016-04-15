@@ -646,7 +646,7 @@ namespace TextFilter
             }
         }
 
-        public ObservableCollection<MenuItem> SharedCollectionBuilder(string directory)
+        public ObservableCollection<MenuItem> Menubuilder(string directory)
         {
             ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
 
@@ -654,7 +654,7 @@ namespace TextFilter
             {
                 if (string.IsNullOrEmpty(directory))
                 {
-                    SetStatus("SharedCollectionBuilder:exit: directory not specified.");
+                    SetStatus("MenuBuilder:exit: directory not specified.");
                     return menuCollection;
                 }
 
@@ -678,7 +678,7 @@ namespace TextFilter
                     dItem.Header = dir.Replace(directory, "").TrimStart('\\');
                     dItem.ItemsSource = new ObservableCollection<MenuItem>();
 
-                    foreach (MenuItem item in SharedCollectionBuilder(dir))
+                    foreach (MenuItem item in Menubuilder(dir))
                     {
                         ((ObservableCollection<MenuItem>)dItem.ItemsSource).Add(item);
                     }
@@ -690,7 +690,7 @@ namespace TextFilter
             }
             catch (Exception e)
             {
-                SetStatus("Exception:SharedCollectionBuilder: " + e.ToString());
+                SetStatus("Exception:MenuBuilder: " + e.ToString());
                 return new ObservableCollection<MenuItem>();
             }
         }

@@ -115,8 +115,7 @@ namespace TextFilter
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => VersionCheck(true)));
-            // todo: shared folder check?
+            Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
         }
 
         #endregion Public Constructors
@@ -347,6 +346,12 @@ namespace TextFilter
             VersionCheck(false);
         }
 
+        private void AfterLaunch(bool silent)
+        {
+            // force update of shared collection menu
+            var oc = _filterViewModel.SharedCollection;
+            VersionCheck(silent);
+        }
         private void VersionCheck(bool silent)
         {
             try

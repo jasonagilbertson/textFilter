@@ -443,11 +443,11 @@
     <Resource Include="Images\tf-status-box-1.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="textFilter.ico" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Images\tf-window-image-1.png" />
     <Resource Include="Images\tf-window-reference-1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="textFilter.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

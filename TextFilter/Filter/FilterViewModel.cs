@@ -179,7 +179,16 @@ namespace TextFilter
         {
             get
             {
-                return (SharedCollectionBuilder(Settings.SharedFilterDirectory));
+                if (_sharedCollection == null)
+                {
+                    _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
+                }
+
+                return _sharedCollection;
+            }
+            set
+            {
+                _sharedCollection = value;
             }
         }
 
@@ -824,6 +833,7 @@ namespace TextFilter
 
         private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
         private Command _removeFilterItemCommand;
+        private ObservableCollection<MenuItem> _sharedCollection;
 
         public LogViewModel _LogViewModel { get; internal set; }
 

@@ -48,13 +48,8 @@ namespace TextFilter
             try
             {
                 foreach (LogFileItem item in logFileItems)
-
-                //Parallel.ForEach(logFileItems,
-                //        () => 0,
-                //        ()
-                //        item =>
                 {
-                    if (item.FilterIndex < 0 | item.FilterIndex > filterItems.Count)
+                    if (item.FilterIndex < 0 ) 
                     {
                         item.Background = Settings.BackgroundColor;
                         item.Foreground = Settings.ForegroundColor;
@@ -65,9 +60,7 @@ namespace TextFilter
                         item.Foreground = filterItem.Foreground;
                         item.Background = filterItem.Background;
                     }
-
-                    // item.FontSize = Settings.FontSize;
-                }//);
+                }
 
                 SetStatus(string.Format("ApplyColor:total time in seconds: {0}", DateTime.Now.Subtract(timer).TotalSeconds));
 
