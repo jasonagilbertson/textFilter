@@ -413,16 +413,16 @@ namespace TextFilter
                         MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}?", downloadLocation), "New version", MessageBoxButton.YesNo);
                         if (mbResult == MessageBoxResult.Yes)
                         {
-                            CreateProcess("explorer.exe", workingDir);
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
                             (new System.Net.WebClient()).DownloadFile(downloadLocation, downloadZip);
                             MessageBox.Show(string.Format("New version has been downloaded from: {0} \n to: {1}.\nExtract zip and restart.", downloadLocation, downloadZip));
+                            CreateProcess("explorer.exe", workingDir);
                         }
                     }
                 }
                 else
                 {
-                    string message = "versions are same: " + version;
+                    string message = "version is same: " + workingVersion;
                     if (silent)
                     {
                         SetStatus("VersionCheck:" + message);
