@@ -646,7 +646,7 @@ namespace TextFilter
             List<string> delList = new List<string>();
             try
             {
-                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true | x.IsNew == true)))
+                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
                 {
                     // set tab index to current
                     SelectedIndex = TabItems.IndexOf(TabItems.First(x => x.Tag == item.Tag));
