@@ -354,7 +354,10 @@ namespace TextFilter
                     {
                         SetStatus("SourceUpdatedExecuted: container generated, setting keyboard focus to index:" + index);
                         var item = dataGrid.ItemContainerGenerator.ContainerFromIndex(index) as ListBoxItem;
-                        if (item != null) item.Focus();
+                        if (item != null)
+                        {
+                            item.Focus();
+                        }
                     }
                 }
                 else

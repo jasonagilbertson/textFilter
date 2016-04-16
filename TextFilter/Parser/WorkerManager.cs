@@ -263,7 +263,7 @@ namespace TextFilter
         {
 
             // todo: remove when switching to mapped file
-            return true;
+           // return true;
 
             if (workerItem == null)
             {

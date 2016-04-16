@@ -73,6 +73,15 @@ namespace TextFilter
         #endregion Private Fields
 
         #region Public Constructors
+        public void ContentItems(LogFile logFile)
+        {
+            SetStatus("ContentItems:enter");
+
+            //FilterLogTabItems(FilterCommand.Filter, null, logFile);
+            LogTabViewModel logTab = (LogTabViewModel)TabItems[SelectedIndex];
+            logTab.ContentList = logFile.ContentItems;
+            SetStatus("ContentItems:exit");
+        }
 
         public LogViewModel(FilterViewModel filterViewModel)
         {
@@ -81,6 +90,7 @@ namespace TextFilter
             TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             ViewManager = new LogFileManager();
             _logFileManager = (LogFileManager)ViewManager;
+            UpdateLogFile = ContentItems;
             _filterViewModel = filterViewModel;
             _parser = new Parser(_filterViewModel, this);
             // load tabs from last session
@@ -238,6 +248,10 @@ namespace TextFilter
 
         public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter)
         {
+            // deprecating
+            SetStatus(string.Format("filterLogTabItems:deprecated. returning... filterIntent: {0}", filterIntent));
+            return;
+
             try
             {
                 List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
