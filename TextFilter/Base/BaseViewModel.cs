@@ -712,7 +712,7 @@ namespace TextFilter
         {
             try
             {
-                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp") && Path.GetFileName(item.Tag).ToLower().StartsWith(".tmp"))
+                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp") && Path.GetFileName(item.Tag).ToLower().StartsWith("tmp"))
                 {
                     Settings.RemoveLogFile(item.Tag);
                     Settings.RemoveFilterFile(item.Tag);
