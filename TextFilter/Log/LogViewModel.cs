@@ -603,8 +603,8 @@ namespace TextFilter
 
             // set to new as save file sets to false and this needs to be set to verify temp file
             // on modified file close
-            file.IsNew = true;
-
+            //file.IsNew = true;
+            file.Modified = true;
             // change temp file name to generic -new ##- name only and not tag
             file.FileName = GenerateTempTagName();
             AddTabItem(file);
