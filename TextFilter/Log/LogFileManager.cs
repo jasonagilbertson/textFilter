@@ -49,7 +49,7 @@ namespace TextFilter
             {
                 foreach (LogFileItem item in logFileItems)
                 {
-                    if (item.FilterIndex < 0 ) 
+                    if (item.FilterIndex < 0)
                     {
                         item.Background = Settings.BackgroundColor;
                         item.Foreground = Settings.ForegroundColor;

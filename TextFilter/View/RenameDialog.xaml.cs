@@ -35,14 +35,14 @@ namespace TextFilter
 
         #region Private Methods
 
-        private void buttonSave_Click(object sender, RoutedEventArgs e)
-        {
-            Disable();
-        }
-
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             textBoxNewName.Text = string.Empty;
+            Disable();
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
             Disable();
         }
 

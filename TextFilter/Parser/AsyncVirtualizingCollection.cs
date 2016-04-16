@@ -1,17 +1,13 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-31-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
 // <copyright file="AsyncVirtualizingCollection.cs" company="http://www.codeproject.com/Articles/34405/WPF-Data-Virtualization">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
-
 
 using System.Collections.Generic;
 using System.Collections.Specialized;

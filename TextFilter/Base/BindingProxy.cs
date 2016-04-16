@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 09-06-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 09-06-2015 ***********************************************************************
 // <copyright file="BindingProxy.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System.Windows;
 
@@ -19,8 +16,8 @@ namespace TextFilter
     {
         #region Public Fields
 
-        // Using a DependencyProperty as the backing store for Data. This enables animation,
-        // styling, binding, etc...
+        // Using a DependencyProperty as the backing store for Data. This enables animation, styling,
+        // binding, etc...
 
         public static readonly DependencyProperty DataProperty =
             DependencyProperty.Register("Data", typeof(object), typeof(BindingProxy), new UIPropertyMetadata(null));

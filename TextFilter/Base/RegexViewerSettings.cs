@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-31-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
 // <copyright file="TextFilterSettings.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
@@ -606,6 +603,23 @@ namespace TextFilter
 
         public string ConfigFile { get; set; }
 
+        public string ContentColumnSize
+        {
+            // used to dynamically set logview content field tied to 'WordWrap' config setting is not
+            // a config file setting
+            get
+            {
+                if (this.WordWrap.ToLower() == "wrap")
+                {
+                    return "300*";
+                }
+                else
+                {
+                    return "Auto";
+                }
+            }
+        }
+
         public bool CountMaskedMatches
         {
             get
@@ -842,23 +856,6 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.VersionCheckFile).ToString());
-                }
-            }
-        }
-
-        public string ContentColumnSize
-        {
-            // used to dynamically set logview content field tied to 'WordWrap' config setting is
-            // not a config file setting
-            get
-            {
-                if (this.WordWrap.ToLower() == "wrap")
-                {
-                    return "300*";
-                }
-                else
-                {
-                    return "Auto";
                 }
             }
         }

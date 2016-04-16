@@ -48,11 +48,14 @@ namespace TextFilter
 
         #region Private Fields
 
+        public static LogFileContentItems UpdateLogFile;
+
         private Command _exportCommand;
 
         private LogFileItem _filteredSelectedItem;
 
         private FilterViewModel _filterViewModel;
+
         private Command _gotoLineCommand;
 
         private Command _keyDownCommand;
@@ -64,6 +67,8 @@ namespace TextFilter
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
+
+        public delegate void LogFileContentItems(LogFile logFile);
 
         #endregion Private Fields
 
@@ -77,7 +82,7 @@ namespace TextFilter
             ViewManager = new LogFileManager();
             _logFileManager = (LogFileManager)ViewManager;
             _filterViewModel = filterViewModel;
-
+            _parser = new Parser(_filterViewModel, this);
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
             _filterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
@@ -231,7 +236,7 @@ namespace TextFilter
             }
         }
 
-        public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter) 
+        public void FilterLogTabItems(FilterCommand filterIntent = FilterCommand.Filter)
         {
             try
             {
@@ -299,10 +304,10 @@ namespace TextFilter
                             SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
                             logTab.ContentList = _logFileManager.ApplyColor(
                                 _logFileManager.ApplyFilter(
-                                    logTab, 
-                                    logFile, 
-                                    filterFileItems, 
-                                    filterIntent), 
+                                    logTab,
+                                    logFile,
+                                    filterFileItems,
+                                    filterIntent),
                                 filterFileItems);
                             break;
                         }
@@ -378,10 +383,10 @@ namespace TextFilter
                     {
                         SetStatus(string.Format("LogViewModel.FindNextExecuted: not found! filterindex: {0} index: {1} ", filterIndex, index));
                         SetStatus(string.Format("QuickFindItem: filter pattern: {0} include: {1} exclude: {2}",
-                            _filterViewModel.QuickFindItem.Filterpattern, 
-                            _filterViewModel.QuickFindItem.Include, 
+                            _filterViewModel.QuickFindItem.Filterpattern,
+                            _filterViewModel.QuickFindItem.Include,
                             _filterViewModel.QuickFindItem.Exclude));
-                        foreach(FilterFileItem item in _filterViewModel.FilterList())
+                        foreach (FilterFileItem item in _filterViewModel.FilterList())
                         {
                             SetStatus(string.Format("file item:{0}:{1}:{2}", item.Index, item.Filterpattern, item.Exclude, item.Include));
                         }
@@ -450,8 +455,8 @@ namespace TextFilter
                 if (!IsHiding())
                 {
                     logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-                    
-                        FilterLogTabItems(FilterCommand.Hide);
+
+                    FilterLogTabItems(FilterCommand.Hide);
                 }
                 else
                 {
@@ -572,6 +577,8 @@ namespace TextFilter
                 return;
             }
 
+            LogFile tempLogFile = new LogFile();
+
             ObservableCollection<LogFileItem> logFileItems = new ObservableCollection<LogFileItem>();
             int index = 0;
             foreach (string line in rawText.Split(new string[] { "\r\n" }, StringSplitOptions.None))
@@ -584,7 +591,24 @@ namespace TextFilter
                 logFileItems.Add(logFileItem);
             }
 
-            NewFileExecuted(logFileItems);
+            // save pasted text to a file first then add empty tab event will populate tab from temp
+            // file tmp2606.tmp in user %temp%
+            string tempFilePath = Path.GetTempFileName();
+            tempLogFile.Tag = tempFilePath;
+            tempLogFile.ContentItems = logFileItems;
+            _logFileManager.SaveFile(tempFilePath, tempLogFile);
+
+            // temp file name from paste text is being sent and has already been saved but needs new temp name
+            IFile<LogFileItem> file = _logFileManager.OpenFile(tempFilePath);
+
+            // set to new as save file sets to false and this needs to be set to verify temp file
+            // on modified file close
+            file.IsNew = true;
+
+            // change temp file name to generic -new ##- name only and not tag
+            file.FileName = GenerateTempTagName();
+            AddTabItem(file);
+
         }
 
         public override void RenameTabItem(string logName)
@@ -753,6 +777,21 @@ namespace TextFilter
         }
 
         #endregion Public Methods
+
+        private Parser _parser;
+
+        public Parser Parser
+        {
+            get
+            {
+                return _parser;
+            }
+
+            set
+            {
+                _parser = value;
+            }
+        }
 
         public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-25-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
 // <copyright file="BaseFileManager.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
@@ -21,9 +18,9 @@ namespace TextFilter
     {
         #region Public Fields
 
-        public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
-
         public TextFilterSettings Settings = TextFilterSettings.Settings;
+
+        public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
 
         #endregion Public Fields
 

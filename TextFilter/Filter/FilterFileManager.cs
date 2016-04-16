@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-13-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-13-2015 ***********************************************************************
 // <copyright file="FilterFileManager.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
@@ -125,8 +122,6 @@ namespace TextFilter
 
                 filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
-
-    
 
                 SetStatus("ManageNewFilterFileItem:adding new line");
                 //filterFile.AddPatternNotification(fileItem, true);
@@ -436,6 +431,18 @@ namespace TextFilter
 
         #region Private Methods
 
+        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
+        {
+            filterFile.FileName = Path.GetFileName(LogName);
+            filterFile.Tag = LogName;
+
+            // todo rework this:
+            ((FilterFile)filterFile).EnablePatternNotifications(false);
+            ((FilterFile)filterFile).EnablePatternNotifications(true);
+            ((FilterFile)filterFile).PropertyChanged += filterFile_PropertyChanged;
+            return filterFile;
+        }
+
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FilterFileItemEvents.Count |
@@ -483,18 +490,6 @@ namespace TextFilter
             }
 
             return "white";
-        }
-
-        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
-        {
-            filterFile.FileName = Path.GetFileName(LogName);
-            filterFile.Tag = LogName;
-
-            // todo rework this:
-            ((FilterFile)filterFile).EnablePatternNotifications(false);
-            ((FilterFile)filterFile).EnablePatternNotifications(true);
-            ((FilterFile)filterFile).PropertyChanged += filterFile_PropertyChanged;
-            return filterFile;
         }
 
         private bool ReadAttributeBool(XmlNode node, string attName, int item)

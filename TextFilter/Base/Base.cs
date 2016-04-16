@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-25-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
 // <copyright file="Base.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.ComponentModel;
@@ -24,11 +21,9 @@ namespace TextFilter
     {
         #region Public Fields
 
-        public bool _transitioning;
-
         public string _tempTabNameFormat = "-new {0}-";
-
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+        public bool _transitioning;
 
         #endregion Public Fields
 
@@ -129,7 +124,7 @@ namespace TextFilter
 
         public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if(_transitioning)
+            if (_transitioning)
             {
                 return;
             }

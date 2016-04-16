@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 09-06-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 09-06-2015 ***********************************************************************
 // <copyright file="AsynchronousCommand.cs" company="http://www.codeproject.com/Articles/274982/Commands-in-MVVM">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.ComponentModel;
@@ -209,8 +206,8 @@ namespace TextFilter
 
         private void NotifyPropertyChanged(string propertyName)
         {
-            // Store the event handler - in case it changes between the line to check it and the
-            // line to fire it.
+            // Store the event handler - in case it changes between the line to check it and the line
+            // to fire it.
             PropertyChangedEventHandler propertyChanged = PropertyChanged;
 
             // If the event has been subscribed to, fire it.

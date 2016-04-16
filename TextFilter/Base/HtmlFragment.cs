@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-09-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-09-2015 ***********************************************************************
 // <copyright file="HtmlFragment.cs" company="http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 
 namespace TextFilter
@@ -17,7 +14,6 @@ namespace TextFilter
     // Sample class for Copying and Pasting HTML fragments to and from the clipboard.
     //
     // Mike Stall. http://blogs.msdn.com/jmstall
-    //
     using System;
     using System.Text;
 
@@ -106,8 +102,8 @@ namespace TextFilter
             // The string contains index references to other spots in the string, so we need
             // placeholders so we can compute the offsets. The <<<<<<<_ strings are just
             // placeholders. We'll backpatch them actual values afterwards. The string layout (<<<)
-            // also ensures that it can't appear in the body of the html because the < character
-            // must be escaped.
+            // also ensures that it can't appear in the body of the html because the < character must
+            // be escaped.
             string header = @"Format:HTML Format
                                 Version:1.0
                                 StartHTML:<<<<<<<1
@@ -234,8 +230,8 @@ namespace TextFilter
                         m_version = val;
                         break;
 
-                    // Byte count from the beginning of the clipboard to the start of the context,
-                    // or -1 if no context
+                    // Byte count from the beginning of the clipboard to the start of the context, or
+                    // -1 if no context
                     case "starthtml":
                         if (startHMTL != 0) throw new FormatException("StartHtml is already declared");
                         startHMTL = int.Parse(val);

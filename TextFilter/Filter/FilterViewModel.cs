@@ -159,22 +159,6 @@ namespace TextFilter
             }
         }
 
-        private void RemoveFilterItemExecuted(object sender)
-        {
-            SetStatus("RemoveeFilterItemExecuted");
-            FilterFile filterFile = (FilterFile)CurrentFile();
-
-            if (filterFile != null)
-            {
-                int filterIndex = 0;
-                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
-
-                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex, true);
-                VerifyIndex();
-            }
-        }
-
-
         public ObservableCollection<MenuItem> SharedCollection
         {
             get
@@ -193,6 +177,21 @@ namespace TextFilter
         }
 
         public TabControl TabControl { get; set; }
+
+        private void RemoveFilterItemExecuted(object sender)
+        {
+            SetStatus("RemoveeFilterItemExecuted");
+            FilterFile filterFile = (FilterFile)CurrentFile();
+
+            if (filterFile != null)
+            {
+                int filterIndex = 0;
+                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
+
+                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex, true);
+                VerifyIndex();
+            }
+        }
 
         #endregion Public Properties
 
@@ -327,7 +326,6 @@ namespace TextFilter
             return retval;
         }
 
-      
         public List<FilterFileItem> FilterList()
         {
             List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
@@ -356,7 +354,6 @@ namespace TextFilter
                 {
                     return CleanFilterList(filterFileItems);
                 }
-
 
                 return filterFileItems;
             }
@@ -477,7 +474,6 @@ namespace TextFilter
         {
             SetStatus("paste text");
         }
-
 
         public override void RenameTabItem(string logName)
         {
@@ -945,7 +941,6 @@ namespace TextFilter
                         QuickFindOr = false;
                         QuickFindItem.Exclude = true;
                         QuickFindItem.Include = false;
-
                     }
                     else
                     {
@@ -1028,7 +1023,6 @@ namespace TextFilter
                     });
                 }
 
-                
                 SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
                 if (string.IsNullOrEmpty(QuickFindItem.Filterpattern))
                 {
@@ -1051,7 +1045,6 @@ namespace TextFilter
                 {
                     QuickFindItem.Enabled = true;
                 }
-
             }
 
             if (_quickFindRegex)

@@ -46,7 +46,7 @@
             Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.HideCommand}"
             CommandParameter="{Binding}"
             Gesture="Ctrl+H" />
-    
+
         <KeyBinding
             Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.GotoLineCommand}"
             CommandParameter="{Binding}"
@@ -71,8 +71,7 @@
             CommandParameter="{Binding}"
             Modifiers="Control" />
 
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}"
-                    Gesture="Delete" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}" Gesture="Delete" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}" Gesture="Insert" />
         <KeyBinding
             Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.CloseCommand}"
@@ -327,14 +326,15 @@
                     CommandParameter="{Binding}"
                     Header="_Reload Filter"
                     InputGestureText="Ctrl+Alt+R" />
-                <MenuItem Style="{DynamicResource MenuItemStyle1}"
-                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                          BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                          Command="{Binding FilterViewModel.RemoveFilterItemCommand}"
-                          CommandParameter="{Binding}"
-                          Header="_Remove Filter Item"
-                          InputGestureText="Delete" />
+                <MenuItem
+                    Style="{DynamicResource MenuItemStyle1}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                    Command="{Binding FilterViewModel.RemoveFilterItemCommand}"
+                    CommandParameter="{Binding}"
+                    Header="_Remove Filter Item"
+                    InputGestureText="Delete" />
                 <MenuItem
                     Style="{DynamicResource MenuItemStyle1}"
                     Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
@@ -634,8 +634,7 @@
 
                 <TabControl.InputBindings>
                     <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.AddFilterItemCommand}" />
-                    <KeyBinding Key="Delete"
-                                Command="{Binding Path=FilterViewModel.RemoveFilterItemCommand}" />
+                    <KeyBinding Key="Delete" Command="{Binding Path=FilterViewModel.RemoveFilterItemCommand}" />
                 </TabControl.InputBindings>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
@@ -804,13 +803,14 @@
                                         Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.ReloadCommand}"
                                         Header="Reload Filter"
                                         InputGestureText="Ctrl+Alt+R" />
-                                    <MenuItem Style="{DynamicResource MenuItemStyle1}"
-                                              Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                                              Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                                              BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                                              Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}"
-                                              Header="Remove Filter Item"
-                                              InputGestureText="Delete" />
+                                    <MenuItem
+                                        Style="{DynamicResource MenuItemStyle1}"
+                                        Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                                        BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                                        Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}"
+                                        Header="Remove Filter Item"
+                                        InputGestureText="Delete" />
                                     <MenuItem
                                         Style="{DynamicResource MenuItemStyle1}"
                                         Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"

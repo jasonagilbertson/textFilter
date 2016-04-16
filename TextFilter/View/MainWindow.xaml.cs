@@ -16,6 +16,7 @@ namespace TextFilter
     public partial class MainWindow : Window
     {
         #region Private Methods
+
         private T GetFirstChildByType<T>(DependencyObject prop) where T : DependencyObject
         {
             for (int i = 0; i < VisualTreeHelper.GetChildrenCount(prop); i++)

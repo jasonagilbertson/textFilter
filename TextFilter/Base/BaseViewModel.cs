@@ -439,36 +439,92 @@ namespace TextFilter
             return retVal;
         }
 
+        public ObservableCollection<MenuItem> Menubuilder(string directory)
+        {
+            ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
+
+            try
+            {
+                if (string.IsNullOrEmpty(directory))
+                {
+                    SetStatus("MenuBuilder:exit: directory not specified.");
+                    return menuCollection;
+                }
+
+                List<string> files = Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly).Where(x => x.ToLower().EndsWith("tat") || x.ToLower().EndsWith("rvf")).ToList();
+                List<string> dirs = Directory.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly).ToList();
+                foreach (string file in files)
+                {
+                    MenuItem wpfMenuItem = new MenuItem()
+                    {
+                        Command = SharedCommand,
+                        CommandParameter = file,
+                        Header = file.Replace(directory, "").TrimStart('\\')
+                    };
+
+                    menuCollection.Add(wpfMenuItem);
+                }
+
+                foreach (string dir in new List<string>(dirs))
+                {
+                    MenuItem dItem = new MenuItem();
+                    dItem.Header = dir.Replace(directory, "").TrimStart('\\');
+                    dItem.ItemsSource = new ObservableCollection<MenuItem>();
+
+                    foreach (MenuItem item in Menubuilder(dir))
+                    {
+                        ((ObservableCollection<MenuItem>)dItem.ItemsSource).Add(item);
+                    }
+
+                    menuCollection.Add(dItem);
+                }
+
+                return menuCollection;
+            }
+            catch (Exception e)
+            {
+                SetStatus("Exception:MenuBuilder: " + e.ToString());
+                return new ObservableCollection<MenuItem>();
+            }
+        }
+
         public void NewFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
-            // add temp name
+
+            string tempTag = GenerateTempTagName();
+
+            if (IsValidTabIndex())
+            {
+                file = ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+            }
+            else
+            {
+                file = ViewManager.NewFile(tempTag);
+            }
+
+            AddTabItem(file);
+        }
+
+        public string GenerateTempTagName()
+        {
+            // generate -new ##- index number
+            string tempTag = string.Empty;
+
             for (int i = 0; i < 100; i++)
             {
-                string tempTag = string.Format(_tempTabNameFormat, i);
-                if (this.TabItems.Any(x => String.Compare((string)x.Tag, tempTag, true) == 0))
+                tempTag = string.Format(_tempTabNameFormat, i);
+                if (TabItems.Any(x => String.Compare((string)x.Header, tempTag, true) == 0))
                 {
                     continue;
                 }
                 else
                 {
-                    if (sender is ObservableCollection<T>)
-                    {
-                        file = this.ViewManager.NewFile(tempTag, (sender as ObservableCollection<T>));
-                    }
-                    else if (SelectedIndex >= 0 & SelectedIndex < this.TabItems.Count)
-                    {
-                        file = this.ViewManager.NewFile(tempTag, this.TabItems[SelectedIndex].ContentList);
-                    }
-                    else
-                    {
-                        file = this.ViewManager.NewFile(tempTag);
-                    }
                     break;
                 }
             }
 
-            AddTabItem(file);
+            return tempTag;
         }
 
         public void OpenDropExecuted(object sender)
@@ -590,7 +646,7 @@ namespace TextFilter
             List<string> delList = new List<string>();
             try
             {
-                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
+                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true | x.IsNew == true)))
                 {
                     // set tab index to current
                     SelectedIndex = TabItems.IndexOf(TabItems.First(x => x.Tag == item.Tag));
@@ -646,55 +702,6 @@ namespace TextFilter
             }
         }
 
-        public ObservableCollection<MenuItem> Menubuilder(string directory)
-        {
-            ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
-
-            try
-            {
-                if (string.IsNullOrEmpty(directory))
-                {
-                    SetStatus("MenuBuilder:exit: directory not specified.");
-                    return menuCollection;
-                }
-
-                List<string> files = Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly).Where(x => x.ToLower().EndsWith("tat") || x.ToLower().EndsWith("rvf")).ToList();
-                List<string> dirs = Directory.EnumerateDirectories(directory, "*", SearchOption.TopDirectoryOnly).ToList();
-                foreach (string file in files)
-                {
-                    MenuItem wpfMenuItem = new MenuItem()
-                    {
-                        Command = SharedCommand,
-                        CommandParameter = file,
-                        Header = file.Replace(directory, "").TrimStart('\\')
-                    };
-
-                    menuCollection.Add(wpfMenuItem);
-                }
-
-                foreach (string dir in new List<string>(dirs))
-                {
-                    MenuItem dItem = new MenuItem();
-                    dItem.Header = dir.Replace(directory, "").TrimStart('\\');
-                    dItem.ItemsSource = new ObservableCollection<MenuItem>();
-
-                    foreach (MenuItem item in Menubuilder(dir))
-                    {
-                        ((ObservableCollection<MenuItem>)dItem.ItemsSource).Add(item);
-                    }
-
-                    menuCollection.Add(dItem);
-                }
-
-                return menuCollection;
-            }
-            catch (Exception e)
-            {
-                SetStatus("Exception:MenuBuilder: " + e.ToString());
-                return new ObservableCollection<MenuItem>();
-            }
-        }
-
         public void SharedFileExecuted(object sender)
         {
             SetStatus("SharedFile:enter");
@@ -705,7 +712,7 @@ namespace TextFilter
         {
             try
             {
-                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp"))
+                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp") && Path.GetFileName(item.Tag).ToLower().StartsWith(".tmp"))
                 {
                     Settings.RemoveLogFile(item.Tag);
                     Settings.RemoveFilterFile(item.Tag);

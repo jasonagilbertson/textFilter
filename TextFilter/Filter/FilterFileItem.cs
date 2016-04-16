@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-25-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
 // <copyright file="FilterFileItem.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -368,10 +365,10 @@ namespace TextFilter
                 if (_stringOperators != value)
                 {
                     _stringOperators = value;
-
                 }
             }
         }
+
         // for tat 'type' text or marker
 
         public string TatType { get; set; }

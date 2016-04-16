@@ -1,18 +1,15 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : RegexViewer
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-31-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
 // <copyright file="WorkerItem.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
-
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace TextFilter
 {
@@ -20,13 +17,23 @@ namespace TextFilter
     {
         #region Public Fields
 
+        public BackgroundWorker BackGroundWorker = new BackgroundWorker();
+
         public int FilteredLineCount;
+
         public ObservableCollection<LogFileItem> FilteredList;
+
         public FilterFile FilterFile;
+
         public FilterNeed FilterNeed;
+
         public LogFile LogFile;
+
         public int TotalLineCount;
+
         public Modification WorkerModification;
+
+        public State WorkerState;
 
         #endregion Public Fields
 
@@ -35,6 +42,7 @@ namespace TextFilter
         public WorkerItem()
         {
             WorkerModification = Modification.Unknown;
+            BackGroundWorker.WorkerSupportsCancellation = true;
         }
 
         #endregion Public Constructors
@@ -43,14 +51,36 @@ namespace TextFilter
 
         public enum Modification
         {
-            FilterAdded,
-            FilterRemoved,
-            FilterModified,
-            LogAdded,
-            LogRemoved,
             Unknown,
+
+            FilterAdded,
+
+            FilterRemoved,
+
+            FilterModified,
+
+            LogAdded,
+
+            LogRemoved,
+
             LogIndex,
+
             FilterIndex
+        }
+
+        public enum State
+        {
+            Unknown,
+
+            NotStarted,
+
+            Started,
+
+            Aborted,
+
+            Ready,
+
+            Completed,
         }
 
         #endregion Public Enums

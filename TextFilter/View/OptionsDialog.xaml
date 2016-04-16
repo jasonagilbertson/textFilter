@@ -1,10 +1,11 @@
-﻿<Window x:Class="TextFilter.OptionsDialog"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-        xmlns:local="clr-namespace:TextFilter"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        WindowStartupLocation="CenterOwner">
+﻿<Window
+    x:Class="TextFilter.OptionsDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+    xmlns:local="clr-namespace:TextFilter"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <local:MainViewModel x:Key="mainViewModel" />
@@ -13,16 +14,18 @@
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
 
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <ObjectDataProvider x:Key="colorsTypeOdp"
-                            MethodName="GetType"
-                            ObjectType="{x:Type sys:Type}">
+        <ObjectDataProvider
+            x:Key="colorsTypeOdp"
+            MethodName="GetType"
+            ObjectType="{x:Type sys:Type}">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
-        <ObjectDataProvider x:Key="colorPropertiesOdp"
-                            MethodName="GetProperties"
-                            ObjectInstance="{StaticResource colorsTypeOdp}" />
+        <ObjectDataProvider
+            x:Key="colorPropertiesOdp"
+            MethodName="GetProperties"
+            ObjectInstance="{StaticResource colorsTypeOdp}" />
     </Window.Resources>
 
     <Grid>
@@ -60,40 +63,46 @@
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>-->
-        <TextBox Width="75"
-                 Margin="10,0,10,10"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Text="{Binding Path=Background}" />
-        <TextBox Width="75"
-                 Margin="10,0,10,10"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Text="{Binding Path=Foreground}" />
-        <TextBox Width="75"
-                 Margin="10,0,10,10"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Text="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-        <TextBox Width="75"
-                 Margin="10,0,10,10"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Text="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+        <TextBox
+            Width="75"
+            Margin="10,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Text="{Binding Path=Background}" />
+        <TextBox
+            Width="75"
+            Margin="10,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Text="{Binding Path=Foreground}" />
+        <TextBox
+            Width="75"
+            Margin="10,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Text="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+        <TextBox
+            Width="75"
+            Margin="10,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Text="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
 
-        <Button Name="buttonSave"
-                Width="75"
-                Margin="10,0,10,10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Click="buttonSave_Click"
-                Content="Save" />
-        <Button Name="buttonCancel"
-                Width="75"
-                Margin="100,0,10,10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Click="buttonCancel_Click"
-                Content="Cancel" />
+        <Button
+            Name="buttonSave"
+            Width="75"
+            Margin="10,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Click="buttonSave_Click"
+            Content="Save" />
+        <Button
+            Name="buttonCancel"
+            Width="75"
+            Margin="100,0,10,10"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Click="buttonCancel_Click"
+            Content="Cancel" />
     </Grid>
 </Window>

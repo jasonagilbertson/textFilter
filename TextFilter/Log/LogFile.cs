@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-09-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-09-2015 ***********************************************************************
 // <copyright file="LogFile.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System.Collections.ObjectModel;
 
@@ -66,8 +63,7 @@ namespace TextFilter
 
         #endregion Public Properties
 
-        public bool HasBom { get; set; }
-
         public System.Text.Encoding Encoding { get; set; }
+        public bool HasBom { get; set; }
     }
 }

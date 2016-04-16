@@ -58,14 +58,14 @@ namespace TextFilter
             Disable();
         }
 
-        private void buttonSave_Click(object sender, RoutedEventArgs e)
-        {
-            Disable();
-        }
-
         private void buttonCopy_Click(object sender, RoutedEventArgs e)
         {
             _copy = true;
+            Disable();
+        }
+
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        {
             Disable();
         }
 

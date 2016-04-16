@@ -1,38 +1,64 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : textFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-31-2015
-// ***********************************************************************
-// <copyright file="Parcer.cs" company="">
-//     Copyright ©  2015
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// <copyright file="Parser.cs" company="">
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
-
 using System.Collections.Generic;
 using System.Linq;
 
 namespace TextFilter
 {
-    internal class Parser : Base
+    public class Parser : Base
     {
+        //public void EnableLogFileMonitoring(bool enable)
+        //{
+        //    if (enable & !_logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged += logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //    else if (!enable & _logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //}
+
         #region Private Fields
 
         private int _filteredLinesCount;
-        private List<IFile<FilterFileItem>> _filterFiles = new List<IFile<FilterFileItem>>();
+
+        private FilterFile _filterFilePrevious;
+
         private bool _filterMonitoringEnabled = false;
+
         private FilterViewModel _filterViewModel;
-        private List<IFile<LogFileItem>> _logFiles = new List<IFile<LogFileItem>>();
+
+        private LogFile _logFilePrevious;
 
         // private bool _logMonitoringEnabled = false;
+
         private LogViewModel _logViewModel;
+
+        private List<FilterFile> _previousFilterFiles = new List<FilterFile>();
+
+        private List<LogFile> _previousLogFiles = new List<LogFile>();
 
         private int _totalLinesCount;
 
         //private List<BackgroundParser> _parsers = new List<BackgroundParser>();
+
         private WorkerManager _workerManager = WorkerManager.Instance;
 
         #endregion Private Fields
@@ -43,16 +69,34 @@ namespace TextFilter
         {
             SetStatus("Parser:ctor");
             // TODO: Complete member initialization
-            this._filterViewModel = filterViewModel;
-            this._logViewModel = logViewModel;
-            // _filterFiles = (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
-            _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+            _filterViewModel = filterViewModel;
+            _logViewModel = logViewModel;
+            Enable(true);
 
-            // _logFiles = (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
-            _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
+            // sync existing information filterviewmodel initialized before parser
+            SyncFilterFiles();
+            SyncLogFiles();
+        }
 
-            this.EnableFilterFileMonitoring(true);
-            // this.EnableLogFileMonitoring(true);
+        public void Enable(bool enable)
+        {
+            if (enable)
+            {
+                _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
+
+                EnableFilterFileMonitoring(true);
+                // EnableLogFileMonitoring(true);
+            }
+            else
+            {
+                _filterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
+
+                EnableFilterFileMonitoring(false);
+                // EnableLogFileMonitoring(false);
+                _workerManager.CancelAllWorkers();
+            }
         }
 
         #endregion Public Constructors
@@ -99,7 +143,7 @@ namespace TextFilter
         {
             if (enable & !_filterMonitoringEnabled)
             {
-                foreach (IFile<FilterFileItem> item in _filterFiles)
+                foreach (IFile<FilterFileItem> item in _previousFilterFiles)
                 {
                     item.ContentItems.CollectionChanged += filterItems_CollectionChanged;
                 }
@@ -107,7 +151,7 @@ namespace TextFilter
             }
             else if (!enable & _filterMonitoringEnabled)
             {
-                foreach (IFile<FilterFileItem> item in _filterFiles)
+                foreach (IFile<FilterFileItem> item in _previousFilterFiles)
                 {
                     item.ContentItems.CollectionChanged -= filterItems_CollectionChanged;
                 }
@@ -115,29 +159,38 @@ namespace TextFilter
             }
         }
 
+        public void ReadFile()
+        {
+            SetStatus("Parser:ReadFile");
+            // todo: determine what changed and run parser new log or remove log
+
+            WorkerItem worker = ModifiedLogFile();
+            _workerManager.ProcessWorker(worker);
+        }
+
         #endregion Public Methods
 
-        //public void EnableLogFileMonitoring(bool enable)
-        //{
-        //    if (enable & !_logMonitoringEnabled)
-        //    {
-        //        foreach (IFile<LogFileItem> item in _logFiles)
-        //        {
-        //            item.ContentItems.CollectionChanged += logItems_CollectionChanged;
-        //        }
-        //        _logMonitoringEnabled = !_logMonitoringEnabled;
-        //    }
-        //    else if (!enable & _logMonitoringEnabled)
-        //    {
-        //        foreach (IFile<LogFileItem> item in _logFiles)
-        //        {
-        //            item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
-        //        }
-        //        _logMonitoringEnabled = !_logMonitoringEnabled;
-        //    }
-        //}
-
         #region Private Methods
+
+        private FilterFile CurrentFilterFile()
+        {
+            return (FilterFile)_filterViewModel.CurrentFile();
+        }
+
+        private List<IFile<FilterFileItem>> CurrentFilterFiles()
+        {
+            return (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
+        }
+
+        private LogFile CurrentLogFile()
+        {
+            return (LogFile)_logViewModel.CurrentFile();
+        }
+
+        private List<IFile<LogFileItem>> CurrentLogFiles()
+        {
+            return (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
+        }
 
         private void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -148,7 +201,7 @@ namespace TextFilter
 
         private void filterViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            SetStatus("Parser:filterViewPropertyChanged");
+            SetStatus("Parser:filterViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new filter, modified filter, removed filter
             // see if tab was added or removed
 
@@ -162,7 +215,7 @@ namespace TextFilter
 
         private void logViewManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            SetStatus("Parser:logViewPropertyChanged");
+            SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new log or remove log
 
             WorkerItem worker = ModifiedLogFile();
@@ -171,37 +224,46 @@ namespace TextFilter
 
         private WorkerItem ModifiedFilterFile()
         {
-            List<IFile<FilterFileItem>> currentFilterFiles = (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
-            FilterFile currentFilter = (FilterFile)_filterViewModel.CurrentFile();
+            SetStatus("Parser:ModifiedFilterFile:enter");
+            List<IFile<FilterFileItem>> currentFilterFiles = CurrentFilterFiles();
+            FilterFile currentFilterFile = CurrentFilterFile();
             //LogFile currentLog = (LogFile)_logViewModel.CurrentFile();
 
-            if (currentFilterFiles == null || currentFilter == null)
+            if (currentFilterFiles == null) // || currentFilterFile == null)
             {
+                // SyncFilterFiles();
                 return new WorkerItem();
             }
 
-            if (currentFilterFiles.Count > 0 && _filterFiles.Count == currentFilterFiles.Count)
+            if (currentFilterFiles.Count > 0 && _previousFilterFiles.Count == currentFilterFiles.Count)
             {
+                SetStatus("Parser:ModifiedFilterFile:same count");
                 WorkerItem filterFileWorkerItem = new WorkerItem()
                 {
-                    WorkerModification = WorkerItem.Modification.FilterIndex,
-                    FilterFile = currentFilter,
-                    // LogFile = currentLog
+                    WorkerModification = WorkerItem.Modification.Unknown,
+                    FilterFile = currentFilterFile,
+                    LogFile = (LogFile)_logViewModel.CurrentFile()
                 };
 
                 FilterNeed filterNeed = FilterNeed.Unknown;
-                if (_filterFiles.Contains(currentFilter))
+                //if (_previousFilterFiles.Contains(currentFilterFile))
+                if (_previousFilterFiles.Exists(x => x.Tag == currentFilterFile.Tag))
                 {
-                    IFile<FilterFileItem> previousFilterFile = _filterFiles.First(x => x.Tag == currentFilter.Tag);
-
-                    // update list
-                    _filterFiles.Remove(previousFilterFile);
-                    _filterFiles.Add(currentFilter);
-                    filterNeed = _filterViewModel.CompareFilterList(previousFilterFile.ContentItems.ToList());
+                    SetStatus("Parser:ModifiedFilterFile:have previous version");
+                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.Tag == currentFilterFile.Tag);
+                    filterNeed = _filterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
                 }
                 else
                 {
                     filterNeed = FilterNeed.Filter;
+                }
+
+                if (currentFilterFile != _filterFilePrevious)
+                {
+                    SetStatus("Parser:ModifiedFilterFile:current filter file changed");
+                    filterFileWorkerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
+                    filterNeed = FilterNeed.Filter;
+                    _filterFilePrevious = currentFilterFile;
                 }
 
                 switch (filterNeed)
@@ -212,55 +274,43 @@ namespace TextFilter
                     case FilterNeed.ApplyColor:
                         filterFileWorkerItem.FilterNeed = filterNeed;
                         filterFileWorkerItem.WorkerModification = WorkerItem.Modification.FilterModified;
-                        //todo: update _filterFiles
-
                         return filterFileWorkerItem;
 
                     case FilterNeed.Current:
-                        break;
+                        SetStatus("Parser:ModifiedFilterFile:current");
+                        filterFileWorkerItem.FilterNeed = FilterNeed.Current;
+                        filterFileWorkerItem.WorkerModification = WorkerItem.Modification.Unknown;
+                        return filterFileWorkerItem;
 
                     default:
                         break;
                 }
-                // }
             }
-            else if (_filterFiles.Count < currentFilterFiles.Count)
+            else if (_previousFilterFiles.Count < currentFilterFiles.Count)
             {
-                foreach (FilterFile file in currentFilterFiles)
+                SetStatus("Parser:ModifiedFilterFile:filter file added");
+                SyncFilterFiles();
+                EnableFilterFileMonitoring(true);
+                // todo : re parse current log with new filter
+                return new WorkerItem()
                 {
-                    if (!_filterFiles.Contains(file))
-                    {
-                        // new filter file added
-
-                        _filterFiles.Add(file);
-                        EnableFilterFileMonitoring(true);
-                        // todo : re parse current log with new filter
-                        return new WorkerItem()
-                        {
-                            FilterFile = file,
-                            FilterNeed = FilterNeed.Filter,
-                            WorkerModification = WorkerItem.Modification.FilterAdded
-                        };
-                    }
-                }
+                    FilterFile = CurrentFilterFile(),
+                    FilterNeed = FilterNeed.Filter,
+                    WorkerModification = WorkerItem.Modification.FilterAdded
+                };
             }
             else
             {
-                foreach (FilterFile file in new List<IFile<FilterFileItem>>(_filterFiles))
+                SetStatus("Parser:ModifiedFilterFile:filter file removed");
+                SyncFilterFiles();
+                EnableFilterFileMonitoring(false);
+                // todo : re parse current log with new filter
+                return new WorkerItem()
                 {
-                    if (!currentFilterFiles.Contains(file))
-                    {
-                        // existing filter file removed
-                        EnableFilterFileMonitoring(false);
-                        _filterFiles.Remove(file);
-                        return new WorkerItem()
-                        {
-                            FilterFile = file,
-                            FilterNeed = FilterNeed.Filter,
-                            WorkerModification = WorkerItem.Modification.FilterRemoved
-                        };
-                    }
-                }
+                    FilterFile = CurrentFilterFile(),
+                    FilterNeed = FilterNeed.Filter,
+                    WorkerModification = WorkerItem.Modification.FilterRemoved
+                };
             }
 
             return new WorkerItem()
@@ -272,84 +322,139 @@ namespace TextFilter
 
         private WorkerItem ModifiedLogFile()
         {
-            List<IFile<LogFileItem>> currentLogFiles = (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
-            LogFile currentLog = (LogFile)_logViewModel.CurrentFile();
+            SetStatus("Parser.ModifiedLogFile:enter");
+            List<IFile<LogFileItem>> currentLogFiles = CurrentLogFiles();
+            LogFile currentLogFile = CurrentLogFile();
 
-            if (currentLogFiles == null || currentLog == null)
+            if (currentLogFiles == null) // || currentLogFile == null)
             {
+                SetStatus("Parser.ModifiedLogFile:currentLog empty");
+                // SyncLogFiles();
                 return new WorkerItem();
             }
 
-            if (_logFiles.Count == currentLogFiles.Count)
+            if (_previousLogFiles.Count == currentLogFiles.Count)
             {
-                return new WorkerItem()
+                WorkerItem workerItem = new WorkerItem()
                 {
-                    LogFile = currentLog,
-                    WorkerModification = WorkerItem.Modification.LogIndex,
+                    FilterFile = (FilterFile)_filterViewModel.CurrentFile(),
+                    LogFile = currentLogFile,
+                    WorkerModification = WorkerItem.Modification.Unknown,
                     FilterNeed = FilterNeed.Current
                 };
-            }
-            else if (_logFiles.Count < currentLogFiles.Count)
-            {
-                foreach (LogFile file in currentLogFiles)
-                {
-                    if (!_logFiles.Contains(file))
-                    {
-                        // new filter file added
 
-                        _logFiles.Add(file);
-                        // EnableFilterFileMonitoring(true); todo : re parse current log with new filter
-                        return new WorkerItem()
-                        {
-                            LogFile = file,
-                            FilterNeed = FilterNeed.Filter,
-                            WorkerModification = WorkerItem.Modification.LogAdded
-                        };
-                    }
+                if (currentLogFile != _logFilePrevious)
+                {
+                    workerItem.WorkerModification = WorkerItem.Modification.LogIndex;
+                    workerItem.FilterNeed = FilterNeed.Filter;
+                    _logFilePrevious = currentLogFile;
                 }
+
+                SetStatus("Parser.ModifiedLogFile:logfile count same");
+                return workerItem;
+            }
+            else if (_previousLogFiles.Count < currentLogFiles.Count)
+            {
+                SetStatus("Parser.ModifiedLogFiles:logfile file added");
+                SyncLogFiles();
+                return new WorkerItem()
+                {
+                    LogFile = CurrentLogFile(),
+                    FilterNeed = FilterNeed.Filter,
+                    WorkerModification = WorkerItem.Modification.LogAdded
+                };
             }
             else
             {
-                foreach (LogFile file in new List<IFile<LogFileItem>>(_logFiles))
+                SetStatus("Parser.ModifiedLogFiles:logfile file removed");
+                SyncLogFiles();
+                return new WorkerItem()
                 {
-                    if (!currentLogFiles.Contains(file))
-                    {
-                        // existing filter file removed EnableFilterFileMonitoring(false);
-                        _logFiles.Remove(file);
-                        return new WorkerItem()
-                        {
-                            LogFile = file,
-                            FilterNeed = FilterNeed.Filter,
-                            WorkerModification = WorkerItem.Modification.LogRemoved
-                        };
-                    }
+                    LogFile = CurrentLogFile(),
+                    FilterNeed = FilterNeed.Filter,
+                    WorkerModification = WorkerItem.Modification.LogRemoved
+                };
+            }
+
+            //return new WorkerItem()
+            //{
+            //    FilterNeed = FilterNeed.Unknown,
+            //    WorkerModification = WorkerItem.Modification.Unknown
+            //};
+        }
+
+        private void SyncFilterFiles()
+        {
+            foreach (FilterFile filterFile in CurrentFilterFiles())
+            {
+                if (!_previousFilterFiles.Exists(x => x == filterFile))
+                {
+                    SetStatus("SyncFilterFiles:Adding entry");
+                    _previousFilterFiles.Add(filterFile);
+                    _workerManager.AddWorkersByWorkerItemFilterFile(new WorkerItem() { FilterFile = filterFile });
                 }
             }
 
-            return new WorkerItem()
+            foreach (FilterFile filterFile in CurrentFilterFiles())
             {
-                FilterNeed = FilterNeed.Unknown,
-                WorkerModification = WorkerItem.Modification.Unknown
-            };
+                if (_previousFilterFiles.Exists(x => x.Tag == filterFile.Tag))
+                {
+                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.Tag == filterFile.Tag);
+
+                    // update list
+                    _previousFilterFiles.Remove(previousVersionFilterFile);
+                }
+
+                SetStatus("SyncFilterFiles:saving entry for compare.");
+                FilterFile file = new FilterFile()
+                {
+                    ContentItems = filterFile.ContentItems,
+                    FileName = filterFile.FileName,
+                    FilterNotes = filterFile.FilterNotes,
+                    FilterVersion = filterFile.FilterVersion,
+                    IsNew = filterFile.IsNew,
+                    IsReadOnly = filterFile.IsReadOnly,
+                    Modified = filterFile.Modified,
+                    Tag = filterFile.Tag
+                };
+
+                _previousFilterFiles.Add(file);
+            }
+
+            foreach (FilterFile filterFile in new List<FilterFile>(_previousFilterFiles))
+            {
+                if (!CurrentFilterFiles().Exists(x => x == filterFile))
+                {
+                    SetStatus("SyncFilterFiles:Removing entry");
+                    _previousFilterFiles.Remove(filterFile);
+                    _workerManager.RemoveWorkersByFilterFile(filterFile);
+                }
+            }
+        }
+
+        private void SyncLogFiles()
+        {
+            foreach (LogFile logFile in CurrentLogFiles())
+            {
+                if (!_previousLogFiles.Exists(x => x == logFile))
+                {
+                    SetStatus("SyncLogFiles:Adding entry");
+                    _previousLogFiles.Add(logFile);
+                    _workerManager.AddWorkersByWorkerItemLogFile(new WorkerItem() { LogFile = logFile });
+                }
+            }
+
+            foreach (LogFile logFile in new List<LogFile>(_previousLogFiles))
+            {
+                if (!CurrentLogFiles().Exists(x => x == logFile))
+                {
+                    SetStatus("SyncLogFiles:Removing entry");
+                    _previousLogFiles.Remove(logFile);
+                    _workerManager.RemoveWorkersByLogFile(logFile);
+                }
+            }
         }
 
         #endregion Private Methods
-
-        //private bool ParseFile(IFile<FilterFileItem> filterFile, IFile<LogFileItem> logFile)
-        //{
-        //    // http: //stackoverflow.com/questions/1207832/wpf-dispatcher-begininvoke-and-ui-background-threads
-
-        // WorkerItem worker = new WorkerItem();
-
-        // _workerManager.StartWorker(worker);
-
-        //    return true;
-        //}
-
-        //private void logItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        //{
-        //    SetStatus("Parser:logItemsCollectionChanged");
-        //    throw new NotSupportedException();
-        //}
     }
 }

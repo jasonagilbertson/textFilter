@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-25-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
 // <copyright file="IViewModel.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 
 namespace TextFilter
@@ -70,6 +67,7 @@ namespace TextFilter
         ITabViewModel<T> CurrentTab();
 
         void FindNextExecuted(object sender);
+
         void HideExecuted(object sender);
 
         bool IsValidTabIndex();

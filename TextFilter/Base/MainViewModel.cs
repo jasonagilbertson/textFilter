@@ -1,15 +1,12 @@
-﻿// ***********************************************************************
-// Assembly         : TextFilter
-// Author           : jason
-// Created          : 09-06-2015
+﻿// *********************************************************************** Assembly : TextFilter
+// Author : jason Created : 09-06-2015
 //
-// Last Modified By : jason
-// Last Modified On : 10-31-2015
-// ***********************************************************************
+// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
 // <copyright file="MainViewModel.cs" company="">
-//     Copyright ©  2015
+//     Copyright © 2015
 // </copyright>
-// <summary></summary>
+// <summary>
+// </summary>
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
@@ -36,8 +33,6 @@ namespace TextFilter
         private Command _helpCommand;
 
         private LogViewModel _logViewModel;
-
-        private Parser _parser;
 
         private TextFilterSettings _settings;
 
@@ -75,12 +70,19 @@ namespace TextFilter
 
                 _filterViewModel._LogViewModel = _logViewModel;
 
-                _parser = new Parser(_filterViewModel, _logViewModel);
-
+               
                 App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
                     Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion); //,
-                                                                                         // VersionCheck(true) ? "** NEW VERSION AVAILABLE **. See Help->Check for new version" : "");
+                                                                                         // VersionCheck(true)
+                                                                                         // ? "** NEW
+                                                                                         // VERSION
+                                                                                         // AVAILABLE
+                                                                                         // **. See
+                                                                                         // Help->Check
+                                                                                         // for new
+                                                                                         // version"
+                                                                                         // : "");
 
                 SetStatus(App.Current.MainWindow.Title);
 
@@ -352,6 +354,7 @@ namespace TextFilter
             var oc = _filterViewModel.SharedCollection;
             VersionCheck(silent);
         }
+
         private void VersionCheck(bool silent)
         {
             try
@@ -456,6 +459,7 @@ namespace TextFilter
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _logViewModel.Parser.Enable(false);
             _filterViewModel.SaveModifiedFiles(sender);
             _logViewModel.SaveModifiedFiles(sender);
             _settings.Save();
