@@ -347,10 +347,10 @@ namespace TextFilter
             // remove _transitioning when using parser _transitioning = true;
             for (int i = 0; i < items.Count; i++)
             {
-                if (i == items.Count - 1)
-                {
-                    _transitioning = false;
-                }
+                //if (i == items.Count - 1)
+                //{
+                //    _transitioning = false;
+                //}
 
                 AddTabItem(items[i]);
             }
@@ -597,8 +597,8 @@ namespace TextFilter
 
         public void RemoveTabItems(List<ITabViewModel<T>> items)
         {
-            // remove _transitioning when using parser
-            _transitioning = true;
+            // todo remove _transitioning when using parser
+            //_transitioning = true;
             for (int i = 0; i < items.Count; i++)
             {
                 DeleteIfTempFile(ViewManager.FileManager.FirstOrDefault(x => x.Tag == items[i].Tag));
@@ -607,10 +607,10 @@ namespace TextFilter
                     continue;
                 }
 
-                if (i == items.Count - 1)
-                {
-                    _transitioning = false;
-                }
+                //if (i == items.Count - 1)
+                //{
+                //    _transitioning = false;
+                //}
 
                 RemoveTabItem(items[i]);
             }

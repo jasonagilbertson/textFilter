@@ -71,18 +71,9 @@ namespace TextFilter
                 _filterViewModel._LogViewModel = _logViewModel;
 
                
-                App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
+                App.Current.MainWindow.Title = string.Format("{0} {1}", 
                     Process.GetCurrentProcess().MainModule.ModuleName,
-                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion); //,
-                                                                                         // VersionCheck(true)
-                                                                                         // ? "** NEW
-                                                                                         // VERSION
-                                                                                         // AVAILABLE
-                                                                                         // **. See
-                                                                                         // Help->Check
-                                                                                         // for new
-                                                                                         // version"
-                                                                                         // : "");
+                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion); 
 
                 SetStatus(App.Current.MainWindow.Title);
 

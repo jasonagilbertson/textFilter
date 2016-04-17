@@ -124,10 +124,10 @@ namespace TextFilter
 
         public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (_transitioning)
-            {
-                return;
-            }
+            //if (_transitioning)
+            //{
+            //    return;
+            //}
 
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)

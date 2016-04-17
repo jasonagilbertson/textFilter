@@ -8,6 +8,7 @@
 // <summary>
 // </summary>
 // ***********************************************************************
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -23,6 +24,8 @@ namespace TextFilter
 
         public ObservableCollection<LogFileItem> FilteredList;
 
+        public int FilterGroupCount;
+
         public FilterFile FilterFile;
 
         public FilterNeed FilterNeed;
@@ -34,6 +37,7 @@ namespace TextFilter
         public Modification WorkerModification;
 
         public State WorkerState;
+        internal List<FilterFileItem> VerifiedFilterItems;
 
         #endregion Public Fields
 

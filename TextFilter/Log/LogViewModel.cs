@@ -48,7 +48,7 @@ namespace TextFilter
 
         #region Private Fields
 
-        public static LogFileContentItems UpdateLogFile;
+        public static LogFileWorkerItem UpdateLogFileCallBack;
 
         private Command _exportCommand;
 
@@ -68,19 +68,30 @@ namespace TextFilter
 
         private LogFileItem _unFilteredSelectedItem;
 
-        public delegate void LogFileContentItems(LogFile logFile);
+        public delegate void LogFileWorkerItem(WorkerItem workerItem);
 
         #endregion Private Fields
 
         #region Public Constructors
-        public void ContentItems(LogFile logFile)
-        {
-            SetStatus("ContentItems:enter");
 
+        public void UpdateLogFile(WorkerItem workerItem)
+        {
+            SetStatus("UpdateLogFile:enter");
+            LogFile logFile = workerItem.LogFile;
             //FilterLogTabItems(FilterCommand.Filter, null, logFile);
             LogTabViewModel logTab = (LogTabViewModel)TabItems[SelectedIndex];
-            logTab.ContentList = logFile.ContentItems;
-            SetStatus("ContentItems:exit");
+            logTab.SetGroupCount(workerItem.FilterGroupCount);
+            if (workerItem.FilterNeed == FilterNeed.ShowAll)
+            {
+                // no filter, display all
+                logTab.ContentList = workerItem.LogFile.ContentItems;
+            }
+            else
+            {
+                logTab.ContentList = workerItem.FilteredList;
+            }
+
+            SetStatus("UpdateLogFile:exit");
         }
 
         public LogViewModel(FilterViewModel filterViewModel)
@@ -90,11 +101,12 @@ namespace TextFilter
             TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             ViewManager = new LogFileManager();
             _logFileManager = (LogFileManager)ViewManager;
-            UpdateLogFile = ContentItems;
+            UpdateLogFileCallBack = UpdateLogFile;
             _filterViewModel = filterViewModel;
             _parser = new Parser(_filterViewModel, this);
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
+
             _filterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
             PropertyChanged += LogViewModel_PropertyChanged;
             LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
@@ -559,12 +571,12 @@ namespace TextFilter
                     // Open document
                     SetStatus(string.Format("opening file:{0}", logName));
                     LogFile logFile = new LogFile();
-                    if (String.IsNullOrEmpty((logFile = (LogFile)ViewManager.OpenFile(logName)).Tag))
-                    {
-                        return;
-                    }
+                    //if (String.IsNullOrEmpty((logFile = (LogFile)ViewManager.OpenFile(logName)).Tag))
+                    //{
+                    //    return;
+                    //}
 
-                    // make new tab
+                    // make new tab parser will open file on event
                     AddTabItem(logFile);
                 }
             }
@@ -614,7 +626,7 @@ namespace TextFilter
 
             // temp file name from paste text is being sent and has already been saved but needs new temp name
             IFile<LogFileItem> file = _logFileManager.OpenFile(tempFilePath);
-
+            file.Tag = tempFilePath;
             // set to new as save file sets to false and this needs to be set to verify temp file
             // on modified file close
             //file.IsNew = true;

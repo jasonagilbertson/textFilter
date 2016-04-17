@@ -174,21 +174,26 @@ namespace TextFilter
 
         private FilterFile CurrentFilterFile()
         {
+            SetStatus("Parser:CurrentFilterFile:exit: index: " + _filterViewModel.SelectedIndex);
             return (FilterFile)_filterViewModel.CurrentFile();
         }
 
         private List<IFile<FilterFileItem>> CurrentFilterFiles()
         {
+            SetStatus("Parser:CurrentFilterFiles:exit: count: " + _filterViewModel.ViewManager.FileManager.Count);
             return (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
+
         }
 
         private LogFile CurrentLogFile()
         {
+            SetStatus("Parser:CurrentLogFile:exit: index: " + _logViewModel.SelectedIndex);
             return (LogFile)_logViewModel.CurrentFile();
         }
 
         private List<IFile<LogFileItem>> CurrentLogFiles()
         {
+            SetStatus("Parser:CurrentLogFiles:exit: count: " + _logViewModel.ViewManager.FileManager.Count);
             return (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
         }
 
@@ -225,162 +230,154 @@ namespace TextFilter
         private WorkerItem ModifiedFilterFile()
         {
             SetStatus("Parser:ModifiedFilterFile:enter");
-            List<IFile<FilterFileItem>> currentFilterFiles = CurrentFilterFiles();
-            FilterFile currentFilterFile = CurrentFilterFile();
+                        
             //LogFile currentLog = (LogFile)_logViewModel.CurrentFile();
 
-            if (currentFilterFiles == null) // || currentFilterFile == null)
+            if (CurrentFilterFiles() == null) // || currentFilterFile == null)
             {
                 // SyncFilterFiles();
                 return new WorkerItem();
             }
 
-            if (currentFilterFiles.Count > 0 && _previousFilterFiles.Count == currentFilterFiles.Count)
+
+            WorkerItem workerItem = new WorkerItem()
+            {
+                FilterFile = CurrentFilterFile(),
+                WorkerModification = WorkerItem.Modification.Unknown,
+                FilterNeed = FilterNeed.Unknown
+            };
+
+
+            if (CurrentFilterFiles().Count > 0 && _previousFilterFiles.Count == CurrentFilterFiles().Count)
             {
                 SetStatus("Parser:ModifiedFilterFile:same count");
-                WorkerItem filterFileWorkerItem = new WorkerItem()
-                {
-                    WorkerModification = WorkerItem.Modification.Unknown,
-                    FilterFile = currentFilterFile,
-                    LogFile = (LogFile)_logViewModel.CurrentFile()
-                };
+                workerItem.LogFile = CurrentLogFile();
 
-                FilterNeed filterNeed = FilterNeed.Unknown;
-                //if (_previousFilterFiles.Contains(currentFilterFile))
-                if (_previousFilterFiles.Exists(x => x.Tag == currentFilterFile.Tag))
+                // get current item based on filter file and log file
+                if (_workerManager.GetWorkers(workerItem).Count == 1)
+                {
+                    workerItem = _workerManager.GetWorkers(workerItem).FirstOrDefault();
+                }
+
+                workerItem.WorkerModification = WorkerItem.Modification.Unknown;
+                workerItem.FilterNeed = FilterNeed.Unknown;
+
+                if (CurrentFilterFile() != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName))
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
-                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.Tag == currentFilterFile.Tag);
-                    filterNeed = _filterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
+                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName);
+                    workerItem.FilterNeed = _filterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
                 }
                 else
                 {
-                    filterNeed = FilterNeed.Filter;
+                    workerItem.FilterNeed = FilterNeed.Filter;
                 }
 
-                if (currentFilterFile != _filterFilePrevious)
+                if (CurrentFilterFile() != _filterFilePrevious)
                 {
                     SetStatus("Parser:ModifiedFilterFile:current filter file changed");
-                    filterFileWorkerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
-                    filterNeed = FilterNeed.Filter;
-                    _filterFilePrevious = currentFilterFile;
+                    workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
+                    workerItem.FilterNeed = FilterNeed.Filter;
+                    _filterFilePrevious = CurrentFilterFile();
                 }
 
-                switch (filterNeed)
+                switch (workerItem.FilterNeed)
                 {
                     case FilterNeed.Unknown:
                     case FilterNeed.ShowAll:
                     case FilterNeed.Filter:
                     case FilterNeed.ApplyColor:
-                        filterFileWorkerItem.FilterNeed = filterNeed;
-                        filterFileWorkerItem.WorkerModification = WorkerItem.Modification.FilterModified;
-                        return filterFileWorkerItem;
+                        workerItem.WorkerModification = WorkerItem.Modification.FilterModified;
+                        return workerItem;
 
                     case FilterNeed.Current:
                         SetStatus("Parser:ModifiedFilterFile:current");
-                        filterFileWorkerItem.FilterNeed = FilterNeed.Current;
-                        filterFileWorkerItem.WorkerModification = WorkerItem.Modification.Unknown;
-                        return filterFileWorkerItem;
+                        workerItem.FilterNeed = FilterNeed.Current;
+                        workerItem.WorkerModification = WorkerItem.Modification.Unknown;
+                        return workerItem;
 
                     default:
                         break;
                 }
             }
-            else if (_previousFilterFiles.Count < currentFilterFiles.Count)
+            else if (_previousFilterFiles.Count < CurrentFilterFiles().Count)
             {
                 SetStatus("Parser:ModifiedFilterFile:filter file added");
                 SyncFilterFiles();
                 EnableFilterFileMonitoring(true);
-                // todo : re parse current log with new filter
-                return new WorkerItem()
-                {
-                    FilterFile = CurrentFilterFile(),
-                    FilterNeed = FilterNeed.Filter,
-                    WorkerModification = WorkerItem.Modification.FilterAdded
-                };
+
+                workerItem.FilterNeed = FilterNeed.Filter;
+                workerItem.WorkerModification = WorkerItem.Modification.FilterAdded;
             }
             else
             {
                 SetStatus("Parser:ModifiedFilterFile:filter file removed");
                 SyncFilterFiles();
                 EnableFilterFileMonitoring(false);
-                // todo : re parse current log with new filter
-                return new WorkerItem()
-                {
-                    FilterFile = CurrentFilterFile(),
-                    FilterNeed = FilterNeed.Filter,
-                    WorkerModification = WorkerItem.Modification.FilterRemoved
-                };
+                workerItem.FilterNeed = FilterNeed.Filter;
+                workerItem.WorkerModification = WorkerItem.Modification.FilterRemoved;
             }
 
-            return new WorkerItem()
-            {
-                FilterNeed = FilterNeed.Unknown,
-                WorkerModification = WorkerItem.Modification.Unknown
-            };
+            return workerItem;
         }
 
         private WorkerItem ModifiedLogFile()
         {
             SetStatus("Parser.ModifiedLogFile:enter");
-            List<IFile<LogFileItem>> currentLogFiles = CurrentLogFiles();
-            LogFile currentLogFile = CurrentLogFile();
-
-            if (currentLogFiles == null) // || currentLogFile == null)
+            
+            if (CurrentLogFiles() == null) // || currentLogFile == null)
             {
                 SetStatus("Parser.ModifiedLogFile:currentLog empty");
                 // SyncLogFiles();
                 return new WorkerItem();
             }
 
-            if (_previousLogFiles.Count == currentLogFiles.Count)
-            {
+            
                 WorkerItem workerItem = new WorkerItem()
                 {
-                    FilterFile = (FilterFile)_filterViewModel.CurrentFile(),
-                    LogFile = currentLogFile,
+                    LogFile = CurrentLogFile(),
                     WorkerModification = WorkerItem.Modification.Unknown,
                     FilterNeed = FilterNeed.Current
                 };
+            
 
-                if (currentLogFile != _logFilePrevious)
+            if (_previousLogFiles.Count == CurrentLogFiles().Count)
+            {
+                workerItem.FilterFile = CurrentFilterFile();
+                if(_workerManager.GetWorkers(workerItem).Count == 1)
                 {
+                    workerItem = _workerManager.GetWorkers(workerItem).FirstOrDefault();
+                }
+
+                if (CurrentLogFile() != _logFilePrevious)
+                {
+                    SetStatus("Parser.ModifiedLogFile:logfile index changed");
                     workerItem.WorkerModification = WorkerItem.Modification.LogIndex;
                     workerItem.FilterNeed = FilterNeed.Filter;
-                    _logFilePrevious = currentLogFile;
+                    _logFilePrevious = CurrentLogFile();
                 }
 
                 SetStatus("Parser.ModifiedLogFile:logfile count same");
                 return workerItem;
             }
-            else if (_previousLogFiles.Count < currentLogFiles.Count)
+            else if (_previousLogFiles.Count < CurrentLogFiles().Count)
             {
                 SetStatus("Parser.ModifiedLogFiles:logfile file added");
                 SyncLogFiles();
-                return new WorkerItem()
-                {
-                    LogFile = CurrentLogFile(),
-                    FilterNeed = FilterNeed.Filter,
-                    WorkerModification = WorkerItem.Modification.LogAdded
-                };
+
+                workerItem.FilterNeed = FilterNeed.Filter;
+                workerItem.WorkerModification = WorkerItem.Modification.LogAdded;
             }
             else
             {
                 SetStatus("Parser.ModifiedLogFiles:logfile file removed");
                 SyncLogFiles();
-                return new WorkerItem()
-                {
-                    LogFile = CurrentLogFile(),
-                    FilterNeed = FilterNeed.Filter,
-                    WorkerModification = WorkerItem.Modification.LogRemoved
-                };
+                workerItem.FilterNeed = FilterNeed.Filter;
+                workerItem.WorkerModification = WorkerItem.Modification.LogRemoved;
+
             }
 
-            //return new WorkerItem()
-            //{
-            //    FilterNeed = FilterNeed.Unknown,
-            //    WorkerModification = WorkerItem.Modification.Unknown
-            //};
+            return workerItem;
         }
 
         private void SyncFilterFiles()
@@ -389,7 +386,7 @@ namespace TextFilter
             {
                 if (!_previousFilterFiles.Exists(x => x == filterFile))
                 {
-                    SetStatus("SyncFilterFiles:Adding entry");
+                    SetStatus("Parser:SyncFilterFiles:Adding entry: " + filterFile.Tag);
                     _previousFilterFiles.Add(filterFile);
                     _workerManager.AddWorkersByWorkerItemFilterFile(new WorkerItem() { FilterFile = filterFile });
                 }
@@ -400,12 +397,12 @@ namespace TextFilter
                 if (_previousFilterFiles.Exists(x => x.Tag == filterFile.Tag))
                 {
                     FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.Tag == filterFile.Tag);
-
+                    SetStatus("Parser:SyncFilterFiles:removing cache entry: " + previousVersionFilterFile.Tag);
                     // update list
                     _previousFilterFiles.Remove(previousVersionFilterFile);
                 }
 
-                SetStatus("SyncFilterFiles:saving entry for compare.");
+                SetStatus("Parser:SyncFilterFiles:saving entry for compare.");
                 FilterFile file = new FilterFile()
                 {
                     ContentItems = filterFile.ContentItems,
@@ -418,14 +415,15 @@ namespace TextFilter
                     Tag = filterFile.Tag
                 };
 
+                SetStatus("Parser:SyncFilterFiles:adding cache entry: " + file.Tag);
                 _previousFilterFiles.Add(file);
             }
 
             foreach (FilterFile filterFile in new List<FilterFile>(_previousFilterFiles))
             {
-                if (!CurrentFilterFiles().Exists(x => x == filterFile))
+                if (!CurrentFilterFiles().Exists(x => x.Tag == filterFile.Tag))
                 {
-                    SetStatus("SyncFilterFiles:Removing entry");
+                    SetStatus("Parser:SyncFilterFiles:Removing entry: " + filterFile.Tag);
                     _previousFilterFiles.Remove(filterFile);
                     _workerManager.RemoveWorkersByFilterFile(filterFile);
                 }
@@ -446,7 +444,7 @@ namespace TextFilter
 
             foreach (LogFile logFile in new List<LogFile>(_previousLogFiles))
             {
-                if (!CurrentLogFiles().Exists(x => x == logFile))
+                if (!CurrentLogFiles().Exists(x => x.Tag == logFile.Tag))
                 {
                     SetStatus("SyncLogFiles:Removing entry");
                     _previousLogFiles.Remove(logFile);

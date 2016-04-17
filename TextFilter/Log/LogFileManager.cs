@@ -83,6 +83,10 @@ namespace TextFilter
 
         public ObservableCollection<LogFileItem> ApplyFilter(LogTabViewModel logTab, LogFile logFile, List<FilterFileItem> filterFileItems, FilterCommand filterCommand)
         {
+            //moved to parser
+            throw new NotImplementedException();
+            return new ObservableCollection<LogFileItem>();
+
             Mouse.OverrideCursor = Cursors.Wait;
             DateTime timer = DateTime.Now;
             SetStatus(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), logFile.Tag));
@@ -476,7 +480,8 @@ namespace TextFilter
                 {
                     logFile.FileName = Path.GetFileName(fileName);
                     logFile.Tag = fileName;
-                    logFile.ContentItems = ((LogFile)ReadFile(fileName)).ContentItems;
+                    // moved to parser
+                    //logFile.ContentItems = ((LogFile)ReadFile(fileName)).ContentItems;
                     FileManager.Add(logFile);
                     Settings.AddLogFile(fileName);
                 }
@@ -498,7 +503,7 @@ namespace TextFilter
 
         public override List<IFile<LogFileItem>> OpenFiles(string[] files)
         {
-            List<IFile<LogFileItem>> textBlockItems = new List<IFile<LogFileItem>>();
+            List<IFile<LogFileItem>> logFileItems = new List<IFile<LogFileItem>>();
 
             foreach (string file in files)
             {
@@ -508,10 +513,10 @@ namespace TextFilter
                     continue;
                 }
 
-                textBlockItems.Add(logFile);
+                logFileItems.Add(logFile);
             }
 
-            return textBlockItems;
+            return logFileItems;
         }
 
         public override IFile<LogFileItem> ReadFile(string fileName)
