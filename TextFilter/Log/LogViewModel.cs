@@ -27,7 +27,7 @@ namespace TextFilter
 
         private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            SetStatus("_FilterViewModel.CollectionChanged: " + sender.ToString());
+            SetStatus("_LogViewModel.CollectionChanged: " + sender.ToString());
             FilterLogTabItems();
         }
 
@@ -207,7 +207,8 @@ namespace TextFilter
                     Name = logFile.FileName,
                     Tag = logFile.Tag,
                     Header = logFile.FileName,
-                    IsNew = logFile.IsNew
+                    IsNew = logFile.IsNew,
+                    File = logFile
                 };
 
                 TabItems.Add(tabItem);
@@ -571,10 +572,10 @@ namespace TextFilter
                     // Open document
                     SetStatus(string.Format("opening file:{0}", logName));
                     LogFile logFile = new LogFile();
-                    //if (String.IsNullOrEmpty((logFile = (LogFile)ViewManager.OpenFile(logName)).Tag))
-                    //{
-                    //    return;
-                    //}
+                    if (String.IsNullOrEmpty((logFile = (LogFile)ViewManager.OpenFile(logName)).Tag))
+                    {
+                        return;
+                    }
 
                     // make new tab parser will open file on event
                     AddTabItem(logFile);

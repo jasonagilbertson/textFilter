@@ -49,7 +49,7 @@ namespace TextFilter
         private string _tag;
 
         private object _viewer;
-
+        public IFile<T> File { get; set; }
         #endregion Private Fields
 
         #region Public Constructors

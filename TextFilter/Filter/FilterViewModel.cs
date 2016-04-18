@@ -209,7 +209,8 @@ namespace TextFilter
                     Tag = filterFile.Tag,
                     Header = filterFile.FileName,
                     Modified = false,
-                    IsNew = filterFile.IsNew
+                    IsNew = filterFile.IsNew,
+                    File = filterFile
                 };
 
                 // tabItem.ContentList.CollectionChanged += ContentList_CollectionChanged;

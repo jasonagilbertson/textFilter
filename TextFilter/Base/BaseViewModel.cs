@@ -61,9 +61,9 @@ namespace TextFilter
 
         private Command _sharedCommand;
 
-        private TextFilterSettings settings = TextFilterSettings.Settings;
+        private TextFilterSettings _settings = TextFilterSettings.Settings;
 
-        private ObservableCollection<ITabViewModel<T>> tabItems;
+        private ObservableCollection<ITabViewModel<T>> _tabItems = new ObservableCollection<ITabViewModel<T>>();
 
         #endregion Private Fields
 
@@ -303,8 +303,8 @@ namespace TextFilter
 
         public TextFilterSettings Settings
         {
-            get { return settings; }
-            set { settings = value; }
+            get { return _settings; }
+            set { _settings = value; }
         }
 
         public Command SharedCommand
@@ -317,11 +317,15 @@ namespace TextFilter
         {
             get
             {
-                return tabItems;
+                return _tabItems;
             }
             set
             {
-                tabItems = value;
+                if (value.Count != _tabItems.Count)
+                {
+                    OnPropertyChanged("TabItems");
+                }
+                _tabItems = value;
             }
         }
 
@@ -333,10 +337,10 @@ namespace TextFilter
 
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
-            if (!tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
+            if (!_tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
-                tabItems.Add(tabItem);
-                SelectedIndex = tabItems.Count - 1;
+                _tabItems.Add(tabItem);
+                SelectedIndex = _tabItems.Count - 1;
             }
         }
 
@@ -358,7 +362,7 @@ namespace TextFilter
 
         public void CloseAllFilesExecuted(object sender)
         {
-            ObservableCollection<ITabViewModel<T>> items = new ObservableCollection<ITabViewModel<T>>(tabItems);
+            ObservableCollection<ITabViewModel<T>> items = new ObservableCollection<ITabViewModel<T>>(_tabItems);
             RemoveTabItems(items.ToList());
         }
 
@@ -367,7 +371,7 @@ namespace TextFilter
             if (IsValidTabIndex())
             {
                 DeleteIfTempFile(CurrentFile());
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                ITabViewModel<T> tabItem = _tabItems[_selectedIndex];
 
                 if (!ViewManager.CloseFile(tabItem.Tag))
                 {
@@ -382,7 +386,7 @@ namespace TextFilter
         {
             if (IsValidTabIndex())
             {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                ITabViewModel<T> tabItem = _tabItems[_selectedIndex];
                 Clipboard.Clear();
                 Clipboard.SetText(tabItem.Tag);
             }
@@ -571,7 +575,7 @@ namespace TextFilter
 
             if (IsValidTabIndex())
             {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                ITabViewModel<T> tabItem = _tabItems[_selectedIndex];
                 if (!File.Exists(tabItem.Tag))
                 {
                     SetStatus("ReloadFile:returning: file does not exist: " + tabItem.Tag);
@@ -588,10 +592,10 @@ namespace TextFilter
 
         public void RemoveTabItem(ITabViewModel<T> tabItem)
         {
-            if (tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
+            if (_tabItems.Any(x => String.Compare((string)x.Tag, (string)tabItem.Tag, true) == 0))
             {
-                tabItems.Remove(tabItem);
-                SelectedIndex = tabItems.Count - 1;
+                _tabItems.Remove(tabItem);
+                SelectedIndex = _tabItems.Count - 1;
             }
         }
 
@@ -622,7 +626,7 @@ namespace TextFilter
 
             if (IsValidTabIndex())
             {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                ITabViewModel<T> tabItem = _tabItems[_selectedIndex];
                 RenameDialog dialog = new RenameDialog();
                 string result = dialog.WaitForResult();
                 if (!string.IsNullOrEmpty(result))
@@ -741,7 +745,7 @@ namespace TextFilter
         {
             if (IsValidTabIndex())
             {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                ITabViewModel<T> tabItem = _tabItems[_selectedIndex];
                 CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
             }
         }

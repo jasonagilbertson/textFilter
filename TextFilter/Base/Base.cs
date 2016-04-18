@@ -23,7 +23,7 @@ namespace TextFilter
 
         public string _tempTabNameFormat = "-new {0}-";
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
-        public bool _transitioning;
+        //public bool _transitioning;
 
         #endregion Public Fields
 
