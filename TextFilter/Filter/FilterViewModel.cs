@@ -25,22 +25,27 @@ namespace TextFilter
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
-        #region Private Fields
+
+        #region Fields
 
         private Command _addFilterItemCommand;
         private string _filterHide;
         private Command _filterNotesCommand;
         private bool _quickFindAnd;
+        private Command _quickFindChangedCommand;
         private int _quickFindIndex;
+        private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
         private ObservableCollection<ListBoxItem> _quickFindList;
         private bool _quickFindNot;
         private bool _quickFindOr;
         private bool _quickFindRegex;
+        private Command _removeFilterItemCommand;
+        private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public FilterViewModel()
         {
@@ -56,9 +61,11 @@ namespace TextFilter
             ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
+
+        public LogViewModel _LogViewModel { get; internal set; }
 
         public Command AddFilterItemCommand
         {
@@ -133,6 +140,168 @@ namespace TextFilter
             set { _filterNotesCommand = value; }
         }
 
+        public bool QuickFindAnd
+        {
+            get
+            {
+                return _quickFindAnd;
+            }
+            set
+            {
+                if (_quickFindAnd != value)
+                {
+                    _quickFindAnd = value;
+                    if (_quickFindAnd)
+                    {
+                        QuickFindOr = false;
+                        QuickFindNot = false;
+                        QuickFindItem.Include = true;
+                        QuickFindItem.Exclude = true;
+                    }
+                    else
+                    {
+                        QuickFindItem.Include = false;
+                        QuickFindItem.Exclude = false;
+                    }
+                    OnPropertyChanged("QuickFindAnd");
+                }
+            }
+        }
+
+        public Command QuickFindChangedCommand
+        {
+            get
+            {
+                if (_quickFindChangedCommand == null)
+                {
+                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
+                }
+                _quickFindChangedCommand.CanExecute = true;
+
+                return _quickFindChangedCommand;
+            }
+            set { _quickFindChangedCommand = value; }
+        }
+
+        public int QuickFindIndex
+        {
+            get
+            {
+                return _quickFindIndex;
+            }
+            set
+            {
+                if (_quickFindIndex != value)
+                {
+                    _quickFindIndex = value;
+                    OnPropertyChanged("QuickFindIndex");
+                }
+            }
+        }
+
+        public FilterFileItem QuickFindItem
+        {
+            get
+            {
+                return _quickFindItem;
+            }
+            set
+            {
+                if (_quickFindItem != value)
+                {
+                    _quickFindItem = value;
+                    // OnPropertyChanged("QuickFindItem");
+                }
+            }
+        }
+
+        public ObservableCollection<ListBoxItem> QuickFindList
+        {
+            get
+            {
+                return _quickFindList;
+            }
+            set
+            {
+                if (_quickFindList != value)
+                {
+                    _quickFindList = value;
+                    OnPropertyChanged("QuickFindList");
+                }
+            }
+        }
+
+        public bool QuickFindNot
+        {
+            get
+            {
+                return _quickFindNot;
+            }
+            set
+            {
+                if (_quickFindNot != value)
+                {
+                    _quickFindNot = value;
+                    if (_quickFindNot)
+                    {
+                        QuickFindAnd = false;
+                        QuickFindOr = false;
+                        QuickFindItem.Exclude = true;
+                        QuickFindItem.Include = false;
+                    }
+                    else
+                    {
+                        QuickFindItem.Exclude = false;
+                    }
+                    OnPropertyChanged("QuickFindNot");
+                }
+            }
+        }
+
+        public bool QuickFindOr
+        {
+            get
+            {
+                return _quickFindOr;
+            }
+            set
+            {
+                if (_quickFindOr != value)
+                {
+                    _quickFindOr = value;
+
+                    if (_quickFindOr)
+                    {
+                        QuickFindAnd = false;
+                        QuickFindNot = false;
+                        QuickFindItem.Include = true;
+                        QuickFindItem.Exclude = false;
+                    }
+                    else
+                    {
+                        QuickFindItem.Include = false;
+                    }
+                    OnPropertyChanged("QuickFindOr");
+                }
+            }
+        }
+
+        public bool QuickFindRegex
+        {
+            get
+            {
+                return _quickFindRegex;
+            }
+            set
+            {
+                if (_quickFindRegex != value)
+                {
+                    _quickFindRegex = value;
+                    OnPropertyChanged("QuickFindRegex");
+                }
+            }
+        }
+
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
@@ -178,24 +347,9 @@ namespace TextFilter
 
         public TabControl TabControl { get; set; }
 
-        private void RemoveFilterItemExecuted(object sender)
-        {
-            SetStatus("RemoveeFilterItemExecuted");
-            FilterFile filterFile = (FilterFile)CurrentFile();
+        #endregion Properties
 
-            if (filterFile != null)
-            {
-                int filterIndex = 0;
-                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
-
-                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex, true);
-                VerifyIndex();
-            }
-        }
-
-        #endregion Public Properties
-
-        #region Public Methods
+        #region Methods
 
         public override void AddTabItem(IFile<FilterFileItem> filterFile)
         {
@@ -476,6 +630,84 @@ namespace TextFilter
             SetStatus("paste text");
         }
 
+        public void QuickFindChangedExecuted(object sender)
+        {
+            SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is ComboBox)));
+            if (sender is ComboBox)
+            {
+                ComboBox comboBox = (sender as ComboBox);
+                QuickFindItem.Filterpattern = (sender as ComboBox).Text;
+                bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
+                foreach (ComboBoxItem item in comboBox.Items)
+                {
+                    if ((string)item.Content == QuickFindItem.Filterpattern)
+                    {
+                        foundItem = true;
+                        break;
+                    }
+                }
+
+                if (!foundItem)
+                {
+                    comboBox.Items.Insert(0, new ComboBoxItem()
+                    {
+                        Content = QuickFindItem.Filterpattern,
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor,
+                        BorderBrush = Settings.BackgroundColor
+                    });
+                }
+
+                SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
+                if (string.IsNullOrEmpty(QuickFindItem.Filterpattern))
+                {
+                    QuickFindItem.Enabled = false;
+
+                    if (FilterList().Count > 0)
+                    {
+                        // send filter request
+                        _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+                    }
+                    else
+                    {
+                        // no filter show all
+                        _LogViewModel.FilterLogTabItems(FilterCommand.ShowAll);
+                    }
+
+                    return;
+                }
+                else
+                {
+                    QuickFindItem.Enabled = true;
+                }
+            }
+
+            if (_quickFindRegex)
+            {
+                try
+                {
+                    Regex test = new Regex(QuickFindItem.Filterpattern);
+                    QuickFindItem.Regex = true;
+                }
+                catch
+                {
+                    SetStatus("quick find not a regex:" + QuickFindItem.Filterpattern);
+                    QuickFindItem.Regex = false;
+                }
+            }
+
+            //if (!QuickFindAnd && !QuickFindOr && !QuickFindNot)
+            //{
+            //    foreach (FilterFileItem filterItem in FilterList())
+            //    {
+            //        filterItem.Count = 0;
+            //    }
+            //}
+
+            // send filter request
+            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+        }
+
         public override void RenameTabItem(string logName)
         {
             // rename tab
@@ -611,10 +843,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Internal Methods
-
         internal bool VerifyAndOpenFile(string fileName)
         {
             SetStatus(string.Format("checking filter file:{0}", fileName));
@@ -634,10 +862,6 @@ namespace TextFilter
 
             return true;
         }
-
-        #endregion Internal Methods
-
-        #region Private Methods
 
         private void FilterNotesExecuted()
         {
@@ -671,6 +895,20 @@ namespace TextFilter
             }
         }
 
+        private void RemoveFilterItemExecuted(object sender)
+        {
+            SetStatus("RemoveeFilterItemExecuted");
+            FilterFile filterFile = (FilterFile)CurrentFile();
+
+            if (filterFile != null)
+            {
+                int filterIndex = 0;
+                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
+
+                ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex, true);
+                VerifyIndex();
+            }
+        }
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             SetStatus("filterViewModel:tabItem_PropertyChanged");
@@ -824,254 +1062,6 @@ namespace TextFilter
             SetStatus(sb.ToString());
         }
 
-        #endregion Private Methods
-
-        private Command _quickFindChangedCommand;
-
-        private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
-        private Command _removeFilterItemCommand;
-        private ObservableCollection<MenuItem> _sharedCollection;
-
-        public LogViewModel _LogViewModel { get; internal set; }
-
-        public bool QuickFindAnd
-        {
-            get
-            {
-                return _quickFindAnd;
-            }
-            set
-            {
-                if (_quickFindAnd != value)
-                {
-                    _quickFindAnd = value;
-                    if (_quickFindAnd)
-                    {
-                        QuickFindOr = false;
-                        QuickFindNot = false;
-                        QuickFindItem.Include = true;
-                        QuickFindItem.Exclude = true;
-                    }
-                    else
-                    {
-                        QuickFindItem.Include = false;
-                        QuickFindItem.Exclude = false;
-                    }
-                    OnPropertyChanged("QuickFindAnd");
-                }
-            }
-        }
-
-        public Command QuickFindChangedCommand
-        {
-            get
-            {
-                if (_quickFindChangedCommand == null)
-                {
-                    _quickFindChangedCommand = new Command(QuickFindChangedExecuted);
-                }
-                _quickFindChangedCommand.CanExecute = true;
-
-                return _quickFindChangedCommand;
-            }
-            set { _quickFindChangedCommand = value; }
-        }
-
-        public int QuickFindIndex
-        {
-            get
-            {
-                return _quickFindIndex;
-            }
-            set
-            {
-                if (_quickFindIndex != value)
-                {
-                    _quickFindIndex = value;
-                    OnPropertyChanged("QuickFindIndex");
-                }
-            }
-        }
-
-        public FilterFileItem QuickFindItem
-        {
-            get
-            {
-                return _quickFindItem;
-            }
-            set
-            {
-                if (_quickFindItem != value)
-                {
-                    _quickFindItem = value;
-                    // OnPropertyChanged("QuickFindItem");
-                }
-            }
-        }
-
-        public ObservableCollection<ListBoxItem> QuickFindList
-        {
-            get
-            {
-                return _quickFindList;
-            }
-            set
-            {
-                if (_quickFindList != value)
-                {
-                    _quickFindList = value;
-                    OnPropertyChanged("QuickFindList");
-                }
-            }
-        }
-
-        public bool QuickFindNot
-        {
-            get
-            {
-                return _quickFindNot;
-            }
-            set
-            {
-                if (_quickFindNot != value)
-                {
-                    _quickFindNot = value;
-                    if (_quickFindNot)
-                    {
-                        QuickFindAnd = false;
-                        QuickFindOr = false;
-                        QuickFindItem.Exclude = true;
-                        QuickFindItem.Include = false;
-                    }
-                    else
-                    {
-                        QuickFindItem.Exclude = false;
-                    }
-                    OnPropertyChanged("QuickFindNot");
-                }
-            }
-        }
-
-        public bool QuickFindOr
-        {
-            get
-            {
-                return _quickFindOr;
-            }
-            set
-            {
-                if (_quickFindOr != value)
-                {
-                    _quickFindOr = value;
-
-                    if (_quickFindOr)
-                    {
-                        QuickFindAnd = false;
-                        QuickFindNot = false;
-                        QuickFindItem.Include = true;
-                        QuickFindItem.Exclude = false;
-                    }
-                    else
-                    {
-                        QuickFindItem.Include = false;
-                    }
-                    OnPropertyChanged("QuickFindOr");
-                }
-            }
-        }
-
-        public bool QuickFindRegex
-        {
-            get
-            {
-                return _quickFindRegex;
-            }
-            set
-            {
-                if (_quickFindRegex != value)
-                {
-                    _quickFindRegex = value;
-                    OnPropertyChanged("QuickFindRegex");
-                }
-            }
-        }
-
-        public void QuickFindChangedExecuted(object sender)
-        {
-            SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is ComboBox)));
-            if (sender is ComboBox)
-            {
-                ComboBox comboBox = (sender as ComboBox);
-                QuickFindItem.Filterpattern = (sender as ComboBox).Text;
-                bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
-                foreach (ComboBoxItem item in comboBox.Items)
-                {
-                    if ((string)item.Content == QuickFindItem.Filterpattern)
-                    {
-                        foundItem = true;
-                        break;
-                    }
-                }
-
-                if (!foundItem)
-                {
-                    comboBox.Items.Insert(0, new ComboBoxItem()
-                    {
-                        Content = QuickFindItem.Filterpattern,
-                        Background = Settings.BackgroundColor,
-                        Foreground = Settings.ForegroundColor,
-                        BorderBrush = Settings.BackgroundColor
-                    });
-                }
-
-                SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
-                if (string.IsNullOrEmpty(QuickFindItem.Filterpattern))
-                {
-                    QuickFindItem.Enabled = false;
-
-                    if (FilterList().Count > 0)
-                    {
-                        // send filter request
-                        _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
-                    }
-                    else
-                    {
-                        // no filter show all
-                        _LogViewModel.FilterLogTabItems(FilterCommand.ShowAll);
-                    }
-
-                    return;
-                }
-                else
-                {
-                    QuickFindItem.Enabled = true;
-                }
-            }
-
-            if (_quickFindRegex)
-            {
-                try
-                {
-                    Regex test = new Regex(QuickFindItem.Filterpattern);
-                    QuickFindItem.Regex = true;
-                }
-                catch
-                {
-                    SetStatus("quick find not a regex:" + QuickFindItem.Filterpattern);
-                    QuickFindItem.Regex = false;
-                }
-            }
-
-            //if (!QuickFindAnd && !QuickFindOr && !QuickFindNot)
-            //{
-            //    foreach (FilterFileItem filterItem in FilterList())
-            //    {
-            //        filterItem.Count = 0;
-            //    }
-            //}
-
-            // send filter request
-            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
-        }
+        #endregion Methods
     }
 }

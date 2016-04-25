@@ -24,16 +24,17 @@ namespace TextFilter
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
-        #region Public Constructors
+
+        #region Constructors
 
         public FilterFileManager()
         {
             FileManager = new List<IFile<FilterFileItem>>();
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Enums
+        #region Enums
 
         public enum FilterFileVersionResult
         {
@@ -44,9 +45,9 @@ namespace TextFilter
             NotAFilterFile
         }
 
-        #endregion Public Enums
+        #endregion Enums
 
-        #region Public Methods
+        #region Methods
 
         public FilterFileVersionResult FilterFileVersion(string fileName)
         {
@@ -93,6 +94,18 @@ namespace TextFilter
                 SetStatus(string.Format("Exception: FilterFileVersion: filter: {0}, {1}", fileName, e));
                 return FilterFileVersionResult.NotAFilterFile;
             }
+        }
+
+        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
+        {
+            filterFile.FileName = Path.GetFileName(LogName);
+            filterFile.Tag = LogName;
+
+            // todo rework this:
+            ((FilterFile)filterFile).EnablePatternNotifications(false);
+            ((FilterFile)filterFile).EnablePatternNotifications(true);
+            ((FilterFile)filterFile).PropertyChanged += filterFile_PropertyChanged;
+            return filterFile;
         }
 
         public void ManageFilterFileItem(FilterFile filterFile, int filterIndex = -1, bool remove = false)
@@ -426,23 +439,6 @@ namespace TextFilter
                 return false;
             }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
-        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
-        {
-            filterFile.FileName = Path.GetFileName(LogName);
-            filterFile.Tag = LogName;
-
-            // todo rework this:
-            ((FilterFile)filterFile).EnablePatternNotifications(false);
-            ((FilterFile)filterFile).EnablePatternNotifications(true);
-            ((FilterFile)filterFile).PropertyChanged += filterFile_PropertyChanged;
-            return filterFile;
-        }
-
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FilterFileItemEvents.Count |
@@ -733,6 +729,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
+
     }
 }

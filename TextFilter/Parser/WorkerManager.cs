@@ -170,6 +170,24 @@ namespace TextFilter
             }
         }
 
+        public void CancelWorker(WorkerItem workerItem)
+        {
+            if (workerItem.BackGroundWorker != null && workerItem.BackGroundWorker.IsBusy && !workerItem.BackGroundWorker.CancellationPending)
+            {
+                SetStatus(string.Format("CancelAllWorkers:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
+                    workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
+                    workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
+
+                workerItem.BackGroundWorker.CancelAsync();
+                //while (workerItem.BackGroundWorker.IsBusy)
+                //{
+                //    Thread.Sleep(10);
+                //}
+
+                workerItem.WorkerState = WorkerItem.State.Aborted;
+            }
+        }
+
         public void CompleteWorker(BackgroundWorker worker)
         {
             SetStatus("CompleteWorker:enter");
@@ -710,68 +728,16 @@ namespace TextFilter
                 //}
             }
         }
-
-        public void CancelWorker(WorkerItem workerItem)
-        {
-            if (workerItem.BackGroundWorker != null && workerItem.BackGroundWorker.IsBusy && !workerItem.BackGroundWorker.CancellationPending)
-            {
-                SetStatus(string.Format("CancelAllWorkers:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
-                    workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
-                    workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
-
-                workerItem.BackGroundWorker.CancelAsync();
-                //while (workerItem.BackGroundWorker.IsBusy)
-                //{
-                //    Thread.Sleep(10);
-                //}
-
-                workerItem.WorkerState = WorkerItem.State.Aborted;
-            }
-        }
-
-
-        private bool ResetWorkerStates(WorkerItem workerItem)
-        {
-            SetStatus("ResetWorkerStates:enter:");
-
-            List<WorkerItem> workerItems = GetWorkers(workerItem);
-            WorkerItem.State newState = WorkerItem.State.Ready;
-
-            if (workerItems.Count == 0)
-            {
-                return false;
-            }
-            else if (workerItems.Count == 1)
-            {
-                newState = WorkerItem.State.NotStarted;
-            }
-
-            foreach (WorkerItem item in workerItems)
-            {
-                if (item.WorkerState == WorkerItem.State.Started)
-                {
-                }
-                else if (item.WorkerState != WorkerItem.State.Completed)
-                {
-                    item.WorkerModification = workerItem.WorkerModification;
-                    item.WorkerState = newState;
-                    SetStatus("ResetWorkerStates:resetting state:" + item.WorkerState.ToString());
-                }
-            }
-
-            return true;
-        }
-
         private void DoFilterWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker bgWorker;
             bgWorker = (BackgroundWorker)sender;
-            
+
             WorkerItem workerItem = (WorkerItem)e.Argument;
             workerItem.Status.AppendLine("DoFilterWork:enter");
             workerItem.WorkerState = WorkerItem.State.Started;
             e.Result = MMFConcurrentFilter(workerItem);
-            
+
             if (bgWorker.CancellationPending)
             {
                 workerItem.WorkerState = WorkerItem.State.Aborted;
@@ -780,9 +746,10 @@ namespace TextFilter
 
             workerItem.Status.AppendLine("WorkerManager:DoFilterWork:exit");
         }
+
         private void DoLogWork(object sender, DoWorkEventArgs e)
         {
-            
+
             BackgroundWorker bgWorker;
             bgWorker = (BackgroundWorker)sender;
 
@@ -825,6 +792,37 @@ namespace TextFilter
             return true;
         }
 
+        private bool ResetWorkerStates(WorkerItem workerItem)
+        {
+            SetStatus("ResetWorkerStates:enter:");
+
+            List<WorkerItem> workerItems = GetWorkers(workerItem);
+            WorkerItem.State newState = WorkerItem.State.Ready;
+
+            if (workerItems.Count == 0)
+            {
+                return false;
+            }
+            else if (workerItems.Count == 1)
+            {
+                newState = WorkerItem.State.NotStarted;
+            }
+
+            foreach (WorkerItem item in workerItems)
+            {
+                if (item.WorkerState == WorkerItem.State.Started)
+                {
+                }
+                else if (item.WorkerState != WorkerItem.State.Completed)
+                {
+                    item.WorkerModification = workerItem.WorkerModification;
+                    item.WorkerState = newState;
+                    SetStatus("ResetWorkerStates:resetting state:" + item.WorkerState.ToString());
+                }
+            }
+
+            return true;
+        }
         private void RestartWorkers()
         {
             SetStatus("RestartWorkers:enter:count:" + BGWorkers.Count);

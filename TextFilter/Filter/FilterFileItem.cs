@@ -16,7 +16,8 @@ namespace TextFilter
 {
     public struct FilterFileItemEvents
     {
-        #region Public Fields
+
+        #region Fields
 
         public static string Background = "Background";
 
@@ -44,12 +45,14 @@ namespace TextFilter
 
         public static string Regex = "Regex";
 
-        #endregion Public Fields
+        #endregion Fields
+
     }
 
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
-        #region Private Fields
+
+        #region Fields
 
         private string _backgroundColor;
 
@@ -76,9 +79,9 @@ namespace TextFilter
         private bool _regex = false;
         private bool _stringOperators = false;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public FilterFileItem()
         {
@@ -86,15 +89,15 @@ namespace TextFilter
             ForegroundColor = TextFilterSettings.Settings.ForegroundColor.ToString();
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Events
+        #region Events
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Properties
+        #region Properties
 
         public new Brush Background
         {
@@ -373,9 +376,9 @@ namespace TextFilter
 
         public string TatType { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public void OnPropertyChanged(string name)
         {
@@ -393,6 +396,7 @@ namespace TextFilter
             return (FilterFileItem)MemberwiseClone();
         }
 
-        #endregion Public Methods
+        #endregion Methods
+
     }
 }

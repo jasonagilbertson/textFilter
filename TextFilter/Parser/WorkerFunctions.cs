@@ -25,15 +25,17 @@ namespace TextFilter
 {
     public class WorkerFunctions : Base
     {
-        #region Private Fields
+
+        #region Fields
 
         private static string _needsPatch = "textFilter*NeEdSpAtCh*";
 
         private TextFilterSettings Settings = TextFilterSettings.Settings;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Methods
+        #region Methods
+
         public WorkerItem MMFConcurrentFilter(WorkerItem workerItem)
         {
 
@@ -678,9 +680,72 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
+        public WorkerItem VerifyFilterPatterns(WorkerItem workerItem)
+        {
 
-        #region Private Methods
+            int groupCount = 0;
+            List<string> groupNames = new List<string>();
+            if (workerItem.FilterFile == null)
+            {
+                SetStatus("VerifyFilterPattern:FilterFile null. returning");
+                return workerItem;
+            }
+
+            List<FilterFileItem> filterFileItems = workerItem.FilterFile.ContentItems.ToList();
+            List<FilterFileItem> filterItems = new List<FilterFileItem>();
+
+            foreach (FilterFileItem filterItem in filterFileItems)
+            {
+                if (string.IsNullOrEmpty(filterItem.Filterpattern))
+                {
+                    continue;
+                }
+
+                FilterFileItem newFilter = new FilterFileItem()
+                {
+                    Background = filterItem.Background,
+                    Enabled = filterItem.Enabled,
+                    Exclude = filterItem.Exclude,
+                    Filterpattern = filterItem.Filterpattern,
+                    Foreground = filterItem.Foreground,
+                    Include = filterItem.Include,
+                    Regex = filterItem.Regex,
+                    Index = filterItem.Index
+                };
+
+                if (newFilter.Regex)
+                {
+                    try
+                    {
+                        Regex test = new Regex(filterItem.Filterpattern);
+                        // unnamed groups
+                        newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
+                        groupCount = Math.Max(groupCount, newFilter.GroupCount);
+                    }
+                    catch
+                    {
+                        Debug.Print("not a regex:" + filterItem.Filterpattern);
+                        newFilter.Regex = false;
+                        newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
+                    }
+                }
+                else
+                {
+                    // check for string operators and flag
+                    if (newFilter.Filterpattern.Contains(" AND ") | newFilter.Filterpattern.Contains(" OR "))
+                    {
+                        newFilter.StringOperators = true;
+                    }
+                }
+
+                filterItems.Add(newFilter);
+            }
+
+            workerItem.FilterGroupCount = Math.Max(groupCount, groupNames.Count);
+            //logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
+            workerItem.VerifiedFilterItems = filterItems;
+            return workerItem;
+        }
 
         private bool GetEncoding(LogFile logFile)
         {
@@ -776,79 +841,15 @@ namespace TextFilter
             }
 
         }
-        public WorkerItem VerifyFilterPatterns(WorkerItem workerItem)
-        {
 
-            int groupCount = 0;
-            List<string> groupNames = new List<string>();
-            if (workerItem.FilterFile == null)
-            {
-                SetStatus("VerifyFilterPattern:FilterFile null. returning");
-                return workerItem;
-            }
+        #endregion Methods
 
-            List<FilterFileItem> filterFileItems = workerItem.FilterFile.ContentItems.ToList();
-            List<FilterFileItem> filterItems = new List<FilterFileItem>();
-
-            foreach (FilterFileItem filterItem in filterFileItems)
-            {
-                if (string.IsNullOrEmpty(filterItem.Filterpattern))
-                {
-                    continue;
-                }
-
-                FilterFileItem newFilter = new FilterFileItem()
-                {
-                    Background = filterItem.Background,
-                    Enabled = filterItem.Enabled,
-                    Exclude = filterItem.Exclude,
-                    Filterpattern = filterItem.Filterpattern,
-                    Foreground = filterItem.Foreground,
-                    Include = filterItem.Include,
-                    Regex = filterItem.Regex,
-                    Index = filterItem.Index
-                };
-
-                if (newFilter.Regex)
-                {
-                    try
-                    {
-                        Regex test = new Regex(filterItem.Filterpattern);
-                        // unnamed groups
-                        newFilter.GroupCount = test.GetGroupNumbers().Length - 1;
-                        groupCount = Math.Max(groupCount, newFilter.GroupCount);
-                    }
-                    catch
-                    {
-                        Debug.Print("not a regex:" + filterItem.Filterpattern);
-                        newFilter.Regex = false;
-                        newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
-                    }
-                }
-                else
-                {
-                    // check for string operators and flag
-                    if (newFilter.Filterpattern.Contains(" AND ") | newFilter.Filterpattern.Contains(" OR "))
-                    {
-                        newFilter.StringOperators = true;
-                    }
-                }
-
-                filterItems.Add(newFilter);
-            }
-
-            workerItem.FilterGroupCount = Math.Max(groupCount, groupNames.Count);
-            //logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
-            workerItem.VerifiedFilterItems = filterItems;
-            return workerItem;
-        }
-        #endregion Private Methods
-
-        #region Public Classes
+        #region Classes
 
         public class TaskMMFInfo
         {
-            #region Public Fields
+
+            #region Fields
 
             public BackgroundWorker bgWorker;
 
@@ -862,9 +863,9 @@ namespace TextFilter
 
             public List<LogFileItem> stringList;
 
-            #endregion Public Fields
+            #endregion Fields
 
-            #region Public Properties
+            #region Properties
 
             public ManualResetEvent completedEvent { get; set; }
 
@@ -872,9 +873,11 @@ namespace TextFilter
 
             public DoWorkEventArgs doWorkEventArgs { get; set; }
 
-            #endregion Public Properties
+            #endregion Properties
+
         }
 
-        #endregion Public Classes
+        #endregion Classes
+
     }
 }

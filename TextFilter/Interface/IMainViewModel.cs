@@ -13,16 +13,18 @@ namespace TextFilter
 {
     public interface IMainViewModel
     {
-        #region Public Events
+
+        #region Events
 
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Methods
+        #region Methods
 
         void SetViewStatus(string statusData);
 
-        #endregion Public Methods
+        #endregion Methods
+
     }
 }

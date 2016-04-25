@@ -22,7 +22,8 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-        #region Private Fields
+
+        #region Fields
 
         public System.Timers.Timer _timer;
 
@@ -48,9 +49,9 @@ namespace TextFilter
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public MainViewModel()
         {
@@ -106,14 +107,9 @@ namespace TextFilter
             }
         }
 
-        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
-        }
+        #endregion Constructors
 
-        #endregion Public Constructors
-
-        #region Public Properties
+        #region Properties
 
         public Command CopyCommand
         {
@@ -240,9 +236,9 @@ namespace TextFilter
             set { _versionCheckCommand = value; }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public void CopyExecuted(object contentList)
         {
@@ -339,11 +335,28 @@ namespace TextFilter
             VersionCheck(false);
         }
 
+        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _logViewModel.Parser.Enable(false);
+            _filterViewModel.SaveModifiedFiles(sender);
+            _logViewModel.SaveModifiedFiles(sender);
+            _settings.Save();
+        }
+
+        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
+        }
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
             var oc = _filterViewModel.SharedCollection;
             VersionCheck(silent);
+        }
+
+        private void HandleNewStatus(object sender, string status)
+        {
+            SetViewStatus(status);
         }
 
         private void VersionCheck(bool silent)
@@ -444,27 +457,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
+        #endregion Methods
 
-        #region Internal Methods
-
-        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _logViewModel.Parser.Enable(false);
-            _filterViewModel.SaveModifiedFiles(sender);
-            _logViewModel.SaveModifiedFiles(sender);
-            _settings.Save();
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private void HandleNewStatus(object sender, string status)
-        {
-            SetViewStatus(status);
-        }
-
-        #endregion Private Methods
     }
 }

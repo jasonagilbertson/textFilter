@@ -22,7 +22,490 @@ namespace TextFilter
 {
     public class TextFilterSettings : Base
     {
-        #region Public Methods
+
+        #region Fields
+
+        private const int ATTACH_PARENT_PROCESS = -1;
+
+        private static TextFilterSettings settings;
+
+        private KeyValueConfigurationCollection _appSettings;
+
+        private Configuration _Config;
+
+        private ExeConfigurationFileMap _ConfigFileMap;
+
+        #endregion Fields
+
+        #region Constructors
+
+        static TextFilterSettings()
+        {
+            if (settings == null)
+            {
+                settings = new TextFilterSettings();
+            }
+        }
+
+        public TextFilterSettings()
+        {
+        }
+
+        #endregion Constructors
+
+        #region Enums
+
+        public enum ResourceType
+        {
+            Error,
+
+            Local,
+
+            Unc,
+
+            Unknown,
+
+            Url
+        }
+
+        private enum AppSettingNames
+        {
+            AutoSave,
+
+            BackgroundColor,
+
+            CountMaskedMatches,
+
+            CurrentFilterFiles,
+
+            CurrentLogFiles,
+
+            FilterDirectory,
+
+            FilterHide,
+
+            FileHistoryCount,
+
+            FontName,
+
+            FontSize,
+
+            ForegroundColor,
+
+            HelpUrl,
+
+            MaxMultiFileCount,
+
+            RecentFilterFiles,
+
+            RecentLogFiles,
+
+            SaveSessionInformation,
+
+            SharedFilterDirectory,
+
+            VersionCheckFile,
+
+            WordWrap
+        }
+
+        #endregion Enums
+
+        #region Properties
+
+        public static TextFilterSettings Settings
+        {
+            get { return TextFilterSettings.settings; }
+            set { TextFilterSettings.settings = value; }
+        }
+
+        public bool AutoSave
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoSave).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.AutoSave).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.AutoSave).ToString());
+                }
+            }
+        }
+
+        public SolidColorBrush BackgroundColor
+        {
+            get
+            {
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.BackgroundColor).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
+                }
+            }
+        }
+
+        public string ConfigFile { get; set; }
+
+        public string ContentColumnSize
+        {
+            // used to dynamically set logview content field tied to 'WordWrap' config setting is not
+            // a config file setting
+            get
+            {
+                if (this.WordWrap.ToLower() == "wrap")
+                {
+                    return "300*";
+                }
+                else
+                {
+                    return "Auto";
+                }
+            }
+        }
+
+        public bool CountMaskedMatches
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value));
+            }
+            set
+            {
+                _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
+            }
+        }
+
+        public List<string> CurrentFilterFiles
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
+            set
+            {
+                _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value = string.Join(";", value);
+            }
+        }
+
+        public List<string> CurrentLogFiles
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
+            }
+
+            set
+            {
+                _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(";", value);
+            }
+        }
+
+        public int FileHistoryCount
+        {
+            get
+            {
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FileHistoryCount).ToString());
+                }
+            }
+        }
+
+        public string FilterDirectory
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FilterDirectory).ToString());
+                }
+            }
+        }
+
+        public bool FilterHide
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString()));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FilterHide).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FilterHide).ToString());
+                }
+            }
+        }
+
+        public string FontName
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FontName).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FontName).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FontName).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FontName).ToString());
+                }
+            }
+        }
+
+        public int FontSize
+        {
+            get
+            {
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.FontSize).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FontSize).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FontSize).ToString());
+                }
+            }
+        }
+
+        public SolidColorBrush ForegroundColor
+        {
+            get
+            {
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.ForegroundColor).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
+                }
+            }
+        }
+
+        public string HelpUrl
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.HelpUrl).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.HelpUrl).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.HelpUrl).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.HelpUrl).ToString());
+                }
+            }
+        }
+
+        public int MaxMultiFileCount
+        {
+            get
+            {
+                return (Convert.ToInt32(_appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.MaxMultiFileCount).ToString());
+                }
+            }
+        }
+
+        public string[] RecentFilterFiles
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            private set
+            {
+                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
+            }
+        }
+
+        public string[] RecentLogFiles
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            private set
+            {
+                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
+            }
+        }
+
+        public bool SaveSessionInformation
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.SaveSessionInformation).ToString());
+                }
+            }
+        }
+
+        public string SharedFilterDirectory
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.SharedFilterDirectory).ToString());
+                }
+            }
+        }
+
+        public string VersionCheckFile
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value;
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.VersionCheckFile).ToString());
+                }
+            }
+        }
+
+        public string WordWrap
+        {
+            // Wrap or NoWrap
+            get
+            {
+                return (_appSettings[(AppSettingNames.WordWrap).ToString()].Value);
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.WordWrap).ToString()].Value.ToString())
+                {
+                    if (value.ToLower() != "wrap" & value.ToLower() != "nowrap")
+                    {
+                        SetStatus("error:WordWrap:invalid value: " + value);
+                        value = "Wrap";
+                    }
+
+                    _appSettings[(AppSettingNames.WordWrap).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.WordWrap).ToString());
+                }
+            }
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        public void AddFilterFile(string filterFile)
+        {
+            List<string> filterFiles = new List<string>(CurrentFilterFiles);
+            if (!filterFiles.Contains(filterFile))
+            {
+                filterFiles.Add(filterFile);
+                CurrentFilterFiles = filterFiles;
+                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+            }
+        }
+
+        public void AddLogFile(string logFile)
+        {
+            List<string> logFiles = new List<string>(CurrentLogFiles);
+            if (!logFiles.Contains(logFile))
+            {
+                logFiles.Add(logFile);
+                CurrentLogFiles = logFiles;
+                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+            }
+        }
+
+        public ResourceType GetPathType(string path)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(path))
+                {
+                    return ResourceType.Unknown;
+                }
+
+                Uri uri;
+                if (Uri.TryCreate(path, UriKind.Absolute, out uri))
+                {
+                    if (uri.IsUnc)
+                    {
+                        return ResourceType.Unc;
+                    }
+                    else if (uri.IsLoopback)
+                    {
+                        return ResourceType.Local;
+                    }
+                    else
+                    {
+                        return ResourceType.Url;
+                    }
+                }
+
+                string fullpath = Path.GetFullPath(path);
+
+                if (fullpath.StartsWith(@"\\\\"))
+                {
+                    return ResourceType.Unc;
+                }
+
+                if (File.Exists(fullpath)
+                  || Directory.Exists(fullpath))
+                {
+                    return ResourceType.Local;
+                }
+
+                return ResourceType.Unknown;
+            }
+            catch (Exception e)
+            {
+                SetStatus("GetPathType:Exception" + e.ToString());
+                return ResourceType.Error;
+            }
+        }
 
         public bool ReadConfigFile()
         {
@@ -137,10 +620,6 @@ namespace TextFilter
             }
             catch { }
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         [DllImport("kernel32.dll")]
         private static extern bool AttachConsole(int dwProcessId);
@@ -467,492 +946,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Methods
-
-        #region Private Fields
-
-        private const int ATTACH_PARENT_PROCESS = -1;
-
-        private static TextFilterSettings settings;
-
-        private KeyValueConfigurationCollection _appSettings;
-
-        private Configuration _Config;
-
-        private ExeConfigurationFileMap _ConfigFileMap;
-
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        static TextFilterSettings()
-        {
-            if (settings == null)
-            {
-                settings = new TextFilterSettings();
-            }
-        }
-
-        public TextFilterSettings()
-        {
-        }
-
-        #endregion Public Constructors
-
-        #region Public Enums
-
-        public enum ResourceType
-        {
-            Error,
-
-            Local,
-
-            Unc,
-
-            Unknown,
-
-            Url
-        }
-
-        #endregion Public Enums
-
-        #region Private Enums
-
-        private enum AppSettingNames
-        {
-            AutoSave,
-
-            BackgroundColor,
-
-            CountMaskedMatches,
-
-            CurrentFilterFiles,
-
-            CurrentLogFiles,
-
-            FilterDirectory,
-
-            FilterHide,
-
-            FileHistoryCount,
-
-            FontName,
-
-            FontSize,
-
-            ForegroundColor,
-
-            HelpUrl,
-
-            MaxMultiFileCount,
-
-            RecentFilterFiles,
-
-            RecentLogFiles,
-
-            SaveSessionInformation,
-
-            SharedFilterDirectory,
-
-            VersionCheckFile,
-
-            WordWrap
-        }
-
-        #endregion Private Enums
-
-        #region Public Properties
-
-        public static TextFilterSettings Settings
-        {
-            get { return TextFilterSettings.settings; }
-            set { TextFilterSettings.settings = value; }
-        }
-
-        public bool AutoSave
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoSave).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.AutoSave).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.AutoSave).ToString());
-                }
-            }
-        }
-
-        public SolidColorBrush BackgroundColor
-        {
-            get
-            {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.BackgroundColor).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
-                }
-            }
-        }
-
-        public string ConfigFile { get; set; }
-
-        public string ContentColumnSize
-        {
-            // used to dynamically set logview content field tied to 'WordWrap' config setting is not
-            // a config file setting
-            get
-            {
-                if (this.WordWrap.ToLower() == "wrap")
-                {
-                    return "300*";
-                }
-                else
-                {
-                    return "Auto";
-                }
-            }
-        }
-
-        public bool CountMaskedMatches
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value));
-            }
-            set
-            {
-                _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
-            }
-        }
-
-        public List<string> CurrentFilterFiles
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
-
-            set
-            {
-                _appSettings[(AppSettingNames.CurrentFilterFiles).ToString()].Value = string.Join(";", value);
-            }
-        }
-
-        public List<string> CurrentLogFiles
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries).ToList();
-            }
-
-            set
-            {
-                _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(";", value);
-            }
-        }
-
-        public int FileHistoryCount
-        {
-            get
-            {
-                return (Convert.ToInt32(_appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.FileHistoryCount).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.FileHistoryCount).ToString());
-                }
-            }
-        }
-
-        public string FilterDirectory
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value;
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.FilterDirectory).ToString());
-                }
-            }
-        }
-
-        public bool FilterHide
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString()));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.FilterHide).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.FilterHide).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.FilterHide).ToString());
-                }
-            }
-        }
-
-        public string FontName
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.FontName).ToString()].Value;
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.FontName).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.FontName).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.FontName).ToString());
-                }
-            }
-        }
-
-        public int FontSize
-        {
-            get
-            {
-                return (Convert.ToInt32(_appSettings[(AppSettingNames.FontSize).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.FontSize).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.FontSize).ToString());
-                }
-            }
-        }
-
-        public SolidColorBrush ForegroundColor
-        {
-            get
-            {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.ForegroundColor).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
-                }
-            }
-        }
-
-        public string HelpUrl
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.HelpUrl).ToString()].Value;
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.HelpUrl).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.HelpUrl).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.HelpUrl).ToString());
-                }
-            }
-        }
-
-        public int MaxMultiFileCount
-        {
-            get
-            {
-                return (Convert.ToInt32(_appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.MaxMultiFileCount).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.MaxMultiFileCount).ToString());
-                }
-            }
-        }
-
-        public string[] RecentFilterFiles
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            }
-
-            private set
-            {
-                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
-            }
-        }
-
-        public string[] RecentLogFiles
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-            }
-
-            private set
-            {
-                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
-            }
-        }
-
-        public bool SaveSessionInformation
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.SaveSessionInformation).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.SaveSessionInformation).ToString());
-                }
-            }
-        }
-
-        public string SharedFilterDirectory
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value;
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.SharedFilterDirectory).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.SharedFilterDirectory).ToString());
-                }
-            }
-        }
-
-        public string VersionCheckFile
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value;
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.VersionCheckFile).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.VersionCheckFile).ToString());
-                }
-            }
-        }
-
-        public string WordWrap
-        {
-            // Wrap or NoWrap
-            get
-            {
-                return (_appSettings[(AppSettingNames.WordWrap).ToString()].Value);
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.WordWrap).ToString()].Value.ToString())
-                {
-                    if (value.ToLower() != "wrap" & value.ToLower() != "nowrap")
-                    {
-                        SetStatus("error:WordWrap:invalid value: " + value);
-                        value = "Wrap";
-                    }
-
-                    _appSettings[(AppSettingNames.WordWrap).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.WordWrap).ToString());
-                }
-            }
-        }
-
-        #endregion Public Properties
-
-        public void AddFilterFile(string filterFile)
-        {
-            List<string> filterFiles = new List<string>(CurrentFilterFiles);
-            if (!filterFiles.Contains(filterFile))
-            {
-                filterFiles.Add(filterFile);
-                CurrentFilterFiles = filterFiles;
-                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
-            }
-        }
-
-        public void AddLogFile(string logFile)
-        {
-            List<string> logFiles = new List<string>(CurrentLogFiles);
-            if (!logFiles.Contains(logFile))
-            {
-                logFiles.Add(logFile);
-                CurrentLogFiles = logFiles;
-                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
-            }
-        }
-
-        public ResourceType GetPathType(string path)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(path))
-                {
-                    return ResourceType.Unknown;
-                }
-
-                Uri uri;
-                if (Uri.TryCreate(path, UriKind.Absolute, out uri))
-                {
-                    if (uri.IsUnc)
-                    {
-                        return ResourceType.Unc;
-                    }
-                    else if (uri.IsLoopback)
-                    {
-                        return ResourceType.Local;
-                    }
-                    else
-                    {
-                        return ResourceType.Url;
-                    }
-                }
-
-                string fullpath = Path.GetFullPath(path);
-
-                if (fullpath.StartsWith(@"\\\\"))
-                {
-                    return ResourceType.Unc;
-                }
-
-                if (File.Exists(fullpath)
-                  || Directory.Exists(fullpath))
-                {
-                    return ResourceType.Local;
-                }
-
-                return ResourceType.Unknown;
-            }
-            catch (Exception e)
-            {
-                SetStatus("GetPathType:Exception" + e.ToString());
-                return ResourceType.Error;
-            }
-        }
+        #endregion Methods
     }
 }

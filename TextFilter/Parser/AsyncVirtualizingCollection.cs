@@ -18,15 +18,16 @@ namespace TextFilter
 {
     public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        #region Private Fields
+
+        #region Fields
 
         private readonly SynchronizationContext _synchronizationContext;
 
         private bool _isLoading;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
             : base(itemsProvider)
@@ -46,17 +47,17 @@ namespace TextFilter
             _synchronizationContext = SynchronizationContext.Current;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Events
+        #region Events
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Properties
+        #region Properties
 
         public bool IsLoading
         {
@@ -74,18 +75,14 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
-
-        #region Protected Properties
-
         protected SynchronizationContext SynchronizationContext
         {
             get { return _synchronizationContext; }
         }
 
-        #endregion Protected Properties
+        #endregion Properties
 
-        #region Protected Methods
+        #region Methods
 
         protected override void LoadCount()
         {
@@ -113,10 +110,6 @@ namespace TextFilter
             if (h != null)
                 h(this, e);
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private void FireCollectionReset()
         {
@@ -160,6 +153,7 @@ namespace TextFilter
             SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
 
-        #endregion Private Methods
+        #endregion Methods
+
     }
 }

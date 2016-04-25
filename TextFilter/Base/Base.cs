@@ -19,23 +19,25 @@ namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
-        #region Public Fields
+
+        #region Fields
 
         public string _tempTabNameFormat = "-new {0}-";
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+
+        #endregion Fields
+
         //public bool _transitioning;
 
-        #endregion Public Fields
-
-        #region Public Events
+        #region Events
 
         public static event EventHandler<string> NewStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Methods
+        #region Methods
 
         public void CreateProcess(string process, string arguments = null)
         {
@@ -146,6 +148,7 @@ namespace TextFilter
             OnNewStatus(status);
         }
 
-        #endregion Public Methods
+        #endregion Methods
+
     }
 }

@@ -21,7 +21,8 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        #region Private Fields
+
+        #region Fields
 
         private Command _closeAllCommand;
 
@@ -59,23 +60,21 @@ namespace TextFilter
 
         private int _selectedIndex = -1;
 
-        private Command _sharedCommand;
-
         private TextFilterSettings _settings = TextFilterSettings.Settings;
-
+        private Command _sharedCommand;
         private ObservableCollection<ITabViewModel<T>> _tabItems = new ObservableCollection<ITabViewModel<T>>();
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public BaseViewModel()
         {
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public Command CloseAllCommand
         {
@@ -331,9 +330,9 @@ namespace TextFilter
 
         public IFileManager<T> ViewManager { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
@@ -415,6 +414,27 @@ namespace TextFilter
         }
 
         public abstract void FindNextExecuted(object sender);
+
+        public string GenerateTempTagName()
+        {
+            // generate -new ##- index number
+            string tempTag = string.Empty;
+
+            for (int i = 0; i < 100; i++)
+            {
+                tempTag = string.Format(_tempTabNameFormat, i);
+                if (TabItems.Any(x => String.Compare((string)x.Header, tempTag, true) == 0))
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return tempTag;
+        }
 
         public void GotFocusExecuted(object sender)
         {
@@ -509,28 +529,6 @@ namespace TextFilter
 
             AddTabItem(file);
         }
-
-        public string GenerateTempTagName()
-        {
-            // generate -new ##- index number
-            string tempTag = string.Empty;
-
-            for (int i = 0; i < 100; i++)
-            {
-                tempTag = string.Format(_tempTabNameFormat, i);
-                if (TabItems.Any(x => String.Compare((string)x.Header, tempTag, true) == 0))
-                {
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return tempTag;
-        }
-
         public void OpenDropExecuted(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());
@@ -737,10 +735,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void OpenFolderExecuted()
         {
             if (IsValidTabIndex())
@@ -750,6 +744,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
+
     }
 }

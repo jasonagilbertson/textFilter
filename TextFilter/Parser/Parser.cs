@@ -18,31 +18,7 @@ namespace TextFilter
 {
     public class Parser : Base
     {
-        public void EnableLogFileMonitoring(bool enable)
-        {
-            if (enable & !_logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in CurrentLogFiles())
-                {
-                    item.ContentItems.CollectionChanged += logItems_CollectionChanged;
-                }
-
-                _logViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-            else if (!enable & _logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in CurrentLogFiles())
-                {
-                    item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
-                }
-
-                _logViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-        }
-
-        #region Private Fields
+        #region Fields
 
         private int _filteredLinesCount;
 
@@ -60,15 +36,14 @@ namespace TextFilter
 
         private List<FilterFile> _previousFilterFiles = new List<FilterFile>();
 
-        //private List<LogFile> _previousLogFiles = new List<LogFile>();
-
         private int _totalLinesCount;
 
+        //private List<LogFile> _previousLogFiles = new List<LogFile>();
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
         {
@@ -83,59 +58,9 @@ namespace TextFilter
             SyncLogFiles();
         }
 
-        private void SyncLogFiles()
-        {
-            SetStatus("Parser:SyncLogFiles:enter");
-            // make sure all tabs have data
-            foreach (LogFile logFile in CurrentLogFiles())
-            {
+        #endregion Constructors
 
-                //if(logFile.ContentItems.Count == 0)
-                {
-                    SetStatus("Parser:SyncLogFiles:adding worker");
-                    _workerManager.AddWorkersByWorkerItemLogFile(new WorkerItem() { LogFile = logFile });
-                }
-            }
-        }
-
-        private void SyncFilterFiles()
-        {
-            SetStatus("Parser:SyncFilterFiles:enter");
-            // make sure all tabs have data
-            foreach (FilterFile filterFile in CurrentFilterFiles())
-            {
-               // if(filterFile.ContentItems.Count == 0)
-                {
-                    SetStatus("Parser:SyncLogFiles:adding worker");
-                    _workerManager.AddWorkersByWorkerItemFilterFile(new WorkerItem() { FilterFile = filterFile });
-                }
-            }
-        }
-
-        public void Enable(bool enable)
-        {
-            if (enable)
-            {
-                _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
-
-                EnableFilterFileMonitoring(true);
-                EnableLogFileMonitoring(true);
-            }
-            else
-            {
-                _filterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
-
-                EnableFilterFileMonitoring(false);
-                EnableLogFileMonitoring(false);
-                _workerManager.CancelAllWorkers();
-            }
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
+        #region Properties
 
         public int FilteredLinesCount
         {
@@ -169,9 +94,30 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
+
+        public void Enable(bool enable)
+        {
+            if (enable)
+            {
+                _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
+
+                EnableFilterFileMonitoring(true);
+                EnableLogFileMonitoring(true);
+            }
+            else
+            {
+                _filterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
+
+                EnableFilterFileMonitoring(false);
+                EnableLogFileMonitoring(false);
+                _workerManager.CancelAllWorkers();
+            }
+        }
 
         public void EnableFilterFileMonitoring(bool enable)
         {
@@ -197,25 +143,38 @@ namespace TextFilter
             }
         }
 
-        //public void ReadFile()
-        //{
-        //    SetStatus("Parser:ReadFile");
-        //    // todo: determine what changed and run parser new log or remove log
+        public void EnableLogFileMonitoring(bool enable)
+        {
+            if (enable & !_logMonitoringEnabled)
+            {
+                foreach (IFile<LogFileItem> item in CurrentLogFiles())
+                {
+                    item.ContentItems.CollectionChanged += logItems_CollectionChanged;
+                }
 
-        //    WorkerItem worker = ModifiedLogFile();
-        //    _workerManager.ProcessWorker(worker);
-        //}
+                _logViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
+                _logMonitoringEnabled = !_logMonitoringEnabled;
+            }
+            else if (!enable & _logMonitoringEnabled)
+            {
+                foreach (IFile<LogFileItem> item in CurrentLogFiles())
+                {
+                    item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
+                }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
+                _logViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
+                _logMonitoringEnabled = !_logMonitoringEnabled;
+            }
+        }
         private FilterFile CurrentFilterFile()
         {
             SetStatus("Parser:CurrentFilterFile:exit: index: " + _filterViewModel.SelectedIndex);
             return (FilterFile)_filterViewModel.CurrentFile();
         }
 
+        //    WorkerItem worker = ModifiedLogFile();
+        //    _workerManager.ProcessWorker(worker);
+        //}
         private List<IFile<FilterFileItem>> CurrentFilterFiles()
         {
             SetStatus("Parser:CurrentFilterFiles:exit: count: " + _filterViewModel.ViewManager.FileManager.Count);
@@ -223,6 +182,10 @@ namespace TextFilter
 
         }
 
+        //public void ReadFile()
+        //{
+        //    SetStatus("Parser:ReadFile");
+        //    // todo: determine what changed and run parser new log or remove log
         private LogFile CurrentLogFile()
         {
             SetStatus("Parser:CurrentLogFile:exit: index: " + _logViewModel.SelectedIndex);
@@ -239,7 +202,7 @@ namespace TextFilter
         {
             SetStatus("Parser:filterItemsCollectionChanged");
             ModifiedFilterFile(e);
-            
+
         }
 
         private void filterViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -248,9 +211,9 @@ namespace TextFilter
             // todo: determine what changed and run parser new filter, modified filter, removed filter
             // see if tab was added or removed
 
-            if(sender is FilterFileItem)
+            if (sender is FilterFileItem)
             {
-            
+
             }
 
             ModifiedFilterFile(e);
@@ -261,13 +224,21 @@ namespace TextFilter
             // ParseFile(_filterViewModel.CurrentFile(), _logViewModel.CurrentFile());
         }
 
+        private void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("Parser:logItemsCollectionChanged");
+            ModifiedLogFile(e);
+
+
+        }
+
         private void logViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new log or remove log
 
             ModifiedLogFile(e);
-            
+
         }
 
         private void ModifiedFilterFile(object e)
@@ -312,7 +283,7 @@ namespace TextFilter
             else if (e is PropertyChangedEventArgs)
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
-                                             
+
                 if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
@@ -333,7 +304,7 @@ namespace TextFilter
                     LogFile = CurrentLogFile()
                 };
 
-          
+
                 if (CurrentFilterFile() != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName))
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
@@ -378,11 +349,11 @@ namespace TextFilter
         {
             SetStatus("Parser.ModifiedLogFile:enter");
             WorkerItem workerItem = new WorkerItem();
-            if(e == null)
+            if (e == null)
             {
                 throw new System.Exception("Parser.ModifiedLogFile:enter:error argument null");
             }
-            else if(e is NotifyCollectionChangedEventArgs)
+            else if (e is NotifyCollectionChangedEventArgs)
             {
                 NotifyCollectionChangedEventArgs col = (e as NotifyCollectionChangedEventArgs);
                 switch (col.Action)
@@ -408,12 +379,12 @@ namespace TextFilter
                         break;
                     default:
                         {
-                            SetStatus("Parser.ModifiedLogFile:error, unknown collection action: " + Enum.GetName(typeof(NotifyCollectionChangedAction),col.Action));
+                            SetStatus("Parser.ModifiedLogFile:error, unknown collection action: " + Enum.GetName(typeof(NotifyCollectionChangedAction), col.Action));
                             return;
                         }
                 }
             }
-            else if(e is PropertyChangedEventArgs)
+            else if (e is PropertyChangedEventArgs)
             {
                 SetStatus("Parser.ModifiedLogFile:returning, property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
 
@@ -435,15 +406,35 @@ namespace TextFilter
 
         }
 
-
-        private void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void SyncFilterFiles()
         {
-            SetStatus("Parser:logItemsCollectionChanged");
-            ModifiedLogFile(e);
-            
-         
+            SetStatus("Parser:SyncFilterFiles:enter");
+            // make sure all tabs have data
+            foreach (FilterFile filterFile in CurrentFilterFiles())
+            {
+                // if(filterFile.ContentItems.Count == 0)
+                {
+                    SetStatus("Parser:SyncLogFiles:adding worker");
+                    _workerManager.AddWorkersByWorkerItemFilterFile(new WorkerItem() { FilterFile = filterFile });
+                }
+            }
         }
 
-        #endregion Private Methods
+        private void SyncLogFiles()
+        {
+            SetStatus("Parser:SyncLogFiles:enter");
+            // make sure all tabs have data
+            foreach (LogFile logFile in CurrentLogFiles())
+            {
+
+                //if(logFile.ContentItems.Count == 0)
+                {
+                    SetStatus("Parser:SyncLogFiles:adding worker");
+                    _workerManager.AddWorkersByWorkerItemLogFile(new WorkerItem() { LogFile = logFile });
+                }
+            }
+        }
+
+        #endregion Methods
     }
 }

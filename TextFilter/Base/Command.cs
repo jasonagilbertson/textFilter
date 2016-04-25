@@ -19,30 +19,29 @@ namespace TextFilter
 
     public class CancelCommandEventArgs : CommandEventArgs
     {
-        #region Public Properties
+
+        #region Properties
 
         public bool Cancel { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
+
     }
 
     public class Command : ICommand
     {
-        #region Protected Fields
+
+        #region Fields
 
         protected Action _action = null;
 
         protected Action<object> _parameterizedAction = null;
 
-        #endregion Protected Fields
-
-        #region Private Fields
-
         private bool _canExecute = false;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public Command(Action action, bool canExecute = true)
         {
@@ -58,9 +57,9 @@ namespace TextFilter
             _canExecute = canExecute;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Events
+        #region Events
 
         public event EventHandler CanExecuteChanged;
 
@@ -68,9 +67,9 @@ namespace TextFilter
 
         public event CancelCommandEventHandler Executing;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Properties
+        #region Properties
 
         public bool CanExecute
         {
@@ -87,9 +86,9 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public virtual void DoExecute(object param)
         {
@@ -117,10 +116,6 @@ namespace TextFilter
         {
             DoExecute(parameter);
         }
-
-        #endregion Public Methods
-
-        #region Protected Methods
 
         protected void InvokeAction(object param)
         {
@@ -150,15 +145,18 @@ namespace TextFilter
                 executing(this, args);
         }
 
-        #endregion Protected Methods
+        #endregion Methods
+
     }
 
     public class CommandEventArgs : EventArgs
     {
-        #region Public Properties
+
+        #region Properties
 
         public object Parameter { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
+
     }
 }

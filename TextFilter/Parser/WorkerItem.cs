@@ -17,7 +17,8 @@ namespace TextFilter
 {
     public class WorkerItem
     {
-        #region Public Fields
+
+        #region Fields
 
         public BackgroundWorker BackGroundWorker = new BackgroundWorker();
 
@@ -25,10 +26,8 @@ namespace TextFilter
 
         public ObservableCollection<LogFileItem> FilteredList;
 
-        public int FilterGroupCount;
-
         public FilterFile FilterFile;
-
+        public int FilterGroupCount;
         public FilterNeed FilterNeed;
 
         public LogFile LogFile;
@@ -40,9 +39,9 @@ namespace TextFilter
         public State WorkerState;
         internal List<FilterFileItem> VerifiedFilterItems;
 
-        #endregion Public Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public WorkerItem()
         {
@@ -51,20 +50,9 @@ namespace TextFilter
             Status = new StringBuilder();
         }
 
-        public StringBuilder Status { get; set; }
+        #endregion Constructors
 
-        public override int GetHashCode()
-        {
-            return string.Format("{0}:{1}:{2}:{3}:",
-                FilterFile == null ? "" : FilterFile.FileName,
-                FilterFile == null ? "" : FilterFile.Tag,
-                LogFile == null ? "" : LogFile.FileName,
-                LogFile == null ? "" : LogFile.Tag).GetHashCode();
-        }
-
-        #endregion Public Constructors
-
-        #region Public Enums
+        #region Enums
 
         public enum Modification
         {
@@ -100,6 +88,25 @@ namespace TextFilter
             Completed,
         }
 
-        #endregion Public Enums
+        #endregion Enums
+
+        #region Properties
+
+        public StringBuilder Status { get; set; }
+
+        #endregion Properties
+
+        #region Methods
+
+        public override int GetHashCode()
+        {
+            return string.Format("{0}:{1}:{2}:{3}:",
+                FilterFile == null ? "" : FilterFile.FileName,
+                FilterFile == null ? "" : FilterFile.Tag,
+                LogFile == null ? "" : LogFile.FileName,
+                LogFile == null ? "" : LogFile.Tag).GetHashCode();
+        }
+
+        #endregion Methods
     }
 }

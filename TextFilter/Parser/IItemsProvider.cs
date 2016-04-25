@@ -15,12 +15,14 @@ namespace TextFilter
 {
     public interface IItemsProvider<T>
     {
-        #region Public Methods
+
+        #region Methods
 
         int FetchCount();
 
         IList<T> FetchRange(int startIndex, int count);
 
-        #endregion Public Methods
+        #endregion Methods
+
     }
 }

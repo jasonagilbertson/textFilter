@@ -19,7 +19,8 @@ namespace TextFilter
 {
     public class FileTypeAssociation : Base
     {
-        #region Private Fields
+
+        #region Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
 
@@ -29,9 +30,9 @@ namespace TextFilter
 
         private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         static FileTypeAssociation()
         {
@@ -45,18 +46,18 @@ namespace TextFilter
         {
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public static FileTypeAssociation Instance
         {
             get { return _fileTypeAssociation; }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public static bool IsAdministrator()
         {
@@ -162,10 +163,6 @@ namespace TextFilter
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private static void DeleteKey(RegistryKey key, string keyName)
         {
             if (key.OpenSubKey(keyName) != null)
@@ -222,6 +219,7 @@ namespace TextFilter
             baseKey.Close();
         }
 
-        #endregion Private Methods
+        #endregion Methods
+
     }
 }

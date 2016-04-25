@@ -18,7 +18,8 @@ namespace TextFilter
 {
     public class VirtualizingCollection<T> : IList<T>, IList
     {
-        #region Private Fields
+
+        #region Fields
 
         private readonly IItemsProvider<T> _itemsProvider;
 
@@ -32,9 +33,9 @@ namespace TextFilter
 
         private int _count = -1;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
         {
@@ -54,9 +55,9 @@ namespace TextFilter
             _itemsProvider = itemsProvider;
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public virtual int Count
         {
@@ -109,9 +110,9 @@ namespace TextFilter
             get { return this; }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Indexers
+        #region Indexers
 
         object IList.this[int index]
         {
@@ -151,9 +152,9 @@ namespace TextFilter
             set { throw new NotSupportedException(); }
         }
 
-        #endregion Public Indexers
+        #endregion Indexers
 
-        #region Public Methods
+        #region Methods
 
         public void Add(T item)
         {
@@ -253,10 +254,6 @@ namespace TextFilter
             throw new NotSupportedException();
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         protected int FetchCount()
         {
             return ItemsProvider.FetchCount();
@@ -299,6 +296,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Protected Methods
+        #endregion Methods
+
     }
 }

@@ -23,30 +23,8 @@ namespace TextFilter
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
-        #region Private Methods
 
-        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SetStatus("_LogViewModel.CollectionChanged: " + sender.ToString());
-            FilterLogTabItems();
-        }
-
-        #endregion Private Methods
-
-        #region Public Structs
-
-        public struct LogViewModelEvents
-        {
-            #region Public Fields
-
-            public static string LineTotals = "LineTotals";
-
-            #endregion Public Fields
-        }
-
-        #endregion Public Structs
-
-        #region Private Fields
+        #region Fields
 
         public static LogFileWorkerItem UpdateLogFileCallBack;
 
@@ -64,39 +42,15 @@ namespace TextFilter
 
         private LogFileManager _logFileManager;
 
+        private Parser _parser;
+
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
 
-        public delegate void LogFileWorkerItem(WorkerItem workerItem);
+        #endregion Fields
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
-        public void UpdateLogFile(WorkerItem workerItem)
-        {
-            SetStatus("UpdateLogFile:enter");
-            
-            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
-            logTab.SetGroupCount(workerItem.FilterGroupCount);
-            if (workerItem.FilterNeed == FilterNeed.ShowAll)
-            {
-                // no filter, display all
-                logTab.ContentList = workerItem.LogFile.ContentItems;
-            }
-            else
-            {
-                logTab.ContentList = workerItem.FilteredList;
-            }
-
-            if (logTab.ContentList != null)
-            {
-                LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, workerItem.LogFile.ContentItems.Count);
-            }
-
-            SetStatus("UpdateLogFile:exit");
-        }
+        #region Constructors
 
         public LogViewModel(FilterViewModel filterViewModel)
         {
@@ -116,9 +70,15 @@ namespace TextFilter
             LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Delegates
+
+        public delegate void LogFileWorkerItem(WorkerItem workerItem);
+
+        #endregion Delegates
+
+        #region Properties
 
         public Command ExportCommand
         {
@@ -181,6 +141,19 @@ namespace TextFilter
             }
         }
 
+        public Parser Parser
+        {
+            get
+            {
+                return _parser;
+            }
+
+            set
+            {
+                _parser = value;
+            }
+        }
+
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
@@ -197,9 +170,16 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
+
+        public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // dont handle count updates
+            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
+            FilterLogTabItems();
+        }
 
         public override void AddTabItem(IFile<LogFileItem> logFile)
         {
@@ -807,28 +787,28 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        private Parser _parser;
-
-        public Parser Parser
+        public void UpdateLogFile(WorkerItem workerItem)
         {
-            get
+            SetStatus("UpdateLogFile:enter");
+
+            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
+            logTab.SetGroupCount(workerItem.FilterGroupCount);
+            if (workerItem.FilterNeed == FilterNeed.ShowAll)
             {
-                return _parser;
+                // no filter, display all
+                logTab.ContentList = workerItem.LogFile.ContentItems;
+            }
+            else
+            {
+                logTab.ContentList = workerItem.FilteredList;
             }
 
-            set
+            if (logTab.ContentList != null)
             {
-                _parser = value;
+                LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, workerItem.LogFile.ContentItems.Count);
             }
-        }
 
-        public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // dont handle count updates
-            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
-            FilterLogTabItems();
+            SetStatus("UpdateLogFile:exit");
         }
 
         private List<FilterFileItem> GetPreviousFilter()
@@ -890,5 +870,29 @@ namespace TextFilter
             SetStatus("SaveCurrentFilter item count: " + _previousFilterFileItems.Count);
             PreviousIndex = SelectedIndex;
         }
+
+        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("_LogViewModel.CollectionChanged: " + sender.ToString());
+            FilterLogTabItems();
+        }
+
+        #endregion Methods
+
+        #region Structs
+
+        public struct LogViewModelEvents
+        {
+
+            #region Fields
+
+            public static string LineTotals = "LineTotals";
+
+            #endregion Fields
+
+        }
+
+        #endregion Structs
+
     }
 }

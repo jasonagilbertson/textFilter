@@ -25,7 +25,8 @@ namespace TextFilter
 
     internal class HtmlFragment
     {
-        #region Private Fields
+
+        #region Fields
 
         private StringBuilder htmlClipBuilder;
 
@@ -41,9 +42,9 @@ namespace TextFilter
 
         private StringBuilder textClipBuilder;
 
-        #endregion Private Fields
+        #endregion Fields
 
-        #region Public Constructors
+        #region Constructors
 
         public HtmlFragment()
         {
@@ -57,9 +58,9 @@ namespace TextFilter
             ProcessFragment(rawClipboardText);
         }
 
-        #endregion Public Constructors
+        #endregion Constructors
 
-        #region Public Properties
+        #region Properties
 
         public string Context
         {
@@ -81,9 +82,9 @@ namespace TextFilter
             get { return m_version; }
         }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         public static void CopyToClipboard(string htmlFragment, string textFragment)
         {
@@ -183,10 +184,6 @@ namespace TextFilter
             textClipBuilder.Clear();
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         // Helper to convert an integer into an 8 digit string. String must be 8 characters, because
         // it will be used to replace an 8 character string within a larger string.
 
@@ -272,6 +269,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Methods
+        #endregion Methods
+
     } // end of class
 }

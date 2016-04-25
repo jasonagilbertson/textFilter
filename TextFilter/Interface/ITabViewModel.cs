@@ -14,20 +14,19 @@ namespace TextFilter
 {
     public interface ITabViewModel<T>
     {
-        #region Public Events
+
+        #region Events
 
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Public Events
+        #endregion Events
 
-        #region Public Properties
+        #region Properties
 
         string Background { get; set; }
-        IFile<T> File { get; set; }
         ObservableCollection<T> ContentList { get; set; }
-        
         Command CopyCommand { get; set; }
-
+        IFile<T> File { get; set; }
         string Header { get; set; }
 
         bool IsNew { get; set; }
@@ -40,9 +39,9 @@ namespace TextFilter
 
         object Viewer { get; set; }
 
-        #endregion Public Properties
+        #endregion Properties
 
-        #region Public Methods
+        #region Methods
 
         void CopyExecuted(object target);
 
@@ -50,6 +49,7 @@ namespace TextFilter
 
         void SelectionChangedExecuted(object target);
 
-        #endregion Public Methods
+        #endregion Methods
+
     }
 }
