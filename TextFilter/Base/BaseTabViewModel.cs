@@ -20,9 +20,14 @@ using System.Windows.Controls.Primitives;
 
 namespace TextFilter
 {
+    public struct BaseTabViewModelEvents
+    {
+        public static string SelectedIndex = "SelectedIndex";
+    }
+
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
-        #region Private Fields
+      
 
         private string _background;
 
@@ -50,7 +55,7 @@ namespace TextFilter
 
         private object _viewer;
         public IFile<T> File { get; set; }
-        #endregion Private Fields
+        
 
         #region Public Constructors
 

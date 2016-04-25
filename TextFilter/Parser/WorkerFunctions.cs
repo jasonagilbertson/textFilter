@@ -40,18 +40,22 @@ namespace TextFilter
             try
             {
 
-            Debug.Print("MMFConcurrentFilter: enter");
+                workerItem.Status.AppendLine("MMFConcurrentFilter: enter");
                 //List<FilterFileItem> filterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
                 List<FilterFileItem> filterItems = workerItem.VerifiedFilterItems;
 
-                if (workerItem.LogFile == null)
+                if (workerItem.LogFile == null || workerItem.LogFile.ContentItems.Count == 0)
                 {
-                    Debug.Print("MMFConcurrentFilter: logfile null. returning");
+                    workerItem.Status.AppendLine("MMFConcurrentFilter: logfile null. returning");
+                    return workerItem;
+                }
+                if (workerItem.FilterFile == null || workerItem.FilterFile.ContentItems.Count == 0)
+                {
+                    workerItem.Status.AppendLine("MMFConcurrentFilter: filterfile null. returning");
                     return workerItem;
                 }
 
-            
-            Debug.Print(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
+                workerItem.Status.AppendLine(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
                 DateTime timer = DateTime.Now;
                 Debug.Print(string.Format("ApplyFilter:start time: {0} log file: {1} ", timer.ToString("hh:mm:ss.fffffff"), workerItem.LogFile.Tag));
                 LogFile logFile = workerItem.LogFile;
@@ -59,13 +63,41 @@ namespace TextFilter
                 // set regex cache size to number of filter items for better performance
                 // https: //msdn.microsoft.com/en-us/library/gg578045(v=vs.110).aspx
                 Regex.CacheSize = filterItems.Count;
+                Nullable<long> lowest = new Nullable<long>();
 
-            int inclusionFilterCount = filterItems.Count(x => x.Include == true);
-                Parallel.ForEach(workerItem.LogFile.ContentItems, logItem =>
+
+                int inclusionFilterCount = filterItems.Count(x => x.Include == true);
+                ParallelLoopResult loopResult = Parallel.ForEach(workerItem.LogFile.ContentItems, (logItem, state) =>
                 {
+                    if (state.ShouldExitCurrentIteration)
+                    {
+                        if (state.LowestBreakIteration.HasValue)
+                        {
+                            return;
+                        }
+                    }
+
+                    if (workerItem.BackGroundWorker.CancellationPending)
+                    {
+                        workerItem.Status.AppendLine("MMFConcurrentFilter:cancelled");
+                        state.Break();
+                        if (state.LowestBreakIteration.HasValue)
+                        {
+                            if (lowest < state.LowestBreakIteration)
+                            {
+                                lowest = state.LowestBreakIteration;
+                            }
+                        }
+                        else
+                        {
+                            lowest = state.LowestBreakIteration;
+                        }
+
+                    }
+
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        Debug.Print(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId, logItem.Content));
+                        workerItem.Status.AppendLine(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId, logItem.Content));
                         // used for goto line as it needs all line items
                         logItem.FilterIndex = int.MinValue;
                         return;
@@ -366,16 +398,26 @@ namespace TextFilter
                     logItem.FilterIndex = filterIndex;
                 });
 
+                // check for cancellation
+                if(!loopResult.IsCompleted)
+                {
+                    Debug.Print("ApplyFilter: cancelled. returning");
+                    return workerItem;
+                }
+
                 // write totals negative indexes arent displayed and are only used for counting
                 int filterCount = 0;
                 for (int i = 0; i < filterItems.Count; i++)
                 {
                     int filterItemIndex = filterItems[i].Index;
                     filterItems[i].Count = logFile.ContentItems.Count(x => x.FilterIndex == filterItemIndex | x.FilterIndex == (i * -1) - 2);
+                    workerItem.FilterFile.ContentItems.First(x => x.Index == filterItemIndex).Count = filterItems[i].Count;
 
                     if (Settings.CountMaskedMatches)
                     {
                         filterItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue) & (x.FilterIndex != int.MinValue) && x.Masked[i, 0] == 1);
+                        workerItem.FilterFile.ContentItems.First(x => x.Index == filterItemIndex).MaskedCount = filterItems[i].MaskedCount;
+
                         Debug.Print(string.Format("ApplyFilter:filterItem masked counttotal: {0}", filterItems[i].MaskedCount));
                     }
 
@@ -385,7 +427,7 @@ namespace TextFilter
                 }
 
                 double totalSeconds = DateTime.Now.Subtract(timer).TotalSeconds;
-                Debug.Print(string.Format("ApplyFilter:total time in seconds: {0} lines per second: {1} "
+                workerItem.Status.AppendLine(string.Format("ApplyFilter:total time in seconds: {0} lines per second: {1} "
                     + "logfile total count: {2} logfile filter count: {3} log file: {4}",
                     totalSeconds,
                     logFile.ContentItems.Count / totalSeconds,
@@ -399,23 +441,21 @@ namespace TextFilter
             catch (Exception e)
             {
                 //Debug.Print("ApplyFilter:exception" + e.ToString());
-                Debug.Print("ApplyFilter:exception" + e.ToString());
+                workerItem.Status.AppendLine("ApplyFilter:exception" + e.ToString());
 
                 return workerItem;
             }
         }
         public WorkerItem MMFConcurrentRead(WorkerItem workerItem)
         {
-            Debug.Print("MMFConcurrentRead: enter");
+            workerItem.Status.AppendLine("MMFConcurrentRead: enter");
             LogFile logFile = workerItem.LogFile;
             GetEncoding(logFile);
-            // not sure why this here. messing up temp file
-            //logFile.IsNew = false;
-            //logFile.Modified = false;
 
             if (!File.Exists(logFile.Tag))
             {
-                Debug.Print("MMFConcurrentRead:error, file does not exist: " + logFile.Tag);
+                workerItem.Status.AppendLine("MMFConcurrentRead:error, file does not exist: " + logFile.Tag);
+                workerItem.WorkerState = WorkerItem.State.Aborted;
                 return workerItem;
             }
 
@@ -467,9 +507,17 @@ namespace TextFilter
                 ThreadPool.QueueUserWorkItem(new WaitCallback(ParallelMMFRead), taskInfo);
             }
 
-            Debug.Print(string.Format("mmf thread length: {0}", blen));
+            workerItem.Status.AppendLine(string.Format("mmf thread length: {0}", blen));
 
-            WaitHandle.WaitAll(completedEvents);
+            // watch for cancellation while waiting
+            while (!workerItem.BackGroundWorker.CancellationPending)
+            {
+                if (WaitHandle.WaitAll(completedEvents, 10))
+                {
+                    break;
+                }
+
+            }
 
             if (memoryMappedFile != null)
             {
@@ -478,7 +526,7 @@ namespace TextFilter
 
             if (workerItem.BackGroundWorker.CancellationPending)
             {
-                Debug.Print("MMFConcurrentRead:cancelled");
+                workerItem.Status.AppendLine("MMFConcurrentRead:cancelled");
                 return workerItem;
             }
 
@@ -521,7 +569,7 @@ namespace TextFilter
                 item.Index = counter++;
             }
 
-            Debug.Print("MMFConcurrentRead:exit");
+            workerItem.Status.AppendLine("MMFConcurrentRead:exit");
 
             logFile.ContentItems = new ObservableCollection<LogFileItem>(finalList);
 
@@ -562,15 +610,16 @@ namespace TextFilter
 
                 for (x = fixUp; x < bytes.Length; x += step)
                 {
-                    if (taskInfo.bgWorker.CancellationPending)
-                    {
-                        taskInfo.completedEvent.Set();
-                        Debug.Print("ParallelMMFRead:cancelled");
-                        return;
-                    }
 
                     if (bytes[x] == newLine[0])
                     {
+                        if (taskInfo.bgWorker.CancellationPending)
+                        {
+                            taskInfo.completedEvent.Set();
+                            Debug.Print("ParallelMMFRead:cancelled");
+                            return;
+                        }
+
                         LogFileItem logFileItem = new LogFileItem()
                         {
                             Content = (taskInfo.logFile.Encoding).GetString(bytes, beginningIndex, indexCount),
@@ -790,7 +839,7 @@ namespace TextFilter
 
             workerItem.FilterGroupCount = Math.Max(groupCount, groupNames.Count);
             //logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
-            workerItem.VerifiedFilterItems = filterFileItems;
+            workerItem.VerifiedFilterItems = filterItems;
             return workerItem;
         }
         #endregion Private Methods

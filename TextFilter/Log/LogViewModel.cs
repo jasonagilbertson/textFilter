@@ -77,9 +77,8 @@ namespace TextFilter
         public void UpdateLogFile(WorkerItem workerItem)
         {
             SetStatus("UpdateLogFile:enter");
-            LogFile logFile = workerItem.LogFile;
-            //FilterLogTabItems(FilterCommand.Filter, null, logFile);
-            LogTabViewModel logTab = (LogTabViewModel)TabItems[SelectedIndex];
+            
+            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
             logTab.SetGroupCount(workerItem.FilterGroupCount);
             if (workerItem.FilterNeed == FilterNeed.ShowAll)
             {
@@ -89,6 +88,11 @@ namespace TextFilter
             else
             {
                 logTab.ContentList = workerItem.FilteredList;
+            }
+
+            if (logTab.ContentList != null)
+            {
+                LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, workerItem.LogFile.ContentItems.Count);
             }
 
             SetStatus("UpdateLogFile:exit");

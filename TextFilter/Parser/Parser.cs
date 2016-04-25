@@ -248,8 +248,13 @@ namespace TextFilter
             // todo: determine what changed and run parser new filter, modified filter, removed filter
             // see if tab was added or removed
 
-            ModifiedFilterFile(e);
+            if(sender is FilterFileItem)
+            {
             
+            }
+
+            ModifiedFilterFile(e);
+
             //check worker
 
             // todo : re parse current log with new selected filter bool ret =
@@ -285,9 +290,10 @@ namespace TextFilter
                             {
                                 FilterFile = (FilterFile)((FilterTabViewModel)col.NewItems[0]).File,
                                 WorkerModification = WorkerItem.Modification.FilterAdded,
+                                WorkerState = WorkerItem.State.NotStarted,
                                 FilterNeed = FilterNeed.Filter
                             };
-                            _workerManager.AddWorkersByWorkerItemLogFile(workerItem);
+                            _workerManager.AddWorkersByWorkerItemFilterFile(workerItem);
                         }
                         break;
                     case NotifyCollectionChangedAction.Remove:
@@ -306,27 +312,28 @@ namespace TextFilter
             else if (e is PropertyChangedEventArgs)
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
-          
-
-
-        workerItem = new WorkerItem()
-            {
-                FilterFile = CurrentFilterFile(),
-                WorkerModification = WorkerItem.Modification.Unknown,
-                FilterNeed = FilterNeed.Unknown
-            };
-
-                workerItem.LogFile = CurrentLogFile();
-
-                // get current item based on filter file and log file
-                if (_workerManager.GetWorkers(workerItem).Count == 1)
+                                             
+                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
-                    workerItem = _workerManager.GetWorkers(workerItem).FirstOrDefault();
+                    if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
+                    {
+                        workerItem = _workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).First();
+                        workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
+                        _workerManager.ProcessWorker(workerItem);
+                        return;
+                    }
+
                 }
 
-                workerItem.WorkerModification = WorkerItem.Modification.Unknown;
-                workerItem.FilterNeed = FilterNeed.Unknown;
+                workerItem = new WorkerItem()
+                {
+                    FilterFile = CurrentFilterFile(),
+                    WorkerModification = WorkerItem.Modification.Unknown,
+                    FilterNeed = FilterNeed.Unknown,
+                    LogFile = CurrentLogFile()
+                };
 
+          
                 if (CurrentFilterFile() != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName))
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
@@ -342,7 +349,7 @@ namespace TextFilter
                 {
                     SetStatus("Parser:ModifiedFilterFile:current filter file changed");
                     workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
-                    workerItem.FilterNeed = FilterNeed.Filter;
+                    workerItem.FilterNeed = FilterNeed.Current;
                     _filterFilePrevious = CurrentFilterFile();
                 }
 
@@ -357,8 +364,6 @@ namespace TextFilter
                         break;
                     case FilterNeed.Current:
                         SetStatus("Parser:ModifiedFilterFile:current");
-                        workerItem.FilterNeed = FilterNeed.Current;
-                        workerItem.WorkerModification = WorkerItem.Modification.Unknown;
                         _workerManager.ProcessWorker(workerItem);
                         break;
 
@@ -389,6 +394,7 @@ namespace TextFilter
                             {
                                 LogFile = (LogFile)((LogTabViewModel)col.NewItems[0]).File,
                                 WorkerModification = WorkerItem.Modification.LogAdded,
+                                WorkerState = WorkerItem.State.NotStarted,
                                 FilterNeed = FilterNeed.Filter
                             };
                             _workerManager.AddWorkersByWorkerItemLogFile(workerItem);
@@ -397,7 +403,7 @@ namespace TextFilter
                     case NotifyCollectionChangedAction.Remove:
                         {
                             SetStatus("Parser.ModifiedLogFile:log file being removed");
-                            _workerManager.RemoveWorkersByLogFile((LogFile)((LogTabViewModel)col.NewItems[0]).File);
+                            _workerManager.RemoveWorkersByLogFile((LogFile)((LogTabViewModel)col.OldItems[0]).File);
                         }
                         break;
                     default:
@@ -409,9 +415,24 @@ namespace TextFilter
             }
             else if(e is PropertyChangedEventArgs)
             {
-                SetStatus("Parser.ModifiedLogFile:returning, property changed events not implemented: " + (e as PropertyChangedEventArgs).PropertyName);
+                SetStatus("Parser.ModifiedLogFile:returning, property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
+
+                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
+                {
+                    if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
+                    {
+                        workerItem = _workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).First();
+
+                        workerItem.WorkerModification = WorkerItem.Modification.LogIndex;
+                        _workerManager.ProcessWorker(workerItem);
+                        return;
+                    }
+
+                }
+
+
             }
-            
+
         }
 
 

@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Text;
 
 namespace TextFilter
 {
@@ -47,6 +48,18 @@ namespace TextFilter
         {
             WorkerModification = Modification.Unknown;
             BackGroundWorker.WorkerSupportsCancellation = true;
+            Status = new StringBuilder();
+        }
+
+        public StringBuilder Status { get; set; }
+
+        public override int GetHashCode()
+        {
+            return string.Format("{0}:{1}:{2}:{3}:",
+                FilterFile == null ? "" : FilterFile.FileName,
+                FilterFile == null ? "" : FilterFile.Tag,
+                LogFile == null ? "" : LogFile.FileName,
+                LogFile == null ? "" : LogFile.Tag).GetHashCode();
         }
 
         #endregion Public Constructors
