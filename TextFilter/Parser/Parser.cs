@@ -26,36 +26,22 @@ namespace TextFilter
 
         private bool _filterMonitoringEnabled = false;
 
-        private FilterViewModel _filterViewModel;
-
-        private LogFile _logFilePrevious;
-
         private bool _logMonitoringEnabled = false;
-
-        private LogViewModel _logViewModel;
 
         private List<FilterFile> _previousFilterFiles = new List<FilterFile>();
 
         private int _totalLinesCount;
 
-        //private List<LogFile> _previousLogFiles = new List<LogFile>();
         private WorkerManager _workerManager = WorkerManager.Instance;
 
         #endregion Fields
 
         #region Constructors
 
-        public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
+        public Parser()
         {
             SetStatus("Parser:ctor");
-            // TODO: Complete member initialization
-            _filterViewModel = filterViewModel;
-            _logViewModel = logViewModel;
-            Enable(true);
-
-            // sync existing information filterviewmodel initialized before parser
-            SyncFilterFiles();
-            SyncLogFiles();
+            
         }
 
         #endregion Constructors
@@ -102,16 +88,18 @@ namespace TextFilter
         {
             if (enable)
             {
-                _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
+                _workerManager.EnableMonitor(true);
+                _FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                _LogViewModel.PropertyChanged += logViewManager_PropertyChanged;
 
                 EnableFilterFileMonitoring(true);
                 EnableLogFileMonitoring(true);
             }
             else
             {
-                _filterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
+                _workerManager.EnableMonitor(false);
+                _FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                _LogViewModel.PropertyChanged -= logViewManager_PropertyChanged;
 
                 EnableFilterFileMonitoring(false);
                 EnableLogFileMonitoring(false);
@@ -128,7 +116,7 @@ namespace TextFilter
                     item.ContentItems.CollectionChanged += filterItems_CollectionChanged;
                 }
 
-                _filterViewModel.TabItems.CollectionChanged += filterItems_CollectionChanged;
+                _FilterViewModel.TabItems.CollectionChanged += filterItems_CollectionChanged;
                 _filterMonitoringEnabled = !_filterMonitoringEnabled;
             }
             else if (!enable & _filterMonitoringEnabled)
@@ -138,7 +126,7 @@ namespace TextFilter
                     item.ContentItems.CollectionChanged -= filterItems_CollectionChanged;
                 }
 
-                _filterViewModel.TabItems.CollectionChanged -= filterItems_CollectionChanged;
+                _FilterViewModel.TabItems.CollectionChanged -= filterItems_CollectionChanged;
                 _filterMonitoringEnabled = !_filterMonitoringEnabled;
             }
         }
@@ -152,7 +140,7 @@ namespace TextFilter
                     item.ContentItems.CollectionChanged += logItems_CollectionChanged;
                 }
 
-                _logViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
+                _LogViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
                 _logMonitoringEnabled = !_logMonitoringEnabled;
             }
             else if (!enable & _logMonitoringEnabled)
@@ -162,23 +150,36 @@ namespace TextFilter
                     item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
                 }
 
-                _logViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
+                _LogViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
                 _logMonitoringEnabled = !_logMonitoringEnabled;
             }
         }
         private FilterFile CurrentFilterFile()
         {
-            SetStatus("Parser:CurrentFilterFile:exit: index: " + _filterViewModel.SelectedIndex);
-            return (FilterFile)_filterViewModel.CurrentFile();
+            if (_FilterViewModel != null)
+            {
+                SetStatus("Parser:CurrentFilterFile:exit: index: " + _FilterViewModel.SelectedIndex);
+                return (FilterFile)_FilterViewModel.CurrentFile();
+            }
+            else
+            {
+                return null;
+            }
+            
         }
-
-        //    WorkerItem worker = ModifiedLogFile();
-        //    _workerManager.ProcessWorker(worker);
-        //}
         private List<IFile<FilterFileItem>> CurrentFilterFiles()
         {
-            SetStatus("Parser:CurrentFilterFiles:exit: count: " + _filterViewModel.ViewManager.FileManager.Count);
-            return (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
+            if (_FilterViewModel.ViewManager != null)
+            {
+                SetStatus("Parser:CurrentFilterFiles:exit: count: " + _FilterViewModel.ViewManager.FileManager.Count);
+                return (List<IFile<FilterFileItem>>)_FilterViewModel.ViewManager.FileManager;
+            }
+            else
+            {
+                SetStatus("Parser:CurrentFilterFiles:null ");
+                return new List<IFile<FilterFileItem>>();
+            }
+
 
         }
 
@@ -188,24 +189,40 @@ namespace TextFilter
         //    // todo: determine what changed and run parser new log or remove log
         private LogFile CurrentLogFile()
         {
-            SetStatus("Parser:CurrentLogFile:exit: index: " + _logViewModel.SelectedIndex);
-            return (LogFile)_logViewModel.CurrentFile();
+            if (_LogViewModel != null)
+            {
+                SetStatus("Parser:CurrentLogFile:exit: index: " + _LogViewModel.SelectedIndex);
+                return (LogFile)_LogViewModel.CurrentFile();
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private List<IFile<LogFileItem>> CurrentLogFiles()
         {
-            SetStatus("Parser:CurrentLogFiles:exit: count: " + _logViewModel.ViewManager.FileManager.Count);
-            return (List<IFile<LogFileItem>>)_logViewModel.ViewManager.FileManager;
+            if (_LogViewModel.ViewManager != null)
+            {
+                SetStatus("Parser:CurrentLogFiles:exit: count: " + _LogViewModel.ViewManager.FileManager.Count);
+                return (List<IFile<LogFileItem>>)_LogViewModel.ViewManager.FileManager;
+            }
+            else
+            {
+                SetStatus("Parser:CurrentLogFiles:null ");
+                return new List<IFile<LogFileItem>>();
+            }
+
         }
 
-        private void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        public void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             SetStatus("Parser:filterItemsCollectionChanged");
             ModifiedFilterFile(e);
 
         }
 
-        private void filterViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void filterViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetStatus("Parser:filterViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new filter, modified filter, removed filter
@@ -221,10 +238,10 @@ namespace TextFilter
             //check worker
 
             // todo : re parse current log with new selected filter bool ret =
-            // ParseFile(_filterViewModel.CurrentFile(), _logViewModel.CurrentFile());
+            // ParseFile(_FilterViewModel.CurrentFile(), _LogViewModel.CurrentFile());
         }
 
-        private void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        public void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             SetStatus("Parser:logItemsCollectionChanged");
             ModifiedLogFile(e);
@@ -232,7 +249,7 @@ namespace TextFilter
 
         }
 
-        private void logViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        public void logViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new log or remove log
@@ -284,7 +301,7 @@ namespace TextFilter
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
 
-                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
+                if (_LogViewModel != null && (e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
                     {
@@ -301,7 +318,7 @@ namespace TextFilter
                     FilterFile = CurrentFilterFile(),
                     WorkerModification = WorkerItem.Modification.Unknown,
                     FilterNeed = FilterNeed.Unknown,
-                    LogFile = CurrentLogFile()
+                    LogFile = _LogViewModel == null ? null : CurrentLogFile()
                 };
 
 
@@ -309,7 +326,7 @@ namespace TextFilter
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
                     FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName);
-                    workerItem.FilterNeed = _filterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
+                    workerItem.FilterNeed = _FilterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
                 }
                 else
                 {
@@ -368,6 +385,7 @@ namespace TextFilter
                                 WorkerState = WorkerItem.State.NotStarted,
                                 FilterNeed = FilterNeed.Filter
                             };
+
                             _workerManager.AddWorkersByWorkerItemLogFile(workerItem);
                         }
                         break;
@@ -388,7 +406,7 @@ namespace TextFilter
             {
                 SetStatus("Parser.ModifiedLogFile:returning, property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
 
-                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
+                if (_FilterViewModel != null && (e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
                     {

@@ -26,13 +26,11 @@ namespace TextFilter
 
         #region Fields
 
-        public static LogFileWorkerItem UpdateLogFileCallBack;
+        
 
         private Command _exportCommand;
 
         private LogFileItem _filteredSelectedItem;
-
-        private FilterViewModel _filterViewModel;
 
         private Command _gotoLineCommand;
 
@@ -42,8 +40,6 @@ namespace TextFilter
 
         private LogFileManager _logFileManager;
 
-        private Parser _parser;
-
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
@@ -51,32 +47,28 @@ namespace TextFilter
         #endregion Fields
 
         #region Constructors
-
-        public LogViewModel(FilterViewModel filterViewModel)
+        
+        public LogViewModel()
         {
             SetStatus("LogViewModel.ctor");
 
             TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             ViewManager = new LogFileManager();
+
+            this.PropertyChanged += _Parser.logViewManager_PropertyChanged;
+            TabItems.CollectionChanged += _Parser.logItems_CollectionChanged;
+
             _logFileManager = (LogFileManager)ViewManager;
-            UpdateLogFileCallBack = UpdateLogFile;
-            _filterViewModel = filterViewModel;
-            _parser = new Parser(_filterViewModel, this);
+            UpdateViewCallback = UpdateView;
+                        
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
 
-            _filterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
-            PropertyChanged += LogViewModel_PropertyChanged;
-            LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
         #endregion Constructors
 
-        #region Delegates
-
-        public delegate void LogFileWorkerItem(WorkerItem workerItem);
-
-        #endregion Delegates
+        
 
         #region Properties
 
@@ -141,18 +133,7 @@ namespace TextFilter
             }
         }
 
-        public Parser Parser
-        {
-            get
-            {
-                return _parser;
-            }
-
-            set
-            {
-                _parser = value;
-            }
-        }
+     
 
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
@@ -251,7 +232,7 @@ namespace TextFilter
 
             try
             {
-                List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
+                List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_FilterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;
 
@@ -270,7 +251,7 @@ namespace TextFilter
                 // dont check filter need if intent is to reset list to current filter or to show all
                 if (filterIntent == FilterCommand.Filter)
                 {
-                    FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
+                    FilterNeed filterNeed = _FilterViewModel.CompareFilterList(GetPreviousFilter());
                     SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
 
                     switch (filterNeed)
@@ -394,10 +375,10 @@ namespace TextFilter
                     {
                         SetStatus(string.Format("LogViewModel.FindNextExecuted: not found! filterindex: {0} index: {1} ", filterIndex, index));
                         SetStatus(string.Format("QuickFindItem: filter pattern: {0} include: {1} exclude: {2}",
-                            _filterViewModel.QuickFindItem.Filterpattern,
-                            _filterViewModel.QuickFindItem.Include,
-                            _filterViewModel.QuickFindItem.Exclude));
-                        foreach (FilterFileItem item in _filterViewModel.FilterList())
+                            _FilterViewModel.QuickFindItem.Filterpattern,
+                            _FilterViewModel.QuickFindItem.Include,
+                            _FilterViewModel.QuickFindItem.Exclude));
+                        foreach (FilterFileItem item in _FilterViewModel.FilterList())
                         {
                             SetStatus(string.Format("file item:{0}:{1}:{2}", item.Index, item.Filterpattern, item.Exclude, item.Include));
                         }
@@ -787,9 +768,14 @@ namespace TextFilter
             }
         }
 
-        public void UpdateLogFile(WorkerItem workerItem)
+        public override void UpdateView(WorkerItem workerItem)
         {
-            SetStatus("UpdateLogFile:enter");
+            SetStatus("UpdateView:enter");
+            if(workerItem.LogFile == null)
+            {
+                SetStatus("UpdateView:LogFile null:exit");
+                return;
+            }
 
             LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
             logTab.SetGroupCount(workerItem.FilterGroupCount);
@@ -808,7 +794,7 @@ namespace TextFilter
                 LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, workerItem.LogFile.ContentItems.Count);
             }
 
-            SetStatus("UpdateLogFile:exit");
+            SetStatus("UpdateView:exit");
         }
 
         private List<FilterFileItem> GetPreviousFilter()

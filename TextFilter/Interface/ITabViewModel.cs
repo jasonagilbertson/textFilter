@@ -42,7 +42,7 @@ namespace TextFilter
         #endregion Properties
 
         #region Methods
-
+        
         void CopyExecuted(object target);
 
         void OnPropertyChanged(string name);

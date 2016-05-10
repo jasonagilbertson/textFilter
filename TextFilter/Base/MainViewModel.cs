@@ -29,12 +29,11 @@ namespace TextFilter
 
         private Command _copyCommand;
 
-        private FilterViewModel _filterViewModel;
+        
 
         private Command _helpCommand;
 
-        private LogViewModel _logViewModel;
-
+        
         private TextFilterSettings _settings;
 
         private Command _settingsCommand;
@@ -66,11 +65,11 @@ namespace TextFilter
                 }
 
                 Base.NewStatus += HandleNewStatus;
-                _filterViewModel = new FilterViewModel();
-                _logViewModel = new LogViewModel(_filterViewModel);
 
-                _filterViewModel._LogViewModel = _logViewModel;
-
+                Base._Parser = new Parser();                        
+                Base._FilterViewModel = new FilterViewModel();
+                Base._LogViewModel = new LogViewModel();
+                _Parser.Enable(true);
                
                 App.Current.MainWindow.Title = string.Format("{0} {1}", 
                     Process.GetCurrentProcess().MainModule.ModuleName,
@@ -126,12 +125,7 @@ namespace TextFilter
             set { _copyCommand = value; }
         }
 
-        public FilterViewModel FilterViewModel
-        {
-            get { return _filterViewModel; }
-            set { _filterViewModel = value; }
-        }
-
+       
         public Command HelpCommand
         {
             get
@@ -147,12 +141,7 @@ namespace TextFilter
             set { _helpCommand = value; }
         }
 
-        public LogViewModel LogViewModel
-        {
-            get { return _logViewModel; }
-            set { _logViewModel = value; }
-        }
-
+      
         public TextFilterSettings Settings
         {
             get { return _settings; }
@@ -298,18 +287,22 @@ namespace TextFilter
         {
             try
             {
-                while (this.Status.Count > 1000)
+                Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
                 {
-                    this.Status.RemoveAt(0);
-                }
 
-                ListBoxItem listBoxItem = new ListBoxItem();
-                listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), statusData);
-                this.Status.Add(listBoxItem);
-                this.StatusIndex = Status.Count - 1;
+                    while (this.Status.Count > 1000)
+                    {
+                        this.Status.RemoveAt(0);
+                    }
 
-                Debug.Print(statusData);
-                OnPropertyChanged("Status");
+                    ListBoxItem listBoxItem = new ListBoxItem();
+                    listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), statusData);
+                    this.Status.Add(listBoxItem);
+                    this.StatusIndex = Status.Count - 1;
+
+                    Debug.Print(statusData);
+                    OnPropertyChanged("Status");
+                });
             }
             catch (Exception e)
             {
@@ -337,9 +330,9 @@ namespace TextFilter
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            _logViewModel.Parser.Enable(false);
-            _filterViewModel.SaveModifiedFiles(sender);
-            _logViewModel.SaveModifiedFiles(sender);
+            _Parser.Enable(false);
+            _FilterViewModel.SaveModifiedFiles(sender);
+            _LogViewModel.SaveModifiedFiles(sender);
             _settings.Save();
         }
 
@@ -350,7 +343,7 @@ namespace TextFilter
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
-            var oc = _filterViewModel.SharedCollection;
+            var oc = _FilterViewModel.SharedCollection;
             VersionCheck(silent);
         }
 

@@ -14,13 +14,11 @@ namespace TextFilter
     public interface IViewModel<T>
     {
 
-        #region Events
-
-        // ITabViewModel<T> SelectedTabItem { get; set; }
+        
+        
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Events
-
+        void UpdateView(WorkerItem workerItem);
         #region Properties
 
         Command CloseCommand { get; set; }

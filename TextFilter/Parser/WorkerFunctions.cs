@@ -45,7 +45,11 @@ namespace TextFilter
                 workerItem.Status.AppendLine("MMFConcurrentFilter: enter");
                 //List<FilterFileItem> filterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
                 List<FilterFileItem> filterItems = workerItem.VerifiedFilterItems;
-
+                if (filterItems == null)
+                {
+                    workerItem.Status.AppendLine("MMFConcurrentFilter: filterItems null. returning");
+                    return workerItem;
+                }
                 if (workerItem.LogFile == null || workerItem.LogFile.ContentItems.Count == 0)
                 {
                     workerItem.Status.AppendLine("MMFConcurrentFilter: logfile null. returning");
@@ -56,6 +60,7 @@ namespace TextFilter
                     workerItem.Status.AppendLine("MMFConcurrentFilter: filterfile null. returning");
                     return workerItem;
                 }
+
 
                 workerItem.Status.AppendLine(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
                 DateTime timer = DateTime.Now;
@@ -417,7 +422,9 @@ namespace TextFilter
 
                     if (Settings.CountMaskedMatches)
                     {
-                        filterItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue) & (x.FilterIndex != int.MinValue) && x.Masked[i, 0] == 1);
+                        filterItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue) 
+                            & (x.FilterIndex != int.MinValue) 
+                            && x.Masked[i, 0] == 1);
                         workerItem.FilterFile.ContentItems.First(x => x.Index == filterItemIndex).MaskedCount = filterItems[i].MaskedCount;
 
                         Debug.Print(string.Format("ApplyFilter:filterItem masked counttotal: {0}", filterItems[i].MaskedCount));
@@ -503,7 +510,7 @@ namespace TextFilter
                     position = bposition,
                     length = blen,
                     completedEvent = completedEvents[mmfCount],
-                    bgWorker = workerItem.BackGroundWorker
+                    workerItem = workerItem
                 };
 
                 ThreadPool.QueueUserWorkItem(new WaitCallback(ParallelMMFRead), taskInfo);
@@ -583,7 +590,7 @@ namespace TextFilter
             try
             {
                 TaskMMFInfo taskInfo = (TaskMMFInfo)taskMMFInfo;
-                Debug.Print(string.Format("ParallelMMFRead:enter : position:{0} length:{1} total:{2}",
+                taskInfo.workerItem.Status.AppendLine(string.Format("ParallelMMFRead:enter : position:{0} length:{1} total:{2}",
                     taskInfo.position, taskInfo.length, taskInfo.length + taskInfo.position));
 
                 MemoryMappedViewStream viewStream = taskInfo.mmf.CreateViewStream(taskInfo.position, taskInfo.length, MemoryMappedFileAccess.Read);
@@ -615,10 +622,10 @@ namespace TextFilter
 
                     if (bytes[x] == newLine[0])
                     {
-                        if (taskInfo.bgWorker.CancellationPending)
+                        if (taskInfo.workerItem.BackGroundWorker.CancellationPending)
                         {
                             taskInfo.completedEvent.Set();
-                            Debug.Print("ParallelMMFRead:cancelled");
+                            taskInfo.workerItem.Status.AppendLine("ParallelMMFRead:cancelled");
                             return;
                         }
 
@@ -851,7 +858,7 @@ namespace TextFilter
 
             #region Fields
 
-            public BackgroundWorker bgWorker;
+            public WorkerItem workerItem;
 
             public Int32 length;
 

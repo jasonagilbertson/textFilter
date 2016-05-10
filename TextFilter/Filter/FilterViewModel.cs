@@ -44,21 +44,35 @@ namespace TextFilter
         private SpinLock _spinLock = new SpinLock();
 
         #endregion Fields
+        public override void UpdateView(WorkerItem workerItem)
+        {
+            SetStatus("UpdateView:enter");
 
+            FilterTabViewModel tab = (FilterTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.FilterFile.FileName);
+            
+            tab.ContentList = workerItem.FilterFile.ContentItems;
+
+            SetStatus("UpdateView:exit");
+        }
         #region Constructors
 
         public FilterViewModel()
         {
+            //_Parser = parser;
+            //_Parser._FilterViewModel = this;
+
             TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
+            this.PropertyChanged += _Parser.filterViewManager_PropertyChanged;
+            TabItems.CollectionChanged += _Parser.filterItems_CollectionChanged;
 
             ViewManager = new FilterFileManager();
 
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentFilterFiles.ToArray()));
 
-            TabItems.CollectionChanged += TabItems_CollectionChanged;
-            ViewManager.PropertyChanged += ViewManager_PropertyChanged;
-            ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
+            //TabItems.CollectionChanged += TabItems_CollectionChanged;
+            // ViewManager.PropertyChanged += ViewManager_PropertyChanged;
+            // ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
         #endregion Constructors

@@ -27,8 +27,9 @@ namespace TextFilter
 
         #endregion Fields
 
-        //public bool _transitioning;
-
+        public static FilterViewModel _FilterViewModel { get; set; }
+        public static LogViewModel _LogViewModel { get; set; }
+        public static Parser _Parser { get; set; }
         #region Events
 
         public static event EventHandler<string> NewStatus;

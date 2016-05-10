@@ -217,13 +217,13 @@ namespace TextFilter
                         | Path.GetExtension(filename).ToLower() == ".rvf"
                         | Path.GetExtension(filename).ToLower() == ".tat")
                     {
-                        if (this._mainViewModel.FilterViewModel.VerifyAndOpenFile(filename))
+                        if (Base._FilterViewModel.VerifyAndOpenFile(filename))
                         {
                             continue;
                         }
                     }
                     // not a filter file
-                    this._mainViewModel.LogViewModel.OpenFileExecuted(filename);
+                    Base._LogViewModel.OpenFileExecuted(filename);
                 }
             }
         }
