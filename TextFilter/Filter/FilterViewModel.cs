@@ -58,9 +58,7 @@ namespace TextFilter
 
         public FilterViewModel()
         {
-            //_Parser = parser;
-            //_Parser._FilterViewModel = this;
-
+            SetStatus("FilterViewModel.ctor");
             TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
             this.PropertyChanged += _Parser.filterViewManager_PropertyChanged;
             TabItems.CollectionChanged += _Parser.filterItems_CollectionChanged;

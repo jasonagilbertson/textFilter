@@ -10,6 +10,7 @@
 // ***********************************************************************
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -75,6 +76,7 @@ namespace TextFilter
 
         public void AddWorkersByWorkerItemFilterFile(WorkerItem workerItem)
         {
+            CancelAllWorkers();
             WorkerItem baseItem = new WorkerItem()
             {
                 FilterNeed = FilterNeed.Filter,
@@ -127,6 +129,7 @@ namespace TextFilter
 
         public void AddWorkersByWorkerItemLogFile(WorkerItem workerItem)
         {
+            CancelAllWorkers();
             WorkerItem baseItem = new WorkerItem()
             {
                 FilterNeed = FilterNeed.ShowAll,
@@ -176,13 +179,10 @@ namespace TextFilter
         public void CancelAllWorkers()
         {
             // Cancel the asynchronous operation.
-            Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
+            foreach (WorkerItem bgWorker in GetWorkers())
             {
-                foreach (WorkerItem bgWorker in GetWorkers())
-                {
-                    CancelWorker(bgWorker);
-                }
-            });
+                CancelWorker(bgWorker);
+            }
         }
 
         public void CancelWorker(WorkerItem workerItem)
@@ -192,8 +192,10 @@ namespace TextFilter
                 SetStatus(string.Format("CancelAllWorkers:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
                     workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
                     workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
-
-                workerItem.BackGroundWorker.CancelAsync();
+                Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
+                {
+                    workerItem.BackGroundWorker.CancelAsync();
+                });
                 //while (workerItem.BackGroundWorker.IsBusy)
                 //{
                 //    Thread.Sleep(10);
@@ -479,8 +481,6 @@ namespace TextFilter
         public bool ProcessWorker(WorkerItem workerItem)
         {
 
-            CancelAllWorkers();
-
             if (workerItem == null)
             {
                 SetStatus("WorkerManager.ProcessWorker enter worker null. returning");
@@ -532,9 +532,6 @@ namespace TextFilter
             }
 
             SetStatus("WorkerManager.ProcessWorker:workerItem.State:" + workerItem.WorkerState.ToString());
-
-         
-
             return true;
         }
 
@@ -562,7 +559,7 @@ namespace TextFilter
                 {
                     ListLock.EnterWriteLock();
                     SetStatus("RemoveWorker:removing worker:" + workerItem.GetHashCode().ToString());
-                    workerItem.BackGroundWorker.CancelAsync();
+                    CancelWorker(workerItem);
                     BGWorkers.Remove(workerItem);
                 }
                 else
@@ -747,6 +744,10 @@ namespace TextFilter
             WorkerItem workerItem = (WorkerItem)e.Argument;
             workerItem.Status.AppendLine("DoFilterWork:enter");
             workerItem.WorkerState = WorkerItem.State.Started;
+            if(workerItem.FilterFile.ContentItems.Count == 0)
+            {
+                //workerItem.FilterFile.ContentItems = (ObservableCollection<IFileItem>)MMFConcurrentRead(workerItem).LogFile.ContentItems;
+            }
             e.Result = MMFConcurrentFilter(workerItem);
 
             if (bgWorker.CancellationPending)
@@ -823,6 +824,7 @@ namespace TextFilter
             {
                 if (item.WorkerState == WorkerItem.State.Started)
                 {
+                    CancelWorker(item);
                 }
                 else if (item.WorkerState != WorkerItem.State.Completed)
                 {
