@@ -37,6 +37,10 @@ namespace TextFilter
                     if(scount == 0 & ccount > 0)
                     {
                         CheckWorkerStates(workerManager);
+                        _workerManager.ListLock.EnterWriteLock();
+                        ManageWorkerStates();
+                        _workerManager.ListLock.ExitWriteLock();
+
                         Thread.Sleep(10);
                     }
                     else
@@ -72,6 +76,48 @@ namespace TextFilter
             {
                 //SetStatus("WorkerManager.ProcessWorker:workerItem not ready or notstarted. exiting.");
             }
+        }
+        private void ManageWorkerStates()
+        {
+            SetStatus("ManageWorkerStates:enter:count:" + _workerManager.BGWorkers.Count);
+
+#if DEBUG
+            foreach (WorkerItem worker in _workerManager.BGWorkers)
+            {
+
+                SetStatus(string.Format("ManageWorkerStates:{0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
+
+                    worker.GetHashCode(),
+                    worker.LogFile == null ? string.Empty : worker.LogFile.Tag,
+                    worker.FilterFile == null ? string.Empty : worker.FilterFile.Tag,
+                    worker.WorkerState,
+                    worker.WorkerModification));
+            }
+#endif
+            if (_workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started) == 0)
+            {
+                SetStatus("ManageWorkerStates:no workers in Started state.");
+                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.NotStarted))
+                {
+                    SetStatus("ManageWorkerStates:starting worker in NotStarted state.");
+                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.NotStarted));
+                    return;
+                }
+                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.Aborted))
+                {
+                    SetStatus("ManageWorkerStates:starting worker in Aborted state.");
+                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.Aborted));
+                    return;
+                }
+                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.Ready))
+                {
+                    SetStatus("ManageWorkerStates:starting worker in Ready state.");
+                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.Ready));
+                    return;
+                }
+            }
+
+            SetStatus("ManageWorkerStates:exiting");
         }
 
         internal void Abort()

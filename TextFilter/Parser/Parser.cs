@@ -301,7 +301,7 @@ namespace TextFilter
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
 
-                if (_LogViewModel != null && (e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
+                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
                     {
@@ -406,7 +406,7 @@ namespace TextFilter
             {
                 SetStatus("Parser.ModifiedLogFile:returning, property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
 
-                if (_FilterViewModel != null && (e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
+                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
                     {

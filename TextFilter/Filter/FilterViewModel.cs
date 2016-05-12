@@ -64,6 +64,7 @@ namespace TextFilter
             TabItems.CollectionChanged += _Parser.filterItems_CollectionChanged;
 
             ViewManager = new FilterFileManager();
+            UpdateViewCallback = UpdateView;
 
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentFilterFiles.ToArray()));

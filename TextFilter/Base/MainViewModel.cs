@@ -66,14 +66,14 @@ namespace TextFilter
 
                 Base.NewStatus += HandleNewStatus;
 
-                Base._Parser = new Parser();                        
+                Base._Parser = new Parser();
                 Base._FilterViewModel = new FilterViewModel();
                 Base._LogViewModel = new LogViewModel();
                 _Parser.Enable(true);
-               
-                App.Current.MainWindow.Title = string.Format("{0} {1}", 
+
+                App.Current.MainWindow.Title = string.Format("{0} {1}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
-                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion); 
+                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
 
                 SetStatus(App.Current.MainWindow.Title);
 
@@ -93,10 +93,13 @@ namespace TextFilter
                     }
                 };
 
-                _timer = new System.Timers.Timer(10000);
-                _timer.AutoReset = false;
+                _timer = new System.Timers.Timer(10000)
+                {
+                    AutoReset = false,
+                    Enabled = true
+                };
+
                 _timer.Elapsed += _timer_Elapsed;
-                _timer.Enabled = true;
 
                 SetStatus("loaded");
             }
