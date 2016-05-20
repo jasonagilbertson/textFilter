@@ -166,7 +166,8 @@
     <Compile Include="Log\LogTabViewModel.cs" />
     <Compile Include="Base\MainViewModel.cs" />
     <Compile Include="Parser\AsyncVirtualizingCollection.cs" />
-    <Compile Include="Parser\QueueMonitor.cs" />
+    <Compile Include="Parser\JobMonitor.cs" />
+    <Compile Include="Parser\TaskMMInfo.cs" />
     <Compile Include="Parser\WorkerFunctions.cs" />
     <Compile Include="Parser\WorkerItem.cs" />
     <Compile Include="Parser\IItemsProvider.cs" />

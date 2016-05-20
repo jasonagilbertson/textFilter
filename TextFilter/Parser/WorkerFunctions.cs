@@ -38,12 +38,9 @@ namespace TextFilter
 
         public WorkerItem MMFConcurrentFilter(WorkerItem workerItem)
         {
-
             try
             {
-
                 workerItem.Status.AppendLine("MMFConcurrentFilter: enter");
-                //List<FilterFileItem> filterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
                 List<FilterFileItem> filterItems = workerItem.VerifiedFilterItems;
                 if (filterItems == null)
                 {
@@ -71,7 +68,6 @@ namespace TextFilter
                 // https: //msdn.microsoft.com/en-us/library/gg578045(v=vs.110).aspx
                 Regex.CacheSize = filterItems.Count;
                 Nullable<long> lowest = new Nullable<long>();
-
 
                 int inclusionFilterCount = filterItems.Count(x => x.Include == true);
                 ParallelLoopResult loopResult = Parallel.ForEach(workerItem.LogFile.ContentItems, (logItem, state) =>
@@ -135,7 +131,6 @@ namespace TextFilter
                             Thread.CurrentThread.ManagedThreadId, filterItem.Filterpattern, logItem.Content));
 
                         // unnamed and named groups
-                        //if (logTab.GroupCount > 0 && filterItem.Regex)
                         if (filterItem.GroupCount > 0 && filterItem.Regex)
                         {
                             MatchCollection mc = Regex.Matches(logItem.Content, filterItem.Filterpattern, RegexOptions.Singleline | (filterItem.CaseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase));
@@ -587,9 +582,9 @@ namespace TextFilter
 
         public void ParallelMMFRead(object taskMMFInfo)
         {
+            TaskMMFInfo taskInfo = (TaskMMFInfo)taskMMFInfo;
             try
             {
-                TaskMMFInfo taskInfo = (TaskMMFInfo)taskMMFInfo;
                 taskInfo.workerItem.Status.AppendLine(string.Format("ParallelMMFRead:enter : position:{0} length:{1} total:{2}",
                     taskInfo.position, taskInfo.length, taskInfo.length + taskInfo.position));
 
@@ -678,11 +673,11 @@ namespace TextFilter
                 }
 
                 taskInfo.completedEvent.Set();
-                Debug.Print("ParallelMMFRead:exit");
+                taskInfo.workerItem.Status.AppendLine("ParallelMMFRead:exit");
             }
             catch (Exception e)
             {
-                Debug.Print("ParallelMMFRead:exception" + e.ToString());
+                taskInfo.workerItem.Status.AppendLine("ParallelMMFRead:exception" + e.ToString());
                 return;
             }
         }
@@ -694,7 +689,7 @@ namespace TextFilter
             List<string> groupNames = new List<string>();
             if (workerItem.FilterFile == null)
             {
-                SetStatus("VerifyFilterPattern:FilterFile null. returning");
+                workerItem.Status.AppendLine("VerifyFilterPattern:FilterFile null. returning");
                 return workerItem;
             }
 
@@ -731,7 +726,7 @@ namespace TextFilter
                     }
                     catch
                     {
-                        Debug.Print("not a regex:" + filterItem.Filterpattern);
+                        workerItem.Status.AppendLine("not a regex:" + filterItem.Filterpattern);
                         newFilter.Regex = false;
                         newFilter.Filterpattern = Regex.Escape(filterItem.Filterpattern);
                     }
@@ -767,15 +762,13 @@ namespace TextFilter
 
                 Encoding[] encodings = new Encoding[] { Encoding.UTF32, Encoding.UTF8, Encoding.BigEndianUnicode, Encoding.Unicode };
 
-                //logFile.FileName = Path.GetFileName(fileName);
                 // find bom
                 bool foundEncoding = false;
 
                 using (System.IO.StreamReader sr = new System.IO.StreamReader(logFile.Tag, true))
                 {
-                    // encoding = sr.CurrentEncoding;
-
                     Debug.Print("current encoding:" + logFile.Encoding.EncodingName);
+
                     // biggest preamble is 4 bytes
                     if (sr.BaseStream.Length < 4)
                     {
@@ -815,7 +808,6 @@ namespace TextFilter
                     }
 
                     // if bom not supplied, try to determine utf-16 (unicode)
-
                     while (!sr.EndOfStream)
                     {
                         string line = sr.ReadLine();
@@ -850,41 +842,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
-        #region Classes
-
-        public class TaskMMFInfo
-        {
-
-            #region Fields
-
-            public WorkerItem workerItem;
-
-            public Int32 length;
-
-            public LogFile logFile;
-
-            public MemoryMappedFile mmf;
-
-            public Int32 position;
-
-            public List<LogFileItem> stringList;
-
-            #endregion Fields
-
-            #region Properties
-
-            public ManualResetEvent completedEvent { get; set; }
-
-            //public string fileName { get; set; }
-
-            public DoWorkEventArgs doWorkEventArgs { get; set; }
-
-            #endregion Properties
-
-        }
-
-        #endregion Classes
-
     }
 }

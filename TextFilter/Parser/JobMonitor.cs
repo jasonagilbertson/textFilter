@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace TextFilter
 {
-    class QueueMonitor:Base
+    class JobMonitor:Base
     {
         Thread _monitorThread;
         WorkerManager _workerManager;
         
-        public QueueMonitor(WorkerManager workerManager)
+        public JobMonitor(WorkerManager workerManager)
         {
             _workerManager = workerManager;
             _monitorThread = new Thread(DoWork);
