@@ -38,6 +38,8 @@ namespace TextFilter
 
         private Command _settingsCommand;
 
+        private Command _showDebugLogCommand;
+
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
 
         private Command _statusChangedCommand;
@@ -187,6 +189,21 @@ namespace TextFilter
             set { _settingsCommand = value; }
         }
 
+        public Command ShowDebugLogCommand
+        {
+            get
+            {
+                if (_showDebugLogCommand == null)
+                {
+                    _showDebugLogCommand = new Command(ShowDebugLogExecuted);
+                }
+                _showDebugLogCommand.CanExecute = true;
+
+                return _showDebugLogCommand;
+            }
+            set { _showDebugLogCommand = value; }
+        }
+
         public ObservableCollection<ListBoxItem> Status
         {
             get
@@ -259,6 +276,7 @@ namespace TextFilter
 
             try
             {
+
                 if (contentList is List<ListBoxItem>)
                 {
                     c_contentList = (List<ListBoxItem>)contentList;
@@ -328,6 +346,12 @@ namespace TextFilter
             {
                 Debug.Print(string.Format("SetViewStatus:exception: {0}: {1}", statusData, e));
             }
+        }
+
+        public void ShowDebugLogExecuted(object sender)
+        {
+            DebugLogDialog dialog = new DebugLogDialog();
+            dialog.WaitForResult();
         }
 
         public void StatusChangedExecuted(object sender)
