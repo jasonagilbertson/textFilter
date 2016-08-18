@@ -494,6 +494,7 @@
                     Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                     Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                     BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Command="{Binding FilterViewModel.QuickFindChangedCommand}"
                     Content="Regex"
                     IsChecked="{Binding Path=FilterViewModel.QuickFindRegex, Mode=TwoWay}" />
                 <ToggleButton
@@ -833,7 +834,7 @@
                                         Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                                         BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                                         Header="Shared Filters"
-                                        ItemsSource="{Binding FilterViewModel.SharedCollection}" />
+                                        ItemsSource="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.SharedCollection}" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                             <DataGrid.Columns>

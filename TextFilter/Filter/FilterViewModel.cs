@@ -1060,14 +1060,10 @@ namespace TextFilter
                     QuickFindItem.Regex = false;
                 }
             }
-
-            //if (!QuickFindAnd && !QuickFindOr && !QuickFindNot)
-            //{
-            //    foreach (FilterFileItem filterItem in FilterList())
-            //    {
-            //        filterItem.Count = 0;
-            //    }
-            //}
+            else
+            {
+                QuickFindItem.Regex = false;
+            }
 
             // send filter request
             _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
