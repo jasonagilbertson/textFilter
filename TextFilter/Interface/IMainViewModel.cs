@@ -21,7 +21,7 @@ namespace TextFilter
 
         #region Public Methods
 
-        void SetViewStatusLog(string statusData);
+        
 
         #endregion Public Methods
     }

@@ -1080,7 +1080,6 @@ namespace TextFilter
 
             // send filter request
             _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
-            SetCurrentStatus(CurrentStatusSetting.quick_filtered);
         }
     }
 }

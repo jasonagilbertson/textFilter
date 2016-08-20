@@ -323,7 +323,6 @@ namespace TextFilter
                         {
                             SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
                             logTab.ContentList = logFile.ContentItems;
-                            SetCurrentStatus(CurrentStatusSetting.showing_all);
                             break;
                         }
 
@@ -336,6 +335,22 @@ namespace TextFilter
 
                 // update line total counts
                 LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, logFile.ContentItems.Count);
+
+
+                // set current status message
+                if(logTab.ContentList.Count == logFile.ContentItems.Count)
+                {
+                    SetCurrentStatus(CurrentStatusSetting.showing_all);
+                }
+                else if (_filterViewModel.QuickFindItem.Enabled)
+                {
+                    SetCurrentStatus(CurrentStatusSetting.quick_filtered);
+                }
+                else
+                {
+                    SetCurrentStatus(CurrentStatusSetting.filtered);
+                }
+
 
                 SaveCurrentFilter(filterFileItems);
             }
@@ -458,13 +473,11 @@ namespace TextFilter
                 if (!IsHiding())
                 {
                     logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-                    SetCurrentStatus(CurrentStatusSetting.filtered);
                     FilterLogTabItems(FilterCommand.Hide);
                 }
                 else
                 {
                     logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-                    SetCurrentStatus(CurrentStatusSetting.showing_all);
                     FilterLogTabItems(FilterCommand.ShowAll);
                 }
 

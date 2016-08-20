@@ -19,7 +19,7 @@ namespace TextFilter
 
         Unknown,
 
-        Hide,
+        Hide
     }
 
     public enum FilterNeed

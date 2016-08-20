@@ -11,6 +11,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -35,8 +36,6 @@ namespace TextFilter
         #endregion Public Fields
 
         #region Public Events
-
-        public static event EventHandler<string> NewStatusLog;
 
         public static event EventHandler<string> NewCurrentStatus;
 
@@ -152,14 +151,26 @@ namespace TextFilter
                 MessageBox.Show(status, "Oh Snap! TextFilter exception", MessageBoxButton.OK);
             }
 
-            EventHandler<string> newStatusLog = NewStatusLog;
-            if (newStatusLog != null)
+            try
             {
-                newStatusLog(this, status);
+
+                if (!string.IsNullOrEmpty(TextFilterSettings.Settings.DebugFile))
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(TextFilterSettings.Settings.DebugFile, true))
+                    {
+                        file.WriteLine(string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), status));
+                    }
+                }
+
+                Debug.Print(status);
+
             }
-
-        }
-
-        #endregion Public Methods
+            catch (Exception e)
+            {
+                Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
+            }
     }
+
+    #endregion Public Methods
+}
 }

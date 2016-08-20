@@ -530,6 +530,8 @@ namespace TextFilter
 
             CurrentLogFiles,
 
+            DebugFile,
+
             FilterDirectory,
 
             FilterHide,
@@ -881,6 +883,22 @@ namespace TextFilter
                     OnPropertyChanged((AppSettingNames.WordWrap).ToString());
                 }
             }
+        }
+
+        public string DebugFile
+        {
+            get
+            {   return (_appSettings[(AppSettingNames.DebugFile).ToString()].Value);
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.DebugFile).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.DebugFile).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.DebugFile).ToString());
+                }
+            }
+
         }
 
         #endregion Public Properties

@@ -39,8 +39,6 @@ namespace TextFilter
 
         private Command _settingsCommand;
 
-        private Command _showDebugLogCommand;
-
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
 
         private Command _statusChangedCommand;
@@ -69,7 +67,13 @@ namespace TextFilter
                     return;
                 }
 
-                Base.NewStatusLog += HandleNewStatusLog;
+                // clean up old log file if exists
+                if(!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
+                {
+                    File.Delete(Settings.DebugFile);
+                }
+
+                SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
                 Base.NewCurrentStatus += HandleNewCurrentStatus;
 
                 _filterViewModel = new FilterViewModel();
@@ -185,68 +189,6 @@ namespace TextFilter
             set { _settingsCommand = value; }
         }
 
-        public Command ShowDebugLogCommand
-        {
-            get
-            {
-                if (_showDebugLogCommand == null)
-                {
-                    _showDebugLogCommand = new Command(ShowDebugLogExecuted);
-                }
-                _showDebugLogCommand.CanExecute = true;
-
-                return _showDebugLogCommand;
-            }
-            set { _showDebugLogCommand = value; }
-        }
-
-        public ObservableCollection<ListBoxItem> Status
-        {
-            get
-            {
-                return _status;
-            }
-            set
-            {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged("Status");
-                }
-            }
-        }
-
-        public Command StatusChangedCommand
-        {
-            get
-            {
-                if (_statusChangedCommand == null)
-                {
-                    _statusChangedCommand = new Command(StatusChangedExecuted);
-                }
-                _statusChangedCommand.CanExecute = true;
-
-                return _statusChangedCommand;
-            }
-            set { _statusChangedCommand = value; }
-        }
-
-        public int StatusIndex
-        {
-            get
-            {
-                return _statusIndex;
-            }
-            set
-            {
-                if (_statusIndex != value)
-                {
-                    _statusIndex = value;
-                    OnPropertyChanged("StatusIndex");
-                }
-            }
-        }
-
         public string CurrentStatus
         {
             get
@@ -334,35 +276,6 @@ namespace TextFilter
                 + " 3. Restart TextFilter.exe.", "TextFilter Window Settings", MessageBoxButton.OK);
             // OptionsDialog dialog = new OptionsDialog();
             //dialog.WaitForResult();
-        }
-
-        public void SetViewStatusLog(string statusData)
-        {
-            try
-            {
-                while (this.Status.Count > 1000)
-                {
-                    this.Status.RemoveAt(0);
-                }
-
-                ListBoxItem listBoxItem = new ListBoxItem();
-                listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), statusData);
-                this.Status.Add(listBoxItem);
-                this.StatusIndex = Status.Count - 1;
-
-                Debug.Print(statusData);
-                OnPropertyChanged("StatusLog");
-            }
-            catch (Exception e)
-            {
-                Debug.Print(string.Format("SetViewStatus:exception: {0}: {1}", statusData, e));
-            }
-        }
-
-        public void ShowDebugLogExecuted(object sender)
-        {
-            DebugLogDialog dialog = new DebugLogDialog();
-            dialog.WaitForResult();
         }
 
         public void StatusChangedExecuted(object sender)
@@ -494,6 +407,7 @@ namespace TextFilter
 
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            SetStatus("Stopping textFilter: " + Process.GetCurrentProcess().Id.ToString());
             _logViewModel.Parser.Enable(false);
             _filterViewModel.SaveModifiedFiles(sender);
             _logViewModel.SaveModifiedFiles(sender);
@@ -503,11 +417,6 @@ namespace TextFilter
         #endregion Internal Methods
 
         #region Private Methods
-
-        private void HandleNewStatusLog(object sender, string status)
-        {
-            SetViewStatusLog(status);
-        }
 
         private void HandleNewCurrentStatus(object sender, string status)
         {
