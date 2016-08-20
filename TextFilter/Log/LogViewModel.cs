@@ -309,18 +309,21 @@ namespace TextFilter
                                     filterFileItems,
                                     filterIntent),
                                 filterFileItems);
+                            SetCurrentStatus(CurrentStatusSetting.filtered);
                             break;
                         }
                     case FilterCommand.Hide:
                         {
                             SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
                             logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
+                            SetCurrentStatus(CurrentStatusSetting.filtered);
                             break;
                         }
                     case FilterCommand.ShowAll:
                         {
                             SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
                             logTab.ContentList = logFile.ContentItems;
+                            SetCurrentStatus(CurrentStatusSetting.showing_all);
                             break;
                         }
 
@@ -455,13 +458,13 @@ namespace TextFilter
                 if (!IsHiding())
                 {
                     logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-
+                    SetCurrentStatus(CurrentStatusSetting.filtered);
                     FilterLogTabItems(FilterCommand.Hide);
                 }
                 else
                 {
                     logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-
+                    SetCurrentStatus(CurrentStatusSetting.showing_all);
                     FilterLogTabItems(FilterCommand.ShowAll);
                 }
 

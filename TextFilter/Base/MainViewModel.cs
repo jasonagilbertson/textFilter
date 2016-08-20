@@ -22,6 +22,7 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
+      
         #region Private Fields
 
         public System.Timers.Timer _timer;
@@ -46,6 +47,8 @@ namespace TextFilter
 
         private Int32 _statusIndex;
 
+        private string _currentStatus;
+
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
@@ -66,7 +69,9 @@ namespace TextFilter
                     return;
                 }
 
-                Base.NewStatus += HandleNewStatus;
+                Base.NewStatusLog += HandleNewStatusLog;
+                Base.NewCurrentStatus += HandleNewCurrentStatus;
+
                 _filterViewModel = new FilterViewModel();
                 _logViewModel = new LogViewModel(_filterViewModel);
 
@@ -75,16 +80,7 @@ namespace TextFilter
                
                 App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
-                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion); //,
-                                                                                         // VersionCheck(true)
-                                                                                         // ? "** NEW
-                                                                                         // VERSION
-                                                                                         // AVAILABLE
-                                                                                         // **. See
-                                                                                         // Help->Check
-                                                                                         // for new
-                                                                                         // version"
-                                                                                         // : "");
+                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
 
                 SetStatus(App.Current.MainWindow.Title);
 
@@ -251,6 +247,21 @@ namespace TextFilter
             }
         }
 
+        public string CurrentStatus
+        {
+            get
+            {
+                return _currentStatus;
+            }
+            set
+            {
+                if (_currentStatus != value)
+                {
+                    _currentStatus = value;
+                    OnPropertyChanged("CurrentStatus");
+                }
+            }
+        }
         public Command VersionCheckCommand
         {
             get
@@ -325,7 +336,7 @@ namespace TextFilter
             //dialog.WaitForResult();
         }
 
-        public void SetViewStatus(string statusData)
+        public void SetViewStatusLog(string statusData)
         {
             try
             {
@@ -340,7 +351,7 @@ namespace TextFilter
                 this.StatusIndex = Status.Count - 1;
 
                 Debug.Print(statusData);
-                OnPropertyChanged("Status");
+                OnPropertyChanged("StatusLog");
             }
             catch (Exception e)
             {
@@ -493,11 +504,15 @@ namespace TextFilter
 
         #region Private Methods
 
-        private void HandleNewStatus(object sender, string status)
+        private void HandleNewStatusLog(object sender, string status)
         {
-            SetViewStatus(status);
+            SetViewStatusLog(status);
         }
 
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
+        }
         #endregion Private Methods
     }
 }

@@ -445,7 +445,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="150" />
+                    <ColumnDefinition Width="100" />
                     <ColumnDefinition Width="150" />
                 </Grid.ColumnDefinitions>
                 <Grid.InputBindings>
@@ -560,16 +560,20 @@
                 <Label
                     Name="labelStatus"
                     Grid.Column="2"
-                    Width="50"
+                    Width="100"
                     Height="25"
                     Margin="0,0,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Bottom"
                     Style="{DynamicResource LabelStyle1}"
-                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Background="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                     BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                    Content="Status:" />
+                    BorderThickness="1"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    Content="{Binding Source={StaticResource mainViewModel}, Path=CurrentStatus}"
+                      />
 
                 <Label Name="labelLineTotals"
                        Grid.Column="3"

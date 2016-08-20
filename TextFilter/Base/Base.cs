@@ -19,6 +19,13 @@ namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
+        public enum CurrentStatusSetting
+        {
+            enter_to_filter,
+            filtered,
+            quick_filtered,
+            showing_all,
+        }
         #region Public Fields
 
         public string _tempTabNameFormat = "-new {0}-";
@@ -29,7 +36,9 @@ namespace TextFilter
 
         #region Public Events
 
-        public static event EventHandler<string> NewStatus;
+        public static event EventHandler<string> NewStatusLog;
+
+        public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -108,15 +117,6 @@ namespace TextFilter
             return null;
         }
 
-        public void OnNewStatus(string status)
-        {
-            EventHandler<string> newStatus = NewStatus;
-            if (newStatus != null)
-            {
-                newStatus(this, status);
-            }
-        }
-
         public void OnPropertyChanged(string name)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(name));
@@ -136,6 +136,15 @@ namespace TextFilter
             }
         }
 
+        public void SetCurrentStatus(CurrentStatusSetting status)
+        {
+            EventHandler<string> newCurrentStatus = NewCurrentStatus;
+            if (newCurrentStatus != null)
+            {
+                newCurrentStatus(this, Enum.GetName(typeof(CurrentStatusSetting), status).Replace("_", " ").ToUpper());
+            }
+        }
+
         public void SetStatus(string status)
         {
             if (status.ToLower().StartsWith("fatal:"))
@@ -143,7 +152,12 @@ namespace TextFilter
                 MessageBox.Show(status, "Oh Snap! TextFilter exception", MessageBoxButton.OK);
             }
 
-            OnNewStatus(status);
+            EventHandler<string> newStatusLog = NewStatusLog;
+            if (newStatusLog != null)
+            {
+                newStatusLog(this, status);
+            }
+
         }
 
         #endregion Public Methods
