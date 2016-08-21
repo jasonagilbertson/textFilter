@@ -163,7 +163,7 @@ namespace TextFilter
         {
             get
             {
-                if (_sharedCollection == null)
+                if (_sharedCollection == null || _sharedCollection.Count < 1)
                 {
                     _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
                 }
