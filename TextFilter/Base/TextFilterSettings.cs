@@ -24,6 +24,11 @@ namespace TextFilter
     {
         #region Public Methods
 
+        public TextFilterSettings ShallowCopy()
+        {
+            return (TextFilterSettings)MemberwiseClone();
+        }
+
         public bool ReadConfigFile()
         {
             // check config file first
@@ -61,7 +66,7 @@ namespace TextFilter
             _Config = ConfigurationManager.OpenMappedExeConfiguration(_ConfigFileMap, ConfigurationUserLevel.None);
             _appSettings = _Config.AppSettings.Settings;
 
-            VerifyAppSettings();
+            VerifyAppSettings(false);
 
             // verify files
             CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
@@ -377,7 +382,7 @@ namespace TextFilter
             return files;
         }
 
-        private void VerifyAppSettings()
+        public void VerifyAppSettings(bool overwrite)
         {
             try
             {
@@ -389,7 +394,7 @@ namespace TextFilter
                     }
 
                     // set default settings
-                    if (!string.IsNullOrEmpty(_appSettings[name].Value))
+                    if (!overwrite && !string.IsNullOrEmpty(_appSettings[name].Value))
                     {
                         continue;
                     }
@@ -409,6 +414,22 @@ namespace TextFilter
                         case AppSettingNames.CountMaskedMatches:
                             {
                                 _appSettings[name].Value = "False";
+                                break;
+                            }
+                        case AppSettingNames.CurrentFilterFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.CurrentLogFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+
+                        case AppSettingNames.DebugFile:
+                            {
+                                _appSettings[name].Value = "";
                                 break;
                             }
                         case AppSettingNames.FileHistoryCount:
@@ -436,9 +457,25 @@ namespace TextFilter
                                 _appSettings[name].Value = "Black";
                                 break;
                             }
+                        case AppSettingNames.HelpUrl:
+                            {
+                                _appSettings[name].Value = "https://github.com/jasonagilbertson/TextFilter";
+                                break;
+                            }
+
                         case AppSettingNames.MaxMultiFileCount:
                             {
                                 _appSettings[name].Value = "10";
+                                break;
+                            }
+                        case AppSettingNames.RecentFilterFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.RecentLogFiles:
+                            {
+                                _appSettings[name].Value = "";
                                 break;
                             }
 
@@ -447,6 +484,12 @@ namespace TextFilter
                                 _appSettings[name].Value = "True";
                                 break;
                             }
+                        case AppSettingNames.VersionCheckFile:
+                            {
+                                _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
+                                break;
+                            }
+                            
 
                         case AppSettingNames.WordWrap:
                             {
@@ -795,7 +838,7 @@ namespace TextFilter
                 return _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
-            private set
+            set
             {
                 _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
             }
@@ -808,7 +851,7 @@ namespace TextFilter
                 return _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
-            private set
+            set
             {
                 _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
             }

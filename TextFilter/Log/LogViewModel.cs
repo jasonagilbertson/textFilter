@@ -297,6 +297,8 @@ namespace TextFilter
                     }
                 }
 
+                SetCurrentStatus(CurrentStatusSetting.filtering);
+                
                 switch (filterIntent)
                 {
                     case FilterCommand.Filter:

@@ -460,22 +460,21 @@
                     Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
                     BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
                     Content="Quick Filter:" />
-                <ComboBox
-                    x:Name="comboboxQuickFind"
-                    Grid.Column="0"
-                    Height="25"
-                    Margin="75,0,138,0"
-                    HorizontalAlignment="Stretch"
-                    VerticalAlignment="Top"
-                    Style="{DynamicResource ComboBoxStyle1}"
-                    Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                    IsEditable="True"
-                    IsTextSearchEnabled="True"
-                    ItemsSource="{Binding Path=QuickFindList}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                    SelectedIndex="{Binding Path=QuickFindIndex}">
+                <ComboBox x:Name="comboboxQuickFind"
+                          Grid.Column="0"
+                          Height="25"
+                          Margin="75,0,138,0"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Top"
+                          Style="{DynamicResource ComboBoxStyle1}"
+                          Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+                          Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                          BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                          IsEditable="True"
+                          IsTextSearchEnabled="True"
+                          ItemsSource="{Binding Path=QuickFindList}"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          SelectedIndex="{Binding Path=QuickFindIndex}">
                     <ComboBox.InputBindings>
                         <KeyBinding
                             Key="Enter"
@@ -560,11 +559,12 @@
                     VerticalAlignment="Bottom"
                     Style="{DynamicResource LabelStyle1}"
                     Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-                    Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                    BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
+                    Foreground="Blue"
+                    BorderBrush="Blue"
                     BorderThickness="1"
                     FontSize="12"
                     Content="{Binding Source={StaticResource mainViewModel}, Path=CurrentStatus}"
+                    Padding="5,3,0,0"
                       />
 
                 <Label Name="labelLineTotals"

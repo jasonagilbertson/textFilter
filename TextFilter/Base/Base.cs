@@ -26,6 +26,7 @@ namespace TextFilter
             filtered,
             quick_filtered,
             showing_all,
+            filtering,
         }
         #region Public Fields
 
@@ -44,7 +45,16 @@ namespace TextFilter
         #endregion Public Events
 
         #region Public Methods
-
+        public void ExecuteAsAdmin(string fileName, string arguments)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = fileName;
+            proc.StartInfo.Arguments = arguments;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.Verb = "runas";
+            proc.Start();
+        }
         public void CreateProcess(string process, string arguments = null)
         {
             try

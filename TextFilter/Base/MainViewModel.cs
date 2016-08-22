@@ -41,10 +41,6 @@ namespace TextFilter
 
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
 
-        private Command _statusChangedCommand;
-
-        private Int32 _statusIndex;
-
         private string _currentStatus;
 
         private Command _versionCheckCommand;
@@ -267,15 +263,47 @@ namespace TextFilter
 
         public void SettingsExecuted(object sender)
         {
-            string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            CreateProcess("notepad.exe", workingDir + "\\TextFilter.exe.config");
-            MessageBox.Show("TextFilter window settings are not in gui yet.\n\n"
-                + "To change settings:\n"
-                + " 1. Close TextFilter.exe as it can overwrite on close.\n"
-                + " 2. Make changes in TextFilter.exe.config.\n"
-                + " 3. Restart TextFilter.exe.", "TextFilter Window Settings", MessageBoxButton.OK);
-            // OptionsDialog dialog = new OptionsDialog();
-            //dialog.WaitForResult();
+            TextFilterSettings configFileCache = Settings.ShallowCopy();
+            
+            OptionsDialog dialog = new OptionsDialog();
+
+            switch(dialog.WaitForResult())
+            {
+                case OptionsDialog.OptionsDialogResult.apply:
+                    CreateProcess(Process.GetCurrentProcess().MainModule.FileName, 
+                        string.Format("/filter: \"{0}\" /log: \"{1}\"", 
+                        string.Join("\";\"", Settings.CurrentFilterFiles),
+                        string.Join("\";\"",Settings.CurrentLogFiles)));
+                    Application.Current.Shutdown();
+                    break;
+                case OptionsDialog.OptionsDialogResult.cancel:
+                    Settings = configFileCache.ShallowCopy();
+                    break;
+                case OptionsDialog.OptionsDialogResult.edit:
+                    string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    CreateProcess("notepad.exe", Settings.ConfigFile);
+                    break;
+                case OptionsDialog.OptionsDialogResult.register:
+                    ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/register");
+                    SettingsExecuted(null);
+                    //FileTypeAssociation.Instance.ConfigureFTA(true);
+                    break;
+                case OptionsDialog.OptionsDialogResult.reset:
+                    Settings.VerifyAppSettings(true);
+                    SettingsExecuted(null);
+                    break;
+                case OptionsDialog.OptionsDialogResult.save:
+                    Settings.Save();
+                    break;
+                case OptionsDialog.OptionsDialogResult.unregister:
+                    ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/unregister");
+                    SettingsExecuted(null);
+                    //FileTypeAssociation.Instance.ConfigureFTA(false);
+                    break;
+                case OptionsDialog.OptionsDialogResult.unknown:
+                default:
+                    break;
+            }
         }
 
         public void StatusChangedExecuted(object sender)

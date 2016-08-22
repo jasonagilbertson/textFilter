@@ -1986,6 +1986,7 @@
         <!--  ComboBox  -->
 
         <Style x:Key="ComboBoxFocusVisual">
+
             <Setter Property="Control.Template">
                 <Setter.Value>
                     <ControlTemplate>

@@ -171,7 +171,7 @@
     <Compile Include="Parser\IItemsProvider.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\VirtualizingCollection.cs" />
-    <Compile Include="Base\RegexViewerSettings.cs" />
+    <Compile Include="Base\TextFilterSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
     <Compile Include="View\ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
