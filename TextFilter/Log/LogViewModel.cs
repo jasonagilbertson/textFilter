@@ -240,6 +240,7 @@ namespace TextFilter
         {
             try
             {
+               
                 List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;

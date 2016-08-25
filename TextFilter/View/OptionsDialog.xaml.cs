@@ -1,4 +1,14 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace TextFilter
 {
@@ -8,7 +18,6 @@ namespace TextFilter
         public enum OptionsDialogResult
         {
             unknown,
-            apply,
             cancel,
             edit,
             register,
@@ -16,6 +25,22 @@ namespace TextFilter
             save,
             unregister
         }
+
+        private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            TextFilterSettings.Settings.ColorComboKeyDown(sender, e);
+        }
+
+        private void colorCombo_Selected(object sender, RoutedEventArgs e)
+        {
+            TextFilterSettings.Settings.ColorComboSelected();
+        }
+
+
+
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
 
         private OptionsDialogResult _dialogResult;
         public OptionsDialog()
@@ -60,12 +85,6 @@ namespace TextFilter
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             _dialogResult = OptionsDialogResult.save;
-            Disable();
-        }
-
-        private void buttonRestart_Click(object sender, RoutedEventArgs e)
-        {
-            _dialogResult = OptionsDialogResult.apply;
             Disable();
         }
 

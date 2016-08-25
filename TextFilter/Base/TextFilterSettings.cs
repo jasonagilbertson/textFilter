@@ -12,9 +12,16 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 
@@ -157,6 +164,58 @@ namespace TextFilter
         {
             Console.WriteLine(Properties.Resources.DisplayHelp);
         }
+
+        public void ColorComboSelected()
+        {
+            _color.Clear();
+        }
+
+        public void ColorComboKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is ComboBox)
+            {
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                    case Key.Tab:
+                    case Key.Back:
+                        {
+                            _color.Clear();
+                            return;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                // dont add if not alpha character
+                if (!Regex.IsMatch(e.Key.ToString(), "[a-zA-Z]{1}", RegexOptions.IgnoreCase))
+                {
+                    return;
+                }
+
+                _color.Append(e.Key.ToString());
+                ComboBox comboBox = (sender as ComboBox);
+
+                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
+                if (String.IsNullOrEmpty(color))
+                {
+                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
+                }
+                if (!String.IsNullOrEmpty(color))
+                {
+                    comboBox.SelectedValue = color;
+                }
+                else
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+        }
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
 
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
@@ -751,6 +810,21 @@ namespace TextFilter
             }
         }
 
+        public List<string> FontNameList
+        {
+            get
+            {
+                return new InstalledFontCollection().Families.Select(x => x.Name).ToList();
+            }
+            //set
+            //{
+            //    if(value.ToString() != FontName)
+            //    {
+            //        FontName = value.ToString();
+            //    }
+            //}
+        }
+
         public string FontName
         {
             get
@@ -783,6 +857,37 @@ namespace TextFilter
             }
         }
 
+        public string ForegroundColorString
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString();
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
+                }
+            }
+        }
+
+        public string BackgroundColorString
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString();
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
+                }
+            }
+        }
         public SolidColorBrush ForegroundColor
         {
             get
