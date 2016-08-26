@@ -25,15 +25,15 @@ namespace TextFilter
             save,
             unregister
         }
-
+        private MainViewModel _mainViewModel;
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            TextFilterSettings.Settings.ColorComboKeyDown(sender, e);
+            _mainViewModel.ColorComboKeyDown(sender, e);
         }
 
         private void colorCombo_Selected(object sender, RoutedEventArgs e)
         {
-            TextFilterSettings.Settings.ColorComboSelected();
+            _mainViewModel.ColorComboSelected();
         }
 
 
@@ -48,8 +48,12 @@ namespace TextFilter
             
             Owner = Application.Current.MainWindow;
             InitializeComponent();
+            this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
+            
+            //((ListViewItem)listViewFontName.SelectedItem).BringIntoView();
         }
 
+        
         #endregion Public Constructors
 
         #region Public Methods

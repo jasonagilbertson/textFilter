@@ -13,9 +13,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 
 namespace TextFilter
@@ -63,6 +68,7 @@ namespace TextFilter
                     return;
                 }
 
+                _colorNames = GetColorNames();
                 // clean up old log file if exists
                 if(!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
                 {
@@ -185,6 +191,28 @@ namespace TextFilter
             set { _settingsCommand = value; }
         }
 
+        private Command _listViewSelectionChangedCommand;
+        public Command ListViewSelectionChangedCommand
+        {
+            get { return _listViewSelectionChangedCommand ?? new Command(ListViewSelectionChangedExecuted); }
+            set { _listViewSelectionChangedCommand = value; }
+        }
+
+        public void ListViewSelectionChangedExecuted(object sender)
+        {
+            if (sender is ListView)
+            {
+                if ((sender as ListView).SelectedItem != null)
+                {
+                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
+                }
+            }
+            else
+            {
+                Debug.Print("listviewselectionchanged but invalid call");
+            }
+        }
+
         public string CurrentStatus
         {
             get
@@ -261,12 +289,78 @@ namespace TextFilter
             CreateProcess(Settings.HelpUrl);
         }
 
+        public void ColorComboSelected()
+        {
+            _color.Clear();
+        }
+
+        public void ColorComboKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is ComboBox)
+            {
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                    case Key.Tab:
+                    case Key.Back:
+                        {
+                            _color.Clear();
+                            return;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                // dont add if not alpha character
+                if (!Regex.IsMatch(e.Key.ToString(), "[a-zA-Z]{1}", RegexOptions.IgnoreCase))
+                {
+                    return;
+                }
+
+                _color.Append(e.Key.ToString());
+                ComboBox comboBox = (sender as ComboBox);
+
+                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
+                if (String.IsNullOrEmpty(color))
+                {
+                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
+                }
+                if (!String.IsNullOrEmpty(color))
+                {
+                    comboBox.SelectedValue = color;
+                }
+                else
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+        }
+        public List<string> GetColorNames()
+        {
+            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+            List<string> list = new List<string>();
+            foreach (var prop in typeof(Colors).GetProperties(flags))
+            {
+                if (prop.PropertyType.FullName == "System.Windows.Media.Color")
+                {
+                    Debug.Print(prop.PropertyType.FullName);
+                    list.Add(prop.Name);
+                }
+            }
+            return list;
+        }
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
             
             OptionsDialog dialog = new OptionsDialog();
-
+            
             switch(dialog.WaitForResult())
             {
                 //case OptionsDialog.OptionsDialogResult.apply:
@@ -276,9 +370,9 @@ namespace TextFilter
                 //        string.Join("\";\"",Settings.CurrentLogFiles)));
                 //    Application.Current.Shutdown();
                 //    break;
-                case OptionsDialog.OptionsDialogResult.cancel:
-                    Settings = configFileCache.ShallowCopy();
-                    break;
+                //case OptionsDialog.OptionsDialogResult.cancel:
+                //    Settings = configFileCache.ShallowCopy();
+                //    break;
                 case OptionsDialog.OptionsDialogResult.edit:
                     string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
                     CreateProcess("notepad.exe", Settings.ConfigFile);

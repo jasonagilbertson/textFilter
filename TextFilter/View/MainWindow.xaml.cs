@@ -86,13 +86,15 @@ namespace TextFilter
 
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            TextFilterSettings.Settings.ColorComboKeyDown(sender, e);
+            _mainViewModel.ColorComboKeyDown(sender, e);
         }
 
         private void colorCombo_Selected(object sender, RoutedEventArgs e)
         {
-            TextFilterSettings.Settings.ColorComboSelected();
+            _mainViewModel.ColorComboSelected();
         }
+
+
 
         private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
         {

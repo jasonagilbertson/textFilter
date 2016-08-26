@@ -165,58 +165,6 @@ namespace TextFilter
             Console.WriteLine(Properties.Resources.DisplayHelp);
         }
 
-        public void ColorComboSelected()
-        {
-            _color.Clear();
-        }
-
-        public void ColorComboKeyDown(object sender, KeyEventArgs e)
-        {
-            if (sender is ComboBox)
-            {
-                switch (e.Key)
-                {
-                    case Key.Enter:
-                    case Key.Tab:
-                    case Key.Back:
-                        {
-                            _color.Clear();
-                            return;
-                        }
-                    default:
-                        {
-                            break;
-                        }
-                }
-
-                // dont add if not alpha character
-                if (!Regex.IsMatch(e.Key.ToString(), "[a-zA-Z]{1}", RegexOptions.IgnoreCase))
-                {
-                    return;
-                }
-
-                _color.Append(e.Key.ToString());
-                ComboBox comboBox = (sender as ComboBox);
-
-                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
-                if (String.IsNullOrEmpty(color))
-                {
-                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
-                }
-                if (!String.IsNullOrEmpty(color))
-                {
-                    comboBox.SelectedValue = color;
-                }
-                else
-                {
-                    comboBox.SelectedIndex = 0;
-                }
-            }
-        }
-        private StringBuilder _color = new StringBuilder();
-
-        private List<string> _colorNames = new List<string>();
-
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
         {
             List<string> newList = new List<string>(recentLogFiles);
@@ -582,6 +530,7 @@ namespace TextFilter
         private Configuration _Config;
 
         private ExeConfigurationFileMap _ConfigFileMap;
+        private ListViewItem _fontNameItem;
 
         #endregion Private Fields
 
@@ -810,19 +759,33 @@ namespace TextFilter
             }
         }
 
-        public List<string> FontNameList
+        //public List<string> FontNameList
+        //{
+        //    get
+        //    {
+        //        return new InstalledFontCollection().Families.Select(x => x.Name).ToList();
+        //    }
+        //}
+
+        public List<ListViewItem> FontNameList
         {
             get
             {
-                return new InstalledFontCollection().Families.Select(x => x.Name).ToList();
+                List<ListViewItem> items = new List<ListViewItem>();
+
+                foreach (string name in (new InstalledFontCollection().Families.Select(x => x.Name).ToList()))
+                {
+                    ListViewItem item = new ListViewItem()
+                    {
+                        Content = name,
+                        IsSelected = String.Compare(FontName, name, true) == 0
+                    };
+
+                    items.Add(item);
+                }
+
+                return items;
             }
-            //set
-            //{
-            //    if(value.ToString() != FontName)
-            //    {
-            //        FontName = value.ToString();
-            //    }
-            //}
         }
 
         public string FontName
@@ -841,6 +804,23 @@ namespace TextFilter
             }
         }
 
+        public ListViewItem FontNameItem
+        {
+            get
+            {
+                return _fontNameItem ?? new ListViewItem() { Content = FontName, IsSelected = true };
+                
+            }
+            set
+            {
+                if (_fontNameItem != value)
+                {
+                    _fontNameItem = new ListViewItem() { Content = value.Content, IsSelected = true };
+                    OnPropertyChanged("FontNameItem");
+                    FontName = value.Content.ToString();
+                }
+            }
+        }
         public int FontSize
         {
             get
