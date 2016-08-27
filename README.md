@@ -3,7 +3,7 @@
 # textFilter  
 
 **Current Download:**  
-[textFilter.0.7.004.zip](https://github.com/jasonagilbertson/textFilter/releases/tag/textFilter.0.7.004.zip) 
+[textFilter.0.7.004.zip](https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.0.7.004.zip/textFilter.0.7.004.zip) 
 
 ![](https://github.com/jasonagilbertson/textFilter/blob/master/TextFilter/Images/tf-window-image-1.png)		
 
