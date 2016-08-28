@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace TextFilter
 {
@@ -139,7 +140,6 @@ namespace TextFilter
             }
             set { _gotFocusCommand = value; }
         }
-
         public Command HideCommand
         {
             get
@@ -412,6 +412,27 @@ namespace TextFilter
 
         public abstract void FindNextExecuted(object sender);
 
+        public string GenerateTempTagName()
+        {
+            // generate -new ##- index number
+            string tempTag = string.Empty;
+
+            for (int i = 0; i < 100; i++)
+            {
+                tempTag = string.Format(_tempTabNameFormat, i);
+                if (TabItems.Any(x => String.Compare((string)x.Header, tempTag, true) == 0))
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return tempTag;
+        }
+
         public void GotFocusExecuted(object sender)
         {
             if (CurrentFile() != null)
@@ -505,28 +526,6 @@ namespace TextFilter
 
             AddTabItem(file);
         }
-
-        public string GenerateTempTagName()
-        {
-            // generate -new ##- index number
-            string tempTag = string.Empty;
-
-            for (int i = 0; i < 100; i++)
-            {
-                tempTag = string.Format(_tempTabNameFormat, i);
-                if (TabItems.Any(x => String.Compare((string)x.Header, tempTag, true) == 0))
-                {
-                    continue;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return tempTag;
-        }
-
         public void OpenDropExecuted(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());

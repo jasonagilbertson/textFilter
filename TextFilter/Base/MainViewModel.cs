@@ -27,12 +27,16 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-      
-        #region Private Fields
 
+        #region Private Fields
         public System.Timers.Timer _timer;
+        private Command _controlGotFocusCommand;
+
+        private Command _controlLostFocusCommand;
 
         private Command _copyCommand;
+
+        private string _currentStatus;
 
         private FilterViewModel _filterViewModel;
 
@@ -46,12 +50,59 @@ namespace TextFilter
 
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
 
-        private string _currentStatus;
-
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
+        public Command ControlGotFocusCommand
+        {
+            get
+            {
+                if (_controlGotFocusCommand == null)
+                {
+                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
+                }
+                _controlGotFocusCommand.CanExecute = true;
+
+                return _controlGotFocusCommand;
+            }
+            set { _controlGotFocusCommand = value; }
+        }
+
+        public Command ControlLostFocusCommand
+        {
+            get
+            {
+                if (_controlLostFocusCommand == null)
+                {
+                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
+                }
+                _controlLostFocusCommand.CanExecute = true;
+
+                return _controlLostFocusCommand;
+            }
+            set { _controlLostFocusCommand = value; }
+        }
+
+      
+        private void ControlGotFocusExecuted(object sender)
+        {
+            if (sender is Control)
+            {
+                (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
+                (sender as Control).BorderThickness = new Thickness(2);
+            }
+
+        }
+
+        private void ControlLostFocusExecuted(object sender)
+        {
+            if (sender is Control)
+            {
+                (sender as Control).BorderBrush = Settings.ForegroundColor;
+                (sender as Control).BorderThickness = new Thickness(1);
+            }
+        }
         #endregion Private Fields
 
         #region Public Constructors
@@ -128,6 +179,8 @@ namespace TextFilter
 
         #region Public Properties
 
+        private Command _listViewSelectionChangedCommand;
+
         public Command CopyCommand
         {
             get
@@ -141,6 +194,22 @@ namespace TextFilter
                 return _copyCommand;
             }
             set { _copyCommand = value; }
+        }
+
+        public string CurrentStatus
+        {
+            get
+            {
+                return _currentStatus;
+            }
+            set
+            {
+                if (_currentStatus != value)
+                {
+                    _currentStatus = value;
+                    OnPropertyChanged("CurrentStatus");
+                }
+            }
         }
 
         public FilterViewModel FilterViewModel
@@ -164,12 +233,19 @@ namespace TextFilter
             set { _helpCommand = value; }
         }
 
+        public Command ListViewSelectionChangedCommand
+        {
+            get { return _listViewSelectionChangedCommand ?? new Command(ListViewSelectionChangedExecuted); }
+            set { _listViewSelectionChangedCommand = value; }
+        }
+
         public LogViewModel LogViewModel
         {
             get { return _logViewModel; }
             set { _logViewModel = value; }
         }
 
+      
         public TextFilterSettings Settings
         {
             get { return _settings; }
@@ -190,12 +266,19 @@ namespace TextFilter
             }
             set { _settingsCommand = value; }
         }
-
-        private Command _listViewSelectionChangedCommand;
-        public Command ListViewSelectionChangedCommand
+        public Command VersionCheckCommand
         {
-            get { return _listViewSelectionChangedCommand ?? new Command(ListViewSelectionChangedExecuted); }
-            set { _listViewSelectionChangedCommand = value; }
+            get
+            {
+                if (_versionCheckCommand == null)
+                {
+                    _versionCheckCommand = new Command(VersionCheckExecuted);
+                }
+                _versionCheckCommand.CanExecute = true;
+
+                return _versionCheckCommand;
+            }
+            set { _versionCheckCommand = value; }
         }
 
         public void ListViewSelectionChangedExecuted(object sender)
@@ -212,87 +295,13 @@ namespace TextFilter
                 Debug.Print("listviewselectionchanged but invalid call");
             }
         }
-
-        public string CurrentStatus
-        {
-            get
-            {
-                return _currentStatus;
-            }
-            set
-            {
-                if (_currentStatus != value)
-                {
-                    _currentStatus = value;
-                    OnPropertyChanged("CurrentStatus");
-                }
-            }
-        }
-        public Command VersionCheckCommand
-        {
-            get
-            {
-                if (_versionCheckCommand == null)
-                {
-                    _versionCheckCommand = new Command(VersionCheckExecuted);
-                }
-                _versionCheckCommand.CanExecute = true;
-
-                return _versionCheckCommand;
-            }
-            set { _versionCheckCommand = value; }
-        }
-
         #endregion Public Properties
 
         #region Public Methods
 
-        public void CopyExecuted(object contentList)
-        {
-            List<ListBoxItem> c_contentList = new List<ListBoxItem>();
+        private StringBuilder _color = new StringBuilder();
 
-            try
-            {
-
-                if (contentList is List<ListBoxItem>)
-                {
-                    c_contentList = (List<ListBoxItem>)contentList;
-                }
-                else if (contentList is ObservableCollection<ListBoxItem>)
-                {
-                    c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
-                }
-                else
-                {
-                    return;
-                }
-
-                HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (ListBoxItem lbi in c_contentList)
-                {
-                    if (lbi != null && lbi.IsSelected)
-                    {
-                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
-                    }
-                }
-
-                htmlFragment.CopyListToClipboard();
-            }
-            catch (Exception ex)
-            {
-                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
-            }
-        }
-
-        public void HelpExecuted(object sender)
-        {
-            CreateProcess(Settings.HelpUrl);
-        }
-
-        public void ColorComboSelected()
-        {
-            _color.Clear();
-        }
+        private List<string> _colorNames = new List<string>();
 
         public void ColorComboKeyDown(object sender, KeyEventArgs e)
         {
@@ -337,6 +346,49 @@ namespace TextFilter
                 }
             }
         }
+
+        public void ColorComboSelected()
+        {
+            _color.Clear();
+        }
+
+        public void CopyExecuted(object contentList)
+        {
+            List<ListBoxItem> c_contentList = new List<ListBoxItem>();
+
+            try
+            {
+
+                if (contentList is List<ListBoxItem>)
+                {
+                    c_contentList = (List<ListBoxItem>)contentList;
+                }
+                else if (contentList is ObservableCollection<ListBoxItem>)
+                {
+                    c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
+                }
+                else
+                {
+                    return;
+                }
+
+                HtmlFragment htmlFragment = new HtmlFragment();
+                foreach (ListBoxItem lbi in c_contentList)
+                {
+                    if (lbi != null && lbi.IsSelected)
+                    {
+                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
+                    }
+                }
+
+                htmlFragment.CopyListToClipboard();
+            }
+            catch (Exception ex)
+            {
+                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
+            }
+        }
+
         public List<string> GetColorNames()
         {
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -352,9 +404,11 @@ namespace TextFilter
             }
             return list;
         }
-        private StringBuilder _color = new StringBuilder();
 
-        private List<string> _colorNames = new List<string>();
+        public void HelpExecuted(object sender)
+        {
+            CreateProcess(Settings.HelpUrl);
+        }
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
