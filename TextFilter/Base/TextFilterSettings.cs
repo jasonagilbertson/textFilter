@@ -1015,7 +1015,7 @@ namespace TextFilter
             // Wrap or NoWrap
             get
             {
-                return WordWrap ? "WordWrap" : "NoWrap";
+                return WordWrap ? "Wrap" : "NoWrap";
             }
         }
         #endregion Public Properties

@@ -830,7 +830,6 @@ namespace TextFilter
         private Command _quickFindChangedCommand;
         private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
         private Command _quickFindKeyPressCommand;
-        private string _quickFindText = string.Empty;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
 
@@ -1020,7 +1019,7 @@ namespace TextFilter
             if (sender is ComboBox)
             {
                 ComboBox comboBox = (sender as ComboBox);
-                QuickFindItem.Filterpattern = _quickFindText = (sender as ComboBox).Text;
+                QuickFindItem.Filterpattern = (sender as ComboBox).Text;
                 bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
                 foreach (ComboBoxItem item in comboBox.Items)
                 {
@@ -1095,7 +1094,7 @@ namespace TextFilter
             {
                 if ((sender as ComboBox).Text.Length > 0)
                 {
-                    if ((sender as ComboBox).Text != _quickFindText)
+                    if ((sender as ComboBox).Text != QuickFindItem.Filterpattern)
                     {
                         SetCurrentStatus(CurrentStatusSetting.enter_to_filter);
                     }
