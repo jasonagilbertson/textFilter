@@ -680,6 +680,7 @@
                           ItemsSource="{Binding Path=QuickFindList}"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           SelectedIndex="{Binding Path=QuickFindIndex}"
+                          
                           Style="{DynamicResource ComboBoxStyle1}"
                           >
                     <i:Interaction.Triggers>
@@ -691,6 +692,12 @@
                             <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ControlLostFocusCommand}"
                                                    CommandParameter="{Binding ElementName=comboboxQuickFind}" />
                         </i:EventTrigger>
+                        <!-- backspace uses this -->
+                        <i:EventTrigger EventName="KeyUp">
+                            <i:InvokeCommandAction Command="{Binding Path=FilterViewModel.QuickFindKeyPressCommand}"
+                                                   CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                        </i:EventTrigger>
+
                     </i:Interaction.Triggers>
 
                     <ComboBox.InputBindings>

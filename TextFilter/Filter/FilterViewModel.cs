@@ -102,17 +102,6 @@ namespace TextFilter
                 if (_filterHide != value)
                 {
                     _filterHide = value;
-                    //if (_filterHide == "0")
-                    //{
-                    //   // FilterHide = "0";
-                    //    Settings.FilterHide = true;
-                    //}
-                    //else
-                    //{
-                    //  //  FilterHide = "25*";
-                    //    Settings.FilterHide = false;
-                    //}
-
                     OnPropertyChanged("FilterHide");
                 }
             }
@@ -839,8 +828,9 @@ namespace TextFilter
         #endregion Private Methods
 
         private Command _quickFindChangedCommand;
-
         private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
+        private Command _quickFindKeyPressCommand;
+        private string _quickFindText = string.Empty;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
 
@@ -919,6 +909,21 @@ namespace TextFilter
                     // OnPropertyChanged("QuickFindItem");
                 }
             }
+        }
+
+        public Command QuickFindKeyPressCommand
+        {
+            get
+            {
+                if (_quickFindKeyPressCommand == null)
+                {
+                    _quickFindKeyPressCommand = new Command(QuickFindKeyPressExecuted);
+                }
+                _quickFindKeyPressCommand.CanExecute = true;
+
+                return _quickFindKeyPressCommand;
+            }
+            set { _quickFindKeyPressCommand = value; }
         }
 
         public ObservableCollection<ListBoxItem> QuickFindList
@@ -1011,10 +1016,11 @@ namespace TextFilter
         public void QuickFindChangedExecuted(object sender)
         {
             SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is ComboBox)));
+
             if (sender is ComboBox)
             {
                 ComboBox comboBox = (sender as ComboBox);
-                QuickFindItem.Filterpattern = (sender as ComboBox).Text;
+                QuickFindItem.Filterpattern = _quickFindText = (sender as ComboBox).Text;
                 bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
                 foreach (ComboBoxItem item in comboBox.Items)
                 {
@@ -1080,6 +1086,25 @@ namespace TextFilter
 
             // send filter request
             _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+        }
+
+        private void QuickFindKeyPressExecuted(object sender)
+        {
+            SetStatus(string.Format("quickfindKeyPressexecuted:enter: {0}", (sender is ComboBox)));
+            if (sender is ComboBox)
+            {
+                if ((sender as ComboBox).Text.Length > 0)
+                {
+                    if ((sender as ComboBox).Text != _quickFindText)
+                    {
+                        SetCurrentStatus(CurrentStatusSetting.enter_to_filter);
+                    }
+                }
+                else
+                {
+                     QuickFindChangedExecuted(sender);
+                }
+            }
         }
     }
 }

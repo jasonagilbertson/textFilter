@@ -456,19 +456,6 @@ namespace TextFilter
             }
         }
 
-        public void StatusChangedExecuted(object sender)
-        {
-            try
-            {
-                if (sender is ListBox)
-                {
-                    ListBox listBox = (sender as ListBox);
-                    listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
-                }
-            }
-            catch { }
-        }
-
         public void VersionCheckExecuted(object sender)
         {
             VersionCheck(false);
