@@ -18,6 +18,7 @@ namespace TextFilter
         public enum OptionsDialogResult
         {
             unknown,
+            apply,
             cancel,
             edit,
             register,
@@ -25,15 +26,15 @@ namespace TextFilter
             save,
             unregister
         }
-        private MainViewModel _mainViewModel;
+        
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            _mainViewModel.ColorComboKeyDown(sender, e);
+         //   _mainViewModel.ColorComboKeyDown(sender, e);
         }
 
         private void colorCombo_Selected(object sender, RoutedEventArgs e)
         {
-            _mainViewModel.ColorComboSelected();
+         //   _mainViewModel.ColorComboSelected();
         }
 
 
@@ -45,15 +46,10 @@ namespace TextFilter
         private OptionsDialogResult _dialogResult;
         public OptionsDialog()
         {
-            
             Owner = Application.Current.MainWindow;
             InitializeComponent();
-            this._mainViewModel = (MainViewModel)this.FindResource("mainViewModel");
-            
-            //((ListViewItem)listViewFontName.SelectedItem).BringIntoView();
         }
 
-        
         #endregion Public Constructors
 
         #region Public Methods
@@ -73,7 +69,11 @@ namespace TextFilter
         #endregion Public Methods
 
         #region Private Methods
-
+        private void buttonApply_Click(object sender, RoutedEventArgs e)
+        {
+            _dialogResult = OptionsDialogResult.apply;
+            Disable();
+        }
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             _dialogResult = OptionsDialogResult.cancel;

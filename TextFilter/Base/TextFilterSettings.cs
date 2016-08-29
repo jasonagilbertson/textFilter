@@ -31,11 +31,6 @@ namespace TextFilter
     {
         #region Public Methods
 
-        public TextFilterSettings ShallowCopy()
-        {
-            return (TextFilterSettings)MemberwiseClone();
-        }
-
         public bool ReadConfigFile()
         {
             // check config file first
@@ -150,9 +145,141 @@ namespace TextFilter
             catch { }
         }
 
+        public TextFilterSettings ShallowCopy()
+        {
+            return (TextFilterSettings)MemberwiseClone();
+        }
         #endregion Public Methods
 
         #region Private Methods
+
+        public void VerifyAppSettings(bool overwrite)
+        {
+            try
+            {
+                foreach (string name in Enum.GetNames(typeof(AppSettingNames)))
+                {
+                    if (!_appSettings.AllKeys.Contains(name))
+                    {
+                        _appSettings.Add(name, string.Empty);
+                    }
+
+                    // set default settings
+                    if (!overwrite && !string.IsNullOrEmpty(_appSettings[name].Value))
+                    {
+                        continue;
+                    }
+
+                    switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
+                    {
+                        case AppSettingNames.AutoSave:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
+                        case AppSettingNames.BackgroundColor:
+                            {
+                                _appSettings[name].Value = "AliceBlue";
+                                break;
+                            }
+                        case AppSettingNames.CountMaskedMatches:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
+                        case AppSettingNames.CurrentFilterFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.CurrentLogFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+
+                        case AppSettingNames.DebugFile:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.FileHistoryCount:
+                            {
+                                _appSettings[name].Value = "20";
+                                break;
+                            }
+                        case AppSettingNames.FilterHide:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
+                        case AppSettingNames.FontName:
+                            {
+                                _appSettings[name].Value = "Lucida Console";
+                                break;
+                            }
+                        case AppSettingNames.FontSize:
+                            {
+                                _appSettings[name].Value = "12";
+                                break;
+                            }
+                        case AppSettingNames.ForegroundColor:
+                            {
+                                _appSettings[name].Value = "Black";
+                                break;
+                            }
+                        case AppSettingNames.HelpUrl:
+                            {
+                                _appSettings[name].Value = "https://github.com/jasonagilbertson/TextFilter";
+                                break;
+                            }
+
+                        case AppSettingNames.MaxMultiFileCount:
+                            {
+                                _appSettings[name].Value = "10";
+                                break;
+                            }
+                        case AppSettingNames.RecentFilterFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.RecentLogFiles:
+                            {
+                                _appSettings[name].Value = "";
+                                break;
+                            }
+
+                        case AppSettingNames.SaveSessionInformation:
+                            {
+                                _appSettings[name].Value = "True";
+                                break;
+                            }
+                        case AppSettingNames.VersionCheckFile:
+                            {
+                                _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
+                                break;
+                            }
+
+
+                        case AppSettingNames.WordWrap:
+                            {
+                                _appSettings[name].Value = "True";
+                                break;
+                            }
+
+                        default:
+                            {
+                                break;
+                            }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("Exception:verifyappsetings:" + e.ToString());
+            }
+        }
 
         [DllImport("kernel32.dll")]
         private static extern bool AttachConsole(int dwProcessId);
@@ -388,135 +515,6 @@ namespace TextFilter
 
             return files;
         }
-
-        public void VerifyAppSettings(bool overwrite)
-        {
-            try
-            {
-                foreach (string name in Enum.GetNames(typeof(AppSettingNames)))
-                {
-                    if (!_appSettings.AllKeys.Contains(name))
-                    {
-                        _appSettings.Add(name, string.Empty);
-                    }
-
-                    // set default settings
-                    if (!overwrite && !string.IsNullOrEmpty(_appSettings[name].Value))
-                    {
-                        continue;
-                    }
-
-                    switch ((AppSettingNames)Enum.Parse(typeof(AppSettingNames), name))
-                    {
-                        case AppSettingNames.AutoSave:
-                            {
-                                _appSettings[name].Value = "False";
-                                break;
-                            }
-                        case AppSettingNames.BackgroundColor:
-                            {
-                                _appSettings[name].Value = "AliceBlue";
-                                break;
-                            }
-                        case AppSettingNames.CountMaskedMatches:
-                            {
-                                _appSettings[name].Value = "False";
-                                break;
-                            }
-                        case AppSettingNames.CurrentFilterFiles:
-                            {
-                                _appSettings[name].Value = "";
-                                break;
-                            }
-                        case AppSettingNames.CurrentLogFiles:
-                            {
-                                _appSettings[name].Value = "";
-                                break;
-                            }
-
-                        case AppSettingNames.DebugFile:
-                            {
-                                _appSettings[name].Value = "";
-                                break;
-                            }
-                        case AppSettingNames.FileHistoryCount:
-                            {
-                                _appSettings[name].Value = "20";
-                                break;
-                            }
-                        case AppSettingNames.FilterHide:
-                            {
-                                _appSettings[name].Value = "False";
-                                break;
-                            }
-                        case AppSettingNames.FontName:
-                            {
-                                _appSettings[name].Value = "Lucida Console";
-                                break;
-                            }
-                        case AppSettingNames.FontSize:
-                            {
-                                _appSettings[name].Value = "12";
-                                break;
-                            }
-                        case AppSettingNames.ForegroundColor:
-                            {
-                                _appSettings[name].Value = "Black";
-                                break;
-                            }
-                        case AppSettingNames.HelpUrl:
-                            {
-                                _appSettings[name].Value = "https://github.com/jasonagilbertson/TextFilter";
-                                break;
-                            }
-
-                        case AppSettingNames.MaxMultiFileCount:
-                            {
-                                _appSettings[name].Value = "10";
-                                break;
-                            }
-                        case AppSettingNames.RecentFilterFiles:
-                            {
-                                _appSettings[name].Value = "";
-                                break;
-                            }
-                        case AppSettingNames.RecentLogFiles:
-                            {
-                                _appSettings[name].Value = "";
-                                break;
-                            }
-
-                        case AppSettingNames.SaveSessionInformation:
-                            {
-                                _appSettings[name].Value = "True";
-                                break;
-                            }
-                        case AppSettingNames.VersionCheckFile:
-                            {
-                                _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
-                                break;
-                            }
-                            
-
-                        case AppSettingNames.WordWrap:
-                            {
-                                _appSettings[name].Value = "Wrap";
-                                break;
-                            }
-
-                        default:
-                            {
-                                break;
-                            }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                SetStatus("Exception:verifyappsetings:" + e.ToString());
-            }
-        }
-
         #endregion Private Methods
 
         #region Private Fields
@@ -530,7 +528,7 @@ namespace TextFilter
         private Configuration _Config;
 
         private ExeConfigurationFileMap _ConfigFileMap;
-        private ListViewItem _fontNameItem;
+        
 
         #endregion Private Fields
 
@@ -654,6 +652,22 @@ namespace TextFilter
             }
         }
 
+        public string BackgroundColorString
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString();
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
+                }
+            }
+        }
+
         public string ConfigFile { get; set; }
 
         public string ContentColumnSize
@@ -662,7 +676,7 @@ namespace TextFilter
             // a config file setting
             get
             {
-                if (this.WordWrap.ToLower() == "wrap")
+                if (this.WordWrap)
                 {
                     return "300*";
                 }
@@ -709,6 +723,23 @@ namespace TextFilter
             {
                 _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(";", value);
             }
+        }
+
+        public string DebugFile
+        {
+            get
+            {
+                return (_appSettings[(AppSettingNames.DebugFile).ToString()].Value);
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.DebugFile).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.DebugFile).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.DebugFile).ToString());
+                }
+            }
+
         }
 
         public int FileHistoryCount
@@ -767,27 +798,6 @@ namespace TextFilter
         //    }
         //}
 
-        public List<ListViewItem> FontNameList
-        {
-            get
-            {
-                List<ListViewItem> items = new List<ListViewItem>();
-
-                foreach (string name in (new InstalledFontCollection().Families.Select(x => x.Name).ToList()))
-                {
-                    ListViewItem item = new ListViewItem()
-                    {
-                        Content = name,
-                        IsSelected = String.Compare(FontName, name, true) == 0
-                    };
-
-                    items.Add(item);
-                }
-
-                return items;
-            }
-        }
-
         public string FontName
         {
             get
@@ -796,29 +806,26 @@ namespace TextFilter
             }
             set
             {
-                if (value.ToString() != _appSettings[(AppSettingNames.FontName).ToString()].Value.ToString())
+                if (value != _appSettings[(AppSettingNames.FontName).ToString()].Value.ToString())
                 {
-                    _appSettings[(AppSettingNames.FontName).ToString()].Value = value.ToString();
+                    _appSettings[(AppSettingNames.FontName).ToString()].Value = value;
                     OnPropertyChanged((AppSettingNames.FontName).ToString());
                 }
             }
         }
 
-        public ListViewItem FontNameItem
+        public List<string> FontNameList
         {
             get
             {
-                return _fontNameItem ?? new ListViewItem() { Content = FontName, IsSelected = true };
-                
-            }
-            set
-            {
-                if (_fontNameItem != value)
+                List<string> items = new List<string>();
+
+                foreach (string name in (new InstalledFontCollection().Families.Select(x => x.Name).ToList()))
                 {
-                    _fontNameItem = new ListViewItem() { Content = value.Content, IsSelected = true };
-                    OnPropertyChanged("FontNameItem");
-                    FontName = value.Content.ToString();
+                    items.Add(name);
                 }
+
+                return items;
             }
         }
         public int FontSize
@@ -833,6 +840,22 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.FontSize).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.FontSize).ToString());
+                }
+            }
+        }
+
+        public SolidColorBrush ForegroundColor
+        {
+            get
+            {
+                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.ForegroundColor).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
                 }
             }
         }
@@ -852,38 +875,6 @@ namespace TextFilter
                 }
             }
         }
-
-        public string BackgroundColorString
-        {
-            get
-            {
-                return _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString();
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.BackgroundColor).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.BackgroundColor).ToString());
-                }
-            }
-        }
-        public SolidColorBrush ForegroundColor
-        {
-            get
-            {
-                return ((SolidColorBrush)new BrushConverter().ConvertFromString(_appSettings[(AppSettingNames.ForegroundColor).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.ForegroundColor).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.ForegroundColor).ToString());
-                }
-            }
-        }
-
         public string HelpUrl
         {
             get
@@ -990,45 +981,43 @@ namespace TextFilter
             }
         }
 
-        public string WordWrap
+        public bool WordWrap
         {
-            // Wrap or NoWrap
             get
             {
-                return (_appSettings[(AppSettingNames.WordWrap).ToString()].Value);
+                // value was string now bool
+                try
+                {
+                    return (Convert.ToBoolean(_appSettings[(AppSettingNames.WordWrap).ToString()].Value));
+                }
+                catch
+                {
+                    WordWrap = true;
+                    return true;
+                }
             }
             set
             {
                 if (value.ToString() != _appSettings[(AppSettingNames.WordWrap).ToString()].Value.ToString())
                 {
-                    if (value.ToLower() != "wrap" & value.ToLower() != "nowrap")
-                    {
-                        SetStatus("error:WordWrap:invalid value: " + value);
-                        value = "Wrap";
-                    }
-
+                    
                     _appSettings[(AppSettingNames.WordWrap).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.WordWrap).ToString());
+                    
+                    // to have forms updated using string value
+                    OnPropertyChanged("WordWrapString");
                 }
             }
         }
 
-        public string DebugFile
+        public string WordWrapString
         {
+            // Wrap or NoWrap
             get
-            {   return (_appSettings[(AppSettingNames.DebugFile).ToString()].Value);
-            }
-            set
             {
-                if (value.ToString() != _appSettings[(AppSettingNames.DebugFile).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.DebugFile).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.DebugFile).ToString());
-                }
+                return WordWrap ? "WordWrap" : "NoWrap";
             }
-
         }
-
         #endregion Public Properties
 
         public void AddFilterFile(string filterFile)

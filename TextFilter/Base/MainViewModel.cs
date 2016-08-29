@@ -417,13 +417,15 @@ namespace TextFilter
             
             switch(dialog.WaitForResult())
             {
-                //case OptionsDialog.OptionsDialogResult.apply:
-                //    CreateProcess(Process.GetCurrentProcess().MainModule.FileName, 
-                //        string.Format("/filter: \"{0}\" /log: \"{1}\"", 
-                //        string.Join("\";\"", Settings.CurrentFilterFiles),
-                //        string.Join("\";\"",Settings.CurrentLogFiles)));
-                //    Application.Current.Shutdown();
-                //    break;
+                case OptionsDialog.OptionsDialogResult.apply:
+                    string args = string.Format("/filter: \"{0}\" /log: \"{1}\"",
+                        string.Join("\";\"", Settings.CurrentFilterFiles),
+                        string.Join("\";\"", Settings.CurrentLogFiles));
+                    Settings.Save();
+                    CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args);
+                    Debug.Print(args);
+                    Application.Current.Shutdown();
+                    break;
                 //case OptionsDialog.OptionsDialogResult.cancel:
                 //    Settings = configFileCache.ShallowCopy();
                 //    break;

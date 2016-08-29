@@ -1076,7 +1076,7 @@
                                     </DataGridTextColumn.CellStyle>
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1164,7 +1164,7 @@
 
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1448,7 +1448,7 @@
                                                     >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1462,7 +1462,7 @@
                                                     >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1475,7 +1475,7 @@
                                                     >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1488,7 +1488,7 @@
                                                     >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1501,7 +1501,7 @@
                                                     >
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrap}" />
+                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
