@@ -18,8 +18,10 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
 
 namespace TextFilter
 {
@@ -1098,10 +1100,15 @@ namespace TextFilter
                     {
                         SetCurrentStatus(CurrentStatusSetting.enter_to_filter);
                     }
+
+                    (sender as ComboBox).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("LightGreen"));
+                    (sender as ComboBox).BorderThickness = new Thickness(1.5);
                 }
                 else
                 {
-                     QuickFindChangedExecuted(sender);
+                    (sender as ComboBox).BorderBrush = Settings.ForegroundColor;
+                    (sender as ComboBox).BorderThickness = new Thickness(1);
+                    //QuickFindChangedExecuted(sender);
                 }
             }
         }

@@ -87,20 +87,21 @@ namespace TextFilter
       
         private void ControlGotFocusExecuted(object sender)
         {
-            if (sender is Control)
-            {
-                (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
-                (sender as Control).BorderThickness = new Thickness(2);
-            }
+            //if (sender is Control)
+            //{
+            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
+            //    (sender as Control).BorderThickness = new Thickness(2);
+            //}
 
         }
 
         private void ControlLostFocusExecuted(object sender)
         {
-            if (sender is Control)
+            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
             {
-                (sender as Control).BorderBrush = Settings.ForegroundColor;
-                (sender as Control).BorderThickness = new Thickness(1);
+                _filterViewModel.QuickFindChangedExecuted(sender);
+            //    (sender as Control).BorderBrush = Settings.ForegroundColor;
+            //    (sender as Control).BorderThickness = new Thickness(1);
             }
         }
         #endregion Private Fields
