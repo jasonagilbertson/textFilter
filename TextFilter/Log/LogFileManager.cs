@@ -96,9 +96,15 @@ namespace TextFilter
 
             int inclusionFilterCount = filterItems.Count(x => x.Include == true);
 
+            ParallelOptions po = new ParallelOptions
+            {
+                MaxDegreeOfParallelism = Environment.ProcessorCount
+            };
+
+
             try
             {
-                Parallel.ForEach(logFile.ContentItems, logItem =>
+                Parallel.ForEach(logFile.ContentItems, po, logItem =>
                 {
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
