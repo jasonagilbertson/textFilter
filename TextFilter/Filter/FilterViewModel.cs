@@ -154,8 +154,9 @@ namespace TextFilter
         {
             get
             {
-                if (_sharedCollection == null || _sharedCollection.Count < 1)
+                if (_sharedCollection == null || _sharedCollection.Count < 1 | Settings.RefreshSharedFilterDirectory)
                 {
+                    Settings.RefreshSharedFilterDirectory = false;
                     _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
                 }
 

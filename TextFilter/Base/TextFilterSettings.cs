@@ -472,6 +472,13 @@ namespace TextFilter
             return retval;
         }
 
+        public void Refresh()
+        {
+            // f5 from gui
+            // only thing that needs refreshed are the shared menus
+            RefreshSharedFilterDirectory = true;
+        }
+
         private List<string> ProcessFiles(List<string> results)
         {
             List<string> files = new List<string>();
@@ -1041,6 +1048,8 @@ namespace TextFilter
                 return WordWrap ? "Wrap" : "NoWrap";
             }
         }
+
+        public bool RefreshSharedFilterDirectory { get; set; }
         #endregion Public Properties
 
         public void AddFilterFile(string filterFile)

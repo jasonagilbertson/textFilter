@@ -422,13 +422,16 @@ namespace TextFilter
                 }
 
                 double totalSeconds = DateTime.Now.Subtract(timer).TotalSeconds;
-                SetStatus(string.Format("ApplyFilter:total time in seconds: {0} lines per second: {1} "
-                    + "logfile total count: {2} logfile filter count: {3} log file: {4}",
+                SetStatus(string.Format("ApplyFilter:total time in seconds: {0}\n\tlines per second: {1} "
+                    + "\n\tlogfile total lines count: {2}\n\tlogfile filter lines count: {3}\n\tlog file: {4}"
+                    + "\n\tnumber of filters: {5}\n\tcalculated lines per second for single query: {6}",
                     totalSeconds,
                     logFile.ContentItems.Count / totalSeconds,
                     logFile.ContentItems.Count,
                     filterCount,
-                    logFile.Tag));
+                    logFile.Tag,
+                    filterItems.Count,
+                    logFile.ContentItems.Count / totalSeconds * filterItems.Count));
 
                 Mouse.OverrideCursor = null;
                 return new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
