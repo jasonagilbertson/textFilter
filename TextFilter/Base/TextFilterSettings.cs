@@ -137,10 +137,25 @@ namespace TextFilter
                     } */
             try
             {
-                if (SaveSessionInformation)
+                if (!SaveSessionInformation)
                 {
-                    _Config.Save(ConfigurationSaveMode.Full);
+                    // set current properties back to what they were
+                    List<string> currentFilterFiles = new List<string>(CurrentLogFiles);
+                    List<string> currentLogFiles = new List<string>(CurrentLogFiles);
+                    CurrentLogFiles = new List<string>();
+                    CurrentFilterFiles = new List<string>();
+                    
+                    _Config.Save(ConfigurationSaveMode.Minimal, true);
+
+                    CurrentLogFiles = currentLogFiles;
+                    CurrentFilterFiles = currentFilterFiles;
                 }
+                else
+                {
+                    _Config.Save(ConfigurationSaveMode.Minimal, true);
+                }
+                
+
             }
             catch { }
         }
@@ -916,7 +931,11 @@ namespace TextFilter
 
             set
             {
-                _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
+                if (value.ToString() != _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.RecentFilterFiles).ToString()].Value = string.Join(";", value);
+                    OnPropertyChanged((AppSettingNames.RecentFilterFiles).ToString());
+                }
             }
         }
 
@@ -929,7 +948,11 @@ namespace TextFilter
 
             set
             {
-                _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
+                if (value.ToString() != _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.RecentLogFiles).ToString()].Value = string.Join(";", value);
+                    OnPropertyChanged((AppSettingNames.RecentLogFiles).ToString());
+                }
             }
         }
 
