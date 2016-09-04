@@ -718,13 +718,16 @@
                                                    Path=Settings.ForegroundColor}"
                               />
 
-                <Label Name="labelStatus"
+                <Button Name="buttonStatus"
                        Grid.Column="2"
                        Width="110"
                        Height="25"
                        Margin="0,0,0,0"
+                       Command="{Binding FilterViewModel.QuickFindChangedCommand}"
+                       CommandParameter="{Binding ElementName=x:comboboxQuickFind}"
                        HorizontalAlignment="Left"
                        VerticalAlignment="Bottom"
+                       
                        Background="{Binding Source={StaticResource settings},
                                             Path=Settings.BackgroundColor}"
                        BorderBrush="Blue"
@@ -734,7 +737,7 @@
                        FontSize="12"
                        Foreground="Blue"
                        Padding="5,3,0,0"
-                       Style="{DynamicResource LabelStyle1}"
+                       
                        />
 
                 <Label Name="labelLineTotals"
