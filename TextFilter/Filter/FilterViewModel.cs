@@ -342,7 +342,7 @@ namespace TextFilter
                     filterFileItems.Insert(0, QuickFindItem);
                 }
 
-                if(QuickFindItem.Exclude && !string.IsNullOrEmpty(QuickFindItem.Filterpattern) && filterFileItems.Count ==1)
+                if (QuickFindItem.Exclude && !string.IsNullOrEmpty(QuickFindItem.Filterpattern) && filterFileItems.Count == 1)
                 {
                     // doing a not quick filter and no filter file is loaded.
                     // in this case, add a new wildcard filter entry to show all lines not matching the not quick filter

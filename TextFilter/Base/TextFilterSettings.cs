@@ -15,13 +15,7 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Xml;
 
@@ -144,7 +138,7 @@ namespace TextFilter
                     List<string> currentLogFiles = new List<string>(CurrentLogFiles);
                     CurrentLogFiles = new List<string>();
                     CurrentFilterFiles = new List<string>();
-                    
+
                     _Config.Save(ConfigurationSaveMode.Minimal, true);
 
                     CurrentLogFiles = currentLogFiles;
@@ -154,8 +148,6 @@ namespace TextFilter
                 {
                     _Config.Save(ConfigurationSaveMode.Minimal, true);
                 }
-                
-
             }
             catch { }
         }
@@ -164,9 +156,17 @@ namespace TextFilter
         {
             return (TextFilterSettings)MemberwiseClone();
         }
+
         #endregion Public Methods
 
         #region Private Methods
+
+        public void Refresh()
+        {
+            // f5 from gui
+            // only thing that needs refreshed are the shared menus
+            RefreshSharedFilterDirectory = true;
+        }
 
         public void VerifyAppSettings(bool overwrite)
         {
@@ -275,7 +275,6 @@ namespace TextFilter
                                 _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
                                 break;
                             }
-
 
                         case AppSettingNames.WordWrap:
                             {
@@ -471,14 +470,6 @@ namespace TextFilter
 
             return retval;
         }
-
-        public void Refresh()
-        {
-            // f5 from gui
-            // only thing that needs refreshed are the shared menus
-            RefreshSharedFilterDirectory = true;
-        }
-
         private List<string> ProcessFiles(List<string> results)
         {
             List<string> files = new List<string>();
@@ -537,6 +528,7 @@ namespace TextFilter
 
             return files;
         }
+
         #endregion Private Methods
 
         #region Private Fields
@@ -550,7 +542,6 @@ namespace TextFilter
         private Configuration _Config;
 
         private ExeConfigurationFileMap _ConfigFileMap;
-        
 
         #endregion Private Fields
 
@@ -761,7 +752,6 @@ namespace TextFilter
                     OnPropertyChanged((AppSettingNames.DebugFile).ToString());
                 }
             }
-
         }
 
         public int FileHistoryCount
@@ -850,6 +840,7 @@ namespace TextFilter
                 return items;
             }
         }
+
         public int FontSize
         {
             get
@@ -897,6 +888,7 @@ namespace TextFilter
                 }
             }
         }
+
         public string HelpUrl
         {
             get
@@ -962,6 +954,8 @@ namespace TextFilter
                 }
             }
         }
+
+        public bool RefreshSharedFilterDirectory { get; set; }
 
         public bool SaveSessionInformation
         {
@@ -1030,10 +1024,9 @@ namespace TextFilter
             {
                 if (value.ToString() != _appSettings[(AppSettingNames.WordWrap).ToString()].Value.ToString())
                 {
-                    
                     _appSettings[(AppSettingNames.WordWrap).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.WordWrap).ToString());
-                    
+
                     // to have forms updated using string value
                     OnPropertyChanged("WordWrapString");
                 }
@@ -1048,8 +1041,6 @@ namespace TextFilter
                 return WordWrap ? "Wrap" : "NoWrap";
             }
         }
-
-        public bool RefreshSharedFilterDirectory { get; set; }
         #endregion Public Properties
 
         public void AddFilterFile(string filterFile)

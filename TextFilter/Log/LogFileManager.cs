@@ -101,7 +101,6 @@ namespace TextFilter
                 MaxDegreeOfParallelism = Environment.ProcessorCount
             };
 
-
             try
             {
                 Parallel.ForEach(logFile.ContentItems, po, logItem =>

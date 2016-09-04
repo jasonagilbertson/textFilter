@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Text.RegularExpressions;
-using TextFilter;
+﻿using System.IO;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -42,7 +33,6 @@ namespace TextFilter
 
         #region Private Fields
 
-
         private MainViewModel _mainViewModel;
 
         #endregion Private Fields
@@ -56,7 +46,6 @@ namespace TextFilter
 
             // https: //msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
 
-            
             Closing += _mainViewModel.OnWindowClosing;
         }
 
@@ -80,8 +69,6 @@ namespace TextFilter
             return null;
         }
 
-        
-
         #endregion Public Methods
 
         private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -93,8 +80,6 @@ namespace TextFilter
         {
             _mainViewModel.ColorComboSelected();
         }
-
-
 
         private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
         {
@@ -174,6 +159,5 @@ namespace TextFilter
                 }
             }
         }
-        
     }
 }

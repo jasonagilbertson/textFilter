@@ -11,7 +11,6 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 using System.Windows;
 using System.Windows.Media;
@@ -28,6 +27,7 @@ namespace TextFilter
             showing_all,
             filtering,
         }
+
         #region Public Fields
 
         public string _tempTabNameFormat = "-new {0}-";
@@ -45,16 +45,7 @@ namespace TextFilter
         #endregion Public Events
 
         #region Public Methods
-        public void ExecuteAsAdmin(string fileName, string arguments)
-        {
-            Process proc = new Process();
-            proc.StartInfo.FileName = fileName;
-            proc.StartInfo.Arguments = arguments;
-            proc.StartInfo.CreateNoWindow = true;
-            proc.StartInfo.UseShellExecute = true;
-            proc.StartInfo.Verb = "runas";
-            proc.Start();
-        }
+
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -75,6 +66,16 @@ namespace TextFilter
             }
         }
 
+        public void ExecuteAsAdmin(string fileName, string arguments)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = fileName;
+            proc.StartInfo.Arguments = arguments;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.Verb = "runas";
+            proc.Start();
+        }
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;
@@ -163,7 +164,6 @@ namespace TextFilter
 
             try
             {
-
                 if (!string.IsNullOrEmpty(TextFilterSettings.Settings.DebugFile))
                 {
                     using (System.IO.StreamWriter file = new System.IO.StreamWriter(TextFilterSettings.Settings.DebugFile, true))
@@ -173,14 +173,13 @@ namespace TextFilter
                 }
 
                 Debug.Print(status);
-
             }
             catch (Exception e)
             {
                 Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
             }
-    }
+        }
 
-    #endregion Public Methods
-}
+        #endregion Public Methods
+    }
 }

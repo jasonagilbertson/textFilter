@@ -240,7 +240,6 @@ namespace TextFilter
         {
             try
             {
-               
                 List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;
@@ -299,7 +298,7 @@ namespace TextFilter
                 }
 
                 SetCurrentStatus(CurrentStatusSetting.filtering);
-                
+
                 switch (filterIntent)
                 {
                     case FilterCommand.Filter:
@@ -339,9 +338,8 @@ namespace TextFilter
                 // update line total counts
                 LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, logFile.ContentItems.Count);
 
-
                 // set current status message
-                if(logTab.ContentList.Count == logFile.ContentItems.Count)
+                if (logTab.ContentList.Count == logFile.ContentItems.Count)
                 {
                     SetCurrentStatus(CurrentStatusSetting.showing_all);
                 }
@@ -353,7 +351,6 @@ namespace TextFilter
                 {
                     SetCurrentStatus(CurrentStatusSetting.filtered);
                 }
-
 
                 SaveCurrentFilter(filterFileItems);
             }
@@ -627,7 +624,6 @@ namespace TextFilter
             // change temp file name to generic -new ##- name only and not tag
             file.FileName = GenerateTempTagName();
             AddTabItem(file);
-
         }
 
         public override void RenameTabItem(string logName)

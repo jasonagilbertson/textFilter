@@ -261,7 +261,6 @@ namespace TextFilter
 
         public bool ProcessWorker(WorkerItem workerItem)
         {
-
             // todo: remove when switching to mapped file
             return true;
 

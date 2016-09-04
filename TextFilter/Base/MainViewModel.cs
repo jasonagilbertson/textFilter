@@ -27,8 +27,8 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-
         #region Private Fields
+
         public System.Timers.Timer _timer;
         private Command _controlGotFocusCommand;
 
@@ -84,7 +84,6 @@ namespace TextFilter
             set { _controlLostFocusCommand = value; }
         }
 
-      
         private void ControlGotFocusExecuted(object sender)
         {
             //if (sender is Control)
@@ -92,7 +91,6 @@ namespace TextFilter
             //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
             //    (sender as Control).BorderThickness = new Thickness(2);
             //}
-
         }
 
         private void ControlLostFocusExecuted(object sender)
@@ -100,10 +98,11 @@ namespace TextFilter
             if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
             {
                 _filterViewModel.QuickFindChangedExecuted(sender);
-            //    (sender as Control).BorderBrush = Settings.ForegroundColor;
-            //    (sender as Control).BorderThickness = new Thickness(1);
+                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
+                //    (sender as Control).BorderThickness = new Thickness(1);
             }
         }
+
         #endregion Private Fields
 
         #region Public Constructors
@@ -122,7 +121,7 @@ namespace TextFilter
 
                 _colorNames = GetColorNames();
                 // clean up old log file if exists
-                if(!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
+                if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
                 {
                     File.Delete(Settings.DebugFile);
                 }
@@ -135,7 +134,6 @@ namespace TextFilter
 
                 _filterViewModel._LogViewModel = _logViewModel;
 
-               
                 App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
                     Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
@@ -246,7 +244,6 @@ namespace TextFilter
             set { _logViewModel = value; }
         }
 
-      
         public TextFilterSettings Settings
         {
             get { return _settings; }
@@ -267,6 +264,7 @@ namespace TextFilter
             }
             set { _settingsCommand = value; }
         }
+
         public Command VersionCheckCommand
         {
             get
@@ -296,6 +294,7 @@ namespace TextFilter
                 Debug.Print("listviewselectionchanged but invalid call");
             }
         }
+
         #endregion Public Properties
 
         #region Public Methods
@@ -359,7 +358,6 @@ namespace TextFilter
 
             try
             {
-
                 if (contentList is List<ListBoxItem>)
                 {
                     c_contentList = (List<ListBoxItem>)contentList;
@@ -410,13 +408,14 @@ namespace TextFilter
         {
             CreateProcess(Settings.HelpUrl);
         }
+
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
-            
+
             OptionsDialog dialog = new OptionsDialog();
-            
-            switch(dialog.WaitForResult())
+
+            switch (dialog.WaitForResult())
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     string args = string.Format("/filter: \"{0}\" /log: \"{1}\"",
@@ -434,23 +433,28 @@ namespace TextFilter
                     string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
                     CreateProcess("notepad.exe", Settings.ConfigFile);
                     break;
+
                 case OptionsDialog.OptionsDialogResult.register:
                     ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/register");
                     SettingsExecuted(null);
                     //FileTypeAssociation.Instance.ConfigureFTA(true);
                     break;
+
                 case OptionsDialog.OptionsDialogResult.reset:
                     Settings.VerifyAppSettings(true);
                     SettingsExecuted(null);
                     break;
+
                 case OptionsDialog.OptionsDialogResult.save:
                     Settings.Save();
                     break;
+
                 case OptionsDialog.OptionsDialogResult.unregister:
                     ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/unregister");
                     SettingsExecuted(null);
                     //FileTypeAssociation.Instance.ConfigureFTA(false);
                     break;
+
                 case OptionsDialog.OptionsDialogResult.unknown:
                 default:
                     break;
@@ -588,6 +592,7 @@ namespace TextFilter
         {
             CurrentStatus = status;
         }
+
         #endregion Private Methods
     }
 }

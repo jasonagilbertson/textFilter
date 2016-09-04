@@ -18,11 +18,5 @@ namespace TextFilter
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         #endregion Public Events
-
-        #region Public Methods
-
-        
-
-        #endregion Public Methods
     }
 }

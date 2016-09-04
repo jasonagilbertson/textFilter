@@ -16,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace TextFilter
 {
@@ -140,6 +139,7 @@ namespace TextFilter
             }
             set { _gotFocusCommand = value; }
         }
+
         public Command HideCommand
         {
             get
@@ -526,6 +526,7 @@ namespace TextFilter
 
             AddTabItem(file);
         }
+
         public void OpenDropExecuted(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());

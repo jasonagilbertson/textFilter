@@ -7,24 +7,21 @@
         Title="Settings"
         Width="834.477"
         Height="550"
-        WindowStartupLocation="CenterOwner"
-        >
+        WindowStartupLocation="CenterOwner">
     <!--  todo contentstringformat https://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k(System.Windows.Controls.ContentControl.ContentStringFormat);k(VS.XamlEditor);k(TargetFrameworkMoniker-.NETFramework,Version%3Dv4.5)&rd=true  -->
     <Window.Resources>
         <local:TextFilterSettings x:Key="settings" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <ObjectDataProvider x:Key="colorsTypeOdp"
                             MethodName="GetType"
-                            ObjectType="{x:Type sys:Type}"
-                            >
+                            ObjectType="{x:Type sys:Type}">
             <ObjectDataProvider.MethodParameters>
                 <sys:String>System.Windows.Media.Colors, PresentationCore, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35</sys:String>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <ObjectDataProvider x:Key="colorPropertiesOdp"
                             MethodName="GetProperties"
-                            ObjectInstance="{StaticResource colorsTypeOdp}"
-                            />
+                            ObjectInstance="{StaticResource colorsTypeOdp}" />
     </Window.Resources>
 
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
@@ -54,7 +51,6 @@
             <ColumnDefinition Width="450" />
         </Grid.ColumnDefinitions>
 
-
         <ToggleButton Grid.Row="1"
                       Grid.Column="1"
                       Width="75"
@@ -70,8 +66,7 @@
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.AutoSave}"
-                      />
+                                          Path=Settings.AutoSave}" />
 
         <Label Grid.Row="1"
                Grid.Column="2"
@@ -85,8 +80,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="RecentFilterFiles:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ListView Grid.Row="1"
                   Grid.Column="3"
@@ -104,8 +98,7 @@
                   ItemsSource="{Binding Source={StaticResource settings},
                                         Path=Settings.RecentFilterFiles,
                                         Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  />
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 
         <Label Grid.Row="2"
                Grid.Column="0"
@@ -119,8 +112,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="BackgroundColor:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ComboBox Name="backgroundColorCombo"
                   Grid.Row="2"
@@ -141,16 +133,14 @@
                                           UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Name"
                   VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  >
+                  VirtualizingStackPanel.VirtualizationMode="Recycling">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Width="20"
                                    Height="15"
                                    Margin="0,0,5,0"
-                                   Background="{Binding Name}"
-                                   />
+                                   Background="{Binding Name}" />
                         <TextBlock Name="backgroundColorText" Text="{Binding Name}" />
                     </StackPanel>
                 </DataTemplate>
@@ -169,8 +159,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="RecentLogFiles:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ListView Grid.Row="2"
                   Grid.Column="3"
@@ -188,9 +177,7 @@
                   ItemsSource="{Binding Source={StaticResource settings},
                                         Path=Settings.RecentLogFiles,
                                         Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  />
-
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
 
         <ToggleButton Grid.Row="3"
                       Grid.Column="1"
@@ -207,9 +194,7 @@
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.CountMaskedMatches}"
-                      />
-
+                                          Path=Settings.CountMaskedMatches}" />
 
         <ToggleButton Grid.Row="3"
                       Grid.Column="3"
@@ -227,8 +212,7 @@
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
                                           Path=Settings.SaveSessionInformation,
-                                          StringFormat={}{0:True;;False}}"
-                      />
+                                          StringFormat={}{0:True;;False}}" />
 
         <Label Grid.Row="4"
                Grid.Column="0"
@@ -242,8 +226,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="CurrentFilterFiles:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ListView Grid.Row="4"
                   Grid.Column="1"
@@ -262,8 +245,7 @@
                                         Path=Settings.CurrentFilterFiles,
                                         Mode=TwoWay}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  SelectionMode="Extended"
-                  />
+                  SelectionMode="Extended" />
 
         <Label Grid.Row="4"
                Grid.Column="2"
@@ -277,8 +259,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="SharedFilterDirectory:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="4"
                  Grid.Column="3"
@@ -294,8 +275,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.SharedFilterDirectory}"
-                 />
+                                Path=Settings.SharedFilterDirectory}" />
 
         <Label Grid.Row="5"
                Grid.Column="0"
@@ -309,8 +289,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="CurrentLogFiles:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ListView Grid.Row="5"
                   Grid.Column="1"
@@ -329,8 +308,7 @@
                                         Path=Settings.CurrentLogFiles,
                                         Mode=TwoWay}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  SelectionMode="Extended"
-                  />
+                  SelectionMode="Extended" />
 
         <Label Grid.Row="5"
                Grid.Column="2"
@@ -344,8 +322,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="VersionCheckFile:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="5"
                  Grid.Column="3"
@@ -361,8 +338,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.VersionCheckFile}"
-                 />
+                                Path=Settings.VersionCheckFile}" />
 
         <Label Grid.Row="6"
                Grid.Column="0"
@@ -376,8 +352,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="DebugFile:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="6"
                  Grid.Column="1"
@@ -393,9 +368,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.DebugFile}"
-                 />
-
+                                Path=Settings.DebugFile}" />
 
         <ToggleButton Grid.Row="6"
                       Grid.Column="3"
@@ -412,8 +385,7 @@
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.WordWrap}"
-                      />
+                                          Path=Settings.WordWrap}" />
 
         <Label Grid.Row="7"
                Grid.Column="0"
@@ -427,8 +399,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="FileHistoryCount:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="7"
                  Grid.Column="1"
@@ -444,8 +415,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FileHistoryCount}"
-                 />
+                                Path=Settings.FileHistoryCount}" />
 
         <Label Grid.Row="8"
                Grid.Column="0"
@@ -459,8 +429,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="FilterDirectory:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="8"
                  Grid.Column="1"
@@ -476,10 +445,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FilterDirectory}"
-                 />
-
-
+                                Path=Settings.FilterDirectory}" />
 
         <ToggleButton Grid.Row="9"
                       Grid.Column="1"
@@ -496,8 +462,7 @@
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.FilterHide}"
-                      />
+                                          Path=Settings.FilterHide}" />
 
         <Label Grid.Row="10"
                Grid.Column="0"
@@ -511,8 +476,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="FontName:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ComboBox Name="comboboxFontName"
                   Grid.Row="10"
@@ -531,12 +495,10 @@
                   ItemsSource="{Binding Source={StaticResource settings},
                                         Path=Settings.FontNameList}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-
                   SelectedValue="{Binding Source={StaticResource settings},
-                                         Path=Settings.FontName,
-                                         Mode=TwoWay,
-                                         UpdateSourceTrigger=PropertyChanged}"
-                  >
+                                          Path=Settings.FontName,
+                                          Mode=TwoWay,
+                                          UpdateSourceTrigger=PropertyChanged}">
             <!--<i:Interaction.Triggers>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ListViewSelectionChangedCommand}" CommandParameter="{Binding ElementName=listViewFontName}" />
@@ -562,8 +524,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="FontSize:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="11"
                  Grid.Column="1"
@@ -579,8 +540,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FontSize}"
-                 />
+                                Path=Settings.FontSize}" />
 
         <Label Grid.Row="12"
                Grid.Column="0"
@@ -594,8 +554,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="ForegroundColor:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <ComboBox Name="foregroundColorCombo"
                   Grid.Row="12"
@@ -616,16 +575,14 @@
                                           UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Name"
                   VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling"
-                  >
+                  VirtualizingStackPanel.VirtualizationMode="Recycling">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Width="20"
                                    Height="15"
                                    Margin="0,0,5,0"
-                                   Background="{Binding Name}"
-                                   />
+                                   Background="{Binding Name}" />
                         <TextBlock Name="foregroundColorText" Text="{Binding Name}" />
                     </StackPanel>
                 </DataTemplate>
@@ -644,8 +601,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="HelpUrl:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="13"
                  Grid.Column="1"
@@ -661,8 +617,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.HelpUrl}"
-                 />
+                                Path=Settings.HelpUrl}" />
 
         <Label Grid.Row="14"
                Grid.Column="0"
@@ -676,8 +631,7 @@
                                      Path=Settings.ForegroundColor}"
                Content="MaxMultiFileCount:"
                Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               />
+                                    Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="14"
                  Grid.Column="1"
@@ -693,8 +647,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.MaxMultiFileCount}"
-                 />
+                                Path=Settings.MaxMultiFileCount}" />
         <!--    <Button Grid.Row="16"
                 Grid.Column="1"
                 Height="20"
@@ -723,8 +676,7 @@ Name="buttonCancel"
                 Click="buttonReset_Click"
                 Content="Reset"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-                />
+                                     Path=Settings.ForegroundColor}" />
 
         <Button Name="buttonRegister"
                 Grid.Row="15"
@@ -741,8 +693,7 @@ Name="buttonCancel"
                 Click="buttonRegister_Click"
                 Content="Register Context and FTA"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-                />
+                                     Path=Settings.ForegroundColor}" />
         <Button Name="buttonSave"
                 Grid.Row="16"
                 Grid.Column="0"
@@ -758,8 +709,7 @@ Name="buttonCancel"
                 Click="buttonSave_Click"
                 Content="Save"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-                />
+                                     Path=Settings.ForegroundColor}" />
         <Button Name="buttonApply"
                 Grid.Row="16"
                 Grid.Column="1"
@@ -791,8 +741,7 @@ Name="buttonCancel"
                 Click="buttonEdit_Click"
                 Content="Edit Config Directly"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-                />
+                                     Path=Settings.ForegroundColor}" />
 
         <Button Name="buttonUnRegister"
                 Grid.Row="16"
@@ -809,7 +758,6 @@ Name="buttonCancel"
                 Click="buttonUnRegister_Click"
                 Content="UnRegister Context and FTA"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-                />
+                                     Path=Settings.ForegroundColor}" />
     </Grid>
 </Window>
