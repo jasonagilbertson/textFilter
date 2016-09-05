@@ -340,13 +340,6 @@ namespace TextFilter
 
             try
             {
-                // todo: check for uri / share filter???
-
-                //if (File.Exists(fileName))
-                //{
-                //    File.Delete(fileName);
-                //}
-
                 SetStatus("saving file:" + fileName);
 
                 if (Path.GetExtension(fileName).ToLower().Contains("tat"))
@@ -367,7 +360,7 @@ namespace TextFilter
                 xmlw.WriteStartElement("filterinfo");
 
                 xmlw.WriteStartElement("filterversion");
-                xmlw.WriteString(DateTime.Now.ToString("yymmdd"));
+                xmlw.WriteString(DateTime.Now.ToString("yyMMddss"));
                 xmlw.WriteEndElement();
 
                 xmlw.WriteStartElement("filternotes");

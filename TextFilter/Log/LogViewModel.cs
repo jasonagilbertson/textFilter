@@ -289,6 +289,8 @@ namespace TextFilter
                     }
                 }
 
+                SetCurrentStatus(CurrentStatusSetting.filtering);
+
                 switch (filterIntent)
                 {
                     case FilterCommand.Filter:
@@ -301,12 +303,14 @@ namespace TextFilter
                                     filterFileItems,
                                     filterIntent),
                                 filterFileItems);
+                            SetCurrentStatus(CurrentStatusSetting.filtered);
                             break;
                         }
                     case FilterCommand.Hide:
                         {
                             SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
                             logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
+                            SetCurrentStatus(CurrentStatusSetting.filtered);
                             break;
                         }
                     case FilterCommand.ShowAll:
@@ -325,6 +329,20 @@ namespace TextFilter
 
                 // update line total counts
                 LineTotals = string.Format("{0}/{1}", logTab.ContentList.Count, logFile.ContentItems.Count);
+
+                // set current status message
+                if (logTab.ContentList.Count == logFile.ContentItems.Count)
+                {
+                    SetCurrentStatus(CurrentStatusSetting.showing_all);
+                }
+                else if (_filterViewModel.QuickFindItem.Enabled)
+                {
+                    SetCurrentStatus(CurrentStatusSetting.quick_filtered);
+                }
+                else
+                {
+                    SetCurrentStatus(CurrentStatusSetting.filtered);
+                }
 
                 SaveCurrentFilter(filterFileItems);
             }
@@ -447,13 +465,11 @@ namespace TextFilter
                 if (!IsHiding())
                 {
                     logFileItem = _unFilteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-
                     FilterLogTabItems(FilterCommand.Hide);
                 }
                 else
                 {
                     logFileItem = _filteredSelectedItem = (LogFileItem)dataGrid.SelectedItem;
-
                     FilterLogTabItems(FilterCommand.ShowAll);
                 }
 
@@ -600,7 +616,6 @@ namespace TextFilter
             // change temp file name to generic -new ##- name only and not tag
             file.FileName = GenerateTempTagName();
             AddTabItem(file);
-
         }
 
         public override void RenameTabItem(string logName)

@@ -585,6 +585,8 @@ namespace TextFilter
                     return;
                 }
 
+                // force reset of menus for shared filters
+                Settings.Refresh();
                 ViewManager.CloseFile(tabItem.Tag);
                 RemoveTabItem(tabItem);
                 file = ViewManager.OpenFile(tabItem.Tag);

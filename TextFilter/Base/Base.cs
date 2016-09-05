@@ -19,6 +19,16 @@ namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
+        public enum CurrentStatusSetting
+        {
+            enter_to_filter,
+            filtered,
+            quick_filtered,
+            showing_all,
+            filtering,
+        }
+
+        #region Public Fields
 
         #region Fields
 
@@ -32,7 +42,7 @@ namespace TextFilter
         public static Parser _Parser { get; set; }
         #region Events
 
-        public static event EventHandler<string> NewStatus;
+        public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -60,6 +70,16 @@ namespace TextFilter
             }
         }
 
+        public void ExecuteAsAdmin(string fileName, string arguments)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = fileName;
+            proc.StartInfo.Arguments = arguments;
+            proc.StartInfo.CreateNoWindow = true;
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.Verb = "runas";
+            proc.Start();
+        }
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;
@@ -111,15 +131,6 @@ namespace TextFilter
             return null;
         }
 
-        public void OnNewStatus(string status)
-        {
-            EventHandler<string> newStatus = NewStatus;
-            if (newStatus != null)
-            {
-                newStatus(this, status);
-            }
-        }
-
         public void OnPropertyChanged(string name)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(name));
@@ -139,6 +150,15 @@ namespace TextFilter
             }
         }
 
+        public void SetCurrentStatus(CurrentStatusSetting status)
+        {
+            EventHandler<string> newCurrentStatus = NewCurrentStatus;
+            if (newCurrentStatus != null)
+            {
+                newCurrentStatus(this, Enum.GetName(typeof(CurrentStatusSetting), status).Replace("_", " ").ToUpper());
+            }
+        }
+
         public void SetStatus(string status)
         {
             if (status.ToLower().StartsWith("fatal:"))
@@ -146,7 +166,22 @@ namespace TextFilter
                 MessageBox.Show(status, "Oh Snap! TextFilter exception", MessageBoxButton.OK);
             }
 
-            OnNewStatus(status);
+            try
+            {
+                if (!string.IsNullOrEmpty(TextFilterSettings.Settings.DebugFile))
+                {
+                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(TextFilterSettings.Settings.DebugFile, true))
+                    {
+                        file.WriteLine(string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), status));
+                    }
+                }
+
+                Debug.Print(status);
+            }
+            catch (Exception e)
+            {
+                Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
+            }
         }
 
         #endregion Methods

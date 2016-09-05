@@ -1,241 +1,275 @@
-﻿<Window
-    x:Class="TextFilter.ExportDialog"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:TextFilter"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib"
-    Title="Export Dialog"
-    Width="463.769"
-    Height="210.043"
-    WindowStartupLocation="CenterOwner">
+﻿<Window x:Class="TextFilter.ExportDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:TextFilter"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Export Dialog"
+        Width="463.769"
+        Height="210.043"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <local:TextFilterSettings x:Key="settings" />
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
-        <CheckBox
-            Name="checkIndex"
-            Margin="17,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="False" />
-        <Label
-            Name="labelIndex"
-            Width="75"
-            Height="35"
-            Margin="12,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Index" />
-        <CheckBox
-            Name="checkContent"
-            Margin="87,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="True" />
-        <Label
-            Name="labelContent"
-            Width="75"
-            Height="35"
-            Margin="82,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Content" />
-        <CheckBox
-            Name="checkGroup1"
-            Margin="157,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="False" />
-        <Label
-            Name="labelGroup1"
-            Width="75"
-            Height="35"
-            Margin="152,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Group1" />
-        <CheckBox
-            Name="checkGroup2"
-            Margin="227,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="False" />
-        <Label
-            Name="labelGroup2"
-            Width="75"
-            Height="35"
-            Margin="222,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Group2" />
-        <CheckBox
-            Name="checkGroup3"
-            Margin="297,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="False" />
-        <Label
-            Name="labelGroup3"
-            Width="75"
-            Height="35"
-            Margin="292,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Group3" />
-        <CheckBox
-            Name="checkGroup4"
-            Margin="367,0,0,144"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="False" />
-        <Label
-            Name="labelGroup4"
-            Width="75"
-            Height="35"
-            Margin="362,0,0,104"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Group4" />
-        <TextBox
-            Name="textSeparator"
-            Width="25"
-            Height="25"
-            Margin="287,0,0,67"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource TextBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            Text="," />
-        <Label
-            Name="labelSeparator"
-            Width="75"
-            Height="30"
-            Margin="205,0,0,69"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Separator:" />
-        <CheckBox
-            Name="checkRemoveEmptyRows"
-            Width="25"
-            Height="25"
-            Margin="175,0,0,65"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource CheckBoxStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            IsChecked="True" />
-        <Label
-            Name="labelRemoveEmptyRows"
-            Width="157"
-            Height="30"
-            Margin="17,0,0,69"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource LabelStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            FontSize="15"
-            Content="Remove Empty Rows:" />
+        <CheckBox Name="checkIndex"
+                  Margin="17,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="False"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelIndex"
+               Width="75"
+               Height="35"
+               Margin="12,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Index"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkContent"
+                  Margin="87,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="True"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelContent"
+               Width="75"
+               Height="35"
+               Margin="82,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Content"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkGroup1"
+                  Margin="157,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="False"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelGroup1"
+               Width="75"
+               Height="35"
+               Margin="152,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Group1"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkGroup2"
+                  Margin="227,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="False"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelGroup2"
+               Width="75"
+               Height="35"
+               Margin="222,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Group2"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkGroup3"
+                  Margin="297,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="False"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelGroup3"
+               Width="75"
+               Height="35"
+               Margin="292,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Group3"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkGroup4"
+                  Margin="367,0,0,144"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="False"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelGroup4"
+               Width="75"
+               Height="35"
+               Margin="362,0,0,104"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Group4"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <TextBox Name="textSeparator"
+                 Width="25"
+                 Height="25"
+                 Margin="287,0,0,67"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Style="{DynamicResource TextBoxStyle1}"
+                 Text="," />
+        <Label Name="labelSeparator"
+               Width="75"
+               Height="30"
+               Margin="205,0,0,69"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Separator:"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
+        <CheckBox Name="checkRemoveEmptyRows"
+                  Width="25"
+                  Height="25"
+                  Margin="175,0,0,65"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Bottom"
+                  Background="{Binding Source={StaticResource settings},
+                                       Path=Settings.BackgroundColor}"
+                  BorderBrush="{Binding Source={StaticResource settings},
+                                        Path=Settings.ForegroundColor}"
+                  Foreground="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                  IsChecked="True"
+                  Style="{DynamicResource CheckBoxStyle1}" />
+        <Label Name="labelRemoveEmptyRows"
+               Width="157"
+               Height="30"
+               Margin="17,0,0,69"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Bottom"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Remove Empty Rows:"
+               FontSize="15"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}" />
 
-        <Button
-            Name="buttonSave"
-            Width="75"
-            Margin="10,0,10,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource ButtonStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            Click="buttonSave_Click"
-            Content="Save" />
-        <Button
-            Name="buttonCancel"
-            Width="75"
-            Margin="100,0,10,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource ButtonStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            Click="buttonCancel_Click"
-            Content="Cancel" />
-        <Button
-            Name="buttonCopy"
-            Width="125"
-            Margin="190,0,10,10"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Bottom"
-            Style="{DynamicResource ButtonStyle1}"
-            Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
-            Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-            Click="buttonCopy_Click"
-            Content="Copy To Clipboard" />
+        <Button Name="buttonSave"
+                Width="75"
+                Margin="10,0,10,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonSave_Click"
+                Content="Save"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+        <Button Name="buttonCancel"
+                Width="75"
+                Margin="100,0,10,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonCancel_Click"
+                Content="Cancel"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+        <Button Name="buttonCopy"
+                Width="125"
+                Margin="190,0,10,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonCopy_Click"
+                Content="Copy To Clipboard"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
     </Grid>
 </Window>

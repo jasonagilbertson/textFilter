@@ -18,13 +18,6 @@ namespace TextFilter
 
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Events
-
-        #region Methods
-
-        void SetViewStatus(string statusData);
-
-        #endregion Methods
-
+        #endregion Public Events
     }
 }

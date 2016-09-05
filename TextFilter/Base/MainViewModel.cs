@@ -13,9 +13,14 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
 
 namespace TextFilter
@@ -26,6 +31,9 @@ namespace TextFilter
         #region Fields
 
         public System.Timers.Timer _timer;
+        private Command _controlGotFocusCommand;
+
+        private Command _controlLostFocusCommand;
 
         private Command _copyCommand;
 
@@ -40,15 +48,60 @@ namespace TextFilter
 
         private ObservableCollection<ListBoxItem> _status = new ObservableCollection<ListBoxItem>();
 
-        private Command _statusChangedCommand;
-
-        private Int32 _statusIndex;
-
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        #endregion Fields
+        public Command ControlGotFocusCommand
+        {
+            get
+            {
+                if (_controlGotFocusCommand == null)
+                {
+                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
+                }
+                _controlGotFocusCommand.CanExecute = true;
+
+                return _controlGotFocusCommand;
+            }
+            set { _controlGotFocusCommand = value; }
+        }
+
+        public Command ControlLostFocusCommand
+        {
+            get
+            {
+                if (_controlLostFocusCommand == null)
+                {
+                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
+                }
+                _controlLostFocusCommand.CanExecute = true;
+
+                return _controlLostFocusCommand;
+            }
+            set { _controlLostFocusCommand = value; }
+        }
+
+        private void ControlGotFocusExecuted(object sender)
+        {
+            //if (sender is Control)
+            //{
+            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
+            //    (sender as Control).BorderThickness = new Thickness(2);
+            //}
+        }
+
+        private void ControlLostFocusExecuted(object sender)
+        {
+            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
+            {
+                _filterViewModel.QuickFindChangedExecuted(sender);
+                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
+                //    (sender as Control).BorderThickness = new Thickness(1);
+            }
+        }
+
+        #endregion Private Fields
 
         #region Constructors
 
@@ -63,6 +116,16 @@ namespace TextFilter
                     Application.Current.Shutdown(1);
                     return;
                 }
+
+                _colorNames = GetColorNames();
+                // clean up old log file if exists
+                if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
+                {
+                    File.Delete(Settings.DebugFile);
+                }
+
+                SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
+                Base.NewCurrentStatus += HandleNewCurrentStatus;
 
                 Base.NewStatus += HandleNewStatus;
 
@@ -93,12 +156,8 @@ namespace TextFilter
                     }
                 };
 
-                _timer = new System.Timers.Timer(10000)
-                {
-                    AutoReset = false,
-                    Enabled = true
-                };
-
+                _timer = new System.Timers.Timer(10000);
+                _timer.AutoReset = false;
                 _timer.Elapsed += _timer_Elapsed;
 
                 SetStatus("loaded");
@@ -128,7 +187,28 @@ namespace TextFilter
             set { _copyCommand = value; }
         }
 
-       
+        public string CurrentStatus
+        {
+            get
+            {
+                return _currentStatus;
+            }
+            set
+            {
+                if (_currentStatus != value)
+                {
+                    _currentStatus = value;
+                    OnPropertyChanged("CurrentStatus");
+                }
+            }
+        }
+
+        public FilterViewModel FilterViewModel
+        {
+            get { return _filterViewModel; }
+            set { _filterViewModel = value; }
+        }
+
         public Command HelpCommand
         {
             get
@@ -144,7 +224,13 @@ namespace TextFilter
             set { _helpCommand = value; }
         }
 
-      
+        public Command ListViewSelectionChangedCommand
+        {
+            get { return _listViewSelectionChangedCommand ?? new Command(ListViewSelectionChangedExecuted); }
+            set { _listViewSelectionChangedCommand = value; }
+        }
+
+
         public TextFilterSettings Settings
         {
             get { return _settings; }
@@ -166,53 +252,6 @@ namespace TextFilter
             set { _settingsCommand = value; }
         }
 
-        public ObservableCollection<ListBoxItem> Status
-        {
-            get
-            {
-                return _status;
-            }
-            set
-            {
-                if (_status != value)
-                {
-                    _status = value;
-                    OnPropertyChanged("Status");
-                }
-            }
-        }
-
-        public Command StatusChangedCommand
-        {
-            get
-            {
-                if (_statusChangedCommand == null)
-                {
-                    _statusChangedCommand = new Command(StatusChangedExecuted);
-                }
-                _statusChangedCommand.CanExecute = true;
-
-                return _statusChangedCommand;
-            }
-            set { _statusChangedCommand = value; }
-        }
-
-        public int StatusIndex
-        {
-            get
-            {
-                return _statusIndex;
-            }
-            set
-            {
-                if (_statusIndex != value)
-                {
-                    _statusIndex = value;
-                    OnPropertyChanged("StatusIndex");
-                }
-            }
-        }
-
         public Command VersionCheckCommand
         {
             get
@@ -228,9 +267,77 @@ namespace TextFilter
             set { _versionCheckCommand = value; }
         }
 
-        #endregion Properties
+        public void ListViewSelectionChangedExecuted(object sender)
+        {
+            if (sender is ListView)
+            {
+                if ((sender as ListView).SelectedItem != null)
+                {
+                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
+                }
+            }
+            else
+            {
+                Debug.Print("listviewselectionchanged but invalid call");
+            }
+        }
 
-        #region Methods
+        #endregion Public Properties
+
+        #region Public Methods
+
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
+
+        public void ColorComboKeyDown(object sender, KeyEventArgs e)
+        {
+            if (sender is ComboBox)
+            {
+                switch (e.Key)
+                {
+                    case Key.Enter:
+                    case Key.Tab:
+                    case Key.Back:
+                        {
+                            _color.Clear();
+                            return;
+                        }
+                    default:
+                        {
+                            break;
+                        }
+                }
+
+                // dont add if not alpha character
+                if (!Regex.IsMatch(e.Key.ToString(), "[a-zA-Z]{1}", RegexOptions.IgnoreCase))
+                {
+                    return;
+                }
+
+                _color.Append(e.Key.ToString());
+                ComboBox comboBox = (sender as ComboBox);
+
+                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
+                if (String.IsNullOrEmpty(color))
+                {
+                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
+                }
+                if (!String.IsNullOrEmpty(color))
+                {
+                    comboBox.SelectedValue = color;
+                }
+                else
+                {
+                    comboBox.SelectedIndex = 0;
+                }
+            }
+        }
+
+        public void ColorComboSelected()
+        {
+            _color.Clear();
+        }
 
         public void CopyExecuted(object contentList)
         {
@@ -268,6 +375,22 @@ namespace TextFilter
             }
         }
 
+        public List<string> GetColorNames()
+        {
+            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
+
+            List<string> list = new List<string>();
+            foreach (var prop in typeof(Colors).GetProperties(flags))
+            {
+                if (prop.PropertyType.FullName == "System.Windows.Media.Color")
+                {
+                    Debug.Print(prop.PropertyType.FullName);
+                    list.Add(prop.Name);
+                }
+            }
+            return list;
+        }
+
         public void HelpExecuted(object sender)
         {
             CreateProcess(Settings.HelpUrl);
@@ -275,55 +398,54 @@ namespace TextFilter
 
         public void SettingsExecuted(object sender)
         {
-            string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
-            CreateProcess("notepad.exe", workingDir + "\\TextFilter.exe.config");
-            MessageBox.Show("TextFilter window settings are not in gui yet.\n\n"
-                + "To change settings:\n"
-                + " 1. Close TextFilter.exe as it can overwrite on close.\n"
-                + " 2. Make changes in TextFilter.exe.config.\n"
-                + " 3. Restart TextFilter.exe.", "TextFilter Window Settings", MessageBoxButton.OK);
-            // OptionsDialog dialog = new OptionsDialog();
-            //dialog.WaitForResult();
-        }
+            TextFilterSettings configFileCache = Settings.ShallowCopy();
 
-        public void SetViewStatus(string statusData)
-        {
-            try
+            OptionsDialog dialog = new OptionsDialog();
+
+            switch (dialog.WaitForResult())
             {
-                Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
-                {
+                case OptionsDialog.OptionsDialogResult.apply:
+                    string args = string.Format("/filter: \"{0}\" /log: \"{1}\"",
+                        string.Join("\";\"", Settings.CurrentFilterFiles),
+                        string.Join("\";\"", Settings.CurrentLogFiles));
+                    Settings.Save();
+                    CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args);
+                    Debug.Print(args);
+                    Application.Current.Shutdown();
+                    break;
+                //case OptionsDialog.OptionsDialogResult.cancel:
+                //    Settings = configFileCache.ShallowCopy();
+                //    break;
+                case OptionsDialog.OptionsDialogResult.edit:
+                    string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
+                    CreateProcess("notepad.exe", Settings.ConfigFile);
+                    break;
 
-                    while (this.Status.Count > 1000)
-                    {
-                        this.Status.RemoveAt(0);
-                    }
+                case OptionsDialog.OptionsDialogResult.register:
+                    ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/register");
+                    SettingsExecuted(null);
+                    //FileTypeAssociation.Instance.ConfigureFTA(true);
+                    break;
 
-                    ListBoxItem listBoxItem = new ListBoxItem();
-                    listBoxItem.Content = string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), statusData);
-                    this.Status.Add(listBoxItem);
-                    this.StatusIndex = Status.Count - 1;
+                case OptionsDialog.OptionsDialogResult.reset:
+                    Settings.VerifyAppSettings(true);
+                    SettingsExecuted(null);
+                    break;
 
-                    Debug.Print(statusData);
-                    OnPropertyChanged("Status");
-                });
+                case OptionsDialog.OptionsDialogResult.save:
+                    Settings.Save();
+                    break;
+
+                case OptionsDialog.OptionsDialogResult.unregister:
+                    ExecuteAsAdmin(Process.GetCurrentProcess().MainModule.FileName, "/unregister");
+                    SettingsExecuted(null);
+                    //FileTypeAssociation.Instance.ConfigureFTA(false);
+                    break;
+
+                case OptionsDialog.OptionsDialogResult.unknown:
+                default:
+                    break;
             }
-            catch (Exception e)
-            {
-                Debug.Print(string.Format("SetViewStatus:exception: {0}: {1}", statusData, e));
-            }
-        }
-
-        public void StatusChangedExecuted(object sender)
-        {
-            try
-            {
-                if (sender is ListBox)
-                {
-                    ListBox listBox = (sender as ListBox);
-                    listBox.ScrollIntoView(listBox.Items[listBox.Items.Count - 1]);
-                }
-            }
-            catch { }
         }
 
         public void VersionCheckExecuted(object sender)
@@ -453,7 +575,14 @@ namespace TextFilter
             }
         }
 
-        #endregion Methods
+        #endregion Internal Methods
+
+        #region Private Methods
+
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
+        }
 
     }
 }
