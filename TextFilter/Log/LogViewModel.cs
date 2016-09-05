@@ -335,7 +335,7 @@ namespace TextFilter
                 {
                     SetCurrentStatus(CurrentStatusSetting.showing_all);
                 }
-                else if (_filterViewModel.QuickFindItem.Enabled)
+                else if (_FilterViewModel.QuickFindItem.Enabled)
                 {
                     SetCurrentStatus(CurrentStatusSetting.quick_filtered);
                 }

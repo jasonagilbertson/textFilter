@@ -23,8 +23,16 @@ namespace TextFilter
 {
     public class TextFilterSettings : Base
     {
+        #region Public Methods
 
-        #region Fields
+        public bool ReadConfigFile()
+        {
+            // check config file first
+            List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
+            if (results.Count == 1)
+            {
+                Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+            }
 
             ConfigFile = !string.IsNullOrEmpty(ConfigFile) ? ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
             _ConfigFileMap = new ExeConfigurationFileMap();
@@ -551,9 +559,9 @@ namespace TextFilter
         {
         }
 
-        #endregion Constructors
+        #endregion Public Constructors
 
-        #region Enums
+        #region Public Enums
 
         public enum ResourceType
         {
@@ -567,6 +575,10 @@ namespace TextFilter
 
             Url
         }
+
+        #endregion Public Enums
+
+        #region Private Enums
 
         private enum AppSettingNames
         {
@@ -611,9 +623,9 @@ namespace TextFilter
             WordWrap
         }
 
-        #endregion Enums
+        #endregion Private Enums
 
-        #region Properties
+        #region Public Properties
 
         public static TextFilterSettings Settings
         {

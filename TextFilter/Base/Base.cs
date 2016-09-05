@@ -187,4 +187,5 @@ namespace TextFilter
         #endregion Methods
 
     }
+    #endregion 
 }

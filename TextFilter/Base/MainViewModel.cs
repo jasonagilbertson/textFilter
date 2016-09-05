@@ -32,11 +32,11 @@ namespace TextFilter
 
         public System.Timers.Timer _timer;
         private Command _controlGotFocusCommand;
-
+        private Command _listViewSelectionChangedCommand;
         private Command _controlLostFocusCommand;
 
         private Command _copyCommand;
-
+        private string _currentStatus;
         
 
         private Command _helpCommand;
@@ -95,7 +95,7 @@ namespace TextFilter
         {
             if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
             {
-                _filterViewModel.QuickFindChangedExecuted(sender);
+                _FilterViewModel.QuickFindChangedExecuted(sender);
                 //    (sender as Control).BorderBrush = Settings.ForegroundColor;
                 //    (sender as Control).BorderThickness = new Thickness(1);
             }
@@ -126,8 +126,6 @@ namespace TextFilter
 
                 SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
                 Base.NewCurrentStatus += HandleNewCurrentStatus;
-
-                Base.NewStatus += HandleNewStatus;
 
                 Base._Parser = new Parser();
                 Base._FilterViewModel = new FilterViewModel();
@@ -201,12 +199,6 @@ namespace TextFilter
                     OnPropertyChanged("CurrentStatus");
                 }
             }
-        }
-
-        public FilterViewModel FilterViewModel
-        {
-            get { return _filterViewModel; }
-            set { _filterViewModel = value; }
         }
 
         public Command HelpCommand
@@ -474,7 +466,7 @@ namespace TextFilter
 
         private void HandleNewStatus(object sender, string status)
         {
-            SetViewStatus(status);
+            CurrentStatus = status;
         }
 
         private void VersionCheck(bool silent)
@@ -585,4 +577,5 @@ namespace TextFilter
         }
 
     }
+    #endregion
 }
