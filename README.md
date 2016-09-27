@@ -5,8 +5,8 @@
 **Current Download:**  
 [textFilter.0.7.006.zip](https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.0.7.006.zip/textFilter.0.7.006.zip) 
 
-**Documentation:**
-[Overview](./Overview.md)
+**Documentation:**  
+[Reference](./docs/Overview.md)
 
 [](./TextFilter/Images/tf-window-image-1.png)		
 
