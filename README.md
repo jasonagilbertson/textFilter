@@ -6,7 +6,7 @@
 [textFilter.0.7.006.zip](https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.0.7.006.zip/textFilter.0.7.006.zip) 
 
 **Documentation:**  
-[Reference](./docs/Overview.md)
+[Reference](./docs/overview.md)
 
 [](./TextFilter/Images/tf-window-image-1.png)		
 
