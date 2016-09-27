@@ -4,7 +4,7 @@ TextFilter is a utility designed to make filtering text files more efficient by 
 ## Documentation:
 [Installation and Requirements](./installation.md)  
 [Functions](./functions.md)  
-[Configuration File](./Configuration.md)  
+[Configuration File](./configuration.md)  
 [Command Line Arguments](./command-line.md)  
 [Creating a Filter](./creating-filter.md)  
 [Trace Analysis General Practices](./general-practices.md)  
