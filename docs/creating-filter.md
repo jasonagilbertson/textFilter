@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # TextFilter Creating a Filter
 
 Creating a filter is not as scary as it looks. Filters can be as easy or as complicated as you want them to be. The same goes for regex in general. Remember you can always start off with simple strings and work your way into the true capabilities of regex. 

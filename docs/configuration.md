@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # TextFilter Configuration File
 
 Below is the configuration file that controls some of the window behavior.

@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # textFilter Known Issues
 
 - [textFilter Configuration file]

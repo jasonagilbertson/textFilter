@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # textFilter Command Line Arguments
 
 TextFilter does support some command line arguments. These arguments are used to setup the file type association and explorer context menu as well as specify which filters and files to open. Additionally a different config file that controls textFilter itself can be specified. This is useful if trying to automate / batch steps that are used repeatedly. One of the nice features of command line use that is not available in the gui is the ability to use a wildcard when specifying either filter file(s) or log file(s). For example, if there are multiple event filters used for viewing event logs and / or there are multiple event log files that are to be viewed, using a wildcard on the command line makes this easy to open assuming they are named in a proper format. See below for examples of this.

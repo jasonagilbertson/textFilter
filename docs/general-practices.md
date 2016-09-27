@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # Trace Analysis General Practices
 
 Though it helps, you don’t necessarily have to know what you are looking for. You will find this to be the case more often than not. So how do I find the issue when I don’t know what I am looking for? This is what I do in general and seems to be common practice:

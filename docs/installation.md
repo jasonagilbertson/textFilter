@@ -1,3 +1,5 @@
+![](../TextFilter/Images/ico.png)
+
 # textFilter Installation and Requirements
 
 TextFilter does not currently have a setup or installation. It consists of two files, textFilter.exe and textFilter.exe.config. If textFilter.exe.config is not available, a new one will be generated automatically on launch.

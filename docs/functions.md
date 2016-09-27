@@ -1,20 +1,22 @@
+![](../TextFilter/Images/ico.png)
+
 **Functions:**  
 The functions that are currently available in RegexViewer can be accessed through either the Window Menu drop downs or from the two view context menus (right-click). Most functions also have an associated hot-key that is shown in the context menu as well. The window itself, Filter Pane and therefore File Pane are all resizable. The width of Status Box and therefore width of Quick Filter are resizable as well.
 
 
 **Window:**  
 - Copy / Paste commands: copies selected text to clipboard. In File view, color, font, format, and size of selected text is copied both in txt and html format to clipboard. This allows pasting into notepad as well as OneNote without issue. In Filter view, only the selected text from the current cell is copied. At this time there is no way to copy entire row in Filter view.
-  * Copy - Ctrl+C 
-  * Paste - Ctrl+V 
-  * Select All - Ctrl+A
+  - Copy - Ctrl+C 
+  - Paste - Ctrl+V 
+  - Select All - Ctrl+A
 
 **Opening filters and files:**  
 There are multiple ways to open both filters and files for use in RegexViewer:
-  * Using Command Line see Command line arguments for additional information
-  * Dragging and dropping one or more files into Gui
-    * **Note:** if regexViewer was opened 'as Administrator / Run as Administrator' this functionality is automatically disabled by framework.
-  * Opening one or more files from within Gui itelf using the Open commands
-  * By registering regexViewer into the explorer file context menu using command line /registerfta from admin command prompt. See Command line arguments for additional information.
+  - Using Command Line see Command line arguments for additional information
+  - Dragging and dropping one or more files into Gui
+    - **Note:** if regexViewer was opened 'as Administrator / Run as Administrator' this functionality is automatically disabled by framework.
+  - Opening one or more files from within Gui itelf using the Open commands
+  - By registering regexViewer into the explorer file context menu using command line /registerfta from admin command prompt. See Command line arguments for additional information.
 		
 
 **Filter Pane:**
@@ -45,13 +47,13 @@ There are multiple ways to open both filters and files for use in RegexViewer:
 
 ---
 **View:**
-  * **Export File** - displays the Export dialog where you can choose which fields to include in export to file or to clipboard. The separator can be modified as well as removing empty strings.  
+  - **Export File** - displays the Export dialog where you can choose which fields to include in export to file or to clipboard. The separator can be modified as well as removing empty strings.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/rv-05412-export-dialog-1.png)
-  * **Goto Line** - Ctrl+G - navigates to specified line number in current file view. This will unfilter the current file view.  
+  - **Goto Line** - Ctrl+G - navigates to specified line number in current file view. This will unfilter the current file view.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/rv-05412-goto-line-1.png)
-  * **Open View in new Tab** - Ctrl+N - opens currently filtered view in active tab into a new tab with a '-new x-' name. A file will NOT be created unless 'Save Current View' is selected. This is a known issue.
-  * **Save Current View** - Ctrl+S - displays the Save As dialog box regardless if current tab is an existing file or if tab is a 'new' tab that has not been saved. Default location will be the location where file was opened. Default file name will be appended with '.filter'.
-  * **Show / Hide All Items** - Ctrl+H - toggles between the filtered view and unfiltered view on current tab. If a 'Quick Filter' is specified, it toggles between 'Quick Filter' and unfiltered view.  
+  - **Open View in new Tab** - Ctrl+N - opens currently filtered view in active tab into a new tab with a '-new x-' name. A file will NOT be created unless 'Save Current View' is selected. This is a known issue.
+  - **Save Current View** - Ctrl+S - displays the Save As dialog box regardless if current tab is an existing file or if tab is a 'new' tab that has not been saved. Default location will be the location where file was opened. Default file name will be appended with '.filter'.
+  - **Show / Hide All Items** - Ctrl+H - toggles between the filtered view and unfiltered view on current tab. If a 'Quick Filter' is specified, it toggles between 'Quick Filter' and unfiltered view.  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;![](https://github.com/jasonagilbertson/regexViewer/blob/master/RegexViewer/images/rv-05412-file-view-context-1.png)
 
 **Status Box:**
