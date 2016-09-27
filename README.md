@@ -1,4 +1,4 @@
-[](https://github.com/jasonagilbertson/textFilter/blob/master/TextFilter/Images/ico.png)  
+![](./TextFilter/Images/ico.png)  
 
 # textFilter  
 
@@ -8,7 +8,7 @@
 **Documentation:**  
 [Reference](https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md)
 
-[](https://github.com/jasonagilbertson/textFilter/blob/master/TextFilter/Images/tf-window-image-1.png)		
+![](./TextFilter/Images/tf-window-image-1.png)		
 
 **Overview:**
 textFilter is a utility designed to make filtering text files more efficient by using either strings or regex patterns. What makes this utility unique as compared to other regex or text viewing utilities is the ability to have multiple filters in multiple filter tabs. This allows for quick toggling between different filters searching for the appropriate information. Creating filters in textFilter is simple and with the 'Notes' field, gives the ability to document the reasons for the filter. Filters can be local or remote as well as on a website for easy sharing. Other features that make parsing log files easier is being able to do a Quick Filter at top of window with string search operators. Optionally enable central file location of filter files (shared filters)  to be shared with team.
