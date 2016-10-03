@@ -47,6 +47,7 @@ namespace TextFilter
             // https: //msdn.microsoft.com/en-us/library/system.windows.frameworktemplate.findname(v=vs.110).aspx
 
             Closing += _mainViewModel.OnWindowClosing;
+            KeyUp += MainWindow_KeyUp;
         }
 
         #endregion Public Constructors
@@ -81,59 +82,12 @@ namespace TextFilter
             _mainViewModel.ColorComboSelected();
         }
 
-        private void DataGrid_CellGotFocus(object sender, RoutedEventArgs e)
+        private void MainWindow_KeyUp(object sender, KeyEventArgs e)
         {
-            // inconsistent. makes deletion difficult not worth the convenience
-
-            //if (_endEditing)
-            //{
-            //    return;
-            //}
-
-            // Lookup for the source to be DataGridCell
-            //if (e.OriginalSource.GetType() == typeof(DataGridCell))
-            //{
-            //    // Starts the Edit on the row;
-            //    DataGrid grd = (DataGrid)sender;
-            //    grd.BeginEdit(e);
-
-            //    Control control = GetFirstChildByType<Control>(e.OriginalSource as DataGridCell);
-            //    if (control != null)
-            //    {
-            //        if (control is CheckBox)
-            //        {
-            //            (control as CheckBox).IsChecked = !(control as CheckBox).IsChecked;
-            //        }
-            //        else
-            //        {
-            //            control.Focus();
-            //        }
-            //    }
-            //}
-        }
-
-        private void DataGridCell_KeyDown(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.Enter)
-            //{
-            //    _endEditing = true;
-            //}
-            //else
-            //{
-            //    _endEditing = false;
-            //}
-        }
-
-        private void DataGridCell_KeyUp(object sender, KeyEventArgs e)
-        {
-            //if (e.Key == Key.Enter)
-            //{
-            //    _endEditing = false;
-            //}
-            //else
-            //{
-            //    _endEditing = true;
-            //}
+            if(e.Key == Key.Enter)
+            {
+                _mainViewModel.FilterViewModel.FilterLogExecuted();
+            }
         }
 
         private void FileData_Drop(object sender, DragEventArgs e)

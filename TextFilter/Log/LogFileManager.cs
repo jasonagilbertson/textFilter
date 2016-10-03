@@ -98,7 +98,7 @@ namespace TextFilter
 
             ParallelOptions po = new ParallelOptions
             {
-                MaxDegreeOfParallelism = Environment.ProcessorCount
+                MaxDegreeOfParallelism = Environment.ProcessorCount // / 2
             };
 
             try

@@ -31,6 +31,7 @@
     </Window.Resources>
 
     <Window.InputBindings>
+        
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.CloseCommand}"
                     CommandParameter="{Binding}"
@@ -656,6 +657,7 @@
                         Width="110"
                         Height="25"
                         Margin="0,0,0,0"
+                        HorizontalContentAlignment="Left"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
                         Background="{Binding Source={StaticResource settings},
@@ -764,7 +766,6 @@
                                   Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"
                                   CanUserAddRows="False"
-                                  DataGridCell.GotFocus="DataGrid_CellGotFocus"
                                   ItemsSource="{Binding Path=ContentList,
                                                         Mode=TwoWay}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto"

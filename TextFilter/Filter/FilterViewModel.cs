@@ -21,6 +21,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TextFilter
@@ -78,6 +79,13 @@ namespace TextFilter
             {
                 _addFilterItemCommand = value;
             }
+        }
+
+        public void FilterLogExecuted()
+        {
+            // main form {enter}
+            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+
         }
 
         public string FilterHide
@@ -804,10 +812,13 @@ namespace TextFilter
                     {
                         VerifyIndex((sender as FilterFileItem));
                     }
+
+                    SetCurrentStatus(CurrentStatusSetting.enter_to_filter);
                 }
             }
 
-            OnPropertyChanged(sender, e);
+            
+            //OnPropertyChanged(sender, e);
         }
 
         private void WriteFilterList(List<FilterFileItem> currentItems, string name)
