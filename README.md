@@ -3,7 +3,7 @@
 # textFilter  
 
 ## Current Download:  
-[textFilter.0.7.006.zip](https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.0.7.006.zip/textFilter.0.7.006.zip) 
+[textFilter.0.7.007.zip](https://github.com/jasonagilbertson/textFilter/releases/download/0.7.007/textFilter.0.7.007.zip) 
 
 ## Documentation:  
 [Reference](https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md)
