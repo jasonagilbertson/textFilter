@@ -847,8 +847,6 @@ namespace TextFilter
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
 
-        public LogViewModel _LogViewModel { get; internal set; }
-
         public bool QuickFindAnd
         {
             get

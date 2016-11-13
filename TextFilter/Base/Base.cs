@@ -34,6 +34,10 @@ namespace TextFilter
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
         public bool _transitioning;
 
+        public static FilterViewModel _FilterViewModel { get; set; }
+        public static LogViewModel _LogViewModel { get; set; }
+        public static Parser _Parser { get; set; }
+
         #endregion Public Fields
 
         #region Public Events

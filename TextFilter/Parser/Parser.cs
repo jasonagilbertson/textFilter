@@ -43,8 +43,6 @@ namespace TextFilter
 
         private bool _filterMonitoringEnabled = false;
 
-        private FilterViewModel _filterViewModel;
-
         private LogFile _logFilePrevious;
 
         // private bool _logMonitoringEnabled = false;
@@ -69,7 +67,7 @@ namespace TextFilter
         {
             SetStatus("Parser:ctor");
             // TODO: Complete member initialization
-            _filterViewModel = filterViewModel;
+            _FilterViewModel = filterViewModel;
             _logViewModel = logViewModel;
             Enable(true);
 
@@ -82,7 +80,7 @@ namespace TextFilter
         {
             if (enable)
             {
-                _filterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                _FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
                 _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
 
                 EnableFilterFileMonitoring(true);
@@ -90,7 +88,7 @@ namespace TextFilter
             }
             else
             {
-                _filterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                _FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
                 _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
 
                 EnableFilterFileMonitoring(false);
@@ -174,12 +172,12 @@ namespace TextFilter
 
         private FilterFile CurrentFilterFile()
         {
-            return (FilterFile)_filterViewModel.CurrentFile();
+            return (FilterFile)_FilterViewModel.CurrentFile();
         }
 
         private List<IFile<FilterFileItem>> CurrentFilterFiles()
         {
-            return (List<IFile<FilterFileItem>>)_filterViewModel.ViewManager.FileManager;
+            return (List<IFile<FilterFileItem>>)_FilterViewModel.ViewManager.FileManager;
         }
 
         private LogFile CurrentLogFile()
@@ -251,7 +249,7 @@ namespace TextFilter
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
                     FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.Tag == currentFilterFile.Tag);
-                    filterNeed = _filterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
+                    filterNeed = _FilterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
                 }
                 else
                 {
@@ -337,7 +335,7 @@ namespace TextFilter
             {
                 WorkerItem workerItem = new WorkerItem()
                 {
-                    FilterFile = (FilterFile)_filterViewModel.CurrentFile(),
+                    FilterFile = (FilterFile)_FilterViewModel.CurrentFile(),
                     LogFile = currentLogFile,
                     WorkerModification = WorkerItem.Modification.Unknown,
                     FilterNeed = FilterNeed.Current

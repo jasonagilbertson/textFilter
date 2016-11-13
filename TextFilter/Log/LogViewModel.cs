@@ -54,8 +54,6 @@ namespace TextFilter
 
         private LogFileItem _filteredSelectedItem;
 
-        private FilterViewModel _filterViewModel;
-
         private Command _gotoLineCommand;
 
         private Command _keyDownCommand;
@@ -74,18 +72,17 @@ namespace TextFilter
 
         #region Public Constructors
 
-        public LogViewModel(FilterViewModel filterViewModel)
+        public LogViewModel()
         {
             SetStatus("LogViewModel.ctor");
 
             TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
             ViewManager = new LogFileManager();
             _logFileManager = (LogFileManager)ViewManager;
-            _filterViewModel = filterViewModel;
-            _parser = new Parser(_filterViewModel, this);
+
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
-            _filterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
+            _FilterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
             PropertyChanged += LogViewModel_PropertyChanged;
             LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
@@ -240,7 +237,8 @@ namespace TextFilter
         {
             try
             {
-                List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_filterViewModel.FilterList());
+                bool processFilterIntent = true;
+                List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_FilterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;
 
@@ -259,7 +257,7 @@ namespace TextFilter
                 // dont check filter need if intent is to reset list to current filter or to show all
                 if (filterIntent == FilterCommand.Filter)
                 {
-                    FilterNeed filterNeed = _filterViewModel.CompareFilterList(GetPreviousFilter());
+                    FilterNeed filterNeed = _FilterViewModel.CompareFilterList(GetPreviousFilter());
                     SetStatus(string.Format("filterLogTabItems: filterNeed: {0}", filterNeed));
 
                     switch (filterNeed)
@@ -267,72 +265,78 @@ namespace TextFilter
                         case FilterNeed.ApplyColor:
                             {
                                 logTab.ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
-                                SaveCurrentFilter(filterFileItems);
-                                return;
+                                processFilterIntent = false;
+                                break;
                             }
                         case FilterNeed.Current:
                             {
                                 if (PreviousIndex == SelectedIndex)
                                 {
                                     SetStatus("filterLogTabItems:no change");
-                                    return;
+                                    processFilterIntent = false;
+                                    break;
                                 }
 
                                 break;
                             }
-
                         case FilterNeed.ShowAll:
                             {
                                 filterIntent = FilterCommand.ShowAll;
                                 break;
                             }
                         case FilterNeed.Filter:
-                            break;
-
+                            {
+                                break;
+                            }
                         case FilterNeed.Unknown:
-
                         default:
-                            SaveCurrentFilter(filterFileItems);
-                            return;
+                            {
+                                processFilterIntent = false;
+                                SaveCurrentFilter(filterFileItems);
+                                return;
+                            }
                     }
                 }
 
-                SetCurrentStatus(CurrentStatusSetting.filtering);
-
-                switch (filterIntent)
+                if (processFilterIntent)
                 {
-                    case FilterCommand.Filter:
-                        {
-                            SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = _logFileManager.ApplyColor(
-                                _logFileManager.ApplyFilter(
-                                    logTab,
-                                    logFile,
-                                    filterFileItems,
-                                    filterIntent),
-                                filterFileItems);
-                            SetCurrentStatus(CurrentStatusSetting.filtered);
-                            break;
-                        }
-                    case FilterCommand.Hide:
-                        {
-                            SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
-                            SetCurrentStatus(CurrentStatusSetting.filtered);
-                            break;
-                        }
-                    case FilterCommand.ShowAll:
-                        {
-                            SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = logFile.ContentItems;
-                            break;
-                        }
+                    SetCurrentStatus(CurrentStatusSetting.filtering);
 
-                    case FilterCommand.Unknown:
-                    default:
-                        {
-                            break;
-                        }
+                    switch (filterIntent)
+                    {
+                        case FilterCommand.Filter:
+                            {
+                                SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = _logFileManager.ApplyColor(
+                                    _logFileManager.ApplyFilter(
+                                        logTab,
+                                        logFile,
+                                        filterFileItems,
+                                        filterIntent),
+                                    filterFileItems);
+                                SetCurrentStatus(CurrentStatusSetting.filtered);
+                                break;
+                            }
+                        case FilterCommand.Hide:
+                            {
+                                SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
+                                SetCurrentStatus(CurrentStatusSetting.filtered);
+                                break;
+                            }
+                        case FilterCommand.ShowAll:
+                            {
+                                SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = logFile.ContentItems;
+                                break;
+                            }
+
+                        case FilterCommand.Unknown:
+                        default:
+                            {
+                                break;
+                            }
+                    }
                 }
 
                 // update line total counts
@@ -343,7 +347,7 @@ namespace TextFilter
                 {
                     SetCurrentStatus(CurrentStatusSetting.showing_all);
                 }
-                else if (_filterViewModel.QuickFindItem.Enabled)
+                else if (_FilterViewModel.QuickFindItem.Enabled)
                 {
                     SetCurrentStatus(CurrentStatusSetting.quick_filtered);
                 }
@@ -401,10 +405,10 @@ namespace TextFilter
                     {
                         SetStatus(string.Format("LogViewModel.FindNextExecuted: not found! filterindex: {0} index: {1} ", filterIndex, index));
                         SetStatus(string.Format("QuickFindItem: filter pattern: {0} include: {1} exclude: {2}",
-                            _filterViewModel.QuickFindItem.Filterpattern,
-                            _filterViewModel.QuickFindItem.Include,
-                            _filterViewModel.QuickFindItem.Exclude));
-                        foreach (FilterFileItem item in _filterViewModel.FilterList())
+                            _FilterViewModel.QuickFindItem.Filterpattern,
+                            _FilterViewModel.QuickFindItem.Include,
+                            _FilterViewModel.QuickFindItem.Exclude));
+                        foreach (FilterFileItem item in _FilterViewModel.FilterList())
                         {
                             SetStatus(string.Format("file item:{0}:{1}:{2}", item.Index, item.Filterpattern, item.Exclude, item.Include));
                         }

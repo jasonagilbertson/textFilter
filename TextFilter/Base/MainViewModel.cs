@@ -38,11 +38,7 @@ namespace TextFilter
 
         private string _currentStatus;
 
-        private FilterViewModel _filterViewModel;
-
         private Command _helpCommand;
-
-        private LogViewModel _logViewModel;
 
         private TextFilterSettings _settings;
 
@@ -97,7 +93,7 @@ namespace TextFilter
         {
             if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
             {
-                _filterViewModel.QuickFindChangedExecuted(sender);
+                _FilterViewModel.QuickFindChangedExecuted(sender);
                 //    (sender as Control).BorderBrush = Settings.ForegroundColor;
                 //    (sender as Control).BorderThickness = new Thickness(1);
             }
@@ -129,10 +125,11 @@ namespace TextFilter
                 SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
                 Base.NewCurrentStatus += HandleNewCurrentStatus;
 
-                _filterViewModel = new FilterViewModel();
-                _logViewModel = new LogViewModel(_filterViewModel);
-
-                _filterViewModel._LogViewModel = _logViewModel;
+                // Base._Parser = new Parser();
+                Base._FilterViewModel = new FilterViewModel();
+                Base._LogViewModel = new LogViewModel();
+                //_Parser.Enable(true);
+                
 
                 App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
@@ -213,8 +210,8 @@ namespace TextFilter
 
         public FilterViewModel FilterViewModel
         {
-            get { return _filterViewModel; }
-            set { _filterViewModel = value; }
+            get { return _FilterViewModel; }
+            set { _FilterViewModel = value; }
         }
 
         public Command HelpCommand
@@ -240,8 +237,8 @@ namespace TextFilter
 
         public LogViewModel LogViewModel
         {
-            get { return _logViewModel; }
-            set { _logViewModel = value; }
+            get { return _LogViewModel; }
+            set { _LogViewModel = value; }
         }
 
         public TextFilterSettings Settings
@@ -469,7 +466,7 @@ namespace TextFilter
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
-            var oc = _filterViewModel.SharedCollection;
+            var oc = _FilterViewModel.SharedCollection;
             VersionCheck(silent);
         }
 
@@ -578,9 +575,10 @@ namespace TextFilter
         internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SetStatus("Stopping textFilter: " + Process.GetCurrentProcess().Id.ToString());
-            _logViewModel.Parser.Enable(false);
-            _filterViewModel.SaveModifiedFiles(sender);
-            _logViewModel.SaveModifiedFiles(sender);
+
+            //_Parser.Enable(false);
+            _FilterViewModel.SaveModifiedFiles(sender);
+            _LogViewModel.SaveModifiedFiles(sender);
             _settings.Save();
         }
 
