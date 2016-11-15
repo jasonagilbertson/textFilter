@@ -652,7 +652,7 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}" />
 
-                <Button Name="buttonStatus"
+                <Button x:Name="buttonStatus"
                         Grid.Column="2"
                         Width="110"
                         Height="25"
@@ -665,7 +665,7 @@
                         BorderBrush="Blue"
                         BorderThickness="1"
                         Command="{Binding FilterViewModel.QuickFindChangedCommand}"
-                        CommandParameter="{Binding ElementName=x:comboboxQuickFind}"
+                        CommandParameter="{Binding ElementName=buttonStatus}"
                         Content="{Binding Source={StaticResource mainViewModel},
                                           Path=CurrentStatus}"
                         FontSize="12"

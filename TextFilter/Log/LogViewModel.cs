@@ -825,7 +825,7 @@ namespace TextFilter
             return _previousFilterFileItems;
         }
 
-        private bool IsHiding()
+        public bool IsHiding()
         {
             // if count the same then assume it is not filtered
             try

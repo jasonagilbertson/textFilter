@@ -1095,8 +1095,37 @@ namespace TextFilter
                 QuickFindItem.Regex = false;
             }
 
-            // send filter request
-            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+            // status button toggle
+            if (sender is Button)
+            {
+                CurrentStatusSetting setting;
+                if (Enum.TryParse((sender as Button).Content.ToString().ToLower().Replace(" ", "_"), out setting))
+                {
+                    switch (setting)
+                    {
+                        case CurrentStatusSetting.enter_to_filter:
+                            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+                            break;
+                        case CurrentStatusSetting.filtering:
+                        case CurrentStatusSetting.filtered:
+                        case CurrentStatusSetting.quick_filtered:
+                        case CurrentStatusSetting.showing_all:
+                            _LogViewModel.HideExecuted(null);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    SetStatus("warning:unable to toggle status button");
+                }
+            }
+            else
+            {
+                // send filter request
+                _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+            }
         }
 
         private void QuickFindKeyPressExecuted(object sender)
