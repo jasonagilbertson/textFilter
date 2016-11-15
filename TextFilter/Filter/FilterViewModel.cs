@@ -1099,7 +1099,8 @@ namespace TextFilter
             if (sender is Button)
             {
                 CurrentStatusSetting setting;
-                if (Enum.TryParse((sender as Button).Content.ToString().ToLower().Replace(" ", "_"), out setting))
+                object currentStatus = (sender as Button).Content;
+                if (currentStatus != null && Enum.TryParse(currentStatus.ToString().ToLower().Replace(" ", "_"), out setting))
                 {
                     switch (setting)
                     {
