@@ -35,6 +35,8 @@ namespace TextFilter
 
         private LogFileManager _logFileManager;
 
+        private Parser _parser;
+
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
@@ -114,6 +116,19 @@ namespace TextFilter
                     _lineTotals = value;
                     OnPropertyChanged(LogViewModelEvents.LineTotals);
                 }
+            }
+        }
+
+        public Parser Parser
+        {
+            get
+            {
+                return _parser;
+            }
+
+            set
+            {
+                _parser = value;
             }
         }
 

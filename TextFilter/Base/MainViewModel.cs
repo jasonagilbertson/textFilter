@@ -35,6 +35,7 @@ namespace TextFilter
         private Command _copyCommand;
         private string _currentStatus;
         private Command _helpCommand;
+
         private Command _listViewSelectionChangedCommand;
         private TextFilterSettings _settings;
 
@@ -329,6 +330,21 @@ namespace TextFilter
         public void HelpExecuted(object sender)
         {
             CreateProcess(Settings.HelpUrl);
+        }
+
+        public void ListViewSelectionChangedExecuted(object sender)
+        {
+            if (sender is ListView)
+            {
+                if ((sender as ListView).SelectedItem != null)
+                {
+                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
+                }
+            }
+            else
+            {
+                Debug.Print("listviewselectionchanged but invalid call");
+            }
         }
 
         public void ListViewSelectionChangedExecuted(object sender)
