@@ -17,23 +17,13 @@ namespace TextFilter
 {
     public class AsynchronousCommand : Command, INotifyPropertyChanged
     {
-        #region Protected Fields
-
         protected Dispatcher callingDispatcher;
-
-        #endregion Protected Fields
-
-        #region Private Fields
 
         private Command cancelCommand;
 
         private bool isCancellationRequested;
 
         private bool isExecuting = false;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public AsynchronousCommand(Action action, bool canExecute = true)
             : base(action, canExecute)
@@ -49,17 +39,9 @@ namespace TextFilter
             Initialise();
         }
 
-        #endregion Public Constructors
-
-        #region Public Events
-
         public event CommandEventHandler Cancelled;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
-
-        #region Public Properties
 
         public Command CancelCommand
         {
@@ -97,10 +79,6 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public bool CancelIfRequested()
         {
@@ -176,10 +154,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Protected Methods
-
         protected void InvokeCancelled(CommandEventArgs args)
         {
             CommandEventHandler cancelled = Cancelled;
@@ -188,10 +162,6 @@ namespace TextFilter
             if (cancelled != null)
                 cancelled(this, args);
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private void Initialise()
         {
@@ -214,7 +184,5 @@ namespace TextFilter
             if (propertyChanged != null)
                 propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        #endregion Private Methods
     }
 }
