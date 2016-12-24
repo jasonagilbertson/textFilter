@@ -14,13 +14,7 @@ namespace TextFilter
 {
     public interface ITabViewModel<T>
     {
-        #region Events
-
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Events
-
-        #region Properties
 
         string Background { get; set; }
         ObservableCollection<T> ContentList { get; set; }
@@ -38,16 +32,10 @@ namespace TextFilter
 
         object Viewer { get; set; }
 
-        #endregion Properties
-
-        #region Methods
-
         void CopyExecuted(object target);
 
         void OnPropertyChanged(string name);
 
         void SelectionChangedExecuted(object target);
-
-        #endregion Methods
     }
 }

@@ -18,8 +18,6 @@ namespace TextFilter
 {
     public class Parser : Base
     {
-        #region Fields
-
         private int _filteredLinesCount;
 
         private FilterFile _filterFilePrevious;
@@ -34,18 +32,10 @@ namespace TextFilter
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        #endregion Fields
-
-        #region Constructors
-
         public Parser()
         {
             SetStatus("Parser:ctor");
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public int FilteredLinesCount
         {
@@ -78,10 +68,6 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Properties
-
-        #region Methods
 
         public void Enable(bool enable)
         {
@@ -442,7 +428,5 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Methods
     }
 }

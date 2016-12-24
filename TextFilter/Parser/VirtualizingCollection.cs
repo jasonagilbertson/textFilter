@@ -18,8 +18,6 @@ namespace TextFilter
 {
     public class VirtualizingCollection<T> : IList<T>, IList
     {
-        #region Fields
-
         private readonly IItemsProvider<T> _itemsProvider;
 
         private readonly Dictionary<int, IList<T>> _pages = new Dictionary<int, IList<T>>();
@@ -31,10 +29,6 @@ namespace TextFilter
         private readonly Dictionary<int, DateTime> _pageTouchTimes = new Dictionary<int, DateTime>();
 
         private int _count = -1;
-
-        #endregion Fields
-
-        #region Constructors
 
         public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
         {
@@ -53,10 +47,6 @@ namespace TextFilter
         {
             _itemsProvider = itemsProvider;
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public virtual int Count
         {
@@ -109,10 +99,6 @@ namespace TextFilter
             get { return this; }
         }
 
-        #endregion Properties
-
-        #region Indexers
-
         object IList.this[int index]
         {
             get { return this[index]; }
@@ -150,10 +136,6 @@ namespace TextFilter
             }
             set { throw new NotSupportedException(); }
         }
-
-        #endregion Indexers
-
-        #region Methods
 
         public void Add(T item)
         {
@@ -294,7 +276,5 @@ namespace TextFilter
                 _pageTouchTimes[pageIndex] = DateTime.Now;
             }
         }
-
-        #endregion Methods
     }
 }

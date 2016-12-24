@@ -25,8 +25,6 @@ namespace TextFilter
 
     internal class HtmlFragment
     {
-        #region Fields
-
         private StringBuilder htmlClipBuilder;
 
         private string m_fragment;
@@ -41,10 +39,6 @@ namespace TextFilter
 
         private StringBuilder textClipBuilder;
 
-        #endregion Fields
-
-        #region Constructors
-
         public HtmlFragment()
         {
             htmlClipBuilder = new StringBuilder();
@@ -56,10 +50,6 @@ namespace TextFilter
         {
             ProcessFragment(rawClipboardText);
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public string Context
         {
@@ -80,10 +70,6 @@ namespace TextFilter
         {
             get { return m_version; }
         }
-
-        #endregion Properties
-
-        #region Methods
 
         public static void CopyToClipboard(string htmlFragment, string textFragment)
         {
@@ -267,7 +253,5 @@ namespace TextFilter
                 throw new FormatException("No data specified");
             }
         }
-
-        #endregion Methods
     } // end of class
 }

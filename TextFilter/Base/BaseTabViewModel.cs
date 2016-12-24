@@ -22,17 +22,11 @@ namespace TextFilter
 {
     public struct BaseTabViewModelEvents
     {
-        #region Fields
-
         public static string SelectedIndex = "SelectedIndex";
-
-        #endregion Fields
     }
 
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
-        #region Fields
-
         private string _background;
 
         private ObservableCollection<T> _contentList = new ObservableCollection<T>();
@@ -59,18 +53,10 @@ namespace TextFilter
 
         private object _viewer;
 
-        #endregion Fields
-
-        #region Constructors
-
         public BaseTabViewModel()
         {
             //IsNew = true;
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public string Background
         {
@@ -273,10 +259,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Properties
-
-        #region Methods
-
         public void CopyExecuted(object sender)
         {
             try
@@ -373,7 +355,5 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Methods
     }
 }

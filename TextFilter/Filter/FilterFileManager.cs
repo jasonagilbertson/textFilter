@@ -24,16 +24,10 @@ namespace TextFilter
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
-        #region Constructors
-
         public FilterFileManager()
         {
             FileManager = new List<IFile<FilterFileItem>>();
         }
-
-        #endregion Constructors
-
-        #region Enums
 
         public enum FilterFileVersionResult
         {
@@ -43,10 +37,6 @@ namespace TextFilter
 
             NotAFilterFile
         }
-
-        #endregion Enums
-
-        #region Methods
 
         public FilterFileVersionResult FilterFileVersion(string fileName)
         {
@@ -721,7 +711,5 @@ namespace TextFilter
                 return false;
             }
         }
-
-        #endregion Methods
     }
 }

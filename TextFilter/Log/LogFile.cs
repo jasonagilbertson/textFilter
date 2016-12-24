@@ -14,17 +14,11 @@ namespace TextFilter
 {
     public class LogFile : BaseFile<LogFileItem>
     {
-        #region Constructors
-
         public LogFile()
         {
             ContentItems = new ObservableCollection<LogFileItem>();
             ExportConfiguration = new ExportConfigurationInfo();
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public override ObservableCollection<LogFileItem> ContentItems { get; set; }
 
@@ -34,14 +28,8 @@ namespace TextFilter
 
         public bool HasBom { get; set; }
 
-        #endregion Properties
-
-        #region Classes
-
         public class ExportConfigurationInfo
         {
-            #region Fields
-
             public bool Cancel;
 
             public bool Content = true;
@@ -61,10 +49,6 @@ namespace TextFilter
             public bool RemoveEmpty = true;
 
             public string Separator = ",";
-
-            #endregion Fields
         }
-
-        #endregion Classes
     }
 }

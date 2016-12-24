@@ -19,26 +19,16 @@ namespace TextFilter
 
     public class CancelCommandEventArgs : CommandEventArgs
     {
-        #region Properties
-
         public bool Cancel { get; set; }
-
-        #endregion Properties
     }
 
     public class Command : ICommand
     {
-        #region Fields
-
         protected Action _action = null;
 
         protected Action<object> _parameterizedAction = null;
 
         private bool _canExecute = false;
-
-        #endregion Fields
-
-        #region Constructors
 
         public Command(Action action, bool canExecute = true)
         {
@@ -54,19 +44,11 @@ namespace TextFilter
             _canExecute = canExecute;
         }
 
-        #endregion Constructors
-
-        #region Events
-
         public event EventHandler CanExecuteChanged;
 
         public event CommandEventHandler Executed;
 
         public event CancelCommandEventHandler Executing;
-
-        #endregion Events
-
-        #region Properties
 
         public bool CanExecute
         {
@@ -82,10 +64,6 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Properties
-
-        #region Methods
 
         public virtual void DoExecute(object param)
         {
@@ -141,16 +119,10 @@ namespace TextFilter
             if (executing != null)
                 executing(this, args);
         }
-
-        #endregion Methods
     }
 
     public class CommandEventArgs : EventArgs
     {
-        #region Properties
-
         public object Parameter { get; set; }
-
-        #endregion Properties
     }
 }

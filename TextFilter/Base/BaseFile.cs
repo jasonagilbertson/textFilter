@@ -15,18 +15,12 @@ namespace TextFilter
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
-        #region Constructors
-
         public BaseFile()
         {
             Modified = false;
             IsNew = true;
             IsReadOnly = false;
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
@@ -39,7 +33,5 @@ namespace TextFilter
         public bool Modified { get; set; }
 
         public string Tag { get; set; }
-
-        #endregion Properties
     }
 }

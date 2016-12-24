@@ -19,8 +19,6 @@ namespace TextFilter
 {
     public class FileTypeAssociation : Base
     {
-        #region Fields
-
         private static FileTypeAssociation _fileTypeAssociation;
 
         private string[] _extensions = new string[4] { ".csv", ".log", ".rvf", ".rvconfig" };
@@ -28,10 +26,6 @@ namespace TextFilter
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
         private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
-
-        #endregion Fields
-
-        #region Constructors
 
         static FileTypeAssociation()
         {
@@ -45,18 +39,10 @@ namespace TextFilter
         {
         }
 
-        #endregion Constructors
-
-        #region Properties
-
         public static FileTypeAssociation Instance
         {
             get { return _fileTypeAssociation; }
         }
-
-        #endregion Properties
-
-        #region Methods
 
         public static bool IsAdministrator()
         {
@@ -217,7 +203,5 @@ namespace TextFilter
 
             baseKey.Close();
         }
-
-        #endregion Methods
     }
 }

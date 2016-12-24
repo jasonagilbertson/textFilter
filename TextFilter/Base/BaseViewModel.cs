@@ -21,15 +21,7 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        #region Fields
-
         public static FileWorkerItem UpdateViewCallback;
-
-        #region Delegates
-
-        public delegate void FileWorkerItem(WorkerItem workerItem);
-
-        #endregion Delegates
 
         private Command _closeAllCommand;
 
@@ -68,20 +60,16 @@ namespace TextFilter
         private int _selectedIndex = -1;
 
         private TextFilterSettings _settings = TextFilterSettings.Settings;
+
         private Command _sharedCommand;
+
         private ObservableCollection<ITabViewModel<T>> _tabItems = new ObservableCollection<ITabViewModel<T>>();
-
-        #endregion Fields
-
-        #region Constructors
 
         public BaseViewModel()
         {
         }
 
-        #endregion Constructors
-
-        #region Properties
+        public delegate void FileWorkerItem(WorkerItem workerItem);
 
         public Command CloseAllCommand
         {
@@ -336,10 +324,6 @@ namespace TextFilter
         }
 
         public IFileManager<T> ViewManager { get; set; }
-
-        #endregion Properties
-
-        #region Methods
 
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
@@ -755,7 +739,5 @@ namespace TextFilter
                 CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
             }
         }
-
-        #endregion Methods
     }
 }

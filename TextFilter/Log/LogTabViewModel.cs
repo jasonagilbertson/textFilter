@@ -13,8 +13,6 @@ namespace TextFilter
 {
     public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
-        #region Fields
-
         public int MaxGroupCount = 4;
 
         private bool _group1Visibility = false;
@@ -25,18 +23,10 @@ namespace TextFilter
 
         private bool _group4Visibility = false;
 
-        #endregion Fields
-
-        #region Constructors
-
         public LogTabViewModel()
         {
             // List<LogFileItem> ContentList = new List<LogFileItem>();
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public bool Group1Visibility
         {
@@ -104,10 +94,6 @@ namespace TextFilter
 
         public int GroupCount { get; private set; }
 
-        #endregion Properties
-
-        #region Methods
-
         public void SetGroupCount(int count)
         {
             GroupCount = count;
@@ -154,14 +140,8 @@ namespace TextFilter
             }
         }
 
-        #endregion Methods
-
-        #region Structs
-
         public struct LogTabViewModelEvents
         {
-            #region Fields
-
             public static string Group1Visibility = "Group1Visibility";
 
             public static string Group2Visibility = "Group2Visibility";
@@ -169,10 +149,6 @@ namespace TextFilter
             public static string Group3Visibility = "Group3Visibility";
 
             public static string Group4Visibility = "Group4Visibility";
-
-            #endregion Fields
         }
-
-        #endregion Structs
     }
 }

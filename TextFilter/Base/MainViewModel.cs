@@ -27,9 +27,9 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-        #region Fields
-
         public System.Timers.Timer _timer;
+        private StringBuilder _color = new StringBuilder();
+        private List<string> _colorNames = new List<string>();
         private Command _controlGotFocusCommand;
         private Command _controlLostFocusCommand;
         private Command _copyCommand;
@@ -45,64 +45,6 @@ namespace TextFilter
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
-
-        public Command ControlGotFocusCommand
-        {
-            get
-            {
-                if (_controlGotFocusCommand == null)
-                {
-                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
-                }
-                _controlGotFocusCommand.CanExecute = true;
-
-                return _controlGotFocusCommand;
-            }
-            set { _controlGotFocusCommand = value; }
-        }
-
-        public Command ControlLostFocusCommand
-        {
-            get
-            {
-                if (_controlLostFocusCommand == null)
-                {
-                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
-                }
-                _controlLostFocusCommand.CanExecute = true;
-
-                return _controlLostFocusCommand;
-            }
-            set { _controlLostFocusCommand = value; }
-        }
-
-        private void ControlGotFocusExecuted(object sender)
-        {
-            //if (sender is Control)
-            //{
-            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
-            //    (sender as Control).BorderThickness = new Thickness(2);
-            //}
-        }
-
-        private void ControlLostFocusExecuted(object sender)
-        {
-            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
-            {
-                _FilterViewModel.QuickFindChangedExecuted(sender);
-                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
-                //    (sender as Control).BorderThickness = new Thickness(1);
-            }
-        }
-
-        private void HandleNewCurrentStatus(object sender, string status)
-        {
-            CurrentStatus = status;
-        }
-
-        #endregion Fields
-
-        #region Constructors
 
         public MainViewModel()
         {
@@ -165,9 +107,35 @@ namespace TextFilter
             }
         }
 
-        #endregion Constructors
+        public Command ControlGotFocusCommand
+        {
+            get
+            {
+                if (_controlGotFocusCommand == null)
+                {
+                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
+                }
+                _controlGotFocusCommand.CanExecute = true;
 
-        #region Properties
+                return _controlGotFocusCommand;
+            }
+            set { _controlGotFocusCommand = value; }
+        }
+
+        public Command ControlLostFocusCommand
+        {
+            get
+            {
+                if (_controlLostFocusCommand == null)
+                {
+                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
+                }
+                _controlLostFocusCommand.CanExecute = true;
+
+                return _controlLostFocusCommand;
+            }
+            set { _controlLostFocusCommand = value; }
+        }
 
         public Command CopyCommand
         {
@@ -256,27 +224,6 @@ namespace TextFilter
             }
             set { _versionCheckCommand = value; }
         }
-
-        public void ListViewSelectionChangedExecuted(object sender)
-        {
-            if (sender is ListView)
-            {
-                if ((sender as ListView).SelectedItem != null)
-                {
-                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
-                }
-            }
-            else
-            {
-                Debug.Print("listviewselectionchanged but invalid call");
-            }
-        }
-
-        #endregion Properties
-
-        private StringBuilder _color = new StringBuilder();
-
-        private List<string> _colorNames = new List<string>();
 
         public void ColorComboKeyDown(object sender, KeyEventArgs e)
         {
@@ -384,6 +331,21 @@ namespace TextFilter
             CreateProcess(Settings.HelpUrl);
         }
 
+        public void ListViewSelectionChangedExecuted(object sender)
+        {
+            if (sender is ListView)
+            {
+                if ((sender as ListView).SelectedItem != null)
+                {
+                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
+                }
+            }
+            else
+            {
+                Debug.Print("listviewselectionchanged but invalid call");
+            }
+        }
+
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
@@ -474,6 +436,30 @@ namespace TextFilter
             // force update of shared collection menu
             var oc = _FilterViewModel.SharedCollection;
             VersionCheck(silent);
+        }
+
+        private void ControlGotFocusExecuted(object sender)
+        {
+            //if (sender is Control)
+            //{
+            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
+            //    (sender as Control).BorderThickness = new Thickness(2);
+            //}
+        }
+
+        private void ControlLostFocusExecuted(object sender)
+        {
+            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
+            {
+                _FilterViewModel.QuickFindChangedExecuted(sender);
+                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
+                //    (sender as Control).BorderThickness = new Thickness(1);
+            }
+        }
+
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
         }
 
         private void HandleNewStatus(object sender, string status)

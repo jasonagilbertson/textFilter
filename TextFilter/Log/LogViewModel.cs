@@ -23,8 +23,6 @@ namespace TextFilter
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
-        #region Fields
-
         private Command _exportCommand;
 
         private LogFileItem _filteredSelectedItem;
@@ -40,10 +38,6 @@ namespace TextFilter
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
-
-        #endregion Fields
-
-        #region Constructors
 
         public LogViewModel()
         {
@@ -61,10 +55,6 @@ namespace TextFilter
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public Command ExportCommand
         {
@@ -142,10 +132,6 @@ namespace TextFilter
                 return (LogTabViewModel)TabItems[SelectedIndex];
             }
         }
-
-        #endregion Properties
-
-        #region Methods
 
         public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -877,19 +863,9 @@ namespace TextFilter
             FilterLogTabItems();
         }
 
-        #endregion Methods
-
-        #region Structs
-
         public struct LogViewModelEvents
         {
-            #region Fields
-
             public static string LineTotals = "LineTotals";
-
-            #endregion Fields
         }
-
-        #endregion Structs
     }
 }

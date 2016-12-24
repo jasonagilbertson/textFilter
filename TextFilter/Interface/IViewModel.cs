@@ -15,10 +15,6 @@ namespace TextFilter
     {
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
-        void UpdateView(WorkerItem workerItem);
-
-        #region Properties
-
         Command CloseCommand { get; set; }
 
         Command DragDropCommand { get; set; }
@@ -38,10 +34,6 @@ namespace TextFilter
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
-
-        #endregion Properties
-
-        #region Methods
 
         void AddTabItem(IFile<T> fileProperties);
 
@@ -77,6 +69,6 @@ namespace TextFilter
 
         void SaveFileExecuted(object sender);
 
-        #endregion Methods
+        void UpdateView(WorkerItem workerItem);
     }
 }

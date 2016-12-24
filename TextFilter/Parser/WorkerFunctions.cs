@@ -24,15 +24,9 @@ namespace TextFilter
 {
     public class WorkerFunctions : Base
     {
-        #region Fields
-
         private static string _needsPatch = "textFilter*NeEdSpAtCh*";
 
         private TextFilterSettings Settings = TextFilterSettings.Settings;
-
-        #endregion Fields
-
-        #region Methods
 
         public WorkerItem MMFConcurrentFilter(WorkerItem workerItem)
         {
@@ -833,7 +827,5 @@ namespace TextFilter
                 return false;
             }
         }
-
-        #endregion Methods
     }
 }

@@ -16,19 +16,9 @@ namespace TextFilter
 {
     public interface IFileManager<T>
     {
-        #region Events
-
         event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Events
-
-        #region Properties
-
         List<IFile<T>> FileManager { get; set; }
-
-        #endregion Properties
-
-        #region Methods
 
         bool CloseFile(string LogName);
 
@@ -43,7 +33,5 @@ namespace TextFilter
         IFile<T> ReadFile(string LogName);
 
         bool SaveFile(string FileName, IFile<T> file);
-
-        #endregion Methods
     }
 }

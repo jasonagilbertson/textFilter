@@ -8,8 +8,6 @@ namespace TextFilter
 {
     public class TaskMMFInfo
     {
-        #region Fields
-
         public Int32 length;
         public LogFile logFile;
         public MemoryMappedFile mmf;
@@ -17,14 +15,8 @@ namespace TextFilter
         public List<LogFileItem> stringList;
         public WorkerItem workerItem;
 
-        #endregion Fields
-
-        #region Properties
-
         public ManualResetEvent completedEvent { get; set; }
 
         public DoWorkEventArgs doWorkEventArgs { get; set; }
-
-        #endregion Properties
     }
 }

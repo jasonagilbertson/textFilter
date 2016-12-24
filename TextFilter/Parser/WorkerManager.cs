@@ -20,26 +20,16 @@ namespace TextFilter
 {
     public class WorkerManager : WorkerFunctions
     {
-        #region Fields
-
         public ReaderWriterLockSlim ListLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
         private static WorkerManager _workerManager;
 
         private JobMonitor _monitor;
         private WorkerFunctions _workerFunctions = new WorkerFunctions();
 
-        #endregion Fields
-
-        #region Constructors
-
         private WorkerManager()
         {
             BGWorkers = new List<WorkerItem>();
         }
-
-        #endregion Constructors
-
-        #region Properties
 
         public static WorkerManager Instance
         {
@@ -54,10 +44,6 @@ namespace TextFilter
         }
 
         public List<WorkerItem> BGWorkers { get; set; }
-
-        #endregion Properties
-
-        #region Methods
 
         public void AddWorkersByWorkerItemFilterFile(WorkerItem workerItem)
         {
@@ -838,7 +824,5 @@ namespace TextFilter
 
             return true;
         }
-
-        #endregion Methods
     }
 }

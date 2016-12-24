@@ -17,8 +17,6 @@ namespace TextFilter
 {
     public class WorkerItem
     {
-        #region Fields
-
         public BackgroundWorker BackGroundWorker = new BackgroundWorker();
 
         public int FilteredLineCount;
@@ -38,20 +36,12 @@ namespace TextFilter
         public State WorkerState;
         internal List<FilterFileItem> VerifiedFilterItems;
 
-        #endregion Fields
-
-        #region Constructors
-
         public WorkerItem()
         {
             WorkerModification = Modification.Unknown;
             BackGroundWorker.WorkerSupportsCancellation = true;
             Status = new StringBuilder();
         }
-
-        #endregion Constructors
-
-        #region Enums
 
         public enum Modification
         {
@@ -87,15 +77,7 @@ namespace TextFilter
             Completed,
         }
 
-        #endregion Enums
-
-        #region Properties
-
         public StringBuilder Status { get; set; }
-
-        #endregion Properties
-
-        #region Methods
 
         public override int GetHashCode()
         {
@@ -105,7 +87,5 @@ namespace TextFilter
                 LogFile == null ? "" : LogFile.FileName,
                 LogFile == null ? "" : LogFile.Tag).GetHashCode();
         }
-
-        #endregion Methods
     }
 }

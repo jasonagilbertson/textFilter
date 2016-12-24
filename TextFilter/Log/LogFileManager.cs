@@ -27,16 +27,10 @@ namespace TextFilter
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {
-        #region Constructors
-
         public LogFileManager()
         {
             FileManager = new List<IFile<LogFileItem>>();
         }
-
-        #endregion Constructors
-
-        #region Methods
 
         public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems, bool showAll = false)
         {
@@ -727,14 +721,8 @@ namespace TextFilter
             return filterItems;
         }
 
-        #endregion Methods
-
-        #region Classes
-
         public class TaskMMFInfo
         {
-            #region Fields
-
             public BackgroundWorker bgWorker;
 
             public Int32 length;
@@ -747,17 +735,9 @@ namespace TextFilter
 
             public List<LogFileItem> stringList;
 
-            #endregion Fields
-
-            #region Properties
-
             public ManualResetEvent completedEvent { get; set; }
-
-            #endregion Properties
 
             //public string fileName { get; set; }
         }
-
-        #endregion Classes
     }
 }
