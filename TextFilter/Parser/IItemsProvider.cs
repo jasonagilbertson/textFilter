@@ -15,7 +15,6 @@ namespace TextFilter
 {
     public interface IItemsProvider<T>
     {
-
         #region Methods
 
         int FetchCount();
@@ -23,6 +22,5 @@ namespace TextFilter
         IList<T> FetchRange(int startIndex, int count);
 
         #endregion Methods
-
     }
 }

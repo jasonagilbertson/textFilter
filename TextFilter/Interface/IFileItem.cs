@@ -13,7 +13,6 @@ namespace TextFilter
 {
     public interface IFileItem
     {
-
         #region Properties
 
         System.Windows.Media.Brush Background { get; set; }
@@ -31,6 +30,5 @@ namespace TextFilter
         IFileItem ShallowCopy();
 
         #endregion Methods
-
     }
 }

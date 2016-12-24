@@ -18,7 +18,6 @@ namespace TextFilter
 {
     public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-
         #region Fields
 
         private readonly SynchronizationContext _synchronizationContext;
@@ -154,6 +153,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

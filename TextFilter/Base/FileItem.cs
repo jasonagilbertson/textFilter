@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public class FileItem : IFileItem
     {
-
         #region Properties
 
         public Brush Background { get; set; }
@@ -35,6 +34,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

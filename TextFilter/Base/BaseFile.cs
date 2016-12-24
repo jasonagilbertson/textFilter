@@ -15,7 +15,6 @@ namespace TextFilter
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
-
         #region Constructors
 
         public BaseFile()
@@ -42,6 +41,5 @@ namespace TextFilter
         public string Tag { get; set; }
 
         #endregion Properties
-
     }
 }

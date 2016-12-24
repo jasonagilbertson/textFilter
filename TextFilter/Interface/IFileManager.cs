@@ -16,7 +16,6 @@ namespace TextFilter
 {
     public interface IFileManager<T>
     {
-
         #region Events
 
         event PropertyChangedEventHandler PropertyChanged;
@@ -46,6 +45,5 @@ namespace TextFilter
         bool SaveFile(string FileName, IFile<T> file);
 
         #endregion Methods
-
     }
 }

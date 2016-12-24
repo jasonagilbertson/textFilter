@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public interface ITabViewModel<T>
     {
-
         #region Events
 
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
@@ -42,7 +41,7 @@ namespace TextFilter
         #endregion Properties
 
         #region Methods
-        
+
         void CopyExecuted(object target);
 
         void OnPropertyChanged(string name);
@@ -50,6 +49,5 @@ namespace TextFilter
         void SelectionChangedExecuted(object target);
 
         #endregion Methods
-
     }
 }

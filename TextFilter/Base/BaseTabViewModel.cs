@@ -22,18 +22,15 @@ namespace TextFilter
 {
     public struct BaseTabViewModelEvents
     {
-
         #region Fields
 
         public static string SelectedIndex = "SelectedIndex";
 
         #endregion Fields
-
     }
 
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
-
         #region Fields
 
         private string _background;
@@ -122,6 +119,7 @@ namespace TextFilter
         }
 
         public IFile<T> File { get; set; }
+
         public string Header
         {
             get
@@ -377,6 +375,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

@@ -6,18 +6,12 @@ namespace TextFilter
 {
     public partial class GotoLineDialog : Window
     {
-        #region Public Constructors
-
         public GotoLineDialog()
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             textBoxLineNumber.Focus();
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Disable()
         {
@@ -36,10 +30,6 @@ namespace TextFilter
             return 0;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void buttonGotoLine_Click(object sender, RoutedEventArgs e)
         {
             Disable();
@@ -56,7 +46,5 @@ namespace TextFilter
                 Disable();
             }
         }
-
-        #endregion Private Methods
     }
 }

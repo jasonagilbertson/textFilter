@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -21,14 +20,12 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TextFilter
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
-
         private Command _addFilterItemCommand;
         private string _filterHide;
         private Command _filterNotesCommand;
@@ -44,7 +41,6 @@ namespace TextFilter
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
-
 
         public FilterViewModel()
         {
@@ -64,8 +60,6 @@ namespace TextFilter
             // ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
-
-
         public Command AddFilterItemCommand
         {
             get
@@ -82,13 +76,6 @@ namespace TextFilter
             {
                 _addFilterItemCommand = value;
             }
-        }
-
-        public void FilterLogExecuted()
-        {
-            // main form {enter}
-            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
-
         }
 
         public string FilterHide
@@ -135,7 +122,6 @@ namespace TextFilter
             set { _filterNotesCommand = value; }
         }
 
-
         public bool QuickFindAnd
         {
             get
@@ -178,7 +164,6 @@ namespace TextFilter
             }
             set { _quickFindChangedCommand = value; }
         }
-
 
         public int QuickFindIndex
         {
@@ -243,7 +228,6 @@ namespace TextFilter
             }
         }
 
-
         public bool QuickFindNot
         {
             get
@@ -270,8 +254,6 @@ namespace TextFilter
                 }
             }
         }
-
-       
 
         public bool QuickFindOr
         {
@@ -300,7 +282,6 @@ namespace TextFilter
                 }
             }
         }
-
 
         public bool QuickFindRegex
         {
@@ -543,6 +524,12 @@ namespace TextFilter
                 SetStatus("Exception:FilterTabItem:" + e.ToString());
                 return filterFileItems;
             }
+        }
+
+        public void FilterLogExecuted()
+        {
+            // main form {enter}
+            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
         }
 
         public override void FindNextExecuted(object sender)
@@ -871,20 +858,12 @@ namespace TextFilter
             SetStatus("UpdateView:enter");
 
             FilterTabViewModel tab = (FilterTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.FilterFile.FileName);
-            
+
             tab.ContentList = workerItem.FilterFile.ContentItems;
 
             SetStatus("UpdateView:exit");
         }
-        #region Constructors
-        #endregion Constructors
 
-        #region Properties
-        #endregion Properties
-
-        
-
-        #region Public Methods
         internal bool VerifyAndOpenFile(string fileName)
         {
             SetStatus(string.Format("checking filter file:{0}", fileName));
@@ -975,6 +954,7 @@ namespace TextFilter
                 VerifyIndex();
             }
         }
+
         private void tabItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             SetStatus("filterViewModel:tabItem_PropertyChanged");
@@ -1109,7 +1089,6 @@ namespace TextFilter
                 }
             }
 
-            
             //OnPropertyChanged(sender, e);
         }
 
@@ -1130,7 +1109,5 @@ namespace TextFilter
 
             SetStatus(sb.ToString());
         }
-
-        #endregion Private Methods
     }
 }

@@ -13,7 +13,6 @@ namespace TextFilter
 {
     public class FilterTabViewModel : BaseTabViewModel<FilterFileItem>
     {
-
         #region Fields
 
         private bool _maskedVisibility = TextFilterSettings.Settings.CountMaskedMatches;
@@ -47,6 +46,5 @@ namespace TextFilter
         }
 
         #endregion Properties
-
     }
 }

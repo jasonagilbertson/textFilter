@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public class FilterFile : BaseFile<FilterFileItem>
     {
-
         #region Fields
 
         private ObservableCollection<FilterFileItem> _contentItems = new ObservableCollection<FilterFileItem>();
@@ -109,6 +108,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public interface IFile<T>
     {
-
         #region Properties
 
         ObservableCollection<T> ContentItems { get; set; }
@@ -30,6 +29,5 @@ namespace TextFilter
         string Tag { get; set; }
 
         #endregion Properties
-
     }
 }

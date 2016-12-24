@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public class BindingProxy : Freezable
     {
-
         // Using a DependencyProperty as the backing store for Data. This enables animation, styling,
         // binding, etc...
 
@@ -43,6 +42,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

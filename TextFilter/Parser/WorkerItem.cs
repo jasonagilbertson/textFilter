@@ -17,7 +17,6 @@ namespace TextFilter
 {
     public class WorkerItem
     {
-
         #region Fields
 
         public BackgroundWorker BackGroundWorker = new BackgroundWorker();

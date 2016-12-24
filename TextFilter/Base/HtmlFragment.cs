@@ -25,7 +25,6 @@ namespace TextFilter
 
     internal class HtmlFragment
     {
-
         #region Fields
 
         private StringBuilder htmlClipBuilder;
@@ -270,6 +269,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     } // end of class
 }

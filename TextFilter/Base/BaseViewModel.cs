@@ -21,14 +21,16 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-
         #region Fields
+
         public static FileWorkerItem UpdateViewCallback;
+
         #region Delegates
 
         public delegate void FileWorkerItem(WorkerItem workerItem);
 
         #endregion Delegates
+
         private Command _closeAllCommand;
 
         private Command _closeCommand;
@@ -68,7 +70,7 @@ namespace TextFilter
         private TextFilterSettings _settings = TextFilterSettings.Settings;
         private Command _sharedCommand;
         private ObservableCollection<ITabViewModel<T>> _tabItems = new ObservableCollection<ITabViewModel<T>>();
-        
+
         #endregion Fields
 
         #region Constructors
@@ -534,6 +536,7 @@ namespace TextFilter
 
             AddTabItem(file);
         }
+
         public void OpenDropExecuted(object sender)
         {
             SetStatus("OpenDrop: " + sender.GetType().ToString());
@@ -644,7 +647,6 @@ namespace TextFilter
             }
         }
 
-        public abstract void UpdateView(WorkerItem workerItem);
         public abstract void RenameTabItem(string newName);
 
         public abstract void SaveFileAsExecuted(object sender);
@@ -718,6 +720,8 @@ namespace TextFilter
             OpenFileExecuted(sender);
         }
 
+        public abstract void UpdateView(WorkerItem workerItem);
+
         private bool DeleteIfTempFile(IFile<T> item)
         {
             try
@@ -753,6 +757,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

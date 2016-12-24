@@ -13,12 +13,10 @@ namespace TextFilter
 {
     public interface IViewModel<T>
     {
-
-        
-        
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
         void UpdateView(WorkerItem workerItem);
+
         #region Properties
 
         Command CloseCommand { get; set; }

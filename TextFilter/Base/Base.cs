@@ -19,6 +19,16 @@ namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
+        public string _tempTabNameFormat = "-new {0}-";
+
+        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+
+        public bool _transitioning;
+
+        public static event EventHandler<string> NewCurrentStatus;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public enum CurrentStatusSetting
         {
             enter_to_filter,
@@ -28,27 +38,9 @@ namespace TextFilter
             filtering,
         }
 
-        #region Public Fields
-
-        public string _tempTabNameFormat = "-new {0}-";
-        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
-        public bool _transitioning;
-
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
-
-        #endregion Public Fields
-
-        #region Public Events
-
-        public static event EventHandler<string> NewCurrentStatus;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
-
-        #region Public Methods
 
         public void CreateProcess(string process, string arguments = null)
         {
@@ -80,6 +72,7 @@ namespace TextFilter
             proc.StartInfo.Verb = "runas";
             proc.Start();
         }
+
         public T FindVisualParent<T>(UIElement element) where T : UIElement
         {
             var parent = element;
@@ -183,7 +176,5 @@ namespace TextFilter
                 Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
             }
         }
-
-        #endregion Public Methods
     }
 }

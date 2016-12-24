@@ -19,18 +19,15 @@ namespace TextFilter
 
     public class CancelCommandEventArgs : CommandEventArgs
     {
-
         #region Properties
 
         public bool Cancel { get; set; }
 
         #endregion Properties
-
     }
 
     public class Command : ICommand
     {
-
         #region Fields
 
         protected Action _action = null;
@@ -146,17 +143,14 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 
     public class CommandEventArgs : EventArgs
     {
-
         #region Properties
 
         public object Parameter { get; set; }
 
         #endregion Properties
-
     }
 }

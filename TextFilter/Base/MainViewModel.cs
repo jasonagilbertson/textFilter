@@ -27,21 +27,15 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-
         #region Fields
 
         public System.Timers.Timer _timer;
         private Command _controlGotFocusCommand;
-        private Command _listViewSelectionChangedCommand;
         private Command _controlLostFocusCommand;
-
         private Command _copyCommand;
         private string _currentStatus;
-        
-
         private Command _helpCommand;
-
-        
+        private Command _listViewSelectionChangedCommand;
         private TextFilterSettings _settings;
 
         private Command _settingsCommand;
@@ -101,7 +95,12 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Fields
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
+        }
+
+        #endregion Fields
 
         #region Constructors
 
@@ -222,7 +221,6 @@ namespace TextFilter
             set { _listViewSelectionChangedCommand = value; }
         }
 
-
         public TextFilterSettings Settings
         {
             get { return _settings; }
@@ -274,9 +272,7 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
+        #endregion Properties
 
         private StringBuilder _color = new StringBuilder();
 
@@ -406,7 +402,7 @@ namespace TextFilter
 
                         if (Settings.CurrentLogFiles.Count > 0)
                         {
-                            if(args.Length > 0)
+                            if (args.Length > 0)
                             {
                                 args.Append(" ");
                             }
@@ -472,10 +468,11 @@ namespace TextFilter
         {
             Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
         }
+
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
-            var oc = _filterViewModel.SharedCollection;
+            var oc = _FilterViewModel.SharedCollection;
             VersionCheck(silent);
         }
 
@@ -581,16 +578,5 @@ namespace TextFilter
                 return;
             }
         }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private void HandleNewCurrentStatus(object sender, string status)
-        {
-            CurrentStatus = status;
-        }
-
     }
-    #endregion
 }

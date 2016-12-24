@@ -41,7 +41,6 @@ namespace TextFilter
         public Parser()
         {
             SetStatus("Parser:ctor");
-            
         }
 
         #endregion Constructors
@@ -154,6 +153,45 @@ namespace TextFilter
                 _logMonitoringEnabled = !_logMonitoringEnabled;
             }
         }
+
+        public void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("Parser:filterItemsCollectionChanged");
+            ModifiedFilterFile(e);
+        }
+
+        public void filterViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SetStatus("Parser:filterViewPropertyChanged:" + e.PropertyName);
+            // todo: determine what changed and run parser new filter, modified filter, removed filter
+            // see if tab was added or removed
+
+            if (sender is FilterFileItem)
+            {
+            }
+
+            ModifiedFilterFile(e);
+
+            //check worker
+
+            // todo : re parse current log with new selected filter bool ret =
+            // ParseFile(_FilterViewModel.CurrentFile(), _LogViewModel.CurrentFile());
+        }
+
+        public void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("Parser:logItemsCollectionChanged");
+            ModifiedLogFile(e);
+        }
+
+        public void logViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
+            // todo: determine what changed and run parser new log or remove log
+
+            ModifiedLogFile(e);
+        }
+
         private FilterFile CurrentFilterFile()
         {
             if (_FilterViewModel != null)
@@ -165,8 +203,8 @@ namespace TextFilter
             {
                 return null;
             }
-            
         }
+
         private List<IFile<FilterFileItem>> CurrentFilterFiles()
         {
             if (_FilterViewModel.ViewManager != null)
@@ -179,8 +217,6 @@ namespace TextFilter
                 SetStatus("Parser:CurrentFilterFiles:null ");
                 return new List<IFile<FilterFileItem>>();
             }
-
-
         }
 
         //public void ReadFile()
@@ -212,50 +248,6 @@ namespace TextFilter
                 SetStatus("Parser:CurrentLogFiles:null ");
                 return new List<IFile<LogFileItem>>();
             }
-
-        }
-
-        public void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SetStatus("Parser:filterItemsCollectionChanged");
-            ModifiedFilterFile(e);
-
-        }
-
-        public void filterViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            SetStatus("Parser:filterViewPropertyChanged:" + e.PropertyName);
-            // todo: determine what changed and run parser new filter, modified filter, removed filter
-            // see if tab was added or removed
-
-            if (sender is FilterFileItem)
-            {
-
-            }
-
-            ModifiedFilterFile(e);
-
-            //check worker
-
-            // todo : re parse current log with new selected filter bool ret =
-            // ParseFile(_FilterViewModel.CurrentFile(), _LogViewModel.CurrentFile());
-        }
-
-        public void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-        {
-            SetStatus("Parser:logItemsCollectionChanged");
-            ModifiedLogFile(e);
-
-
-        }
-
-        public void logViewManager_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
-            // todo: determine what changed and run parser new log or remove log
-
-            ModifiedLogFile(e);
-
         }
 
         private void ModifiedFilterFile(object e)
@@ -284,12 +276,14 @@ namespace TextFilter
                             _workerManager.AddWorkersByWorkerItemFilterFile(workerItem);
                         }
                         break;
+
                     case NotifyCollectionChangedAction.Remove:
                         {
                             SetStatus("Parser.ModifiedFilterFile:filter file removed");
                             _workerManager.RemoveWorkersByFilterFile((FilterFile)((FilterTabViewModel)col.OldItems[0]).File);
                         }
                         break;
+
                     default:
                         {
                             SetStatus("Parser.ModifiedFilterFile:error, unknown collection action: " + Enum.GetName(typeof(NotifyCollectionChangedAction), col.Action));
@@ -310,7 +304,6 @@ namespace TextFilter
                         _workerManager.ProcessWorker(workerItem);
                         return;
                     }
-
                 }
 
                 workerItem = new WorkerItem()
@@ -320,7 +313,6 @@ namespace TextFilter
                     FilterNeed = FilterNeed.Unknown,
                     LogFile = _LogViewModel == null ? null : CurrentLogFile()
                 };
-
 
                 if (CurrentFilterFile() != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName))
                 {
@@ -350,6 +342,7 @@ namespace TextFilter
                         workerItem.WorkerModification = WorkerItem.Modification.FilterModified;
                         _workerManager.ProcessWorker(workerItem);
                         break;
+
                     case FilterNeed.Current:
                         SetStatus("Parser:ModifiedFilterFile:current");
                         _workerManager.ProcessWorker(workerItem);
@@ -389,12 +382,14 @@ namespace TextFilter
                             _workerManager.AddWorkersByWorkerItemLogFile(workerItem);
                         }
                         break;
+
                     case NotifyCollectionChangedAction.Remove:
                         {
                             SetStatus("Parser.ModifiedLogFile:log file being removed");
                             _workerManager.RemoveWorkersByLogFile((LogFile)((LogTabViewModel)col.OldItems[0]).File);
                         }
                         break;
+
                     default:
                         {
                             SetStatus("Parser.ModifiedLogFile:error, unknown collection action: " + Enum.GetName(typeof(NotifyCollectionChangedAction), col.Action));
@@ -416,12 +411,8 @@ namespace TextFilter
                         _workerManager.ProcessWorker(workerItem);
                         return;
                     }
-
                 }
-
-
             }
-
         }
 
         private void SyncFilterFiles()
@@ -444,7 +435,6 @@ namespace TextFilter
             // make sure all tabs have data
             foreach (LogFile logFile in CurrentLogFiles())
             {
-
                 //if(logFile.ContentItems.Count == 0)
                 {
                     SetStatus("Parser:SyncLogFiles:adding worker");

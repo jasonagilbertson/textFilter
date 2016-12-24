@@ -18,7 +18,6 @@ namespace TextFilter
 {
     public class VirtualizingCollection<T> : IList<T>, IList
     {
-
         #region Fields
 
         private readonly IItemsProvider<T> _itemsProvider;
@@ -297,6 +296,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

@@ -24,7 +24,6 @@ namespace TextFilter
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
-
         #region Constructors
 
         public FilterFileManager()
@@ -432,6 +431,7 @@ namespace TextFilter
                 return false;
             }
         }
+
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == FilterFileItemEvents.Count |
@@ -723,6 +723,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

@@ -16,7 +16,6 @@ namespace TextFilter
 {
     public struct FilterFileItemEvents
     {
-
         #region Fields
 
         public static string Background = "Background";
@@ -46,12 +45,10 @@ namespace TextFilter
         public static string Regex = "Regex";
 
         #endregion Fields
-
     }
 
     public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
     {
-
         #region Fields
 
         private string _backgroundColor;
@@ -397,6 +394,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

@@ -13,8 +13,6 @@ namespace TextFilter
 {
     public class LogFileItem : FileItem
     {
-        #region Public Properties
-
         public int FilterIndex { get; set; }
 
         public string Group1 { get; set; }
@@ -26,7 +24,5 @@ namespace TextFilter
         public string Group4 { get; set; }
 
         public int[,] Masked { get; set; }
-
-        #endregion Public Properties
     }
 }

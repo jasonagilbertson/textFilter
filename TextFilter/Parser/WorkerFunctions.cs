@@ -11,7 +11,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.IO.MemoryMappedFiles;
@@ -25,7 +24,6 @@ namespace TextFilter
 {
     public class WorkerFunctions : Base
     {
-
         #region Fields
 
         private static string _needsPatch = "textFilter*NeEdSpAtCh*";
@@ -57,7 +55,6 @@ namespace TextFilter
                     workerItem.Status.AppendLine("MMFConcurrentFilter: filterfile null. returning");
                     return workerItem;
                 }
-
 
                 workerItem.Status.AppendLine(string.Format("ApplyFilter: filterItems.Count={0}:{1}", Thread.CurrentThread.ManagedThreadId, filterItems.Count));
                 DateTime timer = DateTime.Now;
@@ -95,7 +92,6 @@ namespace TextFilter
                         {
                             lowest = state.LowestBreakIteration;
                         }
-
                     }
 
                     if (string.IsNullOrEmpty(logItem.Content))
@@ -401,7 +397,7 @@ namespace TextFilter
                 });
 
                 // check for cancellation
-                if(!loopResult.IsCompleted)
+                if (!loopResult.IsCompleted)
                 {
                     Debug.Print("ApplyFilter: cancelled. returning");
                     return workerItem;
@@ -417,8 +413,8 @@ namespace TextFilter
 
                     if (Settings.CountMaskedMatches)
                     {
-                        filterItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue) 
-                            & (x.FilterIndex != int.MinValue) 
+                        filterItems[i].MaskedCount = logFile.ContentItems.Count(x => (x.FilterIndex != int.MaxValue)
+                            & (x.FilterIndex != int.MinValue)
                             && x.Masked[i, 0] == 1);
                         workerItem.FilterFile.ContentItems.First(x => x.Index == filterItemIndex).MaskedCount = filterItems[i].MaskedCount;
 
@@ -450,6 +446,7 @@ namespace TextFilter
                 return workerItem;
             }
         }
+
         public WorkerItem MMFConcurrentRead(WorkerItem workerItem)
         {
             workerItem.Status.AppendLine("MMFConcurrentRead: enter");
@@ -520,7 +517,6 @@ namespace TextFilter
                 {
                     break;
                 }
-
             }
 
             if (memoryMappedFile != null)
@@ -614,7 +610,6 @@ namespace TextFilter
 
                 for (x = fixUp; x < bytes.Length; x += step)
                 {
-
                     if (bytes[x] == newLine[0])
                     {
                         if (taskInfo.workerItem.BackGroundWorker.CancellationPending)
@@ -684,7 +679,6 @@ namespace TextFilter
 
         public WorkerItem VerifyFilterPatterns(WorkerItem workerItem)
         {
-
             int groupCount = 0;
             List<string> groupNames = new List<string>();
             if (workerItem.FilterFile == null)
@@ -838,7 +832,6 @@ namespace TextFilter
                 Debug.Print("Exception:GetEncoding:" + e.ToString());
                 return false;
             }
-
         }
 
         #endregion Methods

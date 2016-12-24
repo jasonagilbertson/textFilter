@@ -14,7 +14,6 @@ namespace TextFilter
 {
     public class LogFile : BaseFile<LogFileItem>
     {
-
         #region Constructors
 
         public LogFile()
@@ -41,7 +40,6 @@ namespace TextFilter
 
         public class ExportConfigurationInfo
         {
-
             #region Fields
 
             public bool Cancel;
@@ -65,7 +63,6 @@ namespace TextFilter
             public string Separator = ",";
 
             #endregion Fields
-
         }
 
         #endregion Classes

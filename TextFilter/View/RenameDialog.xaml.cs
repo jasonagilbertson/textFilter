@@ -5,18 +5,12 @@ namespace TextFilter
 {
     public partial class RenameDialog : Window
     {
-        #region Public Constructors
-
         public RenameDialog()
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             textBoxNewName.Focus();
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Disable()
         {
@@ -30,10 +24,6 @@ namespace TextFilter
 
             return textBoxNewName.Text;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
@@ -58,7 +48,5 @@ namespace TextFilter
                 Disable();
             }
         }
-
-        #endregion Private Methods
     }
 }

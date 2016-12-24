@@ -27,7 +27,6 @@ namespace TextFilter
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {
-
         #region Constructors
 
         public LogFileManager()
@@ -656,6 +655,7 @@ namespace TextFilter
                 return false;
             }
         }
+
         private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems, LogTabViewModel logTab = null)
         {
             bool getGroups = false;
@@ -733,7 +733,6 @@ namespace TextFilter
 
         public class TaskMMFInfo
         {
-
             #region Fields
 
             public BackgroundWorker bgWorker;
@@ -760,6 +759,5 @@ namespace TextFilter
         }
 
         #endregion Classes
-
     }
 }

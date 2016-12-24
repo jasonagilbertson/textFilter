@@ -19,7 +19,6 @@ namespace TextFilter
 {
     public class FileTypeAssociation : Base
     {
-
         #region Fields
 
         private static FileTypeAssociation _fileTypeAssociation;
@@ -220,6 +219,5 @@ namespace TextFilter
         }
 
         #endregion Methods
-
     }
 }

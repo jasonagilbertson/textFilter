@@ -13,7 +13,6 @@ namespace TextFilter
 {
     public class LogTabViewModel : BaseTabViewModel<LogFileItem>
     {
-
         #region Fields
 
         public int MaxGroupCount = 4;
@@ -161,7 +160,6 @@ namespace TextFilter
 
         public struct LogTabViewModelEvents
         {
-
             #region Fields
 
             public static string Group1Visibility = "Group1Visibility";
@@ -173,10 +171,8 @@ namespace TextFilter
             public static string Group4Visibility = "Group4Visibility";
 
             #endregion Fields
-
         }
 
         #endregion Structs
-
     }
 }

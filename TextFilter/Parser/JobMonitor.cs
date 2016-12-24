@@ -1,17 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace TextFilter
 {
-    class JobMonitor:Base
+    internal class JobMonitor : Base
     {
-        Thread _monitorThread;
-        WorkerManager _workerManager;
-        
+        private Thread _monitorThread;
+        private WorkerManager _workerManager;
+
         public JobMonitor(WorkerManager workerManager)
         {
             _workerManager = workerManager;
@@ -32,9 +28,9 @@ namespace TextFilter
                     _workerManager.ListLock.EnterReadLock();
                     // see if any not completed
                     scount = _workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started);
-                    ccount  = _workerManager.BGWorkers.Count(x=> x.WorkerState != WorkerItem.State.Completed);
+                    ccount = _workerManager.BGWorkers.Count(x => x.WorkerState != WorkerItem.State.Completed);
                     _workerManager.ListLock.ExitReadLock();
-                    if(scount == 0 & ccount > 0)
+                    if (scount == 0 & ccount > 0)
                     {
                         CheckWorkerStates(workerManager);
                         _workerManager.ListLock.EnterWriteLock();
@@ -51,7 +47,7 @@ namespace TextFilter
             }
             finally
             {
-                if(workerManager.ListLock.IsWriteLockHeld)
+                if (workerManager.ListLock.IsWriteLockHeld)
                 {
                     workerManager.ListLock.ExitWriteLock();
                 }
@@ -77,6 +73,7 @@ namespace TextFilter
                 //SetStatus("WorkerManager.ProcessWorker:workerItem not ready or notstarted. exiting.");
             }
         }
+
         private void ManageWorkerStates()
         {
             SetStatus("ManageWorkerStates:enter:count:" + _workerManager.BGWorkers.Count);
@@ -84,7 +81,6 @@ namespace TextFilter
 #if DEBUG
             foreach (WorkerItem worker in _workerManager.BGWorkers)
             {
-
                 SetStatus(string.Format("ManageWorkerStates:{0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
 
                     worker.GetHashCode(),

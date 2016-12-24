@@ -23,10 +23,7 @@ namespace TextFilter
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
-
         #region Fields
-
-        
 
         private Command _exportCommand;
 
@@ -47,7 +44,7 @@ namespace TextFilter
         #endregion Fields
 
         #region Constructors
-        
+
         public LogViewModel()
         {
             SetStatus("LogViewModel.ctor");
@@ -60,15 +57,12 @@ namespace TextFilter
 
             _logFileManager = (LogFileManager)ViewManager;
             UpdateViewCallback = UpdateView;
-                        
+
             // load tabs from last session
             AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
-
         }
 
         #endregion Constructors
-
-        
 
         #region Properties
 
@@ -132,8 +126,6 @@ namespace TextFilter
                 }
             }
         }
-
-     
 
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
@@ -510,6 +502,29 @@ namespace TextFilter
             }
         }
 
+        public bool IsHiding()
+        {
+            // if count the same then assume it is not filtered
+            try
+            {
+                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
+                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
+                if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("IsHiding:exception " + e.ToString());
+                return false;
+            }
+        }
+
         public void KeyDownExecuted(object sender)
         {
             SetStatus("KeyDownExecuted");
@@ -793,7 +808,7 @@ namespace TextFilter
         public override void UpdateView(WorkerItem workerItem)
         {
             SetStatus("UpdateView:enter");
-            if(workerItem.LogFile == null)
+            if (workerItem.LogFile == null)
             {
                 SetStatus("UpdateView:LogFile null:exit");
                 return;
@@ -823,29 +838,6 @@ namespace TextFilter
         {
             SetStatus("GetPreviousFilter item count: " + _previousFilterFileItems.Count);
             return _previousFilterFileItems;
-        }
-
-        public bool IsHiding()
-        {
-            // if count the same then assume it is not filtered
-            try
-            {
-                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
-                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
-                if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                SetStatus("IsHiding:exception " + e.ToString());
-                return false;
-            }
         }
 
         private void LogViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -891,16 +883,13 @@ namespace TextFilter
 
         public struct LogViewModelEvents
         {
-
             #region Fields
 
             public static string LineTotals = "LineTotals";
 
             #endregion Fields
-
         }
 
         #endregion Structs
-
     }
 }
