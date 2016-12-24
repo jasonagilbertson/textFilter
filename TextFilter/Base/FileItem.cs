@@ -14,8 +14,6 @@ namespace TextFilter
 {
     public class FileItem : IFileItem
     {
-        #region Public Properties
-
         public Brush Background { get; set; }
 
         public string Content { get; set; }
@@ -24,15 +22,9 @@ namespace TextFilter
 
         public int Index { get; set; }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public IFileItem ShallowCopy()
         {
             return (IFileItem)MemberwiseClone();
         }
-
-        #endregion Public Methods
     }
 }

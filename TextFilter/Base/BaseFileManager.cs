@@ -16,29 +16,13 @@ namespace TextFilter
 {
     public abstract class BaseFileManager<T> : Base, IFileManager<T>
     {
-        #region Public Fields
-
         public TextFilterSettings Settings = TextFilterSettings.Settings;
-
-        public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
-
-        #endregion Public Fields
-
-        #region Public Constructors
 
         public BaseFileManager()
         {
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public List<IFile<T>> FileManager { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public bool CloseFile(string FileName)
         {
@@ -72,6 +56,8 @@ namespace TextFilter
             }
         }
 
+        public abstract IFile<T> ManageFileProperties(string LogName, IFile<T> items = null);
+
         public abstract IFile<T> NewFile(string LogName, ObservableCollection<T> items);
 
         public abstract IFile<T> OpenFile(string LogName);
@@ -81,7 +67,5 @@ namespace TextFilter
         public abstract IFile<T> ReadFile(string LogName);
 
         public abstract bool SaveFile(string FileName, IFile<T> file);
-
-        #endregion Public Methods
     }
 }

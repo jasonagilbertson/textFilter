@@ -35,8 +35,6 @@ namespace TextFilter
         //    }
         //}
 
-        #region Private Fields
-
         private int _filteredLinesCount;
 
         private FilterFile _filterFilePrevious;
@@ -59,10 +57,6 @@ namespace TextFilter
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
         {
             SetStatus("Parser:ctor");
@@ -75,31 +69,6 @@ namespace TextFilter
             SyncFilterFiles();
             SyncLogFiles();
         }
-
-        public void Enable(bool enable)
-        {
-            if (enable)
-            {
-                _FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
-
-                EnableFilterFileMonitoring(true);
-                // EnableLogFileMonitoring(true);
-            }
-            else
-            {
-                _FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
-                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
-
-                EnableFilterFileMonitoring(false);
-                // EnableLogFileMonitoring(false);
-                _workerManager.CancelAllWorkers();
-            }
-        }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public int FilteredLinesCount
         {
@@ -133,9 +102,26 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
+        public void Enable(bool enable)
+        {
+            if (enable)
+            {
+                _FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged += logViewManager_PropertyChanged;
 
-        #region Public Methods
+                EnableFilterFileMonitoring(true);
+                // EnableLogFileMonitoring(true);
+            }
+            else
+            {
+                _FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                _logViewModel.PropertyChanged -= logViewManager_PropertyChanged;
+
+                EnableFilterFileMonitoring(false);
+                // EnableLogFileMonitoring(false);
+                _workerManager.CancelAllWorkers();
+            }
+        }
 
         public void EnableFilterFileMonitoring(bool enable)
         {
@@ -165,10 +151,6 @@ namespace TextFilter
             WorkerItem worker = ModifiedLogFile();
             _workerManager.ProcessWorker(worker);
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private FilterFile CurrentFilterFile()
         {
@@ -452,7 +434,5 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Private Methods
     }
 }

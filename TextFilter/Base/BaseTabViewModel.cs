@@ -22,8 +22,6 @@ namespace TextFilter
 {
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged
     {
-        #region Private Fields
-
         private string _background;
 
         private ObservableCollection<T> _contentList = new ObservableCollection<T>();
@@ -50,18 +48,10 @@ namespace TextFilter
 
         private object _viewer;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public BaseTabViewModel()
         {
             //IsNew = true;
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public string Background
         {
@@ -262,10 +252,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
-
         public void CopyExecuted(object sender)
         {
             try
@@ -336,10 +322,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void SourceUpdatedExecuted(object sender)
         {
             SetStatus("SourceUpdatedExecuted: enter");
@@ -363,7 +345,5 @@ namespace TextFilter
                 }
             }
         }
-
-        #endregion Private Methods
     }
 }

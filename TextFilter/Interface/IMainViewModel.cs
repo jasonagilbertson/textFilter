@@ -13,10 +13,6 @@ namespace TextFilter
 {
     public interface IMainViewModel
     {
-        #region Public Events
-
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
     }
 }

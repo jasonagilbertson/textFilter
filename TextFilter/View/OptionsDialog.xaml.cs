@@ -6,7 +6,17 @@ namespace TextFilter
 {
     public partial class OptionsDialog : Window
     {
-        #region Public Constructors
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
+
+        private OptionsDialogResult _dialogResult;
+
+        public OptionsDialog()
+        {
+            Owner = Application.Current.MainWindow;
+            InitializeComponent();
+        }
 
         public enum OptionsDialogResult
         {
@@ -20,32 +30,6 @@ namespace TextFilter
             unregister
         }
 
-        private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            //   _mainViewModel.ColorComboKeyDown(sender, e);
-        }
-
-        private void colorCombo_Selected(object sender, RoutedEventArgs e)
-        {
-            //   _mainViewModel.ColorComboSelected();
-        }
-
-        private StringBuilder _color = new StringBuilder();
-
-        private List<string> _colorNames = new List<string>();
-
-        private OptionsDialogResult _dialogResult;
-
-        public OptionsDialog()
-        {
-            Owner = Application.Current.MainWindow;
-            InitializeComponent();
-        }
-
-        #endregion Public Constructors
-
-        #region Public Methods
-
         public void Disable()
         {
             this.Hide();
@@ -57,10 +41,6 @@ namespace TextFilter
             this.ShowDialog();
             return _dialogResult;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void buttonApply_Click(object sender, RoutedEventArgs e)
         {
@@ -80,13 +60,11 @@ namespace TextFilter
             Disable();
         }
 
-        private void buttonSave_Click(object sender, RoutedEventArgs e)
+        private void buttonRegister_Click(object sender, RoutedEventArgs e)
         {
-            _dialogResult = OptionsDialogResult.save;
+            _dialogResult = OptionsDialogResult.register;
             Disable();
         }
-
-        #endregion Private Methods
 
         private void buttonReset_Click(object sender, RoutedEventArgs e)
         {
@@ -94,9 +72,9 @@ namespace TextFilter
             Disable();
         }
 
-        private void buttonRegister_Click(object sender, RoutedEventArgs e)
+        private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
-            _dialogResult = OptionsDialogResult.register;
+            _dialogResult = OptionsDialogResult.save;
             Disable();
         }
 
@@ -104,6 +82,16 @@ namespace TextFilter
         {
             _dialogResult = OptionsDialogResult.unregister;
             Disable();
+        }
+
+        private void colorCombo_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            //   _mainViewModel.ColorComboKeyDown(sender, e);
+        }
+
+        private void colorCombo_Selected(object sender, RoutedEventArgs e)
+        {
+            //   _mainViewModel.ColorComboSelected();
         }
     }
 }

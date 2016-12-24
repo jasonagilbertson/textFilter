@@ -8,18 +8,12 @@ namespace TextFilter
 {
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
-        #region Private Fields
-
         private const int _timerSecs = 10;
 
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
         private DispatcherTimer _timer;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public TimedSaveDialog(string fileName)
         {
@@ -28,15 +22,7 @@ namespace TextFilter
             labelDisplay.Content = fileName;
         }
 
-        #endregion Public Constructors
-
-        #region Public Events
-
         public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
-
-        #region Public Enums
 
         public enum Results
         {
@@ -46,10 +32,6 @@ namespace TextFilter
             DontSave,
             Disable
         }
-
-        #endregion Public Enums
-
-        #region Public Methods
 
         public void Disable()
         {
@@ -72,10 +54,6 @@ namespace TextFilter
 
             return _result;
         }
-
-        #endregion Public Methods
-
-        #region Private Methods
 
         private void buttonDisable_Click(object sender, RoutedEventArgs e)
         {
@@ -118,7 +96,5 @@ namespace TextFilter
             _timer.Interval = TimeSpan.FromSeconds(_timerSecs);
             _timer.Start();
         }
-
-        #endregion Private Methods
     }
 }

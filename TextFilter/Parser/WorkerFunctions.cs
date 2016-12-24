@@ -22,15 +22,9 @@ namespace TextFilter
 {
     public class WorkerFunctions : Base
     {
-        #region Private Fields
-
         private static string _needsPatch = "textFilter*NeEdSpAtCh*";
 
         private TextFilterSettings Settings = TextFilterSettings.Settings;
-
-        #endregion Private Fields
-
-        #region Public Methods
 
         public LogFile MMFConcurrentRead(LogFile logFile, BackgroundWorker backgroundWorker)
         {
@@ -255,10 +249,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private bool GetEncoding(LogFile logFile)
         {
             logFile.HasBom = false;
@@ -353,14 +343,8 @@ namespace TextFilter
             }
         }
 
-        #endregion Private Methods
-
-        #region Public Classes
-
         public class TaskMMFInfo
         {
-            #region Public Fields
-
             public BackgroundWorker bgWorker;
 
             public Int32 length;
@@ -373,19 +357,11 @@ namespace TextFilter
 
             public List<LogFileItem> stringList;
 
-            #endregion Public Fields
-
-            #region Public Properties
-
             public ManualResetEvent completedEvent { get; set; }
 
             //public string fileName { get; set; }
 
             public DoWorkEventArgs doWorkEventArgs { get; set; }
-
-            #endregion Public Properties
         }
-
-        #endregion Public Classes
     }
 }

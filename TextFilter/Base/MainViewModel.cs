@@ -27,9 +27,9 @@ namespace TextFilter
 {
     public class MainViewModel : Base, IMainViewModel
     {
-        #region Private Fields
-
         public System.Timers.Timer _timer;
+        private StringBuilder _color = new StringBuilder();
+        private List<string> _colorNames = new List<string>();
         private Command _controlGotFocusCommand;
 
         private Command _controlLostFocusCommand;
@@ -40,6 +40,7 @@ namespace TextFilter
 
         private Command _helpCommand;
 
+        private Command _listViewSelectionChangedCommand;
         private TextFilterSettings _settings;
 
         private Command _settingsCommand;
@@ -49,59 +50,6 @@ namespace TextFilter
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
-
-        public Command ControlGotFocusCommand
-        {
-            get
-            {
-                if (_controlGotFocusCommand == null)
-                {
-                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
-                }
-                _controlGotFocusCommand.CanExecute = true;
-
-                return _controlGotFocusCommand;
-            }
-            set { _controlGotFocusCommand = value; }
-        }
-
-        public Command ControlLostFocusCommand
-        {
-            get
-            {
-                if (_controlLostFocusCommand == null)
-                {
-                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
-                }
-                _controlLostFocusCommand.CanExecute = true;
-
-                return _controlLostFocusCommand;
-            }
-            set { _controlLostFocusCommand = value; }
-        }
-
-        private void ControlGotFocusExecuted(object sender)
-        {
-            //if (sender is Control)
-            //{
-            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
-            //    (sender as Control).BorderThickness = new Thickness(2);
-            //}
-        }
-
-        private void ControlLostFocusExecuted(object sender)
-        {
-            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
-            {
-                _FilterViewModel.QuickFindChangedExecuted(sender);
-                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
-                //    (sender as Control).BorderThickness = new Thickness(1);
-            }
-        }
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public MainViewModel()
         {
@@ -129,7 +77,6 @@ namespace TextFilter
                 Base._FilterViewModel = new FilterViewModel();
                 Base._LogViewModel = new LogViewModel();
                 //_Parser.Enable(true);
-                
 
                 App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
                     Process.GetCurrentProcess().MainModule.ModuleName,
@@ -166,16 +113,35 @@ namespace TextFilter
             }
         }
 
-        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        public Command ControlGotFocusCommand
         {
-            Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
+            get
+            {
+                if (_controlGotFocusCommand == null)
+                {
+                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
+                }
+                _controlGotFocusCommand.CanExecute = true;
+
+                return _controlGotFocusCommand;
+            }
+            set { _controlGotFocusCommand = value; }
         }
 
-        #endregion Public Constructors
+        public Command ControlLostFocusCommand
+        {
+            get
+            {
+                if (_controlLostFocusCommand == null)
+                {
+                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
+                }
+                _controlLostFocusCommand.CanExecute = true;
 
-        #region Public Properties
-
-        private Command _listViewSelectionChangedCommand;
+                return _controlLostFocusCommand;
+            }
+            set { _controlLostFocusCommand = value; }
+        }
 
         public Command CopyCommand
         {
@@ -276,29 +242,6 @@ namespace TextFilter
             }
             set { _versionCheckCommand = value; }
         }
-
-        public void ListViewSelectionChangedExecuted(object sender)
-        {
-            if (sender is ListView)
-            {
-                if ((sender as ListView).SelectedItem != null)
-                {
-                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
-                }
-            }
-            else
-            {
-                Debug.Print("listviewselectionchanged but invalid call");
-            }
-        }
-
-        #endregion Public Properties
-
-        #region Public Methods
-
-        private StringBuilder _color = new StringBuilder();
-
-        private List<string> _colorNames = new List<string>();
 
         public void ColorComboKeyDown(object sender, KeyEventArgs e)
         {
@@ -406,6 +349,21 @@ namespace TextFilter
             CreateProcess(Settings.HelpUrl);
         }
 
+        public void ListViewSelectionChangedExecuted(object sender)
+        {
+            if (sender is ListView)
+            {
+                if ((sender as ListView).SelectedItem != null)
+                {
+                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
+                }
+            }
+            else
+            {
+                Debug.Print("listviewselectionchanged but invalid call");
+            }
+        }
+
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
@@ -424,7 +382,7 @@ namespace TextFilter
 
                         if (Settings.CurrentLogFiles.Count > 0)
                         {
-                            if(args.Length > 0)
+                            if (args.Length > 0)
                             {
                                 args.Append(" ");
                             }
@@ -478,11 +436,50 @@ namespace TextFilter
             VersionCheck(false);
         }
 
+        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            SetStatus("Stopping textFilter: " + Process.GetCurrentProcess().Id.ToString());
+
+            //_Parser.Enable(false);
+            _FilterViewModel.SaveModifiedFiles(sender);
+            _LogViewModel.SaveModifiedFiles(sender);
+            _settings.Save();
+        }
+
+        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() => AfterLaunch(true)));
+        }
+
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
             var oc = _FilterViewModel.SharedCollection;
             VersionCheck(silent);
+        }
+
+        private void ControlGotFocusExecuted(object sender)
+        {
+            //if (sender is Control)
+            //{
+            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
+            //    (sender as Control).BorderThickness = new Thickness(2);
+            //}
+        }
+
+        private void ControlLostFocusExecuted(object sender)
+        {
+            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
+            {
+                _FilterViewModel.QuickFindChangedExecuted(sender);
+                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
+                //    (sender as Control).BorderThickness = new Thickness(1);
+            }
+        }
+
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
         }
 
         private void VersionCheck(bool silent)
@@ -582,30 +579,5 @@ namespace TextFilter
                 return;
             }
         }
-
-        #endregion Public Methods
-
-        #region Internal Methods
-
-        internal void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            SetStatus("Stopping textFilter: " + Process.GetCurrentProcess().Id.ToString());
-
-            //_Parser.Enable(false);
-            _FilterViewModel.SaveModifiedFiles(sender);
-            _LogViewModel.SaveModifiedFiles(sender);
-            _settings.Save();
-        }
-
-        #endregion Internal Methods
-
-        #region Private Methods
-
-        private void HandleNewCurrentStatus(object sender, string status)
-        {
-            CurrentStatus = status;
-        }
-
-        #endregion Private Methods
     }
 }

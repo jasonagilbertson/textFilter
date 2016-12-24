@@ -14,8 +14,6 @@ namespace TextFilter
 {
     public interface IFile<T>
     {
-        #region Public Properties
-
         ObservableCollection<T> ContentItems { get; set; }
 
         string FileName { get; set; }
@@ -27,7 +25,5 @@ namespace TextFilter
         bool Modified { get; set; }
 
         string Tag { get; set; }
-
-        #endregion Public Properties
     }
 }

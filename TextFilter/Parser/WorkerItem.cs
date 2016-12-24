@@ -15,8 +15,6 @@ namespace TextFilter
 {
     public class WorkerItem
     {
-        #region Public Fields
-
         public BackgroundWorker BackGroundWorker = new BackgroundWorker();
 
         public int FilteredLineCount;
@@ -35,19 +33,11 @@ namespace TextFilter
 
         public State WorkerState;
 
-        #endregion Public Fields
-
-        #region Public Constructors
-
         public WorkerItem()
         {
             WorkerModification = Modification.Unknown;
             BackGroundWorker.WorkerSupportsCancellation = true;
         }
-
-        #endregion Public Constructors
-
-        #region Public Enums
 
         public enum Modification
         {
@@ -82,7 +72,5 @@ namespace TextFilter
 
             Completed,
         }
-
-        #endregion Public Enums
     }
 }

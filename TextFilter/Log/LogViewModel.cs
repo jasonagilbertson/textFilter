@@ -23,31 +23,6 @@ namespace TextFilter
 {
     public class LogViewModel : BaseViewModel<LogFileItem>
     {
-        #region Private Methods
-
-        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            SetStatus("_FilterViewModel.CollectionChanged: " + sender.ToString());
-            FilterLogTabItems();
-        }
-
-        #endregion Private Methods
-
-        #region Public Structs
-
-        public struct LogViewModelEvents
-        {
-            #region Public Fields
-
-            public static string LineTotals = "LineTotals";
-
-            #endregion Public Fields
-        }
-
-        #endregion Public Structs
-
-        #region Private Fields
-
         public static LogFileContentItems UpdateLogFile;
 
         private Command _exportCommand;
@@ -62,15 +37,11 @@ namespace TextFilter
 
         private LogFileManager _logFileManager;
 
+        private Parser _parser;
+
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
         private LogFileItem _unFilteredSelectedItem;
-
-        public delegate void LogFileContentItems(LogFile logFile);
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public LogViewModel()
         {
@@ -87,9 +58,7 @@ namespace TextFilter
             LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
+        public delegate void LogFileContentItems(LogFile logFile);
 
         public Command ExportCommand
         {
@@ -152,6 +121,19 @@ namespace TextFilter
             }
         }
 
+        public Parser Parser
+        {
+            get
+            {
+                return _parser;
+            }
+
+            set
+            {
+                _parser = value;
+            }
+        }
+
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
@@ -168,9 +150,12 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
-
-        #region Public Methods
+        public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            // dont handle count updates
+            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
+            FilterLogTabItems();
+        }
 
         public override void AddTabItem(IFile<LogFileItem> logFile)
         {
@@ -515,6 +500,29 @@ namespace TextFilter
             }
         }
 
+        public bool IsHiding()
+        {
+            // if count the same then assume it is not filtered
+            try
+            {
+                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
+                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
+                if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("IsHiding:exception " + e.ToString());
+                return false;
+            }
+        }
+
         public void KeyDownExecuted(object sender)
         {
             SetStatus("KeyDownExecuted");
@@ -795,57 +803,10 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        private Parser _parser;
-
-        public Parser Parser
-        {
-            get
-            {
-                return _parser;
-            }
-
-            set
-            {
-                _parser = value;
-            }
-        }
-
-        public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            // dont handle count updates
-            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
-            FilterLogTabItems();
-        }
-
         private List<FilterFileItem> GetPreviousFilter()
         {
             SetStatus("GetPreviousFilter item count: " + _previousFilterFileItems.Count);
             return _previousFilterFileItems;
-        }
-
-        public bool IsHiding()
-        {
-            // if count the same then assume it is not filtered
-            try
-            {
-                DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
-                SetStatus(string.Format("IsHiding:listBox.Items.Count:{0} CurrentFile().ContentItems.Count:{1}", dataGrid.Items.Count, CurrentFile().ContentItems.Count));
-                if (dataGrid.Items.Count == CurrentFile().ContentItems.Count)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            catch (Exception e)
-            {
-                SetStatus("IsHiding:exception " + e.ToString());
-                return false;
-            }
         }
 
         private void LogViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -877,6 +838,17 @@ namespace TextFilter
             }
             SetStatus("SaveCurrentFilter item count: " + _previousFilterFileItems.Count);
             PreviousIndex = SelectedIndex;
+        }
+
+        private void TabItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+            SetStatus("_FilterViewModel.CollectionChanged: " + sender.ToString());
+            FilterLogTabItems();
+        }
+
+        public struct LogViewModelEvents
+        {
+            public static string LineTotals = "LineTotals";
         }
     }
 }

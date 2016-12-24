@@ -13,26 +13,8 @@ namespace TextFilter
 {
     public interface IViewModel<T>
     {
-        #region Public Methods
-
-        void RemoveTabItem(ITabViewModel<T> tabItem);
-
-        void RenameTabItem(string newName);
-
-        void SaveFileAsExecuted(object sender);
-
-        void SaveFileExecuted(object sender);
-
-        #endregion Public Methods
-
-        #region Public Events
-
         // ITabViewModel<T> SelectedTabItem { get; set; }
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
-
-        #region Public Properties
 
         Command CloseCommand { get; set; }
 
@@ -53,8 +35,6 @@ namespace TextFilter
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }
-
-        #endregion Public Properties
 
         void AddTabItem(IFile<T> fileProperties);
 
@@ -81,5 +61,13 @@ namespace TextFilter
         void OpenFileExecuted(object sender);
 
         void PasteText(object sender);
+
+        void RemoveTabItem(ITabViewModel<T> tabItem);
+
+        void RenameTabItem(string newName);
+
+        void SaveFileAsExecuted(object sender);
+
+        void SaveFileExecuted(object sender);
     }
 }

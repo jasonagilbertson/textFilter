@@ -19,8 +19,6 @@ namespace TextFilter
 {
     public class FileTypeAssociation : Base
     {
-        #region Private Fields
-
         private static FileTypeAssociation _fileTypeAssociation;
 
         private string[] _extensions = new string[4] { ".csv", ".log", ".rvf", ".rvconfig" };
@@ -28,10 +26,6 @@ namespace TextFilter
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
         private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         static FileTypeAssociation()
         {
@@ -45,18 +39,10 @@ namespace TextFilter
         {
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public static FileTypeAssociation Instance
         {
             get { return _fileTypeAssociation; }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public static bool IsAdministrator()
         {
@@ -162,10 +148,6 @@ namespace TextFilter
             SHChangeNotify(0x08000000, 0x0000, IntPtr.Zero, IntPtr.Zero);
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private static void DeleteKey(RegistryKey key, string keyName)
         {
             if (key.OpenSubKey(keyName) != null)
@@ -221,7 +203,5 @@ namespace TextFilter
 
             baseKey.Close();
         }
-
-        #endregion Private Methods
     }
 }

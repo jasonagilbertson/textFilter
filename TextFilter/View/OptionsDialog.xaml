@@ -141,7 +141,8 @@
                                    Height="15"
                                    Margin="0,0,5,0"
                                    Background="{Binding Name}" />
-                        <TextBlock Name="backgroundColorText" Text="{Binding Name}" />
+                        <TextBlock Name="backgroundColorText"
+                                   Text="{Binding Name}" />
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
@@ -583,7 +584,8 @@
                                    Height="15"
                                    Margin="0,0,5,0"
                                    Background="{Binding Name}" />
-                        <TextBlock Name="foregroundColorText" Text="{Binding Name}" />
+                        <TextBlock Name="foregroundColorText"
+                                   Text="{Binding Name}" />
                     </StackPanel>
                 </DataTemplate>
             </ComboBox.ItemTemplate>

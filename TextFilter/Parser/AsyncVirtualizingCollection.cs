@@ -18,15 +18,9 @@ namespace TextFilter
 {
     public class AsyncVirtualizingCollection<T> : VirtualizingCollection<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
-        #region Private Fields
-
         private readonly SynchronizationContext _synchronizationContext;
 
         private bool _isLoading;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
             : base(itemsProvider)
@@ -46,17 +40,9 @@ namespace TextFilter
             _synchronizationContext = SynchronizationContext.Current;
         }
 
-        #endregion Public Constructors
-
-        #region Public Events
-
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion Public Events
-
-        #region Public Properties
 
         public bool IsLoading
         {
@@ -74,18 +60,10 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Properties
-
-        #region Protected Properties
-
         protected SynchronizationContext SynchronizationContext
         {
             get { return _synchronizationContext; }
         }
-
-        #endregion Protected Properties
-
-        #region Protected Methods
 
         protected override void LoadCount()
         {
@@ -113,10 +91,6 @@ namespace TextFilter
             if (h != null)
                 h(this, e);
         }
-
-        #endregion Protected Methods
-
-        #region Private Methods
 
         private void FireCollectionReset()
         {
@@ -159,7 +133,5 @@ namespace TextFilter
             IList<T> page = FetchPage(pageIndex);
             SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
-
-        #endregion Private Methods
     }
 }

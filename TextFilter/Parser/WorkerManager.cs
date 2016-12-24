@@ -20,26 +20,15 @@ namespace TextFilter
 {
     public class WorkerManager : WorkerFunctions
     {
-        #region Private Fields
-
         private static WorkerManager _workerManager;
 
-        private WorkerFunctions _workerFunctions = new WorkerFunctions();
-
-        #endregion Private Fields
-
         private Thread _monitorThread;
-
-        #region Private Constructors
+        private WorkerFunctions _workerFunctions = new WorkerFunctions();
 
         private WorkerManager()
         {
             BGWorkers = new List<WorkerItem>();
         }
-
-        #endregion Private Constructors
-
-        #region Public Properties
 
         public static WorkerManager Instance
         {
@@ -54,10 +43,6 @@ namespace TextFilter
         }
 
         public List<WorkerItem> BGWorkers { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddWorkersByWorkerItemFilterFile(WorkerItem workerItem)
         {
@@ -467,25 +452,6 @@ namespace TextFilter
             }
         }
 
-        private void DoFilterWork(object sender, DoWorkEventArgs e)
-        {
-            SetStatus("DoFilterWork:enter:notimplementedexception");
-
-            BackgroundWorker bgWorker;
-            bgWorker = (BackgroundWorker)sender;
-
-            WorkerItem workerItem = (WorkerItem)e.Argument;
-            workerItem.WorkerState = WorkerItem.State.Started;
-
-            //e.Result = MMFConcurrentRead(workerItem.LogFile, bgWorker);
-
-            SetStatus("WorkerManager:DoFilterWork:exit");
-        }
-
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void CancelWorker(WorkerItem bgWorker)
         {
             if (bgWorker.BackGroundWorker != null && bgWorker.BackGroundWorker.IsBusy)
@@ -526,6 +492,21 @@ namespace TextFilter
             }
 
             return true;
+        }
+
+        private void DoFilterWork(object sender, DoWorkEventArgs e)
+        {
+            SetStatus("DoFilterWork:enter:notimplementedexception");
+
+            BackgroundWorker bgWorker;
+            bgWorker = (BackgroundWorker)sender;
+
+            WorkerItem workerItem = (WorkerItem)e.Argument;
+            workerItem.WorkerState = WorkerItem.State.Started;
+
+            //e.Result = MMFConcurrentRead(workerItem.LogFile, bgWorker);
+
+            SetStatus("WorkerManager:DoFilterWork:exit");
         }
 
         private void DoLogWork(object sender, DoWorkEventArgs e)
@@ -603,7 +584,5 @@ namespace TextFilter
 
             SetStatus("RestartWorkers:worker in started state.exiting");
         }
-
-        #endregion Private Methods
     }
 }

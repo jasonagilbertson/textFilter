@@ -31,7 +31,7 @@
     </Window.Resources>
 
     <Window.InputBindings>
-        
+
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.CloseCommand}"
                     CommandParameter="{Binding}"
@@ -57,7 +57,8 @@
                                       Path=LogViewModel.OpenCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+O" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.RenameCommand}" Gesture="F2" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.RenameCommand}"
+                    Gesture="F2" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.SaveCommand}"
                     CommandParameter="{Binding}"
@@ -69,13 +70,16 @@
                     CommandParameter="{Binding}"
                     Modifiers="Control" />
 
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}" Gesture="Delete" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}" Gesture="Insert" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RemoveFilterItemCommand}"
+                    Gesture="Delete" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.AddFilterItemCommand}"
+                    Gesture="Insert" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=FilterViewModel.CloseCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+Alt+F4" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterviewModel.HideCommand}" CommandParameter="{Binding}" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterviewModel.HideCommand}"
+                    CommandParameter="{Binding}" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=FilterViewModel.OpenCommand}"
                     CommandParameter="{Binding}"
@@ -92,15 +96,18 @@
                                       Path=FilterViewModel.ReloadCommand}"
                     CommandParameter="{Binding}"
                     Gesture="F5" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RenameCommand}" Gesture="Alt+F2" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.RenameCommand}"
+                    Gesture="Alt+F2" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=FilterViewModel.SaveCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+Alt+S" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.HideCommand}" Gesture="Ctrl+Alt+H" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.HideCommand}"
+                    Gesture="Ctrl+Alt+H" />
     </Window.InputBindings>
 
-    <DockPanel Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" DataContext="{StaticResource mainViewModel}">
+    <DockPanel Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
+               DataContext="{StaticResource mainViewModel}">
         <Menu Background="{Binding Source={StaticResource settings},
                                    Path=Settings.BackgroundColor}"
               BorderBrush="{Binding Source={StaticResource settings},
@@ -203,13 +210,19 @@
                           Style="{DynamicResource MenuItemStyle1}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Background"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Command"
+                                    Value="{Binding Command}" />
+                            <Setter Property="MenuItem.CommandParameter"
+                                    Value="{Binding Text}" />
 
-                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Foreground"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                            <Setter Property="MenuItem.Header"
+                                    Value="{Binding Text}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -354,12 +367,18 @@
                           Style="{DynamicResource MenuItemStyle1}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                            <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
-                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                            <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Background"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Command"
+                                    Value="{Binding Command}" />
+                            <Setter Property="MenuItem.CommandParameter"
+                                    Value="{Binding Text}" />
+                            <Setter Property="MenuItem.Foreground"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                            <Setter Property="MenuItem.Header"
+                                    Value="{Binding Text}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -429,9 +448,12 @@
                           Style="{DynamicResource MenuItemStyle1}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
-                            <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                            <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                            <Setter Property="MenuItem.Background"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.BorderBrush"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                            <Setter Property="MenuItem.Foreground"
+                                    Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -626,14 +648,17 @@
                           Style="{DynamicResource ComboBoxStyle1}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="GotFocus">
-                            <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ControlGotFocusCommand}" CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                            <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ControlGotFocusCommand}"
+                                                   CommandParameter="{Binding ElementName=comboboxQuickFind}" />
                         </i:EventTrigger>
                         <i:EventTrigger EventName="LostFocus">
-                            <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ControlLostFocusCommand}" CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                            <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ControlLostFocusCommand}"
+                                                   CommandParameter="{Binding ElementName=comboboxQuickFind}" />
                         </i:EventTrigger>
                         <!--  backspace uses this  -->
                         <i:EventTrigger EventName="KeyUp">
-                            <i:InvokeCommandAction Command="{Binding Path=FilterViewModel.QuickFindKeyPressCommand}" CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                            <i:InvokeCommandAction Command="{Binding Path=FilterViewModel.QuickFindKeyPressCommand}"
+                                                   CommandParameter="{Binding ElementName=comboboxQuickFind}" />
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
 
@@ -721,12 +746,15 @@
                                                 NotifyOnTargetUpdated=True}">
 
                 <TabControl.InputBindings>
-                    <KeyBinding Key="Insert" Command="{Binding Path=FilterViewModel.AddFilterItemCommand}" />
-                    <KeyBinding Key="Delete" Command="{Binding Path=FilterViewModel.RemoveFilterItemCommand}" />
+                    <KeyBinding Key="Insert"
+                                Command="{Binding Path=FilterViewModel.AddFilterItemCommand}" />
+                    <KeyBinding Key="Delete"
+                                Command="{Binding Path=FilterViewModel.RemoveFilterItemCommand}" />
                 </TabControl.InputBindings>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
-                        <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}" CommandParameter="{Binding}" />
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"
+                                               CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.ItemTemplate>
@@ -743,7 +771,8 @@
                 <TabControl.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
+                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                  Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
                                 <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                 <Image HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
@@ -773,16 +802,21 @@
                                   Tag="{Binding}">
 
                             <DataGrid.Resources>
-                                <local:BindingProxy x:Key="proxyFilter" Data="{Binding}" />
+                                <local:BindingProxy x:Key="proxyFilter"
+                                                    Data="{Binding}" />
                             </DataGrid.Resources>
 
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
-                                        <Setter Property="Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                        <Setter Property="Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-                                        <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                        <Setter Property="Background"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                        <Setter Property="Foreground"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                        <Setter Property="FontSize"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                        <Setter Property="FontFamily"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
                                     </Style.Setters>
                                 </Style>
                             </DataGrid.CellStyle>
@@ -922,12 +956,18 @@
                                               Style="{DynamicResource MenuItemStyle1}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}">
-                                                <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                                <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                                <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
-                                                <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                                <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                                                <Setter Property="MenuItem.Background"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                                <Setter Property="MenuItem.BorderBrush"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                                <Setter Property="MenuItem.Command"
+                                                        Value="{Binding Command}" />
+                                                <Setter Property="MenuItem.CommandParameter"
+                                                        Value="{Binding Text}" />
+                                                <Setter Property="MenuItem.Foreground"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                                <Setter Property="MenuItem.Header"
+                                                        Value="{Binding Text}" />
                                             </Style>
                                         </MenuItem.ItemContainerStyle>
                                     </MenuItem>
@@ -991,9 +1031,12 @@
                                 <DataGridTextColumn Binding="{Binding Path=Index}"
                                                     Header="Index"
                                                     SortDirection="Ascending" />
-                                <DataGridCheckBoxColumn Binding="{Binding Path=Enabled}" Header="Enabled" />
-                                <DataGridCheckBoxColumn Binding="{Binding Path=Exclude}" Header="Exclude" />
-                                <DataGridCheckBoxColumn Binding="{Binding Path=Regex}" Header="Regex" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Enabled}"
+                                                        Header="Enabled" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Exclude}"
+                                                        Header="Exclude" />
+                                <DataGridCheckBoxColumn Binding="{Binding Path=Regex}"
+                                                        Header="Regex" />
 
                                 <DataGridTextColumn Width="{Binding Source={StaticResource settings},
                                                                     Path=Settings.ContentColumnSize}"
@@ -1005,16 +1048,21 @@
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Style.Setters>
-                                                <Setter Property="Background" Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
-                                                <Setter Property="Foreground" Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
-                                                <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-                                                <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                                <Setter Property="Background"
+                                                        Value="{Binding Path=BackgroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
+                                                <Setter Property="Foreground"
+                                                        Value="{Binding Path=ForegroundColor, Mode=TwoWay, NotifyOnSourceUpdated=True, NotifyOnTargetUpdated=True}" />
+                                                <Setter Property="FontSize"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                                <Setter Property="FontFamily"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
                                             </Style.Setters>
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1078,7 +1126,8 @@
                                                                        Height="15"
                                                                        Margin="0,0,5,0"
                                                                        Background="{Binding Name}" />
-                                                            <TextBlock FontSize="12" Text="{Binding Name}" />
+                                                            <TextBlock FontSize="12"
+                                                                       Text="{Binding Name}" />
                                                         </StackPanel>
                                                     </DataTemplate>
                                                 </ComboBox.ItemTemplate>
@@ -1094,23 +1143,28 @@
 
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
                             </DataGrid.Columns>
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SourceUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}"
+                                                           CommandParameter="{Binding ElementName=filterFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                                                           CommandParameter="{Binding ElementName=filterFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="LayoutUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}" CommandParameter="{Binding ElementName=filterFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}"
+                                                           CommandParameter="{Binding ElementName=filterFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="PreviewKeyDown">
-                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" CommandParameter="{Binding}" />
+                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                                           CommandParameter="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </DataGrid>
@@ -1208,12 +1262,18 @@
                                   Style="{DynamicResource MenuItemStyle1}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
-                                    <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                    <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                    <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
-                                    <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                    <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                                    <Setter Property="MenuItem.Background"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                    <Setter Property="MenuItem.BorderBrush"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                    <Setter Property="MenuItem.Command"
+                                            Value="{Binding Command}" />
+                                    <Setter Property="MenuItem.CommandParameter"
+                                            Value="{Binding Text}" />
+                                    <Setter Property="MenuItem.Foreground"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                    <Setter Property="MenuItem.Header"
+                                            Value="{Binding Text}" />
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>
@@ -1294,13 +1354,15 @@
 
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
-                        <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}" CommandParameter="{Binding}" />
+                        <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"
+                                               CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TabControl.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
-                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}" Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
+                            <Grid Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}"
+                                  Height="{Binding Path=ActualHeight, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Mode=OneWay}">
                                 <Rectangle Fill="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                 <Image HorizontalAlignment="Left"
                                        VerticalAlignment="Top"
@@ -1349,22 +1411,31 @@
                                   VirtualizingStackPanel.VirtualizationMode="Recycling">
 
                             <DataGrid.Resources>
-                                <local:BindingProxy x:Key="proxyLog" Data="{Binding}" />
+                                <local:BindingProxy x:Key="proxyLog"
+                                                    Data="{Binding}" />
                             </DataGrid.Resources>
 
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Setters>
-                                        <Setter Property="Background" Value="{Binding Path=Background}" />
-                                        <Setter Property="Foreground" Value="{Binding Path=Foreground}" />
-                                        <Setter Property="FontSize" Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
-                                        <Setter Property="FontFamily" Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
-                                        <Setter Property="BorderThickness" Value="1" />
-                                        <Setter Property="BorderBrush" Value="{Binding Path=Background}" />
+                                        <Setter Property="Background"
+                                                Value="{Binding Path=Background}" />
+                                        <Setter Property="Foreground"
+                                                Value="{Binding Path=Foreground}" />
+                                        <Setter Property="FontSize"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
+                                        <Setter Property="FontFamily"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.FontName}" />
+                                        <Setter Property="BorderThickness"
+                                                Value="1" />
+                                        <Setter Property="BorderBrush"
+                                                Value="{Binding Path=Background}" />
                                     </Style.Setters>
                                     <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="BorderBrush" Value="{Binding Path=Foreground}" />
+                                        <Trigger Property="IsSelected"
+                                                 Value="True">
+                                            <Setter Property="BorderBrush"
+                                                    Value="{Binding Path=Foreground}" />
                                         </Trigger>
                                     </Style.Triggers>
                                 </Style>
@@ -1380,7 +1451,8 @@
                                                     Header="Content">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1393,7 +1465,8 @@
                                                                          Converter={StaticResource BoolToVis}}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1405,7 +1478,8 @@
                                                                          Converter={StaticResource BoolToVis}}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1417,7 +1491,8 @@
                                                                          Converter={StaticResource BoolToVis}}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1429,7 +1504,8 @@
                                                                          Converter={StaticResource BoolToVis}}">
                                     <DataGridTextColumn.ElementStyle>
                                         <Style>
-                                            <Setter Property="TextBlock.TextWrapping" Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
+                                            <Setter Property="TextBlock.TextWrapping"
+                                                    Value="{Binding Source={StaticResource settings}, Path=Settings.WordWrapString}" />
                                         </Style>
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
@@ -1437,16 +1513,20 @@
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SourceUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}" CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SourceUpdatedCommand}"
+                                                           CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}" CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SelectionChangedCommand}"
+                                                           CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="LayoutUpdated">
-                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}" CommandParameter="{Binding ElementName=logFileData}" />
+                                    <i:InvokeCommandAction Command="{Binding SetViewerCommand}"
+                                                           CommandParameter="{Binding ElementName=logFileData}" />
                                 </i:EventTrigger>
                                 <i:EventTrigger EventName="PreviewKeyDown">
-                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}" CommandParameter="{Binding}" />
+                                    <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
+                                                           CommandParameter="{Binding}" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
 
@@ -1602,13 +1682,19 @@
                                               Style="{DynamicResource MenuItemStyle1}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}">
-                                                <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                                <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                                <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                                                <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                                                <Setter Property="MenuItem.Background"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                                <Setter Property="MenuItem.BorderBrush"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                                <Setter Property="MenuItem.Command"
+                                                        Value="{Binding Command}" />
+                                                <Setter Property="MenuItem.CommandParameter"
+                                                        Value="{Binding Text}" />
 
-                                                <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                                <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                                                <Setter Property="MenuItem.Foreground"
+                                                        Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                                <Setter Property="MenuItem.Header"
+                                                        Value="{Binding Text}" />
                                             </Style>
                                         </MenuItem.ItemContainerStyle>
                                     </MenuItem>
@@ -1741,13 +1827,19 @@
                                   Style="{DynamicResource MenuItemStyle1}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
-                                    <Setter Property="MenuItem.Background" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                    <Setter Property="MenuItem.BorderBrush" Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
-                                    <Setter Property="MenuItem.Command" Value="{Binding Command}" />
-                                    <Setter Property="MenuItem.CommandParameter" Value="{Binding Text}" />
+                                    <Setter Property="MenuItem.Background"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                    <Setter Property="MenuItem.BorderBrush"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
+                                    <Setter Property="MenuItem.Command"
+                                            Value="{Binding Command}" />
+                                    <Setter Property="MenuItem.CommandParameter"
+                                            Value="{Binding Text}" />
 
-                                    <Setter Property="MenuItem.Foreground" Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
-                                    <Setter Property="MenuItem.Header" Value="{Binding Text}" />
+                                    <Setter Property="MenuItem.Foreground"
+                                            Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                    <Setter Property="MenuItem.Header"
+                                            Value="{Binding Text}" />
                                 </Style>
                             </MenuItem.ItemContainerStyle>
                         </MenuItem>

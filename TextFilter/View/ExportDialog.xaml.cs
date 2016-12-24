@@ -4,7 +4,9 @@ namespace TextFilter
 {
     public partial class ExportDialog : Window
     {
-        #region Public Constructors
+        private bool _cancel;
+
+        private bool _copy;
 
         public ExportDialog(LogFile.ExportConfigurationInfo config)
         {
@@ -19,10 +21,6 @@ namespace TextFilter
             this.checkRemoveEmptyRows.IsChecked = config.RemoveEmpty;
             this.textSeparator.Text = config.Separator;
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public void Disable()
         {
@@ -48,10 +46,6 @@ namespace TextFilter
             };
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             _cancel = true;
@@ -68,10 +62,5 @@ namespace TextFilter
         {
             Disable();
         }
-
-        #endregion Private Methods
-
-        private bool _cancel;
-        private bool _copy;
     }
 }

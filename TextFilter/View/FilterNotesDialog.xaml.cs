@@ -5,13 +5,7 @@ namespace TextFilter
 {
     public partial class FilterNotesDialog : Window
     {
-        #region Private Fields
-
         private string _initialNotes;
-
-        #endregion Private Fields
-
-        #region Public Constructors
 
         public FilterNotesDialog(string notes)
         {
@@ -26,10 +20,6 @@ namespace TextFilter
             textBoxFilterNotes.Background = TextFilterSettings.Settings.BackgroundColor;
         }
 
-        #endregion Public Constructors
-
-        #region Public Properties
-
         public bool DialogCanSave
         {
             get
@@ -43,10 +33,6 @@ namespace TextFilter
                 buttonSave.IsEnabled = value;
             }
         }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void Disable()
         {
@@ -67,10 +53,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void buttonCancel_Click(object sender, RoutedEventArgs e)
         {
             textBoxFilterNotes.Text = _initialNotes;
@@ -81,7 +63,5 @@ namespace TextFilter
         {
             Disable();
         }
-
-        #endregion Private Methods
     }
 }

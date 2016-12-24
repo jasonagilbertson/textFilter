@@ -14,23 +14,13 @@ namespace TextFilter
 {
     public class FilterFile : BaseFile<FilterFileItem>
     {
-        #region Private Fields
-
         private ObservableCollection<FilterFileItem> _contentItems = new ObservableCollection<FilterFileItem>();
 
         private bool _patternNotifications;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public FilterFile()
         {
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public override ObservableCollection<FilterFileItem> ContentItems
         {
@@ -49,10 +39,6 @@ namespace TextFilter
         public string FilterNotes { get; set; }
 
         public string FilterVersion { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddPatternNotification(FilterFileItem filterFileItem, bool enable)
         {
@@ -89,10 +75,6 @@ namespace TextFilter
             _patternNotifications = enable;
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void _contentItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             Modified = true;
@@ -110,7 +92,5 @@ namespace TextFilter
 
             OnPropertyChanged(sender, e);
         }
-
-        #endregion Private Methods
     }
 }

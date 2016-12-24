@@ -21,8 +21,6 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        #region Private Fields
-
         private Command _closeAllCommand;
 
         private Command _closeCommand;
@@ -65,17 +63,9 @@ namespace TextFilter
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
 
-        #endregion Private Fields
-
-        #region Public Constructors
-
         public BaseViewModel()
         {
         }
-
-        #endregion Public Constructors
-
-        #region Public Properties
 
         public Command CloseAllCommand
         {
@@ -326,10 +316,6 @@ namespace TextFilter
         }
 
         public IFileManager<T> ViewManager { get; set; }
-
-        #endregion Public Properties
-
-        #region Public Methods
 
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
@@ -735,10 +721,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
         private void OpenFolderExecuted()
         {
             if (IsValidTabIndex())
@@ -747,7 +729,5 @@ namespace TextFilter
                 CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
             }
         }
-
-        #endregion Private Methods
     }
 }

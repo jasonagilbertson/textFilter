@@ -27,16 +27,10 @@ namespace TextFilter
 {
     public class LogFileManager : BaseFileManager<LogFileItem>
     {
-        #region Public Constructors
-
         public LogFileManager()
         {
             FileManager = new List<IFile<LogFileItem>>();
         }
-
-        #endregion Public Constructors
-
-        #region Public Methods
 
         public ObservableCollection<LogFileItem> ApplyColor(ObservableCollection<LogFileItem> logFileItems, List<FilterFileItem> filterFileItems, bool showAll = false)
         {
@@ -449,6 +443,17 @@ namespace TextFilter
             }
         }
 
+        public override IFile<LogFileItem> ManageFileProperties(string LogName, IFile<LogFileItem> logFile)
+        {
+            // filename is used to name tab
+            logFile.FileName = Path.GetFileName(LogName);
+
+            // tag is used to keep complete file name and path
+            logFile.Tag = LogName;
+
+            return logFile;
+        }
+
         public override IFile<LogFileItem> NewFile(string fileName, ObservableCollection<LogFileItem> logFileItems = null)
         {
             SetStatus("NewFile:enter: " + fileName);
@@ -640,21 +645,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Public Methods
-
-        #region Private Methods
-
-        public override IFile<LogFileItem> ManageFileProperties(string LogName, IFile<LogFileItem> logFile)
-        {
-            // filename is used to name tab
-            logFile.FileName = Path.GetFileName(LogName);
-
-            // tag is used to keep complete file name and path
-            logFile.Tag = LogName;
-
-            return logFile;
-        }
-
         private List<FilterFileItem> VerifyFilterPatterns(List<FilterFileItem> filterFileItems, LogTabViewModel logTab = null)
         {
             bool getGroups = false;
@@ -726,14 +716,8 @@ namespace TextFilter
             return filterItems;
         }
 
-        #endregion Private Methods
-
-        #region Public Classes
-
         public class TaskMMFInfo
         {
-            #region Public Fields
-
             public BackgroundWorker bgWorker;
 
             public Int32 length;
@@ -746,17 +730,9 @@ namespace TextFilter
 
             public List<LogFileItem> stringList;
 
-            #endregion Public Fields
-
-            #region Public Properties
-
             public ManualResetEvent completedEvent { get; set; }
-
-            #endregion Public Properties
 
             //public string fileName { get; set; }
         }
-
-        #endregion Public Classes
     }
 }
