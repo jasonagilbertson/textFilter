@@ -31,6 +31,7 @@
     </Window.Resources>
 
     <Window.InputBindings>
+        
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.CloseCommand}"
                     CommandParameter="{Binding}"
@@ -651,11 +652,12 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}" />
 
-                <Button Name="buttonStatus"
+                <Button x:Name="buttonStatus"
                         Grid.Column="2"
                         Width="110"
                         Height="25"
                         Margin="0,0,0,0"
+                        HorizontalContentAlignment="Left"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Bottom"
                         Background="{Binding Source={StaticResource settings},
@@ -663,7 +665,7 @@
                         BorderBrush="Blue"
                         BorderThickness="1"
                         Command="{Binding FilterViewModel.QuickFindChangedCommand}"
-                        CommandParameter="{Binding ElementName=x:comboboxQuickFind}"
+                        CommandParameter="{Binding ElementName=buttonStatus}"
                         Content="{Binding Source={StaticResource mainViewModel},
                                           Path=CurrentStatus}"
                         FontSize="12"
@@ -764,7 +766,6 @@
                                   Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"
                                   CanUserAddRows="False"
-                                  DataGridCell.GotFocus="DataGrid_CellGotFocus"
                                   ItemsSource="{Binding Path=ContentList,
                                                         Mode=TwoWay}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
@@ -1536,6 +1537,17 @@
                                                                    Path=Settings.ForegroundColor}"
                                               Header="goto line"
                                               InputGestureText="Ctrl+G"
+                                              Style="{DynamicResource MenuItemStyle1}" />
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                                              Command="{Binding LogViewModel.NewCommand}"
+                                              CommandParameter="{Binding}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                                              Header="open view in _new tab"
+                                              InputGestureText="Ctrl+N"
                                               Style="{DynamicResource MenuItemStyle1}" />
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"

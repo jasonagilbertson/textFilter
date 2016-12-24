@@ -30,25 +30,25 @@ namespace TextFilter
 
         #region Public Fields
 
-        #region Fields
-
         public string _tempTabNameFormat = "-new {0}-";
         public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
-
-        #endregion Fields
+        public bool _transitioning;
 
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
-        #region Events
+
+        #endregion Public Fields
+
+        #region Public Events
 
         public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        #endregion Events
+        #endregion Public Events
 
-        #region Methods
+        #region Public Methods
 
         public void CreateProcess(string process, string arguments = null)
         {
@@ -138,10 +138,10 @@ namespace TextFilter
 
         public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            //if (_transitioning)
-            //{
-            //    return;
-            //}
+            if (_transitioning)
+            {
+                return;
+            }
 
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
@@ -184,8 +184,6 @@ namespace TextFilter
             }
         }
 
-        #endregion Methods
-
+        #endregion Public Methods
     }
-    #endregion 
 }

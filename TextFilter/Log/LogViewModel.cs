@@ -232,6 +232,7 @@ namespace TextFilter
 
             try
             {
+                bool processFilterIntent = true;
                 List<FilterFileItem> filterFileItems = new List<FilterFileItem>(_FilterViewModel.FilterList());
                 SetStatus(string.Format("filterLogTabItems:enter filterIntent: {0}", filterIntent));
                 LogFile logFile;
@@ -259,72 +260,78 @@ namespace TextFilter
                         case FilterNeed.ApplyColor:
                             {
                                 logTab.ContentList = _logFileManager.ApplyColor(logFile.ContentItems, filterFileItems);
-                                SaveCurrentFilter(filterFileItems);
-                                return;
+                                processFilterIntent = false;
+                                break;
                             }
                         case FilterNeed.Current:
                             {
                                 if (PreviousIndex == SelectedIndex)
                                 {
                                     SetStatus("filterLogTabItems:no change");
-                                    return;
+                                    processFilterIntent = false;
+                                    break;
                                 }
 
                                 break;
                             }
-
                         case FilterNeed.ShowAll:
                             {
                                 filterIntent = FilterCommand.ShowAll;
                                 break;
                             }
                         case FilterNeed.Filter:
-                            break;
-
+                            {
+                                break;
+                            }
                         case FilterNeed.Unknown:
-
                         default:
-                            SaveCurrentFilter(filterFileItems);
-                            return;
+                            {
+                                processFilterIntent = false;
+                                SaveCurrentFilter(filterFileItems);
+                                return;
+                            }
                     }
                 }
 
-                SetCurrentStatus(CurrentStatusSetting.filtering);
-
-                switch (filterIntent)
+                if (processFilterIntent)
                 {
-                    case FilterCommand.Filter:
-                        {
-                            SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = _logFileManager.ApplyColor(
-                                _logFileManager.ApplyFilter(
-                                    logTab,
-                                    logFile,
-                                    filterFileItems,
-                                    filterIntent),
-                                filterFileItems);
-                            SetCurrentStatus(CurrentStatusSetting.filtered);
-                            break;
-                        }
-                    case FilterCommand.Hide:
-                        {
-                            SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
-                            SetCurrentStatus(CurrentStatusSetting.filtered);
-                            break;
-                        }
-                    case FilterCommand.ShowAll:
-                        {
-                            SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
-                            logTab.ContentList = logFile.ContentItems;
-                            break;
-                        }
+                    SetCurrentStatus(CurrentStatusSetting.filtering);
 
-                    case FilterCommand.Unknown:
-                    default:
-                        {
-                            break;
-                        }
+                    switch (filterIntent)
+                    {
+                        case FilterCommand.Filter:
+                            {
+                                SetStatus(string.Format("switch:Filter: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = _logFileManager.ApplyColor(
+                                    _logFileManager.ApplyFilter(
+                                        logTab,
+                                        logFile,
+                                        filterFileItems,
+                                        filterIntent),
+                                    filterFileItems);
+                                SetCurrentStatus(CurrentStatusSetting.filtered);
+                                break;
+                            }
+                        case FilterCommand.Hide:
+                            {
+                                SetStatus(string.Format("switch:Hide: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
+                                SetCurrentStatus(CurrentStatusSetting.filtered);
+                                break;
+                            }
+                        case FilterCommand.ShowAll:
+                            {
+                                SetStatus(string.Format("switch:ShowAll: filterIntent:{0}", filterIntent));
+                                logTab.ContentList = logFile.ContentItems;
+                                break;
+                            }
+
+                        case FilterCommand.Unknown:
+                        default:
+                            {
+                                break;
+                            }
+                    }
                 }
 
                 // update line total counts
@@ -818,7 +825,7 @@ namespace TextFilter
             return _previousFilterFileItems;
         }
 
-        private bool IsHiding()
+        public bool IsHiding()
         {
             // if count the same then assume it is not filtered
             try

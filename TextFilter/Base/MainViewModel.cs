@@ -397,14 +397,29 @@ namespace TextFilter
             switch (dialog.WaitForResult())
             {
                 case OptionsDialog.OptionsDialogResult.apply:
-                    string args = string.Format("/filter: \"{0}\" /log: \"{1}\"",
-                        string.Join("\";\"", Settings.CurrentFilterFiles),
-                        string.Join("\";\"", Settings.CurrentLogFiles));
-                    Settings.Save();
-                    CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args);
-                    Debug.Print(args);
-                    Application.Current.Shutdown();
-                    break;
+                    {
+                        StringBuilder args = new StringBuilder();
+                        if (Settings.CurrentFilterFiles.Count > 0)
+                        {
+                            args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
+                        }
+
+                        if (Settings.CurrentLogFiles.Count > 0)
+                        {
+                            if(args.Length > 0)
+                            {
+                                args.Append(" ");
+                            }
+
+                            args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
+                        }
+
+                        Settings.Save();
+                        CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+                        Debug.Print(args.ToString());
+                        Application.Current.Shutdown();
+                        break;
+                    }
                 //case OptionsDialog.OptionsDialogResult.cancel:
                 //    Settings = configFileCache.ShallowCopy();
                 //    break;
@@ -460,7 +475,7 @@ namespace TextFilter
         private void AfterLaunch(bool silent)
         {
             // force update of shared collection menu
-            var oc = _FilterViewModel.SharedCollection;
+            var oc = _filterViewModel.SharedCollection;
             VersionCheck(silent);
         }
 
