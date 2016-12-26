@@ -347,21 +347,6 @@ namespace TextFilter
             }
         }
 
-        public void ListViewSelectionChangedExecuted(object sender)
-        {
-            if (sender is ListView)
-            {
-                if ((sender as ListView).SelectedItem != null)
-                {
-                    ((ListViewItem)(sender as ListView).SelectedItem).BringIntoView();
-                }
-            }
-            else
-            {
-                Debug.Print("listviewselectionchanged but invalid call");
-            }
-        }
-
         public void SettingsExecuted(object sender)
         {
             TextFilterSettings configFileCache = Settings.ShallowCopy();
