@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -374,26 +375,7 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        StringBuilder args = new StringBuilder();
-                        if (Settings.CurrentFilterFiles.Count > 0)
-                        {
-                            args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
-                        }
-
-                        if (Settings.CurrentLogFiles.Count > 0)
-                        {
-                            if (args.Length > 0)
-                            {
-                                args.Append(" ");
-                            }
-
-                            args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
-                        }
-
-                        Settings.Save();
-                        CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
-                        Debug.Print(args.ToString());
-                        Application.Current.Shutdown();
+                        Restart();
                         break;
                     }
                 //case OptionsDialog.OptionsDialogResult.cancel:
@@ -429,6 +411,30 @@ namespace TextFilter
                 default:
                     break;
             }
+        }
+
+        private void Restart()
+        {
+            StringBuilder args = new StringBuilder();
+            if (Settings.CurrentFilterFiles.Count > 0)
+            {
+                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
+            }
+
+            if (Settings.CurrentLogFiles.Count > 0)
+            {
+                if (args.Length > 0)
+                {
+                    args.Append(" ");
+                }
+
+                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
+            }
+
+            Settings.Save();
+            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+            Debug.Print(args.ToString());
+            Application.Current.Shutdown();
         }
 
         public void VersionCheckExecuted(object sender)
@@ -484,26 +490,29 @@ namespace TextFilter
 
         private void VersionCheck(bool silent)
         {
+            string destFile = string.Empty;
+            string downloadLocation = string.Empty;
+            string message = string.Empty;
+            string version = string.Empty;
+
             try
             {
                 if (string.IsNullOrEmpty(Settings.VersionCheckFile))
                 {
+                    message = "version check url not specified";
+
                     if (silent)
                     {
-                        SetStatus("VersionCheckExecuted:version check url not specified");
+                        SetStatus(message);
                     }
                     else
                     {
-                        MessageBox.Show("version check url not specified");
+                        MessageBox.Show(message);
                     }
-
                     return;
                 }
-
-                string version = string.Empty;
+               
                 string workingVersion = Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion;
-                string downloadLocation = string.Empty;
-                string destFile = string.Empty;
                 string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
                 XmlDocument doc = new XmlDocument();
@@ -518,15 +527,7 @@ namespace TextFilter
                 }
                 if (string.IsNullOrEmpty(downloadLocation))
                 {
-                    string message = "unable to check version: " + Settings.VersionCheckFile;
-                    if (silent)
-                    {
-                        SetStatus("VersionCheck:" + message);
-                    }
-                    else
-                    {
-                        MessageBox.Show(message);
-                    }
+                    message = "unable to check version: " + Settings.VersionCheckFile;
                 }
                 else if (string.Compare(version, workingVersion, true) > 0)
                 {
@@ -545,19 +546,49 @@ namespace TextFilter
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
                             (new System.Net.WebClient()).DownloadFile(downloadLocation, downloadZip);
-                            MessageBox.Show(string.Format("New version has been downloaded from: {0} \n to: {1}.\nExtract zip and restart.", downloadLocation, downloadZip));
-                            CreateProcess("explorer.exe", workingDir);
+
+                            string downloadZipDir = string.Format("{0}-{1}",Path.GetFileNameWithoutExtension(downloadZip),version);
+
+                            if (Directory.Exists(downloadZipDir))
+                            {
+                                Directory.Delete(downloadZipDir);
+                            }
+
+                            // extract zip
+                            ZipFile.ExtractToDirectory(downloadZip, downloadZipDir);
+                            File.Delete(downloadZip);
+
+                            string currentExe = Process.GetCurrentProcess().MainModule.FileName;
+                            //string currentConfig = currentExe + ".config";
+                            string currentProcessName = Process.GetCurrentProcess().MainModule.ModuleName;
+                            string newExe = string.Format("{0}\\{1}", downloadZipDir, currentProcessName);
+                            //string newConfig = newExe + ".config";
+
+                            // overwrite exe
+                            File.Move(currentExe, currentExe + ".old");
+                            File.Copy(newExe, currentExe, true);
+
+                            // todo: merge configs?
+                            Restart();
                         }
                     }
                 }
+                else if (string.Compare(version, workingVersion, true) < 0)
+                {
+                    message = string.Format("running version is newer. running ver: {0} update ver: {1}", workingVersion, version);
+                }
                 else
                 {
-                    string message = "version is same: " + workingVersion;
-                    if (silent)
-                    {
-                        SetStatus("VersionCheck:" + message);
-                    }
-                    else
+                    message = "version is same: " + workingVersion;
+                }
+
+                if (silent)
+                {
+                    SetStatus("VersionCheck:" + message);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(message);
                     }
