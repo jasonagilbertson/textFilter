@@ -25,4 +25,4 @@ TextFilter is a utility designed to make filtering text files more efficient by 
 - **Opening current file view into new view** - this is another way to reduce the data set that is being parsed. An example of this is if you have a multi gigabyte log file but are only interested in a small portion of it. Create a filter like a time filter to narrow down to the area of interest, and open into a new view. Now all new filtering can be done on just the new view which will be faster and use less RAM.
 - **Shared filters** - setting 'shared filters to a unc location allows the filters to be centralized for multiple users to use.
 
-![](../TextFilter/Images/tf-shared-filter-context-1.png)		
+![](../TextFilter/Images/tf-shared-filter-context-2.png)		
