@@ -1,8 +1,25 @@
 ![](../TextFilter/Images/ico.png)
 
 # TextFilter Creating a Filter
+## String filters
+TextFilter now defaults to 'string' filters instead of 'regex' filters to allow easier filtering.
+String filters are literal filters with no 'escaping' or pattern matching abilities.
+There are two operands that can be used in this utility however which are 'AND' and 'OR'
+### Example file data:
+1. this is a test
+2. this is another test
+3. this is the last test
+4. this is now finished
 
-Creating a filter is not as scary as it looks. Filters can be as easy or as complicated as you want them to be. The same goes for regex in general. Remember you can always start off with simple strings and work your way into the true capabilities of regex. 
+### Example string filters:
+- 'this' would match first 3 lines in above file data
+- 'another' would match the 2nd line in above file data
+- 'another OR finished' would match the 2nd and 4th lines in above file data
+- 'this AND finished' would match the 4th line in above file data
+- 'this OR is AND test' would match the first 3 lines in above file data
+
+## Regex filters
+dCreating a filter using regex is not as scary as it looks. Filters can be as easy or as complicated as you want them to be. The same goes for regex in general. Remember you can always start off with simple strings and work your way into the true capabilities of regex. 
 
 Regex is a common text filtering type language across many programming languages. PowerShell, C++, .net, java, pearl, and even findstr.exe in command prompt all use regex and have very similar syntax just to name a few. Learning how to use regex will make parsing log files quicker and easier. There are many sites that have documentation around Regex. To be clear, I only know a fraction of the capability provided by regex but what little I know helps tremendously. 
 
