@@ -26,3 +26,4 @@ TextFilter is a utility designed to make filtering text files more efficient by 
 - **Shared filters** - setting 'shared filters to a unc location allows the filters to be centralized for multiple users to use.
 
 [image:window-image-2.png]		
+![](./TextFilter/Images/tf-shared-filter-context-1.png)		
