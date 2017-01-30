@@ -234,6 +234,7 @@ namespace TextFilter
                 }
                 else
                 {
+                    PreviousIndex = SelectedIndex;
                     return;
                 }
 
