@@ -444,7 +444,6 @@
     <Resource Include="Images\tf-filter-pane-context-1.png" />
     <Resource Include="Images\tf-goto-line-1.png" />
     <Resource Include="Images\tf-line-totals-1.png" />
-    <Resource Include="Images\tf-status-box-1.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\tf-window-image-1.png" />

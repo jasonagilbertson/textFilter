@@ -1808,6 +1808,17 @@
                                   InputGestureText="Ctrl+O"
                                   Style="{DynamicResource MenuItemStyle1}" />
                         <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                                  BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                                  Command="{Binding LogViewModel.NewCommand}"
+                                  CommandParameter="{Binding}"
+                                  Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                                  Header="open view in _new tab"
+                                  InputGestureText="Ctrl+N"
+                                  Style="{DynamicResource MenuItemStyle1}" />
+                        <MenuItem Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"
                                   BorderBrush="{Binding Source={StaticResource settings},
                                                         Path=Settings.BackgroundColor}"
