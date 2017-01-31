@@ -3,7 +3,7 @@ $ErrorActionPreference = 'Stop';
 
 $packageName= 'textFilter'
 $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
-$url        = ''
+$url        = 'https://cdn.rawgit.com/jasonagilbertson/textFilter/releases/download/textFilter.exe.zip/textfilter.exe.zip'
 
 $packageArgs = @{
   packageName   = $packageName

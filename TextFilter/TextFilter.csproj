@@ -260,6 +260,9 @@
     <None Include="chocolatey\ReadMe.md" />
     <None Include="chocolatey\textfilter.0.7.0.009.nupkg" />
     <None Include="chocolatey\textfilter.nuspec" />
+    <None Include="chocolatey\tools\chocolateybeforemodify.ps1" />
+    <None Include="chocolatey\tools\chocolateyinstall.ps1" />
+    <None Include="chocolatey\tools\chocolateyuninstall.ps1" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -454,6 +457,10 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="textFilter.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="chocolatey\tools\LICENSE.txt" />
+    <Resource Include="chocolatey\tools\VERIFICATION.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
