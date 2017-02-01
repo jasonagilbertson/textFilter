@@ -10,31 +10,40 @@
 ## Auto Uninstaller should be able to detect and handle registry uninstalls (if it is turned on, it is in preview for 0.9.9).
 ## - https://chocolatey.org/docs/helpers-uninstall-chocolatey-package
 
-$ErrorActionPreference = 'Stop'; # stop on all errors
+$ErrorActionPreference = 'Continue'
 
-$packageName = 'textFilter'
-$softwareName = 'textFilter*' #part or all of the Display Name as you see it in Programs and Features. It should be enough to be unique
-$installerType = 'MSI' 
-#$installerType = 'EXE' 
+$destFileBaseName = $softwareName = $packageName = "textFilter"
+$destFileBaseNameExe = "textFilter.exe"
+$toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)"
 
-$silentArgs = '/qn /norestart'
-# https://msdn.microsoft.com/en-us/library/aa376931(v=vs.85).aspx
-$validExitCodes = @(0, 3010, 1605, 1614, 1641)
-if ($installerType -ne 'MSI') {
-  # The below is somewhat naive and built for EXE installers
-  # Uncomment matching EXE type (sorted by most to least common)
-  #$silentArgs = '/S'           # NSIS
-  #$silentArgs = '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' # Inno Setup
-  #$silentArgs = '/s'           # InstallShield
-  #$silentArgs = '/s /v"/qn"' # InstallShield with MSI
-  #$silentArgs = '/s'           # Wise InstallMaster
-  #$silentArgs = '-s'           # Squirrel
-  #$silentArgs = '-q'           # Install4j
-  #$silentArgs = '-s -u'        # Ghost
-  # Note that some installers, in addition to the silentArgs above, may also need assistance of AHK to achieve silence.
-  #$silentArgs = ''             # none; make silent with input macro script like AutoHotKey (AHK)
-                                #       https://chocolatey.org/packages/autohotkey.portable
-  $validExitCodes = @(0)
+$allUsers = "$($env:ALLUSERSPROFILE)\Microsoft\Windows\Start Menu\Programs"
+$currentUser = "$($env:USERPROFILE)\Start Menu\Programs"
+$programDir = "$($env:ProgramFiles)\$($destFileBaseName)"
+$programDirFile = "$($programDir)\$($destFileBaseNameExe)"
+
+$error.Clear()
+
+# unregister fta
+Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$($programDirFile)`" /unregisterfta" -WorkingDirectory $programDir -NoNewWindow
+
+# cleanup old program files
+if([IO.Directory]::Exists($programDir))
+{
+    [IO.Directory]::Delete($programDir, $true)
+}
+    
+$error.Clear()
+
+# delete shortcut in allusers start menu 
+if([IO.File]::Exists("$($allusers)\$($destFileBaseName).lnk"))
+{
+    [IO.File]::Delete("$($allusers)\$($destFileBaseName).lnk")
+}
+
+# delete shortcut in current user start menu
+if([IO.File]::Exists("$($currentuser)\$($destFileBaseName).lnk"))
+{
+    [IO.File]::Delete("$($currentuser)\$($destFileBaseName).lnk")
 }
 
 $uninstalled = $false
@@ -46,19 +55,19 @@ $uninstalled = $false
 [array]$key = Get-UninstallRegistryKey -SoftwareName $softwareName
 
 if ($key.Count -eq 1) {
-  $key | % { 
+    $key | % { 
     $file = "$($_.UninstallString)"
 
     if ($installerType -eq 'MSI') {
-      # The Product Code GUID is all that should be passed for MSI, and very 
-      # FIRST, because it comes directly after /x, which is already set in the 
-      # Uninstall-ChocolateyPackage msiargs (facepalm).
-      $silentArgs = "$($_.PSChildName) $silentArgs"
+        # The Product Code GUID is all that should be passed for MSI, and very 
+        # FIRST, because it comes directly after /x, which is already set in the 
+        # Uninstall-ChocolateyPackage msiargs (facepalm).
+        $silentArgs = "$($_.PSChildName) $silentArgs"
 
-      # Don't pass anything for file, it is ignored for msi (facepalm number 2) 
-      # Alternatively if you need to pass a path to an msi, determine that and 
-      # use it instead of the above in silentArgs, still very first
-      $file = ''
+        # Don't pass anything for file, it is ignored for msi (facepalm number 2) 
+        # Alternatively if you need to pass a path to an msi, determine that and 
+        # use it instead of the above in silentArgs, still very first
+        $file = ''
     }
 
     Uninstall-ChocolateyPackage -PackageName $packageName `
@@ -66,14 +75,14 @@ if ($key.Count -eq 1) {
                                 -SilentArgs "$silentArgs" `
                                 -ValidExitCodes $validExitCodes `
                                 -File "$file"
-  }
+    }
 } elseif ($key.Count -eq 0) {
-  Write-Warning "$packageName has already been uninstalled by other means."
+    Write-Warning "$packageName has already been uninstalled by other means."
 } elseif ($key.Count -gt 1) {
-  Write-Warning "$key.Count matches found!"
-  Write-Warning "To prevent accidental data loss, no programs will be uninstalled."
-  Write-Warning "Please alert package maintainer the following keys were matched:"
-  $key | % {Write-Warning "- $_.DisplayName"}
+    Write-Warning "$key.Count matches found!"
+    Write-Warning "To prevent accidental data loss, no programs will be uninstalled."
+    Write-Warning "Please alert package maintainer the following keys were matched:"
+    $key | % {Write-Warning "- $_.DisplayName"}
 }
 
 
