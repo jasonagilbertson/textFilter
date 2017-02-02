@@ -28,9 +28,9 @@ if(!(Get-OSArchitectureWidth -Compare 64))
     exit 1
 }
 
-if(!($PSVersionTable.CLRVersion -gt 4.0.0.0))
+if(!($PSVersionTable.CLRVersion -ge 4.0.0.0))
 {
-    Write-Warning "package only supported on CLR > 4.0"
+    Write-Warning "package only supported on CLR greater or equal to 4.0.0.0"
     exit 1
 }
 
@@ -38,13 +38,12 @@ if([IO.File]::Exists($destFileNameConfig))
 {
     # copy config file to bak
     [IO.File]::Copy($destFileNameConfig, $destFileNameConfigBack, $true)
-
 }
 
 # download url zip, extract, and install
+Install-ChocolateyZipPackage -PackageName $packageName -Url $url -UnzipLocation $programDir #-checksum $checksum -checksumtype "sha256"
 #Get-ChocolateyWebFile -PackageName $packageName -FileFullPath $destFile -Url $url #-checksum $checksum -checksumtype "sha256"
 #Get-ChocolateyUnzip $destFile $programDir
-Install-ChocolateyZipPackage -PackageName $packageName -Url $url -UnzipLocation $programDir #-checksum $checksum -checksumtype "sha256"
 
 # register fta
 Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$($programDirFile)`" /registerfta" -WorkingDirectory $programDir -NoNewWindow -Wait
@@ -57,7 +56,6 @@ if([IO.File]::Exists($destFileNameConfigBack))
 {
     # copy config file to bak
     [IO.File]::Copy($destFileNameConfigBack, $destFileNameConfig, $true)
-
 }
 
 # check shared filter in config file

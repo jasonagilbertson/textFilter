@@ -257,7 +257,6 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="chocolatey\ReadMe.md" />
     <None Include="chocolatey\textfilter.0.7.0.009.nupkg" />
     <None Include="chocolatey\textfilter.nuspec" />
     <None Include="chocolatey\tools\chocolateybeforemodify.ps1" />
