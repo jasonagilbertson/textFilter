@@ -22,9 +22,15 @@ $programDirFile = "$($programDir)\$($destFileBaseNameExe)" # c:\program files\te
 
 $error.Clear()
 
-if(Get-OSArchitectureWidth -ne 64)
+if(!(Get-OSArchitectureWidth -Compare 64))
 {
     Write-Warning "package only supported on x64"
+    exit 1
+}
+
+if(!($PSVersionTable.CLRVersion -gt 4.0.0.0))
+{
+    Write-Warning "package only supported on CLR > 4.0"
     exit 1
 }
 
