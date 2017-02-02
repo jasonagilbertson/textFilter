@@ -41,15 +41,15 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <iconUrl>https://cdn.rawgit.com/jasonagilbertson/textFilter/e30d359f/TextFilter/Images/ico.png</iconUrl>
     <!-- <copyright>Year Software Vendor</copyright> -->
     <!-- If there is a license Url available, it is is required for the community feed -->
-    <licenseUrl>https://cdn.rawgit.com/jasonagilbertson/textFilter/master/LICENSE</licenseUrl>
+    <licenseUrl>https://raw.githubusercontent.com/jasonagilbertson/textFilter/master/LICENSE</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <!--<projectSourceUrl>Software Source Location - is the software FOSS somewhere? Link to it with this</projectSourceUrl>-->
     <docsUrl>https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md</docsUrl>
     <!--<mailingListUrl></mailingListUrl>-->
     <!--<bugTrackerUrl></bugTrackerUrl>-->
     <tags>textfilter textanalysis</tags>
-    <summary>TextFilter is a utility designed to make filtering text files more efficient by using either strings or regex patterns.</summary>
-    <description>TextFilter is a utility designed to make filtering text files more efficient by using either strings or regex patterns.</description>
+    <summary>TextFilter is a GUI utility designed to make filtering text files more efficient by using either strings or regex patterns.</summary>
+    <description>TextFilter can be used to quickly filter different types of text files using filter files that can highlight lines based on string or regex matches.</description>
     <!-- <releaseNotes>__REPLACE_OR_REMOVE__MarkDown_Okay</releaseNotes> -->
     <!-- =============================== -->      
 

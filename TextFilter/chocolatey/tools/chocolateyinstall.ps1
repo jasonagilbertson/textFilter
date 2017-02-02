@@ -1,4 +1,5 @@
 ﻿# chocolatey install for textfilter package jagilber
+# 170202
 
 $ErrorActionPreference = 'Continue'
 
@@ -10,6 +11,8 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)" # c:\pr
 $destFileNameZip = [IO.Path]::GetFileName($url) # textfilter.exe.zip
 $destFile = "$($toolsDir)\$([IO.Path]::GetFileName($url))" # c:\programdata\chocolatey\lib\textfilter\tools\textfilter.exe.zip
 $destFileBaseNameExe = [IO.Path]::GetFileNameWithoutExtension($destFileNameZip) # textfilter.exe
+$destFileNameConfig = "$($destFileBaseNameExe).config" # textfilter.exe.config
+$destFileNameConfigBack = "$($destFileNameConfig).bak" # textfilter.exe.config.bak
 $packageName = $destFileBaseName = [IO.Path]::GetFileNameWithoutExtension($destFileBaseNameExe) # textfilter
 
 $allUsers = "$($env:ALLUSERSPROFILE)\Microsoft\Windows\Start Menu\Programs"
@@ -19,12 +22,23 @@ $programDirFile = "$($programDir)\$($destFileBaseNameExe)" # c:\program files\te
 
 $error.Clear()
 
+if(Get-OSArchitectureWidth -ne 64)
+{
+    Write-Warning "package only supported on x64"
+    exit 1
+}
+
+if([IO.File]::Exists($destFileNameConfig))
+{
+    # copy config file to bak
+    [IO.File]::Copy($destFileNameConfig, $destFileNameConfigBack, $true)
+
+}
+
 # download url zip, extract, and install
 #Get-ChocolateyWebFile -PackageName $packageName -FileFullPath $destFile -Url $url #-checksum $checksum -checksumtype "sha256"
-Install-ChocolateyZipPackage -PackageName $packageName -Url $url -UnzipLocation $programDir #-checksum $checksum -checksumtype "sha256"
-    
-# unzip
 #Get-ChocolateyUnzip $destFile $programDir
+Install-ChocolateyZipPackage -PackageName $packageName -Url $url -UnzipLocation $programDir #-checksum $checksum -checksumtype "sha256"
 
 # register fta
 Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$($programDirFile)`" /registerfta" -WorkingDirectory $programDir -NoNewWindow -Wait
@@ -32,6 +46,25 @@ Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$($programDirFile)`" /regi
 #Install-ChocolateyFileAssociation -Extension ".log" $programDirFile
 #Install-ChocolateyFileAssociation -Extension ".rvf" $programDirFile
 
+# put existing config file back
+if([IO.File]::Exists($destFileNameConfigBack))
+{
+    # copy config file to bak
+    [IO.File]::Copy($destFileNameConfigBack, $destFileNameConfig, $true)
+
+}
+
+# check shared filter in config file
+if(Test-Connection -ComputerName "tkfiltoolbox" -ErrorAction SilentlyContinue -Count 1)
+{
+    $xml = [xml](get-content $destFileNameConfig)
+    $x = select-xml -xml $xml -XPath "//configuration/appSettings/add" | Where-Object { $_.Node.Key -ieq 'SharedFilterDirectory' }
+    if([string]::IsNullOrEmpty($x.Node.value))
+    {
+        $x.Node.value = "\\tkfiltoolbox\tools\regexViewer\shared-filters-multi"
+        $xml.Save($destFileNameConfig)
+    }
+}
 
 $error.Clear()
 
