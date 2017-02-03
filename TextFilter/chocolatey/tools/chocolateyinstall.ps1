@@ -11,14 +11,15 @@ $toolsDir   = "$(Split-Path -parent $MyInvocation.MyCommand.Definition)" # c:\pr
 $destFileNameZip = [IO.Path]::GetFileName($url) # textfilter.exe.zip
 $destFile = "$($toolsDir)\$([IO.Path]::GetFileName($url))" # c:\programdata\chocolatey\lib\textfilter\tools\textfilter.exe.zip
 $destFileBaseNameExe = [IO.Path]::GetFileNameWithoutExtension($destFileNameZip) # textfilter.exe
-$destFileNameConfig = "$($destFileBaseNameExe).config" # textfilter.exe.config
-$destFileNameConfigBack = "$($destFileNameConfig).bak" # textfilter.exe.config.bak
 $packageName = $destFileBaseName = [IO.Path]::GetFileNameWithoutExtension($destFileBaseNameExe) # textfilter
 
 $allUsers = "$($env:ALLUSERSPROFILE)\Microsoft\Windows\Start Menu\Programs"
 $currentUser = "$($env:USERPROFILE)\Start Menu\Programs"
 $programDir = "$($env:ProgramFiles)\$($destFileBaseName)" # c:\program files\textfilter
 $programDirFile = "$($programDir)\$($destFileBaseNameExe)" # c:\program files\textfilter\textfilter.exe
+
+$destFileNameConfig = "$($programDirFile).config" # c:\program files\textfilter\textfilter.exe.config
+$destFileNameConfigBack = "$($destFileNameConfig).bak" # c:\program files\textfilter\textfilter.exe.config.bak
 
 $error.Clear()
 
@@ -57,6 +58,10 @@ if([IO.File]::Exists($destFileNameConfigBack))
     # copy config file to bak
     [IO.File]::Copy($destFileNameConfigBack, $destFileNameConfig, $true)
 }
+
+# set perms as choco doesnt give users ability to save modifications to config file
+cacls "`"$($programDir)`"" /E /G Users:F
+cacls "`"$($destFileNameConfig)`"" /E /G Users:F
 
 # check shared filter in config file
 if(Test-Connection -ComputerName "tkfiltoolbox" -ErrorAction SilentlyContinue -Count 1)
