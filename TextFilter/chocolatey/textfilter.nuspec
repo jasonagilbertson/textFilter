@@ -47,7 +47,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <docsUrl>https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md</docsUrl>
     <!--<mailingListUrl></mailingListUrl>-->
     <!--<bugTrackerUrl></bugTrackerUrl>-->
-    <tags>textfilter textanalysis</tags>
+    <tags>textfilter textanalysis text log analysis</tags>
     <summary>TextFilter is a GUI utility designed to make filtering text files more efficient by using either strings or regex patterns.</summary>
     <description>TextFilter can be used to quickly filter different types of text files using filter files that can highlight lines based on string or regex matches.</description>
     <!-- <releaseNotes>__REPLACE_OR_REMOVE__MarkDown_Okay</releaseNotes> -->

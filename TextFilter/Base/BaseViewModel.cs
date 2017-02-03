@@ -466,7 +466,9 @@ namespace TextFilter
                     {
                         Command = SharedCommand,
                         CommandParameter = file,
-                        Header = file.Replace(directory, "").TrimStart('\\')
+                        Header = file.Replace(directory, "").TrimStart('\\'),
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor
                     };
 
                     menuCollection.Add(wpfMenuItem);
@@ -474,9 +476,13 @@ namespace TextFilter
 
                 foreach (string dir in new List<string>(dirs))
                 {
-                    MenuItem dItem = new MenuItem();
-                    dItem.Header = dir.Replace(directory, "").TrimStart('\\');
-                    dItem.ItemsSource = new ObservableCollection<MenuItem>();
+                    MenuItem dItem = new MenuItem()
+                    {
+                        Header = dir.Replace(directory, "").TrimStart('\\'),
+                        ItemsSource = new ObservableCollection<MenuItem>(),
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor
+                    };
 
                     foreach (MenuItem item in Menubuilder(dir))
                     {
