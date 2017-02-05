@@ -15,6 +15,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -493,6 +494,11 @@ namespace TextFilter
                     dataGrid.ScrollIntoView(logFileItem);
                     dataGrid.SelectedItem = logFileItem;
                     dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
+                    DataGridRow selectedRow = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+                    dataGrid.Focus();
+                    FocusManager.SetIsFocusScope(selectedRow, true);
+                    FocusManager.SetFocusedElement(selectedRow, selectedRow);
+
                 }
             }
             catch (Exception e)
