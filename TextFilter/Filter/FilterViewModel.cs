@@ -326,17 +326,13 @@ namespace TextFilter
         {
             get
             {
-                if ((_sharedCollection == null || _sharedCollection.Count < 1) | Settings.RefreshSharedFilterDirectory)
-                {
-                    Settings.RefreshSharedFilterDirectory = false;
-                    _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
-                }
-
+                _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
                 return _sharedCollection;
             }
             set
             {
                 _sharedCollection = value;
+                OnPropertyChanged("SharedCollection");
             }
         }
 

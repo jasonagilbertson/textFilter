@@ -716,7 +716,7 @@
                 <TextBox Name="textboxLineTotals"
                          Grid.Column="3"
                          Height="25"
-                         Margin="40,0,5,0"
+                         Margin="40,0,0,0"
                          HorizontalAlignment="Stretch"
                          VerticalAlignment="Bottom"
                          Background="{Binding Source={StaticResource settings},
@@ -832,7 +832,7 @@
                                             Gesture="F3" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
-                                <ContextMenu HasDropShadow="True">
+                                <ContextMenu HasDropShadow="True" >
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
                                               BorderBrush="{Binding Source={StaticResource settings},

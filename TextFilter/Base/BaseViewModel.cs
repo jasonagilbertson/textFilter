@@ -556,10 +556,18 @@ namespace TextFilter
             OpenFileExecuted(sender);
         }
 
+        public void Refresh()
+        {
+            // force reset of menus for shared filters. part of F5 refresh
+            _FilterViewModel.SharedCollection = Menubuilder(Settings.SharedFilterDirectory);
+        }
+
         public void ReloadFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
             SetStatus("ReloadFile:enter");
+
+            Refresh();
 
             if (IsValidTabIndex())
             {
@@ -570,8 +578,6 @@ namespace TextFilter
                     return;
                 }
 
-                // force reset of menus for shared filters
-                Settings.Refresh();
                 ViewManager.CloseFile(tabItem.Tag);
                 RemoveTabItem(tabItem);
                 file = ViewManager.OpenFile(tabItem.Tag);
@@ -715,6 +721,7 @@ namespace TextFilter
                         SetStatus("DeleteTempFile: deleting temporary file:" + item.Tag);
                         File.Delete(item.Tag);
                     }
+
                     return true;
                 }
 

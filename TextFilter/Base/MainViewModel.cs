@@ -411,6 +411,8 @@ namespace TextFilter
                 default:
                     break;
             }
+
+            _FilterViewModel.Refresh();
         }
 
         private void Restart()

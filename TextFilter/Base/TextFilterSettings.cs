@@ -428,8 +428,6 @@ namespace TextFilter
             }
         }
 
-        public bool RefreshSharedFilterDirectory { get; set; }
-
         public bool SaveSessionInformation
         {
             get
@@ -634,13 +632,6 @@ namespace TextFilter
             }
 
             return true;
-        }
-
-        public void Refresh()
-        {
-            // f5 from gui
-            // only thing that needs refreshed are the shared menus
-            RefreshSharedFilterDirectory = true;
         }
 
         public void RemoveAllFilters()
