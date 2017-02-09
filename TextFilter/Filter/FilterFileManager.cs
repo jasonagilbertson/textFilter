@@ -119,14 +119,14 @@ namespace TextFilter
 
             if (results == null | results != null && results.Count() == 0 | filterIndex >= 0)
             {
-                // no valid filters
+                // no empty / new filter item or index ge 0 (insert or remove)
                 FilterFileItem fileItem = new FilterFileItem();
 
                 filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
 
                 SetStatus("ManageNewFilterFileItem:adding new line");
-                //filterFile.AddPatternNotification(fileItem, true);
+
                 if (filterIndex >= 0 && !remove)
                 {
                     // insert in new enabled filter item at specified index

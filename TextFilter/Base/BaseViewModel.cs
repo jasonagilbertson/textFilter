@@ -501,23 +501,7 @@ namespace TextFilter
             }
         }
 
-        public void NewFileExecuted(object sender)
-        {
-            IFile<T> file = default(IFile<T>);
-
-            string tempTag = GenerateTempTagName();
-
-            if (IsValidTabIndex())
-            {
-                file = ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
-            }
-            else
-            {
-                file = ViewManager.NewFile(tempTag);
-            }
-
-            AddTabItem(file);
-        }
+        public abstract void NewFileExecuted(object sender);
 
         public void OpenDropExecuted(object sender)
         {

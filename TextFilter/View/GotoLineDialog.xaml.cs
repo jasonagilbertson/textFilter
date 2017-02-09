@@ -6,11 +6,16 @@ namespace TextFilter
 {
     public partial class GotoLineDialog : Window
     {
-        public GotoLineDialog()
+        public GotoLineDialog(int index)
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             textBoxLineNumber.Focus();
+
+            if(index > 0)
+            {
+                textBoxLineNumber.Text = index.ToString();
+            }
         }
 
         public void Disable()

@@ -144,21 +144,6 @@ namespace TextFilter
             set { _controlLostFocusCommand = value; }
         }
 
-        public Command CopyCommand
-        {
-            get
-            {
-                if (_copyCommand == null)
-                {
-                    _copyCommand = new Command(CopyExecuted);
-                }
-                _copyCommand.CanExecute = true;
-
-                return _copyCommand;
-            }
-            set { _copyCommand = value; }
-        }
-
         public string CurrentStatus
         {
             get
@@ -291,42 +276,6 @@ namespace TextFilter
         public void ColorComboSelected()
         {
             _color.Clear();
-        }
-
-        public void CopyExecuted(object contentList)
-        {
-            List<ListBoxItem> c_contentList = new List<ListBoxItem>();
-
-            try
-            {
-                if (contentList is List<ListBoxItem>)
-                {
-                    c_contentList = (List<ListBoxItem>)contentList;
-                }
-                else if (contentList is ObservableCollection<ListBoxItem>)
-                {
-                    c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
-                }
-                else
-                {
-                    return;
-                }
-
-                HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (ListBoxItem lbi in c_contentList)
-                {
-                    if (lbi != null && lbi.IsSelected)
-                    {
-                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
-                    }
-                }
-
-                htmlFragment.CopyListToClipboard();
-            }
-            catch (Exception ex)
-            {
-                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
-            }
         }
 
         public List<string> GetColorNames()

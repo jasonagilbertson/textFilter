@@ -304,10 +304,17 @@ namespace TextFilter
             else if (sender is ListBox)
             {
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
+                _selectedIndex = (sender as ListBox).SelectedIndex;
             }
             else if (sender is DataGrid)
             {
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
+                IFileItem item = (IFileItem)_selectedContent.FirstOrDefault();
+
+                if (item != null)
+                {
+                    _selectedIndex = item.Index;
+                }
             }
         }
 

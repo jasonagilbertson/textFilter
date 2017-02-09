@@ -419,12 +419,14 @@ namespace TextFilter
                 {
                     index = Convert.ToInt32(sender);
                 }
-                else
+                
+                if(index ==0)
                 {
-                    GotoLineDialog gotoDialog = new GotoLineDialog();
-
-                    index = gotoDialog.WaitForResult();
+                    index = SelectedTab.SelectedIndex;
                 }
+                    GotoLineDialog gotoDialog = new GotoLineDialog(index);
+                    index = gotoDialog.WaitForResult();
+                
 
                 SetStatus("gotoLine:" + index.ToString());
                 DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
@@ -540,6 +542,24 @@ namespace TextFilter
         {
             SetStatus("MouseWheelExecuted");
             throw new NotImplementedException();
+        }
+
+        public override void NewFileExecuted(object sender)
+        {
+            LogFile file = new LogFile();
+
+            string tempTag = GenerateTempTagName();
+
+            if (IsValidTabIndex())
+            {
+                file = (LogFile)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+            }
+            else
+            {
+                file = (LogFile)ViewManager.NewFile(tempTag);
+            }
+
+            AddTabItem(file);
         }
 
         public override void OpenFileExecuted(object sender)
