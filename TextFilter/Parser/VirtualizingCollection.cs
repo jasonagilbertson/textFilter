@@ -1,7 +1,13 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: VirtualizingCollection.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// ************************************************************************************
+
+// ***********************************************************************
 // <copyright file="Virtualizingcollection.cs" company="http://www.codeproject.com/Articles/34405/WPF-Data-Virtualization">
 //     Copyright © 2015
 // </copyright>
@@ -142,6 +148,11 @@ namespace TextFilter
             throw new NotSupportedException();
         }
 
+        int IList.Add(object value)
+        {
+            throw new NotSupportedException();
+        }
+
         public void CleanUpPages()
         {
             List<int> keys = new List<int>(_pageTouchTimes.Keys);
@@ -167,7 +178,17 @@ namespace TextFilter
             return false;
         }
 
+        bool IList.Contains(object value)
+        {
+            return Contains((T)value);
+        }
+
         public void CopyTo(T[] array, int arrayIndex)
+        {
+            throw new NotSupportedException();
+        }
+
+        void ICollection.CopyTo(Array array, int index)
         {
             throw new NotSupportedException();
         }
@@ -180,24 +201,9 @@ namespace TextFilter
             }
         }
 
-        void ICollection.CopyTo(Array array, int index)
-        {
-            throw new NotSupportedException();
-        }
-
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        int IList.Add(object value)
-        {
-            throw new NotSupportedException();
-        }
-
-        bool IList.Contains(object value)
-        {
-            return Contains((T)value);
         }
 
         int IList.IndexOf(object value)
@@ -205,22 +211,22 @@ namespace TextFilter
             return IndexOf((T)value);
         }
 
-        void IList.Insert(int index, object value)
-        {
-            Insert(index, (T)value);
-        }
-
-        void IList.Remove(object value)
-        {
-            throw new NotSupportedException();
-        }
-
         public int IndexOf(T item)
         {
             return -1;
         }
 
+        void IList.Insert(int index, object value)
+        {
+            Insert(index, (T)value);
+        }
+
         public void Insert(int index, T item)
+        {
+            throw new NotSupportedException();
+        }
+
+        void IList.Remove(object value)
         {
             throw new NotSupportedException();
         }

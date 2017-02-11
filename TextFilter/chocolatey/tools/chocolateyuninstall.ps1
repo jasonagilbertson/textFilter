@@ -22,7 +22,7 @@ $uninstalled = $false
 [array]$key = Get-UninstallRegistryKey -SoftwareName $softwareName
 
 if ($key.Count -eq 1) {
-    $key | % { 
+    $key | % {
     $file = "$($_.UninstallString)"
 
     Uninstall-ChocolateyPackage -PackageName $packageName `
@@ -40,7 +40,6 @@ if ($key.Count -eq 1) {
     $key | % {Write-Warning "- $_.DisplayName"}
 }
 
-
 ## OTHER HELPERS
 ## https://chocolatey.org/docs/helpers-reference
 Uninstall-ChocolateyZipPackage $packageName $packageNameZip # Only necessary if you did not unpack to package directory - see https://chocolatey.org/docs/helpers-uninstall-chocolatey-zip-package
@@ -52,7 +51,7 @@ if([IO.Directory]::Exists($programDir))
     [IO.Directory]::Delete($programDir, $true)
 }
 
-# delete shortcut in allusers start menu 
+# delete shortcut in allusers start menu
 if([IO.File]::Exists("$($allusers)\$($destFileBaseName).lnk"))
 {
     [IO.File]::Delete("$($allusers)\$($destFileBaseName).lnk")

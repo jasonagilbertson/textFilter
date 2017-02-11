@@ -556,8 +556,7 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}"
                               IsChecked="{Binding Path=FilterViewModel.QuickFindRegex,
-                                                  Mode=TwoWay}"
-                              Style="{DynamicResource ToggleButtonStyle1}" />
+                                                  Mode=TwoWay}" />
                 <ToggleButton Name="toggleButtonAND"
                               Width="30"
                               Height="25"
@@ -574,8 +573,7 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}"
                               IsChecked="{Binding Path=FilterViewModel.QuickFindAnd,
-                                                  Mode=TwoWay}"
-                              Style="{DynamicResource ToggleButtonStyle1}" />
+                                                  Mode=TwoWay}" />
                 <ToggleButton Name="toggleButtonOR"
                               Width="30"
                               Height="25"
@@ -592,8 +590,7 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}"
                               IsChecked="{Binding Path=FilterViewModel.QuickFindOr,
-                                                  Mode=TwoWay}"
-                              Style="{DynamicResource ToggleButtonStyle1}" />
+                                                  Mode=TwoWay}" />
                 <ToggleButton Name="toggleButtonNOT"
                               Width="30"
                               Height="25"
@@ -610,8 +607,7 @@
                               Foreground="{Binding Source={StaticResource settings},
                                                    Path=Settings.ForegroundColor}"
                               IsChecked="{Binding Path=FilterViewModel.QuickFindNot,
-                                                  Mode=TwoWay}"
-                              Style="{DynamicResource ToggleButtonStyle1}" />
+                                                  Mode=TwoWay}" />
                 <Label Name="labelQuickFind"
                        Grid.Column="0"
                        Width="75"
@@ -833,7 +829,7 @@
                                             Gesture="F3" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
-                                <ContextMenu HasDropShadow="True" >
+                                <ContextMenu HasDropShadow="True">
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
                                               BorderBrush="{Binding Source={StaticResource settings},
@@ -1458,9 +1454,9 @@
                                     </DataGridTextColumn.ElementStyle>
                                     <DataGridTextColumn.EditingElementStyle>
                                         <Style TargetType="TextBox">
-                                                <Setter Property="ContextMenu">
-                                                    <Setter.Value>
-                                                        <ContextMenu>
+                                            <Setter Property="ContextMenu">
+                                                <Setter.Value>
+                                                    <ContextMenu>
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
@@ -1515,9 +1511,9 @@
                                                                   Header="quick filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                     </ContextMenu>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
                                     </DataGridTextColumn.EditingElementStyle>
                                 </DataGridTextColumn>
 
@@ -1602,9 +1598,9 @@
                                                               Path=LogViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
-                                    <KeyBinding Key="N"
-                                                Modifiers="Control+Shift"
-                                                Command="{Binding Source={StaticResource mainViewModel},
+                                <KeyBinding Key="N"
+                                            Modifiers="Control+Shift"
+                                            Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.NewCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=PlacementTarget}" />
                                 <KeyBinding Key="Q"
@@ -1612,7 +1608,6 @@
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.QuickFindTextCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItem}" />
-
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">

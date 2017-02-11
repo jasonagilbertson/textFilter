@@ -77,7 +77,7 @@ if(Test-Connection -ComputerName "tkfiltoolbox" -ErrorAction SilentlyContinue -C
 
 $error.Clear()
 
-# create shortcut in allusers start menu 
+# create shortcut in allusers start menu
 Install-ChocolateyShortcut `
         -ShortcutFilePath "$($allUsers)\$($destFileBaseName).lnk" `
         -TargetPath $programDirFile `

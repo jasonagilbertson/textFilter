@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: FilterViewModel.cs
+// Created: 11/14/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-13-2015 ***********************************************************************
-// <copyright file="FilterViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -313,6 +312,7 @@ namespace TextFilter
                 }
             }
         }
+
         public Command QuickFindTextCommand
         {
             get
@@ -606,7 +606,7 @@ namespace TextFilter
         {
             SetStatus("InsertFilterItemExecuted");
             FilterFile filterFile = (FilterFile)CurrentFile();
-            
+
             if (filterFile != null)
             {
                 int filterIndex = 0;

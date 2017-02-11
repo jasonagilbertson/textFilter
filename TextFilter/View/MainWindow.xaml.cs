@@ -1,4 +1,13 @@
-﻿using System.IO;
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: MainWindow.xaml.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
+//
+// ************************************************************************************
+
+using System.IO;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;

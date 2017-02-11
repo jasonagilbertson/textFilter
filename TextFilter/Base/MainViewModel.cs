@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: mainviewmodel.cs
+// Created: 12/2/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="MainViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,8 +33,6 @@ namespace TextFilter
         private Command _controlGotFocusCommand;
 
         private Command _controlLostFocusCommand;
-
-        private Command _copyCommand;
 
         private string _currentStatus;
 
@@ -364,30 +361,6 @@ namespace TextFilter
             _FilterViewModel.Refresh();
         }
 
-        private void Restart()
-        {
-            StringBuilder args = new StringBuilder();
-            if (Settings.CurrentFilterFiles.Count > 0)
-            {
-                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
-            }
-
-            if (Settings.CurrentLogFiles.Count > 0)
-            {
-                if (args.Length > 0)
-                {
-                    args.Append(" ");
-                }
-
-                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
-            }
-
-            Settings.Save();
-            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
-            Debug.Print(args.ToString());
-            Application.Current.Shutdown();
-        }
-
         public void VersionCheckExecuted(object sender)
         {
             VersionCheck(false);
@@ -439,6 +412,30 @@ namespace TextFilter
             CurrentStatus = status;
         }
 
+        private void Restart()
+        {
+            StringBuilder args = new StringBuilder();
+            if (Settings.CurrentFilterFiles.Count > 0)
+            {
+                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
+            }
+
+            if (Settings.CurrentLogFiles.Count > 0)
+            {
+                if (args.Length > 0)
+                {
+                    args.Append(" ");
+                }
+
+                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
+            }
+
+            Settings.Save();
+            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+            Debug.Print(args.ToString());
+            Application.Current.Shutdown();
+        }
+
         private void VersionCheck(bool silent)
         {
             string destFile = string.Empty;
@@ -462,7 +459,7 @@ namespace TextFilter
                     }
                     return;
                 }
-               
+
                 string workingVersion = Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion;
                 string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
@@ -498,7 +495,7 @@ namespace TextFilter
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
                             (new System.Net.WebClient()).DownloadFile(downloadLocation, downloadZip);
 
-                            string downloadZipDir = string.Format("{0}-{1}",Path.GetFileNameWithoutExtension(downloadZip),version);
+                            string downloadZipDir = string.Format("{0}-{1}", Path.GetFileNameWithoutExtension(downloadZip), version);
 
                             if (Directory.Exists(downloadZipDir))
                             {

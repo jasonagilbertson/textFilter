@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: LogViewModel.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="LogViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +14,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
@@ -419,13 +417,13 @@ namespace TextFilter
                 {
                     index = Convert.ToInt32(sender);
                 }
-                
-                if(index ==0)
+
+                if (index == 0)
                 {
                     index = SelectedTab.SelectedIndex;
                 }
 
-                if(sender == null)
+                if (sender == null)
                 {
                     // display dialog to get index
                     GotoLineDialog gotoDialog = new GotoLineDialog(index);
@@ -504,7 +502,6 @@ namespace TextFilter
                     dataGrid.Focus();
                     FocusManager.SetIsFocusScope(selectedRow, true);
                     FocusManager.SetFocusedElement(selectedRow, selectedRow);
-
                 }
             }
             catch (Exception e)

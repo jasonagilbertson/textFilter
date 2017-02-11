@@ -1712,7 +1712,7 @@
                            Fill="{TemplateBinding Background}"
                            Stroke="{TemplateBinding BorderBrush}"
                            StrokeThickness="0"
-                           Margin="-1"/>
+                           Margin="-1" />
                 <Rectangle x:Name="InnerBorder"
                            Margin="-1" />
                 <Grid>
