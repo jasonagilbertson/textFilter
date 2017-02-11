@@ -1513,7 +1513,6 @@
                                                                   Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
                                                                   Header="quick filter"
-                                                                  InputGestureText="Ctrl+Q"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                     </ContextMenu>
                                                     </Setter.Value>
@@ -1603,11 +1602,17 @@
                                                               Path=LogViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
-                                    <!--<KeyBinding Key="N"
+                                    <KeyBinding Key="N"
                                                 Modifiers="Control+Shift"
                                                 Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.NewCommand}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=PlacementTarget}" />-->
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=PlacementTarget}" />
+                                <KeyBinding Key="Q"
+                                            Modifiers="Control"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.QuickFindTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItem}" />
+
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">

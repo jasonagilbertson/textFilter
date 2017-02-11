@@ -424,9 +424,13 @@ namespace TextFilter
                 {
                     index = SelectedTab.SelectedIndex;
                 }
+
+                if(sender == null)
+                {
+                    // display dialog to get index
                     GotoLineDialog gotoDialog = new GotoLineDialog(index);
                     index = gotoDialog.WaitForResult();
-                
+                }
 
                 SetStatus("gotoLine:" + index.ToString());
                 DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;

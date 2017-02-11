@@ -39,7 +39,7 @@ namespace TextFilter
         private bool _quickFindNot;
         private bool _quickFindOr;
         private bool _quickFindRegex;
-        private string _quickFindText;
+        private string _quickFindText = string.Empty;
         private Command _quickFindTextCommand;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
@@ -828,9 +828,7 @@ namespace TextFilter
         {
             if (sender is TextBox)
             {
-                QuickFindText = (sender as TextBox).SelectedText;
-                ComboBox comboBox = new ComboBox() { Text = QuickFindText };
-                QuickFindChangedExecuted(comboBox);
+                QuickFindChangedExecuted((sender as TextBox));
             }
         }
 
