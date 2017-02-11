@@ -36,6 +36,8 @@ namespace TextFilter
 
         private string _currentStatus;
 
+        private Command _duplicateWindowCommand;
+
         private Command _helpCommand;
 
         private Command _listViewSelectionChangedCommand;
@@ -155,6 +157,21 @@ namespace TextFilter
                     OnPropertyChanged("CurrentStatus");
                 }
             }
+        }
+
+        public Command DuplicateWindowCommand
+        {
+            get
+            {
+                if (_duplicateWindowCommand == null)
+                {
+                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
+
+                return _duplicateWindowCommand;
+            }
+            set { _duplicateWindowCommand = value; }
         }
 
         public FilterViewModel FilterViewModel
@@ -321,7 +338,8 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        Restart();
+                        DuplicateWindow();
+                        Application.Current.Shutdown();
                         break;
                     }
                 //case OptionsDialog.OptionsDialogResult.cancel:
@@ -407,12 +425,7 @@ namespace TextFilter
             }
         }
 
-        private void HandleNewCurrentStatus(object sender, string status)
-        {
-            CurrentStatus = status;
-        }
-
-        private void Restart()
+        private void DuplicateWindow()
         {
             StringBuilder args = new StringBuilder();
             if (Settings.CurrentFilterFiles.Count > 0)
@@ -433,7 +446,16 @@ namespace TextFilter
             Settings.Save();
             CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
             Debug.Print(args.ToString());
-            Application.Current.Shutdown();
+        }
+
+        private void DuplicateWindowExecuted(object sender)
+        {
+            DuplicateWindow();
+        }
+
+        private void HandleNewCurrentStatus(object sender, string status)
+        {
+            CurrentStatus = status;
         }
 
         private void VersionCheck(bool silent)
@@ -517,7 +539,7 @@ namespace TextFilter
                             File.Copy(newExe, currentExe, true);
 
                             // todo: merge configs?
-                            Restart();
+                            DuplicateWindow();
                         }
                     }
                 }

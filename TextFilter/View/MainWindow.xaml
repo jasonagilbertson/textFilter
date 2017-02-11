@@ -480,6 +480,16 @@
                                                Path=Settings.ForegroundColor}"
                           Header="_settings"
                           Style="{DynamicResource MenuItemStyle1}" />
+                <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                          BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                          Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=DuplicateWindowCommand}"
+                          Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                          Header="_duplicate window"
+                          Style="{DynamicResource MenuItemStyle1}" />
             </MenuItem>
             <MenuItem Header="_help">
                 <MenuItem Background="{Binding Source={StaticResource settings},
