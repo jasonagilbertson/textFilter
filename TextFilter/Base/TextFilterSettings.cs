@@ -183,7 +183,11 @@ namespace TextFilter
             }
             set
             {
-                _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.CountMaskedMatches).ToString());
+                }
             }
         }
 
