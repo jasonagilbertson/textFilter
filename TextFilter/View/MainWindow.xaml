@@ -107,6 +107,10 @@
                     Gesture="Ctrl+Alt+S" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel}, Path=FilterViewModel.HideCommand}"
                     Gesture="Ctrl+Alt+H" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                      Path=LogViewModel.ViewMessageCommand}"
+                    CommandParameter="{Binding}"
+                    Gesture="Ctrl+M" />
     </Window.InputBindings>
 
     <DockPanel Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}"
@@ -283,6 +287,17 @@
                                                Path=Settings.ForegroundColor}"
                           Header="show / _hide all items"
                           InputGestureText="Ctrl+H"
+                          Style="{DynamicResource MenuItemStyle1}" />
+                <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                          BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                          Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=LogViewModel.ViewMessageCommand}"
+                          Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                          Header="view _message"
+                          InputGestureText="Ctrl+M"
                           Style="{DynamicResource MenuItemStyle1}" />
             </MenuItem>
             <MenuItem Header="_filter">
@@ -1839,8 +1854,17 @@
                                               Header="show / hide all items"
                                               InputGestureText="Ctrl+H"
                                               Style="{DynamicResource MenuItemStyle1}" />
-
-                                    <!--<MenuItem Header="Select All" Command="{Binding SelectAllCommand}" InputGestureText="Ctrl+A" />-->
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=LogViewModel.ViewMessageCommand}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                                              Header="view _message"
+                                              InputGestureText="Ctrl+M"
+                                              Style="{DynamicResource MenuItemStyle1}" />
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

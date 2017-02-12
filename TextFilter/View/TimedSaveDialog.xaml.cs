@@ -18,11 +18,11 @@ namespace TextFilter
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
         private const int _timerSecs = 1;
-        private int _totalTimerSecs = 5;
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
         private DispatcherTimer _timer;
+        private int _totalTimerSecs = 5;
 
         public TimedSaveDialog(string fileName)
         {
@@ -41,6 +41,14 @@ namespace TextFilter
             DontSaveAll,
             Save,
             SaveAs
+        }
+
+        public void CloseDialog()
+        {
+            _timer.Tick -= _handler;
+            _timer.Stop();
+            Disable();
+            this.Close();
         }
 
         public void Disable()
@@ -68,31 +76,31 @@ namespace TextFilter
         private void buttonDisable_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.Disable;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonDontSave_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.DontSave;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonDontSaveAll_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.DontSaveAll;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.Save;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.SaveAs;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void OnTimedEvent(object sender, EventArgs e)
@@ -103,10 +111,7 @@ namespace TextFilter
             }
             else
             {
-                _timer.Tick -= _handler;
-                _timer.Stop();
-                Disable();
-                this.Close();
+                CloseDialog();
             }
         }
 

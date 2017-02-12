@@ -179,6 +179,9 @@
     <Compile Include="View\ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\TraceMessageDialog.xaml.cs">
+      <DependentUpon>TraceMessageDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RenameDialog.xaml.cs">
       <DependentUpon>RenameDialog.xaml</DependentUpon>
     </Compile>
@@ -196,6 +199,10 @@
     </Compile>
     <Compile Include="Parser\WorkerManager.cs" />
     <Page Include="View\ExportDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\TraceMessageDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

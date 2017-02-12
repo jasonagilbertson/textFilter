@@ -42,6 +42,8 @@ namespace TextFilter
 
         private LogFileItem _unFilteredSelectedItem;
 
+        private Command _viewMessageCommand;
+
         public LogViewModel()
         {
             SetStatus("LogViewModel.ctor");
@@ -72,6 +74,45 @@ namespace TextFilter
                 return _exportCommand;
             }
             set { _exportCommand = value; }
+        }
+
+        public Command ViewMessageCommand
+        {
+            get
+            {
+                if (_viewMessageCommand == null)
+                {
+                    _viewMessageCommand = new Command(ViewMessageExecuted);
+                }
+                _viewMessageCommand.CanExecute = true;
+
+                return _viewMessageCommand;
+            }
+            set { _viewMessageCommand = value; }
+        }
+
+        private void ViewMessageExecuted(object sender)
+        {
+            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
+            string message = string.Empty;
+
+            if (logTab != null)
+            {
+                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
+
+                if (logIndex <= logTab.ContentList.Count)
+                {
+                    message = ((LogFileItem)logTab.ContentList[logIndex]).Content;
+                    TraceMessageDialog messageDialog = new TraceMessageDialog(message);
+                    messageDialog.Show();
+                }
+                else
+                {
+                    SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
+                    return;
+                }
+
+            }
         }
 
         public Command KeyDownCommand
