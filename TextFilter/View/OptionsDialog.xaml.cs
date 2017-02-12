@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: OptionsDialog.xaml.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -67,6 +67,16 @@ namespace TextFilter
         {
             _dialogResult = OptionsDialogResult.edit;
             Disable();
+        }
+
+        private void buttonRecentFilterClear_Click(object sender, RoutedEventArgs e)
+        {
+            Base._FilterViewModel.ClearRecentExecuted();
+        }
+
+        private void buttonRecentLogClear_Click(object sender, RoutedEventArgs e)
+        {
+            Base._LogViewModel.ClearRecentExecuted();
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)

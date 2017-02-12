@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: Base.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************

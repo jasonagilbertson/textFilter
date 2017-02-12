@@ -71,6 +71,8 @@ namespace TextFilter
 
             DebugFile,
 
+            FileExtensions,
+
             FilterDirectory,
 
             FilterHide,
@@ -223,6 +225,40 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.DebugFile).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.DebugFile).ToString());
+                }
+            }
+        }
+
+        public string[] FileExtensions
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileExtensions).ToString()].Value = string.Join(";", value);
+                    OnPropertyChanged((AppSettingNames.FileExtensions).ToString());
+                }
+            }
+        }
+
+        public string FileExtensionsString
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FileExtensions).ToString()].Value;
+            }
+
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileExtensions).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FileExtensions).ToString());
                 }
             }
         }
@@ -762,6 +798,11 @@ namespace TextFilter
                         case AppSettingNames.DebugFile:
                             {
                                 _appSettings[name].Value = "";
+                                break;
+                            }
+                        case AppSettingNames.FileExtensions:
+                            {
+                                _appSettings[name].Value = ".log;.rvf";
                                 break;
                             }
                         case AppSettingNames.FileHistoryCount:

@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: IViewModel.cs
 // Created: 12/24/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -13,6 +13,8 @@ namespace TextFilter
     {
         // ITabViewModel<T> SelectedTabItem { get; set; }
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+
+        Command ClearRecentCommand { get; set; }
 
         Command CloseCommand { get; set; }
 
@@ -35,6 +37,8 @@ namespace TextFilter
         IFileManager<T> ViewManager { get; set; }
 
         void AddTabItem(IFile<T> fileProperties);
+
+        void ClearRecentExecuted();
 
         void CloseAllFilesExecuted(object sender);
 

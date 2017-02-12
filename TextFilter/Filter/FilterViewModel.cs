@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: FilterViewModel.cs
 // Created: 11/14/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -341,27 +341,7 @@ namespace TextFilter
                 _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
                 OnPropertyChanged("RecentCollection");
             }
-
         }
-
-        public void GroomFiles()
-        {
-            // check if recent filters are still valid
-            foreach (string file in (new List<string>(Settings.RecentFilterFiles).ToList()))
-            {
-                if (!File.Exists(file))
-                {
-                    List<string> recent = Settings.RecentFilterFiles.ToList();
-                    recent.Remove(file);
-                    Settings.RecentFilterFiles = recent.ToArray();
-                }
-            }
-
-            // force update
-            RecentCollection = null;
-
-        }
-
 
         public Command RemoveFilterItemCommand
         {
@@ -436,6 +416,12 @@ namespace TextFilter
             }
 
             return fileItems;
+        }
+
+        public override void ClearRecentExecuted()
+        {
+            Settings.RecentFilterFiles = new string[0];
+            RecentCollection = null;
         }
 
         public FilterNeed CompareFilterList(List<FilterFileItem> previousFilterFileItems)
@@ -606,6 +592,23 @@ namespace TextFilter
             {
                 SetStatus("findnextexecuted:exception" + e.ToString());
             }
+        }
+
+        public void GroomFiles()
+        {
+            // check if recent filters are still valid
+            foreach (string file in (new List<string>(Settings.RecentFilterFiles).ToList()))
+            {
+                if (!File.Exists(file))
+                {
+                    List<string> recent = Settings.RecentFilterFiles.ToList();
+                    recent.Remove(file);
+                    Settings.RecentFilterFiles = recent.ToArray();
+                }
+            }
+
+            // force update
+            RecentCollection = null;
         }
 
         public override void HideExecuted(object sender)

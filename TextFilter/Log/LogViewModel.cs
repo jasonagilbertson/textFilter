@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: LogViewModel.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -181,6 +181,12 @@ namespace TextFilter
 
                 SelectedIndex = TabItems.Count - 1;
             }
+        }
+
+        public override void ClearRecentExecuted()
+        {
+            Settings.RecentLogFiles = new string[0];
+            RecentCollection = null;
         }
 
         public void CtrlEndExecuted(object sender)

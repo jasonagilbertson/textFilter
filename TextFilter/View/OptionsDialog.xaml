@@ -10,6 +10,7 @@
         WindowStartupLocation="CenterOwner">
     <!--  todo contentstringformat https://msdn.microsoft.com/query/dev14.query?appId=Dev14IDEF1&l=EN-US&k=k(System.Windows.Controls.ContentControl.ContentStringFormat);k(VS.XamlEditor);k(TargetFrameworkMoniker-.NETFramework,Version%3Dv4.5)&rd=true  -->
     <Window.Resources>
+        <local:MainViewModel x:Key="mainViewModel" />
         <local:TextFilterSettings x:Key="settings" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
         <ObjectDataProvider x:Key="colorsTypeOdp"
@@ -46,11 +47,24 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="300" />
+            <ColumnDefinition Width="250" />
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="450" />
         </Grid.ColumnDefinitions>
 
+        <Label Grid.Row="1"
+               Grid.Column="0"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="auto save files:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
         <ToggleButton Grid.Row="1"
                       Grid.Column="1"
                       Width="75"
@@ -62,7 +76,8 @@
                                            Path=Settings.BackgroundColor}"
                       BorderBrush="{Binding Source={StaticResource settings},
                                             Path=Settings.ForegroundColor}"
-                      Content="AutoSave"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.AutoSave}"
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
@@ -78,27 +93,26 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="RecentFilterFiles:"
+               Content="recent filter files:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ListView Grid.Row="1"
-                  Grid.Column="3"
-                  Width="200"
-                  Height="20"
-                  Margin="0,0,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  Background="{Binding Source={StaticResource settings},
-                                       Path=Settings.BackgroundColor}"
-                  BorderBrush="{Binding Source={StaticResource settings},
-                                        Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                  ItemsSource="{Binding Source={StaticResource settings},
-                                        Path=Settings.RecentFilterFiles,
-                                        Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+        <Button Name="buttonRecentFilterClear"
+                Grid.Row="1"
+                Grid.Column="3"
+                Width="75"
+                Height="20"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonRecentFilterClear_Click"
+                Content="clear"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
 
         <Label Grid.Row="2"
                Grid.Column="0"
@@ -110,7 +124,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="BackgroundColor:"
+               Content="background color:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -118,7 +132,6 @@
                   Grid.Row="2"
                   Grid.Column="1"
                   Width="200"
-                  Height="25"
                   HorizontalAlignment="Left"
                   BorderBrush="{Binding Source={StaticResource settings},
                                         Path=Settings.ForegroundColor}"
@@ -133,7 +146,8 @@
                                           UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Name"
                   VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling">
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  Margin="0,3">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -158,31 +172,43 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="RecentLogFiles:"
+               Content="recent log files:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ListView Grid.Row="2"
-                  Grid.Column="3"
-                  Width="200"
-                  Height="20"
-                  Margin="0,0,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  Background="{Binding Source={StaticResource settings},
-                                       Path=Settings.BackgroundColor}"
-                  BorderBrush="{Binding Source={StaticResource settings},
-                                        Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                  ItemsSource="{Binding Source={StaticResource settings},
-                                        Path=Settings.RecentLogFiles,
-                                        Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled" />
+        <Button Name="buttonRecentLogClear"
+                Grid.Row="2"
+                Grid.Column="3"
+                Width="75"
+                Height="20"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonRecentLogClear_Click"
+                Content="clear"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
 
+        <Label Grid.Row="3"
+               Grid.Column="0"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="count masked matches:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
         <ToggleButton Grid.Row="3"
                       Grid.Column="1"
-                      Width="125"
+                      Width="75"
                       Height="20"
                       Margin="0,0,0,0"
                       HorizontalAlignment="Left"
@@ -191,15 +217,30 @@
                                            Path=Settings.BackgroundColor}"
                       BorderBrush="{Binding Source={StaticResource settings},
                                             Path=Settings.ForegroundColor}"
-                      Content="CountMaskedMatches"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.CountMaskedMatches}"
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
                                           Path=Settings.CountMaskedMatches}" />
 
+        <Label Grid.Row="3"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="save session information:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
         <ToggleButton Grid.Row="3"
                       Grid.Column="3"
-                      Width="150"
+                      Width="75"
                       Height="20"
                       Margin="0,0,0,0"
                       HorizontalAlignment="Left"
@@ -208,7 +249,9 @@
                                            Path=Settings.BackgroundColor}"
                       BorderBrush="{Binding Source={StaticResource settings},
                                             Path=Settings.ForegroundColor}"
-                      Content="SaveSessionInformation"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.SaveSessionInformation,
+                                          StringFormat={}{0:True;;False}}"
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
@@ -225,28 +268,25 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="CurrentFilterFiles:"
+               Content="debug file:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ListView Grid.Row="4"
-                  Grid.Column="1"
-                  Width="200"
-                  Height="20"
-                  Margin="0,0,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  Background="{Binding Source={StaticResource settings},
-                                       Path=Settings.BackgroundColor}"
-                  BorderBrush="{Binding Source={StaticResource settings},
-                                        Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
+        <TextBox Grid.Row="4"
+                 Grid.Column="1"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
                                        Path=Settings.ForegroundColor}"
-                  ItemsSource="{Binding Source={StaticResource settings},
-                                        Path=Settings.CurrentFilterFiles,
-                                        Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  SelectionMode="Extended" />
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.DebugFile}" />
 
         <Label Grid.Row="4"
                Grid.Column="2"
@@ -258,7 +298,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="SharedFilterDirectory:"
+               Content="shared filter directory:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -288,28 +328,25 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="CurrentLogFiles:"
+               Content="file history count:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ListView Grid.Row="5"
-                  Grid.Column="1"
-                  Width="200"
-                  Height="20"
-                  Margin="0,0,0,0"
-                  HorizontalAlignment="Left"
-                  VerticalAlignment="Bottom"
-                  Background="{Binding Source={StaticResource settings},
-                                       Path=Settings.BackgroundColor}"
-                  BorderBrush="{Binding Source={StaticResource settings},
-                                        Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
+        <TextBox Grid.Row="5"
+                 Grid.Column="1"
+                 Width="75"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
                                        Path=Settings.ForegroundColor}"
-                  ItemsSource="{Binding Source={StaticResource settings},
-                                        Path=Settings.CurrentLogFiles,
-                                        Mode=TwoWay}"
-                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                  SelectionMode="Extended" />
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.FileHistoryCount}" />
 
         <Label Grid.Row="5"
                Grid.Column="2"
@@ -321,7 +358,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="VersionCheckFile:"
+               Content="version check file:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -342,7 +379,7 @@
                                 Path=Settings.VersionCheckFile}" />
 
         <Label Grid.Row="6"
-               Grid.Column="0"
+               Grid.Column="2"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -351,25 +388,9 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="DebugFile:"
+               Content="word wrap:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
-
-        <TextBox Grid.Row="6"
-                 Grid.Column="1"
-                 Width="200"
-                 Height="20"
-                 Margin="0,0,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Background="{Binding Source={StaticResource settings},
-                                      Path=Settings.BackgroundColor}"
-                 BorderBrush="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                 Foreground="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                 Text="{Binding Source={StaticResource settings},
-                                Path=Settings.DebugFile}" />
 
         <ToggleButton Grid.Row="6"
                       Grid.Column="3"
@@ -382,7 +403,8 @@
                                            Path=Settings.BackgroundColor}"
                       BorderBrush="{Binding Source={StaticResource settings},
                                             Path=Settings.ForegroundColor}"
-                      Content="WordWrap"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.WordWrap}"
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
@@ -398,13 +420,13 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="FileHistoryCount:"
+               Content="file type extensions:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
         <TextBox Grid.Row="7"
                  Grid.Column="1"
-                 Width="75"
+                 Width="200"
                  Height="20"
                  Margin="0,0,0,0"
                  HorizontalAlignment="Left"
@@ -416,7 +438,7 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FileHistoryCount}" />
+                                Path=Settings.FileExtensionsString}" />
 
         <Label Grid.Row="8"
                Grid.Column="0"
@@ -428,7 +450,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="FilterDirectory:"
+               Content="filter directory:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -448,6 +470,20 @@
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.FilterDirectory}" />
 
+        <Label Grid.Row="9"
+               Grid.Column="0"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="filter hide:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
         <ToggleButton Grid.Row="9"
                       Grid.Column="1"
                       Width="75"
@@ -459,7 +495,8 @@
                                            Path=Settings.BackgroundColor}"
                       BorderBrush="{Binding Source={StaticResource settings},
                                             Path=Settings.ForegroundColor}"
-                      Content="FilterHide"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.FilterHide}"
                       Foreground="{Binding Source={StaticResource settings},
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
@@ -475,7 +512,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="FontName:"
+               Content="font name:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -523,7 +560,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="FontSize:"
+               Content="font size:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -553,7 +590,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="ForegroundColor:"
+               Content="foreground color:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -561,7 +598,6 @@
                   Grid.Row="12"
                   Grid.Column="1"
                   Width="200"
-                  Height="25"
                   HorizontalAlignment="Left"
                   BorderBrush="{Binding Source={StaticResource settings},
                                         Path=Settings.ForegroundColor}"
@@ -576,7 +612,8 @@
                                           UpdateSourceTrigger=PropertyChanged}"
                   SelectedValuePath="Name"
                   VirtualizingStackPanel.IsVirtualizing="True"
-                  VirtualizingStackPanel.VirtualizationMode="Recycling">
+                  VirtualizingStackPanel.VirtualizationMode="Recycling"
+                  Margin="0,3">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal">
@@ -601,7 +638,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="HelpUrl:"
+               Content="help url:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -631,7 +668,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="MaxMultiFileCount:"
+               Content="max multi file count:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -668,7 +705,7 @@ Name="buttonCancel"
                 Grid.Column="2"
                 Width="75"
                 Height="20"
-                Margin="0,0,10,10"
+                Margin="0,0,0,10"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Background="{Binding Source={StaticResource settings},
@@ -676,7 +713,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonReset_Click"
-                Content="Reset"
+                Content="reset"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
 
@@ -693,7 +730,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonRegister_Click"
-                Content="Register Context and FTA"
+                Content="register context and FTA"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
         <Button Name="buttonSave"
@@ -701,7 +738,7 @@ Name="buttonCancel"
                 Grid.Column="0"
                 Width="75"
                 Height="20"
-                Margin="10,0,10,10"
+                Margin="10,0,0,10"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Background="{Binding Source={StaticResource settings},
@@ -709,7 +746,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonSave_Click"
-                Content="Save"
+                Content="save"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
         <Button Name="buttonApply"
@@ -717,7 +754,7 @@ Name="buttonCancel"
                 Grid.Column="1"
                 Width="150"
                 Height="20"
-                Margin="0,0,10,10"
+                Margin="0,0,0,10"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Background="{Binding Source={StaticResource settings},
@@ -725,7 +762,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonApply_Click"
-                Content="Apply and Restart"
+                Content="apply and restart"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
         <Button Name="buttonEdit"
@@ -733,7 +770,7 @@ Name="buttonCancel"
                 Grid.Column="2"
                 Width="110"
                 Height="20"
-                Margin="0,0,10,10"
+                Margin="0,0,0,10"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Background="{Binding Source={StaticResource settings},
@@ -741,7 +778,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonEdit_Click"
-                Content="Edit Config Directly"
+                Content="edit config directly"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
 
@@ -750,7 +787,7 @@ Name="buttonCancel"
                 Grid.Column="3"
                 Width="170"
                 Height="20"
-                Margin="0,0,10,10"
+                Margin="0,0,0,10"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
                 Background="{Binding Source={StaticResource settings},
@@ -758,7 +795,7 @@ Name="buttonCancel"
                 BorderBrush="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                 Click="buttonUnRegister_Click"
-                Content="UnRegister Context and FTA"
+                Content="unregister context and FTA"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
     </Grid>

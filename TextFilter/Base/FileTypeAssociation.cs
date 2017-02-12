@@ -20,7 +20,7 @@ namespace TextFilter
     {
         private static FileTypeAssociation _fileTypeAssociation;
 
-        private string[] _extensions = new string[4] { ".csv", ".log", ".rvf", ".rvconfig" };
+        private string[] _extensions = TextFilterSettings.Settings.FileExtensions;
 
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
@@ -36,6 +36,7 @@ namespace TextFilter
 
         public FileTypeAssociation()
         {
+           
         }
 
         public static FileTypeAssociation Instance

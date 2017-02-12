@@ -2,7 +2,7 @@
 // Assembly: TextFilter
 // File: BaseViewModel.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -20,6 +20,8 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
+        private Command _clearRecentCommand;
+
         private Command _closeAllCommand;
 
         private Command _closeCommand;
@@ -64,6 +66,12 @@ namespace TextFilter
 
         public BaseViewModel()
         {
+        }
+
+        public Command ClearRecentCommand
+        {
+            get { return _clearRecentCommand ?? new Command(ClearRecentExecuted); }
+            set { _clearRecentCommand = value; }
         }
 
         public Command CloseAllCommand
@@ -340,6 +348,8 @@ namespace TextFilter
                 AddTabItem(items[i]);
             }
         }
+
+        public abstract void ClearRecentExecuted();
 
         public void CloseAllFilesExecuted(object sender)
         {

@@ -402,7 +402,6 @@ namespace TextFilter
         private void AfterLaunch(bool silent)
         {
             // clean recent lists
-            
             _FilterViewModel.GroomFiles();
             _LogViewModel.GroomFiles();
 
