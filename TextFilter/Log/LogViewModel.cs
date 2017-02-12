@@ -40,6 +40,8 @@ namespace TextFilter
 
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
+        private ObservableCollection<WPFMenuItem> _recentCollection;
+
         private LogFileItem _unFilteredSelectedItem;
 
         public LogViewModel()
@@ -137,7 +139,13 @@ namespace TextFilter
         {
             get
             {
-                return (RecentCollectionBuilder(Settings.RecentLogFiles));
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+            }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+                OnPropertyChanged("RecentCollection");
             }
         }
 
@@ -454,6 +462,23 @@ namespace TextFilter
             {
                 SetStatus("GotoLineExecuted:exception" + e.ToString());
             }
+        }
+
+        public void GroomFiles()
+        {
+            // check if recent files are still valid
+            foreach (string file in (new List<string>(Settings.RecentLogFiles).ToList()))
+            {
+                if (!File.Exists(file))
+                {
+                    List<string> recent = Settings.RecentLogFiles.ToList();
+                    recent.Remove(file);
+                    Settings.RecentLogFiles = recent.ToArray();
+                }
+            }
+
+            // force update
+            RecentCollection = null;
         }
 
         public override void HideExecuted(object sender)

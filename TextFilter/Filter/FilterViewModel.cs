@@ -40,6 +40,7 @@ namespace TextFilter
         private bool _quickFindRegex;
         private string _quickFindText = string.Empty;
         private Command _quickFindTextCommand;
+        private ObservableCollection<WPFMenuItem> _recentCollection;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
@@ -332,9 +333,35 @@ namespace TextFilter
         {
             get
             {
-                return (RecentCollectionBuilder(Settings.RecentFilterFiles));
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
             }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
+                OnPropertyChanged("RecentCollection");
+            }
+
         }
+
+        public void GroomFiles()
+        {
+            // check if recent filters are still valid
+            foreach (string file in (new List<string>(Settings.RecentFilterFiles).ToList()))
+            {
+                if (!File.Exists(file))
+                {
+                    List<string> recent = Settings.RecentFilterFiles.ToList();
+                    recent.Remove(file);
+                    Settings.RecentFilterFiles = recent.ToArray();
+                }
+            }
+
+            // force update
+            RecentCollection = null;
+
+        }
+
 
         public Command RemoveFilterItemCommand
         {

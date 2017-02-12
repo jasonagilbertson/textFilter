@@ -401,8 +401,11 @@ namespace TextFilter
 
         private void AfterLaunch(bool silent)
         {
-            // force update of shared collection menu
-            var oc = _FilterViewModel.SharedCollection;
+            // clean recent lists
+            
+            _FilterViewModel.GroomFiles();
+            _LogViewModel.GroomFiles();
+
             VersionCheck(silent);
         }
 

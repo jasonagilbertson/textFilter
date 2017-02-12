@@ -651,12 +651,12 @@ namespace TextFilter
 
         public void RemoveFilterFile(string filterFile)
         {
-            List<string> logFiles = new List<string>(CurrentFilterFiles);
-            if (logFiles.Contains(filterFile))
+            List<string> filterFiles = new List<string>(CurrentFilterFiles);
+            if (filterFiles.Contains(filterFile))
             {
                 Debug.Print("Removing FilterFile:" + filterFile);
-                logFiles.Remove(filterFile);
-                CurrentFilterFiles = logFiles;
+                filterFiles.Remove(filterFile);
+                CurrentFilterFiles = filterFiles;
             }
         }
 
