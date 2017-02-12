@@ -28,8 +28,6 @@ namespace TextFilter
 
         private LogFileItem _filteredSelectedItem;
 
-        private Command _gotoLineCommand;
-
         private Command _keyDownCommand;
 
         private string _lineTotals;
@@ -74,21 +72,6 @@ namespace TextFilter
                 return _exportCommand;
             }
             set { _exportCommand = value; }
-        }
-
-        public Command GotoLineCommand
-        {
-            get
-            {
-                if (_gotoLineCommand == null)
-                {
-                    _gotoLineCommand = new Command(GotoLineExecuted);
-                }
-                _gotoLineCommand.CanExecute = true;
-
-                return _gotoLineCommand;
-            }
-            set { _gotoLineCommand = value; }
         }
 
         public Command KeyDownCommand
@@ -186,7 +169,7 @@ namespace TextFilter
         public override void ClearRecentExecuted()
         {
             Settings.RecentLogFiles = new string[0];
-            RecentCollection = null;
+            UpdateRecentCollection();
         }
 
         public void CtrlEndExecuted(object sender)
@@ -420,7 +403,7 @@ namespace TextFilter
             }
         }
 
-        public void GotoLineExecuted(object sender)
+        public override void GotoLineExecuted(object sender)
         {
             try
             {
@@ -483,8 +466,7 @@ namespace TextFilter
                 }
             }
 
-            // force update
-            RecentCollection = null;
+            UpdateRecentCollection();
         }
 
         public override void HideExecuted(object sender)
@@ -592,6 +574,7 @@ namespace TextFilter
             }
 
             AddTabItem(file);
+            UpdateRecentCollection();
         }
 
         public override void OpenFileExecuted(object sender)
@@ -641,6 +624,8 @@ namespace TextFilter
                     AddTabItem(logFile);
                 }
             }
+
+            UpdateRecentCollection();
         }
 
         public void PageDownExecuted(object sender)
@@ -903,6 +888,12 @@ namespace TextFilter
         {
             SetStatus("_FilterViewModel.CollectionChanged: " + sender.ToString());
             FilterLogTabItems();
+        }
+
+        private void UpdateRecentCollection()
+        {
+            // setting to null forces refresh
+            RecentCollection = null;
         }
 
         public struct LogViewModelEvents

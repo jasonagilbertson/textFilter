@@ -3,15 +3,59 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:TextFilter"
         Title="Unsaved Settings"
-        Width="439"
-        Height="121"
+        Width="550"
+        Height="125"
         WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <local:TextFilterSettings x:Key="settings" />
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+        <Label Name="labelDisplay"
+               Width="390"
+               Height="25"
+               Margin="30,10,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}"
+               Visibility="Visible" />
 
+        <Label Name="labelTimer"
+               Width="50"
+               Height="25"
+               Margin="30,10,100,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="Timer:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}"
+               Visibility="Visible" />
+
+        <Label Name="labelTimerLeft"
+               Width="20"
+               Height="25"
+               Margin="0,10,80,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Background="{Binding Source={StaticResource settings},
+                                    Path=Settings.BackgroundColor}"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}"
+               Style="{DynamicResource LabelStyle1}"
+               Visibility="Visible" />
         <Button Name="buttonSave"
                 Width="75"
                 Margin="30,44,0,0"
@@ -53,10 +97,22 @@
                 Content="Discard"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
-
-        <Button Name="buttonDisable"
+        <Button Name="buttonDontSaveAll"
                 Width="75"
                 Margin="330,44,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonDontSaveAll_Click"
+                Content="Discard All"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+        <Button Name="buttonDisable"
+                Width="75"
+                Margin="430,44,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Top"
                 Background="{Binding Source={StaticResource settings},
@@ -67,19 +123,5 @@
                 Content="Disable"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
-        <Label Name="labelDisplay"
-               Width="390"
-               Height="25"
-               Margin="30,10,0,0"
-               HorizontalAlignment="Left"
-               VerticalAlignment="Top"
-               Background="{Binding Source={StaticResource settings},
-                                    Path=Settings.BackgroundColor}"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}"
-               Style="{DynamicResource LabelStyle1}"
-               Visibility="Visible" />
     </Grid>
 </Window>

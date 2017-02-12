@@ -44,7 +44,10 @@
                                       Path=LogViewModel.HideCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+H" />
-
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                      Path=FilterViewModel.GotoLineCommand}"
+                    CommandParameter="{Binding}"
+                    Gesture="Ctrl+Alt+G" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.GotoLineCommand}"
                     CommandParameter="{Binding}"
@@ -164,10 +167,21 @@
                           BorderBrush="{Binding Source={StaticResource settings},
                                                 Path=Settings.BackgroundColor}"
                           Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=FilterViewModel.GotoLineCommand}"
+                          Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                          Header="_goto filter"
+                          InputGestureText="Ctrl+Alt+G"
+                          Style="{DynamicResource MenuItemStyle1}" />
+                <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                          BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                          Command="{Binding Source={StaticResource mainViewModel},
                                             Path=LogViewModel.GotoLineCommand}"
                           Foreground="{Binding Source={StaticResource settings},
                                                Path=Settings.ForegroundColor}"
-                          Header="_goto line number"
+                          Header="_goto line"
                           InputGestureText="Ctrl+G"
                           Style="{DynamicResource MenuItemStyle1}" />
                 <MenuItem Background="{Binding Source={StaticResource settings},
@@ -1686,6 +1700,19 @@
                                               Header="find next"
                                               InputGestureText="F3"
                                               Style="{DynamicResource MenuItemStyle1}" />
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                                    Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.GotoLineCommand}"
+                                              CommandParameter="{Binding}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.ForegroundColor}"
+                                              Header="goto filter"
+                                              InputGestureText="Ctrl+Alt+G"
+                                              Style="{DynamicResource MenuItemStyle1}" />
+
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
                                               BorderBrush="{Binding Source={StaticResource settings},

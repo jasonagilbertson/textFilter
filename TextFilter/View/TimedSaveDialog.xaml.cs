@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: timedsavedialog.xaml.cs
+// File: TimedSaveDialog.xaml.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -17,8 +17,8 @@ namespace TextFilter
 {
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
-        private const int _timerSecs = 10;
-
+        private const int _timerSecs = 1;
+        private int _totalTimerSecs = 5;
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
@@ -36,10 +36,11 @@ namespace TextFilter
         public enum Results
         {
             Unknown,
-            Save,
-            SaveAs,
+            Disable,
             DontSave,
-            Disable
+            DontSaveAll,
+            Save,
+            SaveAs
         }
 
         public void Disable()
@@ -76,6 +77,12 @@ namespace TextFilter
             OnTimedEvent(null, null);
         }
 
+        private void buttonDontSaveAll_Click(object sender, RoutedEventArgs e)
+        {
+            _result = Results.DontSaveAll;
+            OnTimedEvent(null, null);
+        }
+
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.Save;
@@ -90,10 +97,17 @@ namespace TextFilter
 
         private void OnTimedEvent(object sender, EventArgs e)
         {
-            _timer.Tick -= _handler;
-            _timer.Stop();
-            Disable();
-            this.Close();
+            if (_totalTimerSecs-- > 0)
+            {
+                labelTimerLeft.Content = _totalTimerSecs;
+            }
+            else
+            {
+                _timer.Tick -= _handler;
+                _timer.Stop();
+                Disable();
+                this.Close();
+            }
         }
 
         private void StartTimer()

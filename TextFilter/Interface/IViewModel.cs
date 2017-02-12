@@ -22,6 +22,8 @@ namespace TextFilter
 
         Command FindNextCommand { get; set; }
 
+        Command GotoLineCommand { get; set; }
+
         Command HideCommand { get; set; }
 
         Command OpenCommand { get; set; }
@@ -49,6 +51,8 @@ namespace TextFilter
         ITabViewModel<T> CurrentTab();
 
         void FindNextExecuted(object sender);
+
+        void GotoLineExecuted(object sender);
 
         void HideExecuted(object sender);
 

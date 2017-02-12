@@ -32,6 +32,8 @@ namespace TextFilter
 
         private Command _gotFocusCommand;
 
+        private Command _gotoLineCommand;
+
         private Command _hideCommand;
 
         private Command _newCommand;
@@ -135,6 +137,21 @@ namespace TextFilter
                 return _gotFocusCommand;
             }
             set { _gotFocusCommand = value; }
+        }
+
+        public Command GotoLineCommand
+        {
+            get
+            {
+                if (_gotoLineCommand == null)
+                {
+                    _gotoLineCommand = new Command(GotoLineExecuted);
+                }
+                _gotoLineCommand.CanExecute = true;
+
+                return _gotoLineCommand;
+            }
+            set { _gotoLineCommand = value; }
         }
 
         public Command HideCommand
@@ -436,6 +453,8 @@ namespace TextFilter
             }
         }
 
+        public abstract void GotoLineExecuted(object sender);
+
         public abstract void HideExecuted(object sender);
 
         public bool IsValidTabIndex()
@@ -637,6 +656,8 @@ namespace TextFilter
         public void SaveModifiedFiles(object sender)
         {
             List<string> delList = new List<string>();
+            bool noPrompt = false;
+
             try
             {
                 foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
@@ -649,7 +670,7 @@ namespace TextFilter
                     }
 
                     // prompt for saving
-                    if (!TextFilterSettings.Settings.AutoSave)
+                    if (!TextFilterSettings.Settings.AutoSave & !noPrompt)
                     {
                         TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
 
@@ -664,7 +685,10 @@ namespace TextFilter
                             case TimedSaveDialog.Results.DontSave:
                                 item.Modified = false;
                                 break;
-
+                            case TimedSaveDialog.Results.DontSaveAll:
+                                noPrompt = true;
+                                item.Modified = false;
+                                break;
                             case TimedSaveDialog.Results.Save:
                                 SaveFileExecuted(item);
                                 item.Modified = false;
@@ -680,7 +704,7 @@ namespace TextFilter
                                 break;
                         }
                     }
-                    else
+                    else if(TextFilterSettings.Settings.AutoSave)
                     {
                         SaveFileExecuted(item);
                         item.Modified = false;
