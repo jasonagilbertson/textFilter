@@ -13,7 +13,7 @@
     </Window.Resources>
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
 
-        <Button Name="buttonSave"
+        <!--<Button Name="buttonSave"
                 Width="75"
                 Margin="10,0,10,10"
                 HorizontalAlignment="Left"
@@ -38,7 +38,7 @@
                 Click="buttonCancel_Click"
                 Content="Cancel"
                 Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}" />
+                                     Path=Settings.ForegroundColor}" />-->
         <TextBox Name="textBoxTraceMessage"
                  Grid.ColumnSpan="2"
                  Margin="10,10,10,50"
