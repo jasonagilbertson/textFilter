@@ -20,11 +20,12 @@ namespace TextFilter
         private string _initialMessage = string.Empty;
         private string _xmlMessage = string.Empty;
 
-        public TraceMessageDialog(string message)
+        public TraceMessageDialog(string message, int id, string file)
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             _initialMessage = message;
+            Title = string.Format("{0} - {1}", id, file);
             textBoxTraceMessage.Text = _initialMessage.Replace(",", ",\r\n").Replace(";", ";\r\n").Replace(". ", ". \r\n").Replace("\t", "\r\n");
             _xmlMessage = CheckXml(_initialMessage);
 

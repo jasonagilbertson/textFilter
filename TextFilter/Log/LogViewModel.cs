@@ -95,6 +95,7 @@ namespace TextFilter
         {
             LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
             string message = string.Empty;
+            int messageIndex = 0;
 
             if (logTab != null)
             {
@@ -103,7 +104,8 @@ namespace TextFilter
                 if (logIndex <= logTab.ContentList.Count)
                 {
                     message = ((LogFileItem)logTab.ContentList[logIndex]).Content;
-                    TraceMessageDialog messageDialog = new TraceMessageDialog(message);
+                    messageIndex = ((LogFileItem)logTab.ContentList[logIndex]).Index;
+                    TraceMessageDialog messageDialog = new TraceMessageDialog(message, messageIndex, CurrentFile().FileName);
                     messageDialog.Show();
                 }
                 else
