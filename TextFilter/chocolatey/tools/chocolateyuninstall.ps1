@@ -40,9 +40,7 @@ if ($key.Count -eq 1) {
     $key | % {Write-Warning "- $_.DisplayName"}
 }
 
-## OTHER HELPERS
-## https://chocolatey.org/docs/helpers-reference
-Uninstall-ChocolateyZipPackage $packageName $packageNameZip # Only necessary if you did not unpack to package directory - see https://chocolatey.org/docs/helpers-uninstall-chocolatey-zip-package
+Uninstall-ChocolateyZipPackage $packageName $packageNameZip 
 ## Remove any shortcuts you added
 
 # cleanup old program files

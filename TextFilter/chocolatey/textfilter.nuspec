@@ -26,8 +26,8 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <!-- version should MATCH as closely as possible with the underlying software -->
     <!-- Is the version a prerelease of a version? https://docs.nuget.org/create/versioning#creating-prerelease-packages -->
     <!-- Note that unstable versions like 0.0.1 can be considered a released version, but it's possible that one can release a 0.0.1-beta before you release a 0.0.1 version. If the version number is final, that is considered a released version and not a prerelease. -->
-    <version>0.7.0.009</version>
-    <packageSourceUrl>https://cdn.rawgit.com/jasonagilbertson/textFilter/tree/master/TextFilter/chocolatey</packageSourceUrl>
+    <version>0.7.0.011</version>
+    <packageSourceUrl>https://github.com/jasonagilbertson/textFilter/tree/master/TextFilter/chocolatey</packageSourceUrl>
     <!-- owners is a poor name for maintainers of the package. It sticks around by this name for compatibility reasons. It basically means you. -->
     <owners>jason</owners>
     <!-- ============================== -->
@@ -47,7 +47,7 @@ This is a nuspec. It mostly adheres to https://docs.nuget.org/create/Nuspec-Refe
     <docsUrl>https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md</docsUrl>
     <!--<mailingListUrl></mailingListUrl>-->
     <!--<bugTrackerUrl></bugTrackerUrl>-->
-    <tags>textfilter textanalysis text log analysis</tags>
+    <tags>textfilter textanalysis text log analysis admin</tags>
     <summary>TextFilter is a GUI utility designed to make filtering text files more efficient by using either strings or regex patterns.</summary>
     <description>TextFilter can be used to quickly filter different types of text files using filter files that can highlight lines based on string or regex matches.</description>
     <!-- <releaseNotes>__REPLACE_OR_REMOVE__MarkDown_Okay</releaseNotes> -->

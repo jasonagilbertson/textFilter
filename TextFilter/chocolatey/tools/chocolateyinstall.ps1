@@ -63,18 +63,6 @@ if([IO.File]::Exists($destFileNameConfigBack))
 cacls "`"$($programDir)`"" /E /G Users:F
 cacls "`"$($destFileNameConfig)`"" /E /G Users:F
 
-# check shared filter in config file
-if(Test-Connection -ComputerName "tkfiltoolbox" -ErrorAction SilentlyContinue -Count 1)
-{
-    $xml = [xml](get-content $destFileNameConfig)
-    $x = select-xml -xml $xml -XPath "//configuration/appSettings/add" | Where-Object { $_.Node.Key -ieq 'SharedFilterDirectory' }
-    if([string]::IsNullOrEmpty($x.Node.value))
-    {
-        $x.Node.value = "\\tkfiltoolbox\tools\regexViewer\shared-filters-multi"
-        $xml.Save($destFileNameConfig)
-    }
-}
-
 $error.Clear()
 
 # create shortcut in allusers start menu
