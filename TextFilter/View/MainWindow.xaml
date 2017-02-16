@@ -723,15 +723,15 @@
                         VerticalAlignment="Bottom"
                         Background="{Binding Source={StaticResource settings},
                                              Path=Settings.BackgroundColor}"
-                        BorderBrush="Blue"
+                        BorderBrush="DeepSkyBlue"
                         BorderThickness="1"
                         Command="{Binding FilterViewModel.QuickFindChangedCommand}"
                         CommandParameter="{Binding ElementName=buttonStatus}"
                         Content="{Binding Source={StaticResource mainViewModel},
                                           Path=CurrentStatus}"
                         FontSize="12"
-                        Foreground="Blue"
-                        Padding="5,3,0,0" />
+                        Foreground="DeepSkyBlue"
+                        Padding="5,1,0,1" />
 
                 <Label Name="labelLineTotals"
                        Grid.Column="3"
