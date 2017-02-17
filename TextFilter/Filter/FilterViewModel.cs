@@ -794,17 +794,21 @@ namespace TextFilter
         public void QuickFindChangedExecuted(object sender)
         {
             SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is ComboBox)));
+            bool buttonStatus = (sender is Button);
+            bool comboQuickFind = (sender is ComboBox);
+            bool textBoxSelectedText = (sender is TextBox);
+                
             // save combo if passed in
-            if ((sender is ComboBox) && QuickFindCombo == null)
+            if (comboQuickFind && QuickFindCombo == null)
             {
                 QuickFindCombo = (sender as ComboBox);
             }
 
-            if (sender is ComboBox)
+            if (comboQuickFind)
             {
                 QuickFindItem.Filterpattern = (sender as ComboBox).Text;
             }
-            else if (sender is TextBox)
+            else if (textBoxSelectedText)
             {
                 QuickFindText = (sender as TextBox).SelectedText;
                 QuickFindItem.Filterpattern = (sender as TextBox).SelectedText;
@@ -832,7 +836,7 @@ namespace TextFilter
             }
 
             SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
-            if (string.IsNullOrEmpty(QuickFindItem.Filterpattern))
+            if (!buttonStatus && string.IsNullOrEmpty(QuickFindItem.Filterpattern))
             {
                 QuickFindItem.Enabled = false;
 
@@ -849,7 +853,7 @@ namespace TextFilter
 
                 return;
             }
-            else
+            else if(!buttonStatus)
             {
                 QuickFindItem.Enabled = true;
             }
@@ -873,7 +877,7 @@ namespace TextFilter
             }
 
             // status button toggle
-            if (sender is Button)
+            if (buttonStatus)
             {
                 CurrentStatusSetting setting;
                 object currentStatus = (sender as Button).Content;
