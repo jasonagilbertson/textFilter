@@ -191,6 +191,19 @@ namespace TextFilter
             }
         }
 
+        public string CurrentFilterFilesString
+        {
+            get
+            {
+                return String.Join(";", CurrentFilterFiles);
+            }
+
+            set
+            {
+                CurrentFilterFiles = value.Split(';').ToList();
+            }
+        }
+
         public List<string> CurrentFilterFiles
         {
             get
@@ -204,6 +217,18 @@ namespace TextFilter
             }
         }
 
+        public string CurrentLogFilesString
+        {
+            get
+            {
+                return String.Join(";", CurrentLogFiles);
+            }
+
+            set
+            {
+                CurrentLogFiles = value.Split(';').ToList();
+            }
+        }
         public List<string> CurrentLogFiles
         {
             get

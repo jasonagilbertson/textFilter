@@ -52,6 +52,9 @@
             <ColumnDefinition Width="450" />
         </Grid.ColumnDefinitions>
 
+        <!-- ************************************************ -->
+        <!-- Column 0 and 1 -->
+        <!-- ************************************************ -->
         <Label Grid.Row="1"
                Grid.Column="0"
                Width="150"
@@ -82,38 +85,8 @@
                                            Path=Settings.ForegroundColor}"
                       IsChecked="{Binding Source={StaticResource settings},
                                           Path=Settings.AutoSave}" />
-
-        <Label Grid.Row="1"
-               Grid.Column="2"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="recent filter files:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <Button Name="buttonRecentFilterClear"
-                Grid.Row="1"
-                Grid.Column="3"
-                Width="75"
-                Height="20"
-                Margin="0,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="{Binding Source={StaticResource settings},
-                                     Path=Settings.BackgroundColor}"
-                BorderBrush="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                Click="buttonRecentFilterClear_Click"
-                Content="clear"
-                Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}" />
-
+        
+        <!-- ************************************************ -->
         <Label Grid.Row="2"
                Grid.Column="0"
                Width="150"
@@ -162,37 +135,7 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Label Grid.Row="2"
-               Grid.Column="2"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="recent log files:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <Button Name="buttonRecentLogClear"
-                Grid.Row="2"
-                Grid.Column="3"
-                Width="75"
-                Height="20"
-                Margin="0,0,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="{Binding Source={StaticResource settings},
-                                     Path=Settings.BackgroundColor}"
-                BorderBrush="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                Click="buttonRecentLogClear_Click"
-                Content="clear"
-                Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}" />
-
+        <!-- ************************************************ -->
         <Label Grid.Row="3"
                Grid.Column="0"
                Width="150"
@@ -224,8 +167,9 @@
                       IsChecked="{Binding Source={StaticResource settings},
                                           Path=Settings.CountMaskedMatches}" />
 
-        <Label Grid.Row="3"
-               Grid.Column="2"
+        <!-- ************************************************ -->
+        <Label Grid.Row="4"
+               Grid.Column="0"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -234,31 +178,59 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="save session information:"
+               Content="current filter files:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ToggleButton Grid.Row="3"
-                      Grid.Column="3"
-                      Width="75"
-                      Height="20"
-                      Margin="0,0,0,0"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Bottom"
-                      Background="{Binding Source={StaticResource settings},
-                                           Path=Settings.BackgroundColor}"
-                      BorderBrush="{Binding Source={StaticResource settings},
-                                            Path=Settings.ForegroundColor}"
-                      Content="{Binding Source={StaticResource settings},
-                                          Path=Settings.SaveSessionInformation,
-                                          StringFormat={}{0:True;;False}}"
-                      Foreground="{Binding Source={StaticResource settings},
-                                           Path=Settings.ForegroundColor}"
-                      IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.SaveSessionInformation,
-                                          StringFormat={}{0:True;;False}}" />
+        <TextBox Grid.Row="4"
+                 Grid.Column="1"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.CurrentFilterFilesString}" />
 
-        <Label Grid.Row="4"
+        <!-- ************************************************ -->
+        <Label Grid.Row="5"
+               Grid.Column="0"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="current log files:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <TextBox Grid.Row="5"
+                 Grid.Column="1"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.CurrentLogFilesString}" />
+        
+        <!-- ************************************************ -->
+        <Label Grid.Row="6"
                Grid.Column="0"
                Width="150"
                Height="25"
@@ -272,7 +244,7 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <TextBox Grid.Row="4"
+        <TextBox Grid.Row="6"
                  Grid.Column="1"
                  Width="200"
                  Height="20"
@@ -288,37 +260,8 @@
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.DebugFile}" />
 
-        <Label Grid.Row="4"
-               Grid.Column="2"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="shared filter directory:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <TextBox Grid.Row="4"
-                 Grid.Column="3"
-                 Width="200"
-                 Height="20"
-                 Margin="0,0,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Background="{Binding Source={StaticResource settings},
-                                      Path=Settings.BackgroundColor}"
-                 BorderBrush="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                 Foreground="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                 Text="{Binding Source={StaticResource settings},
-                                Path=Settings.SharedFilterDirectory}" />
-
-        <Label Grid.Row="5"
+        <!-- ************************************************ -->
+        <Label Grid.Row="7"
                Grid.Column="0"
                Width="150"
                Height="25"
@@ -332,7 +275,7 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <TextBox Grid.Row="5"
+        <TextBox Grid.Row="7"
                  Grid.Column="1"
                  Width="75"
                  Height="20"
@@ -348,98 +291,7 @@
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.FileHistoryCount}" />
 
-        <Label Grid.Row="5"
-               Grid.Column="2"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="version check file:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <TextBox Grid.Row="5"
-                 Grid.Column="3"
-                 Width="200"
-                 Height="20"
-                 Margin="0,0,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Background="{Binding Source={StaticResource settings},
-                                      Path=Settings.BackgroundColor}"
-                 BorderBrush="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                 Foreground="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                 Text="{Binding Source={StaticResource settings},
-                                Path=Settings.VersionCheckFile}" />
-
-        <Label Grid.Row="6"
-               Grid.Column="2"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="word wrap:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <ToggleButton Grid.Row="6"
-                      Grid.Column="3"
-                      Width="75"
-                      Height="20"
-                      Margin="0,0,0,0"
-                      HorizontalAlignment="Left"
-                      VerticalAlignment="Bottom"
-                      Background="{Binding Source={StaticResource settings},
-                                           Path=Settings.BackgroundColor}"
-                      BorderBrush="{Binding Source={StaticResource settings},
-                                            Path=Settings.ForegroundColor}"
-                      Content="{Binding Source={StaticResource settings},
-                                          Path=Settings.WordWrap}"
-                      Foreground="{Binding Source={StaticResource settings},
-                                           Path=Settings.ForegroundColor}"
-                      IsChecked="{Binding Source={StaticResource settings},
-                                          Path=Settings.WordWrap}" />
-
-        <Label Grid.Row="7"
-               Grid.Column="0"
-               Width="150"
-               Height="25"
-               Margin="0,0,0,0"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               HorizontalContentAlignment="Right"
-               BorderBrush="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}"
-               Content="file type extensions:"
-               Foreground="{Binding Source={StaticResource settings},
-                                    Path=Settings.ForegroundColor}" />
-
-        <TextBox Grid.Row="7"
-                 Grid.Column="1"
-                 Width="200"
-                 Height="20"
-                 Margin="0,0,0,0"
-                 HorizontalAlignment="Left"
-                 VerticalAlignment="Bottom"
-                 Background="{Binding Source={StaticResource settings},
-                                      Path=Settings.BackgroundColor}"
-                 BorderBrush="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
-                 Foreground="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                 Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FileExtensionsString}" />
-
+        <!-- ************************************************ -->
         <Label Grid.Row="8"
                Grid.Column="0"
                Width="150"
@@ -450,7 +302,7 @@
                HorizontalContentAlignment="Right"
                BorderBrush="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}"
-               Content="filter directory:"
+               Content="file type extensions:"
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
@@ -468,9 +320,41 @@
                  Foreground="{Binding Source={StaticResource settings},
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
-                                Path=Settings.FilterDirectory}" />
+                                Path=Settings.FileExtensionsString}" />
 
+        <!-- ************************************************ -->
         <Label Grid.Row="9"
+               Grid.Column="0"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="filter directory:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <TextBox Grid.Row="9"
+                 Grid.Column="1"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.FilterDirectory}" />
+        
+        <!-- ************************************************ -->
+        <Label Grid.Row="10"
                Grid.Column="0"
                Width="150"
                Height="25"
@@ -484,7 +368,7 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <ToggleButton Grid.Row="9"
+        <ToggleButton Grid.Row="10"
                       Grid.Column="1"
                       Width="75"
                       Height="20"
@@ -502,7 +386,8 @@
                       IsChecked="{Binding Source={StaticResource settings},
                                           Path=Settings.FilterHide}" />
 
-        <Label Grid.Row="10"
+        <!-- ************************************************ -->
+        <Label Grid.Row="11"
                Grid.Column="0"
                Width="150"
                Height="25"
@@ -517,7 +402,7 @@
                                     Path=Settings.ForegroundColor}" />
 
         <ComboBox Name="comboboxFontName"
-                  Grid.Row="10"
+                  Grid.Row="11"
                   Grid.Column="1"
                   Width="200"
                   Height="20"
@@ -537,21 +422,52 @@
                                           Path=Settings.FontName,
                                           Mode=TwoWay,
                                           UpdateSourceTrigger=PropertyChanged}">
-            <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ListViewSelectionChangedCommand}" CommandParameter="{Binding ElementName=listViewFontName}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="IsVisibleChanged">
-                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ListViewSelectionChangedCommand}" CommandParameter="{Binding ElementName=listViewFontName}" />
-                </i:EventTrigger>
-                <i:EventTrigger EventName="Loaded">
-                    <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=ListViewSelectionChangedCommand}" CommandParameter="{Binding ElementName=listViewFontName}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>-->
         </ComboBox>
 
-        <Label Grid.Row="11"
-               Grid.Column="0"
+        <!-- ************************************************ -->
+        
+        <!-- ************************************************ -->
+        <Button Name="buttonSave"
+                Grid.Row="16"
+                Grid.Column="0"
+                Width="75"
+                Height="20"
+                Margin="10,0,0,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonSave_Click"
+                Content="save"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+        <Button Name="buttonApply"
+                Grid.Row="16"
+                Grid.Column="1"
+                Width="150"
+                Height="20"
+                Margin="0,0,0,10"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonApply_Click"
+                Content="apply and restart"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+
+
+
+        <!-- ************************************************ -->
+        <!-- Column 2 and 3 -->
+        <!-- ************************************************ -->
+
+        <Label Grid.Row="1"
+               Grid.Column="2"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -564,8 +480,8 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <TextBox Grid.Row="11"
-                 Grid.Column="1"
+        <TextBox Grid.Row="1"
+                 Grid.Column="3"
                  Width="75"
                  Height="20"
                  Margin="0,0,0,0"
@@ -580,8 +496,9 @@
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.FontSize}" />
 
-        <Label Grid.Row="12"
-               Grid.Column="0"
+        <!-- ************************************************ -->
+        <Label Grid.Row="2"
+               Grid.Column="2"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -595,8 +512,8 @@
                                     Path=Settings.ForegroundColor}" />
 
         <ComboBox Name="foregroundColorCombo"
-                  Grid.Row="12"
-                  Grid.Column="1"
+                  Grid.Row="2"
+                  Grid.Column="3"
                   Width="200"
                   HorizontalAlignment="Left"
                   BorderBrush="{Binding Source={StaticResource settings},
@@ -628,8 +545,9 @@
             </ComboBox.ItemTemplate>
         </ComboBox>
 
-        <Label Grid.Row="13"
-               Grid.Column="0"
+        <!-- ************************************************ -->
+        <Label Grid.Row="3"
+               Grid.Column="2"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -642,8 +560,8 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <TextBox Grid.Row="13"
-                 Grid.Column="1"
+        <TextBox Grid.Row="3"
+                 Grid.Column="3"
                  Width="200"
                  Height="20"
                  Margin="0,0,0,0"
@@ -658,8 +576,9 @@
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.HelpUrl}" />
 
-        <Label Grid.Row="14"
-               Grid.Column="0"
+        <!-- ************************************************ -->
+        <Label Grid.Row="4"
+               Grid.Column="2"
                Width="150"
                Height="25"
                Margin="0,0,0,0"
@@ -672,8 +591,8 @@
                Foreground="{Binding Source={StaticResource settings},
                                     Path=Settings.ForegroundColor}" />
 
-        <TextBox Grid.Row="14"
-                 Grid.Column="1"
+        <TextBox Grid.Row="4"
+                 Grid.Column="3"
                  Width="75"
                  Height="20"
                  Margin="0,0,0,0"
@@ -687,19 +606,210 @@
                                       Path=Settings.ForegroundColor}"
                  Text="{Binding Source={StaticResource settings},
                                 Path=Settings.MaxMultiFileCount}" />
-        <!--    <Button Grid.Row="16"
-                Grid.Column="1"
-                Height="20"
-                                 BorderBrush="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-                 Foreground="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}"
-Name="buttonCancel"
+
+        <!-- ************************************************ -->
+        <Label Grid.Row="5"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="recent filter files:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <Button Name="buttonRecentFilterClear"
+                Grid.Row="5"
+                Grid.Column="3"
                 Width="75"
-                Margin="10,0,10,10"
+                Height="20"
+                Margin="0,0,0,0"
                 HorizontalAlignment="Left"
                 VerticalAlignment="Bottom"
-                Click="buttonCancel_Click"
-                Content="Cancel" />-->
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonRecentFilterClear_Click"
+                Content="clear"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
 
+        <!-- ************************************************ -->
+        <Label Grid.Row="6"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="recent log files:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <Button Name="buttonRecentLogClear"
+                Grid.Row="6"
+                Grid.Column="3"
+                Width="75"
+                Height="20"
+                Margin="0,0,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{Binding Source={StaticResource settings},
+                                     Path=Settings.BackgroundColor}"
+                BorderBrush="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                Click="buttonRecentLogClear_Click"
+                Content="clear"
+                Foreground="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}" />
+
+        <!-- ************************************************ -->
+        <Label Grid.Row="7"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="save session information:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <ToggleButton Grid.Row="7"
+                      Grid.Column="3"
+                      Width="75"
+                      Height="20"
+                      Margin="0,0,0,0"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Background="{Binding Source={StaticResource settings},
+                                           Path=Settings.BackgroundColor}"
+                      BorderBrush="{Binding Source={StaticResource settings},
+                                            Path=Settings.ForegroundColor}"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.SaveSessionInformation,
+                                          StringFormat={}{0:True;;False}}"
+                      Foreground="{Binding Source={StaticResource settings},
+                                           Path=Settings.ForegroundColor}"
+                      IsChecked="{Binding Source={StaticResource settings},
+                                          Path=Settings.SaveSessionInformation,
+                                          StringFormat={}{0:True;;False}}" />
+
+        <!-- ************************************************ -->
+        <Label Grid.Row="8"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="shared filter directory:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <TextBox Grid.Row="8"
+                 Grid.Column="3"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.SharedFilterDirectory}" />
+
+        <!-- ************************************************ -->
+        <Label Grid.Row="9"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="version check file:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <TextBox Grid.Row="9"
+                 Grid.Column="3"
+                 Width="200"
+                 Height="20"
+                 Margin="0,0,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Bottom"
+                 Background="{Binding Source={StaticResource settings},
+                                      Path=Settings.BackgroundColor}"
+                 BorderBrush="{Binding Source={StaticResource settings},
+                                       Path=Settings.ForegroundColor}"
+                 Foreground="{Binding Source={StaticResource settings},
+                                      Path=Settings.ForegroundColor}"
+                 Text="{Binding Source={StaticResource settings},
+                                Path=Settings.VersionCheckFile}" />
+        
+        <!-- ************************************************ -->
+        <Label Grid.Row="10"
+               Grid.Column="2"
+               Width="150"
+               Height="25"
+               Margin="0,0,0,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               HorizontalContentAlignment="Right"
+               BorderBrush="{Binding Source={StaticResource settings},
+                                     Path=Settings.ForegroundColor}"
+               Content="word wrap:"
+               Foreground="{Binding Source={StaticResource settings},
+                                    Path=Settings.ForegroundColor}" />
+
+        <ToggleButton Grid.Row="10"
+                      Grid.Column="3"
+                      Width="75"
+                      Height="20"
+                      Margin="0,0,0,0"
+                      HorizontalAlignment="Left"
+                      VerticalAlignment="Bottom"
+                      Background="{Binding Source={StaticResource settings},
+                                           Path=Settings.BackgroundColor}"
+                      BorderBrush="{Binding Source={StaticResource settings},
+                                            Path=Settings.ForegroundColor}"
+                      Content="{Binding Source={StaticResource settings},
+                                          Path=Settings.WordWrap}"
+                      Foreground="{Binding Source={StaticResource settings},
+                                           Path=Settings.ForegroundColor}"
+                      IsChecked="{Binding Source={StaticResource settings},
+                                          Path=Settings.WordWrap}" />
+
+        <!-- ************************************************ -->
+
+        <!-- ************************************************ -->
+
+        <!-- ************************************************ -->
+
+        <!-- ************************************************ -->
+
+        <!-- ************************************************ -->
         <Button Name="buttonReset"
                 Grid.Row="15"
                 Grid.Column="2"
@@ -733,38 +843,8 @@ Name="buttonCancel"
                 Content="register context and FTA"
                 Foreground="{Binding Source={StaticResource settings},
                                      Path=Settings.ForegroundColor}" />
-        <Button Name="buttonSave"
-                Grid.Row="16"
-                Grid.Column="0"
-                Width="75"
-                Height="20"
-                Margin="10,0,0,10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="{Binding Source={StaticResource settings},
-                                     Path=Settings.BackgroundColor}"
-                BorderBrush="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                Click="buttonSave_Click"
-                Content="save"
-                Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}" />
-        <Button Name="buttonApply"
-                Grid.Row="16"
-                Grid.Column="1"
-                Width="150"
-                Height="20"
-                Margin="0,0,0,10"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Bottom"
-                Background="{Binding Source={StaticResource settings},
-                                     Path=Settings.BackgroundColor}"
-                BorderBrush="{Binding Source={StaticResource settings},
-                                      Path=Settings.ForegroundColor}"
-                Click="buttonApply_Click"
-                Content="apply and restart"
-                Foreground="{Binding Source={StaticResource settings},
-                                     Path=Settings.ForegroundColor}" />
+        
+        <!-- ************************************************ -->
         <Button Name="buttonEdit"
                 Grid.Row="16"
                 Grid.Column="2"
