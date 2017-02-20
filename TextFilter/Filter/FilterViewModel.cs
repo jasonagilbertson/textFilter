@@ -626,9 +626,22 @@ namespace TextFilter
                     FilterFileItem filterFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.Index == filterIndex);
 
                     dataGrid.ScrollIntoView(filterFileItem);
-
                     dataGrid.SelectedItem = filterFileItem;
                     dataGrid.SelectedIndex = dataGrid.Items.IndexOf(filterFileItem);
+                    dataGrid.UpdateLayout();
+
+                    DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+                    DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(row);
+                    
+                    if (presenter != null)
+                    {
+                        DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(0) as DataGridCell;
+
+                        if (cell != null)
+                        {
+                            cell.Focus();
+                        }
+                    }
                 }
                 else if (filterIndex == -1)
                 {

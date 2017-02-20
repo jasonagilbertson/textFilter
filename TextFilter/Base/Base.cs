@@ -88,6 +88,45 @@ namespace TextFilter
             return null;
         }
 
+        public T FindVisualChild<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+            
+            if (childCount > 0)
+            {
+                for (int i = 0; i < childCount; i++)
+                {
+                    UIElement child = VisualTreeHelper.GetChild(parent, i) as UIElement;
+                    if (child is T)
+                    {
+                        SetStatus("findvisualchild: found child");
+                        return VisualTreeHelper.GetChild(parent, i) as T;
+                    }
+                    else
+                    {
+                        if(VisualTreeHelper.GetChildrenCount(child) > 0)
+                        {
+                            T rChild = FindVisualChild<T>(child);
+                            if (rChild is T)
+                            {
+                                SetStatus("findvisualchild: found rchild");
+                                return rChild as T;
+                            }
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                SetStatus("findvisualchild: no children");
+            }
+
+            SetStatus("findvisualchild: child of type not found");
+            return null;
+        }
+
         public StringBuilder FormatExportItem(bool fileItemEnabled, string separator, bool removeEmpty, string fileItemValue, StringBuilder sb)
         {
             if (fileItemEnabled)

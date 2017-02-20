@@ -831,7 +831,7 @@ namespace TextFilter
                             }
                         case AppSettingNames.FileExtensions:
                             {
-                                _appSettings[name].Value = ".log;.rvf";
+                                _appSettings[name].Value = ".log;.rvf;.rvconfig";
                                 break;
                             }
                         case AppSettingNames.FileHistoryCount:
@@ -880,10 +880,9 @@ namespace TextFilter
                                 _appSettings[name].Value = "";
                                 break;
                             }
-
                         case AppSettingNames.SaveSessionInformation:
                             {
-                                _appSettings[name].Value = "True";
+                                _appSettings[name].Value = "False";
                                 break;
                             }
                         case AppSettingNames.VersionCheckFile:
@@ -891,13 +890,11 @@ namespace TextFilter
                                 _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
                                 break;
                             }
-
                         case AppSettingNames.WordWrap:
                             {
                                 _appSettings[name].Value = "True";
                                 break;
                             }
-
                         default:
                             {
                                 break;
