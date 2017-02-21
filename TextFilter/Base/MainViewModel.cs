@@ -523,7 +523,7 @@ namespace TextFilter
 
                             if (Directory.Exists(downloadZipDir))
                             {
-                                Directory.Delete(downloadZipDir);
+                                Directory.Delete(downloadZipDir, true);
                             }
 
                             // extract zip
@@ -537,11 +537,21 @@ namespace TextFilter
                             //string newConfig = newExe + ".config";
 
                             // overwrite exe
+                            if(File.Exists(currentExe + ".old"))
+                            {
+                                File.Delete(currentExe + ".old");
+                            }
+
                             File.Move(currentExe, currentExe + ".old");
                             File.Copy(newExe, currentExe, true);
 
-                            // todo: merge configs?
-                            DuplicateWindow();
+                            mbResult = MessageBox.Show("textFilter updated. do you want to restart textFilter now?", "New version updated", MessageBoxButton.YesNo);
+                            if (mbResult == MessageBoxResult.Yes)
+                            {
+                                // todo: merge configs?
+                                DuplicateWindow();
+                                Application.Current.Shutdown();
+                            }
                         }
                     }
                 }
@@ -576,7 +586,7 @@ namespace TextFilter
                 }
                 else
                 {
-                    MessageBox.Show("Unable to read version info from " + Settings.VersionCheckFile);
+                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile,  e.ToString()),"update error");
                 }
 
                 return;

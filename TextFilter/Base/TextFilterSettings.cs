@@ -647,13 +647,20 @@ namespace TextFilter
             }
         }
 
-        public bool ReadConfigFile()
+        public bool ReadConfigFile(string fileName = null)
         {
-            // check config file first
-            List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
-            if (results.Count == 1)
+            if (!string.IsNullOrEmpty(fileName))
             {
-                Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+                Settings.ConfigFile = fileName;
+            }
+            else
+            {
+                // check config file first
+                List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
+                if (results.Count == 1)
+                {
+                    Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+                }
             }
 
             ConfigFile = !string.IsNullOrEmpty(ConfigFile) ? ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
@@ -690,7 +697,8 @@ namespace TextFilter
             CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
             CurrentLogFiles = ProcessFiles(CurrentLogFiles);
 
-            if (!ProcessCommandLine())
+            // fileName passed from processcommandline
+            if (string.IsNullOrEmpty(fileName) && !ProcessCommandLine())
             {
                 return false;
             }
@@ -1005,6 +1013,12 @@ namespace TextFilter
                         && new FilterFileManager().FilterFileVersion(filename) != FilterFileManager.FilterFileVersionResult.NotAFilterFile)
                     {
                         Settings.AddFilterFile(Environment.ExpandEnvironmentVariables(filename));
+
+                    }
+                    else if(Path.GetExtension(filename).ToLower() == ".config"
+                        | Path.GetExtension(filename).ToLower() == ".rvconfig")
+                    {
+                        ReadConfigFile(filename);
                     }
                     else
                     {
@@ -1032,12 +1046,8 @@ namespace TextFilter
             if (results.Count > 0)
             {
                 Settings.RemoveAllFilters();
-                if (results.Count > Settings.MaxMultiFileCount)
-                {
-                    SetStatus("max filter count reached:" + settings.MaxMultiFileCount);
-                }
 
-                for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                for (int i = 0; i < results.Count; i++)
                 {
                     Settings.AddFilterFile(results[i]);
                 }
@@ -1047,12 +1057,8 @@ namespace TextFilter
             if (results.Count > 0)
             {
                 Settings.RemoveAllLogs();
-                if (results.Count > Settings.MaxMultiFileCount)
-                {
-                    SetStatus("max log count reached:" + settings.MaxMultiFileCount);
-                }
 
-                for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                for (int i = 0; i < results.Count; i++)
                 {
                     Settings.AddLogFile(results[i]);
                 }
@@ -1123,7 +1129,7 @@ namespace TextFilter
                                     Directory.GetFiles(
                                         Path.GetDirectoryName(cleanPath),
                                         Path.GetFileName(cleanPath),
-                                        SearchOption.AllDirectories).ToList());
+                                        SearchOption.TopDirectoryOnly).ToList());
                             }
                         }
                         catch (Exception e)
@@ -1138,6 +1144,12 @@ namespace TextFilter
                         SetStatus("unknown file type:" + cleanPath);
                         break;
                 }
+            }
+
+            if (files.Count > Settings.MaxMultiFileCount)
+            {
+                SetStatus("max filter count reached:" + settings.MaxMultiFileCount);
+                files.RemoveRange(MaxMultiFileCount - 1, files.Count - MaxMultiFileCount);
             }
 
             return files;
