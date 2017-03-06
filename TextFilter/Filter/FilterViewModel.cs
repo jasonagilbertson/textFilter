@@ -763,7 +763,7 @@ namespace TextFilter
             string[] logNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".rvf";
-            dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
+            dlg.Filter = "Filter Files (*.rvf)|*.rvf|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             dlg.Multiselect = true;
 
@@ -977,7 +977,7 @@ namespace TextFilter
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".rvf";
-            dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
+            dlg.Filter = "Filter Files (*.rvf)|*.rvf|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
 
             dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? Settings.FilterDirectory;
 

@@ -1007,8 +1007,7 @@ namespace TextFilter
                 if (arguments[1] != null)
                 {
                     string filename = arguments[1];
-                    if ((Path.GetExtension(filename).ToLower() == ".xml"
-                        | Path.GetExtension(filename).ToLower() == ".rvf"
+                    if ((Path.GetExtension(filename).ToLower() == ".rvf"
                         | Path.GetExtension(filename).ToLower() == ".tat")
                         && new FilterFileManager().FilterFileVersion(filename) != FilterFileManager.FilterFileVersionResult.NotAFilterFile)
                     {

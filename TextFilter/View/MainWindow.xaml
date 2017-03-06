@@ -801,7 +801,8 @@
                                                         Path=Settings.BackgroundColor}"
                                    Foreground="{Binding Source={StaticResource settings},
                                                         Path=Settings.ForegroundColor}"
-                                   Text="{Binding Path=Header}" />
+                                   Text="{Binding Path=Header}"
+                                   Padding="2,0,2,0"/>
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.Background>
@@ -840,6 +841,22 @@
                             <DataGrid.Resources>
                                 <local:BindingProxy x:Key="proxyFilter"
                                                     Data="{Binding}" />
+                                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
+                                       TargetType="{x:Type DataGridColumnHeader}">
+                                    <Setter Property="Background"
+                                            Value="Gainsboro" />
+                                    <Setter Property="Foreground"
+                                            Value="{Binding Source={StaticResource settings}, Path=ForegroundColor}" />
+                                    <Setter Property="FontSize"
+                                            Value="{Binding Source={StaticResource settings}, Path=FontSize}" />
+                                    <Setter Property="BorderBrush"
+                                            Value="Black" />
+                                    <Setter Property="BorderThickness"
+                                            Value="1" />
+                                    <Setter Property="Padding"
+                                            Value="2,0,2,0" />
+                                </Style>
+
                             </DataGrid.Resources>
 
                             <DataGrid.CellStyle>
@@ -849,6 +866,10 @@
                                                 Value="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}" />
                                         <Setter Property="Foreground"
                                                 Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                        <Setter Property="BorderBrush"
+                                                Value="{Binding Source={StaticResource settings}, Path=Settings.ForegroundColor}" />
+                                        <Setter Property="BorderThickness"
+                                                Value=".5" />
                                         <Setter Property="FontSize"
                                                 Value="{Binding Source={StaticResource settings}, Path=Settings.FontSize}" />
                                         <Setter Property="FontFamily"
@@ -1066,7 +1087,8 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Path=Index}"
                                                     Header="Index"
-                                                    SortDirection="Ascending" />
+                                                    SortDirection="Ascending">
+                                </DataGridTextColumn>
                                 <DataGridCheckBoxColumn Binding="{Binding Path=Enabled}"
                                                         Header="Enabled" />
                                 <DataGridCheckBoxColumn Binding="{Binding Path=Exclude}"
@@ -1417,7 +1439,8 @@
                                                         Path=Settings.BackgroundColor}"
                                    Foreground="{Binding Source={StaticResource settings},
                                                         Path=Settings.ForegroundColor}"
-                                   Text="{Binding Path=Header}" />
+                                   Text="{Binding Path=Header}"
+                                   Padding="2,0,2,0" />
                     </DataTemplate>
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
@@ -1497,56 +1520,57 @@
                                                 <Setter.Value>
                                                     <ContextMenu>
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
-                                                                    Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.InsertFilterItemCommand}"
+                                                                                        Path=FilterViewModel.InsertFilterItemCommand}"
                                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.ForegroundColor}"
+                                                                                        Path=Settings.ForegroundColor}"
                                                                   Header="add to existing filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
-                                                                    Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.NewCommand}"
+                                                                                        Path=FilterViewModel.NewCommand}"
                                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.ForegroundColor}"
+                                                                                        Path=Settings.ForegroundColor}"
                                                                   Header="add to new filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
-                                                                    Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   Command="Copy"
                                                                   Foreground="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.ForegroundColor}"
+                                                                                        Path=Settings.ForegroundColor}"
                                                                   Header="copy"
                                                                   InputGestureText="Ctrl+C"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
-                                                                    Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   Command="Paste"
                                                                   Foreground="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.ForegroundColor}"
+                                                                                        Path=Settings.ForegroundColor}"
                                                                   InputGestureText="Ctrl+V"
                                                                   Header="paste"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   BorderBrush="{Binding Source={StaticResource settings},
-                                                                    Path=Settings.BackgroundColor}"
+                                                                                        Path=Settings.BackgroundColor}"
                                                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.QuickFindTextCommand}"
-                                                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
+                                                                                        Path=FilterViewModel.QuickFindTextCommand}"
+                                                                  CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, 
+                                                                                        Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
-                                                                   Path=Settings.ForegroundColor}"
+                                                                                        Path=Settings.ForegroundColor}"
                                                                   Header="quick filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                     </ContextMenu>
@@ -1844,13 +1868,13 @@
                                               InputGestureText="Ctrl+H"
                                               Style="{DynamicResource MenuItemStyle1}" />
                                     <MenuItem Background="{Binding Source={StaticResource settings},
-                                               Path=Settings.BackgroundColor}"
+                                                                    Path=Settings.BackgroundColor}"
                                               BorderBrush="{Binding Source={StaticResource settings},
-                                                Path=Settings.BackgroundColor}"
+                                                                    Path=Settings.BackgroundColor}"
                                               Command="{Binding Source={StaticResource mainViewModel},
-                                            Path=LogViewModel.ViewMessageCommand}"
+                                                                    Path=LogViewModel.ViewMessageCommand}"
                                               Foreground="{Binding Source={StaticResource settings},
-                                               Path=Settings.ForegroundColor}"
+                                                                    Path=Settings.ForegroundColor}"
                                               Header="view _message"
                                               InputGestureText="Ctrl+M"
                                               Style="{DynamicResource MenuItemStyle1}" />
