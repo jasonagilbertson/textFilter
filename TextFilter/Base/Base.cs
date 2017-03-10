@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: Base.cs
+// File: base.cs
 // Created: 9/6/2016
-// Modified: 2/12/2017
+// Modified: 3/6/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -12,6 +12,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TextFilter
@@ -40,7 +41,7 @@ namespace TextFilter
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
-
+        public Point CurrentMousePosition { get; private set; }
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -72,27 +73,11 @@ namespace TextFilter
             proc.Start();
         }
 
-        public T FindVisualParent<T>(UIElement element) where T : UIElement
-        {
-            var parent = element;
-            while (parent != null)
-            {
-                var correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
-
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            }
-            return null;
-        }
-
         public T FindVisualChild<T>(UIElement element) where T : UIElement
         {
             var parent = element;
             int childCount = VisualTreeHelper.GetChildrenCount(parent);
-            
+
             if (childCount > 0)
             {
                 for (int i = 0; i < childCount; i++)
@@ -105,7 +90,7 @@ namespace TextFilter
                     }
                     else
                     {
-                        if(VisualTreeHelper.GetChildrenCount(child) > 0)
+                        if (VisualTreeHelper.GetChildrenCount(child) > 0)
                         {
                             T rChild = FindVisualChild<T>(child);
                             if (rChild is T)
@@ -124,6 +109,22 @@ namespace TextFilter
             }
 
             SetStatus("findvisualchild: child of type not found");
+            return null;
+        }
+
+        public T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            while (parent != null)
+            {
+                var correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
             return null;
         }
 
@@ -213,6 +214,34 @@ namespace TextFilter
             {
                 Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
             }
+        }
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mpos = e.GetPosition(null);
+            Vector diff = this.CurrentMousePosition - mpos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance &&
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                //if (this.FileView.SelectedItems.Count == 0)
+                {
+                    return;
+                }
+
+                // right about here you get the file urls of the selected items.
+                // should be quite easy, if not, ask.
+                //string[] files = ...;
+                string dataFormat = DataFormats.FileDrop;
+                //DataObject dataObject = new DataObject(dataFormat, files);
+                //DragDrop.DoDragDrop(this.FileView, dataObject, DragDropEffects.Copy);
+            }
+        }
+
+        public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.CurrentMousePosition = e.GetPosition(null);
         }
     }
 }

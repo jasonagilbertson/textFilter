@@ -1,1 +1,26 @@
-﻿
+﻿drag out to desktop
+
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe]
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\Shell]
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\Shell\edit]
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\Shell\edit\command]
+@="\"C:\\Program Files\\textfilter\\textFilter.exe\" \"%1\""
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\Shell\open]
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\Shell\open\command]
+@="\"C:\\Program Files\\textfilter\\textFilter.exe\" \"%1\""
+
+[HKEY_CLASSES_ROOT\Applications\textFilter.exe\SupportedTypes]
+".csv"=""
+".log"=""
+".txt"=""
+".config"=""
+".rvconfig"=""
+".xml"=""
+".rvf"=""

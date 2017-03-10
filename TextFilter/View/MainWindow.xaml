@@ -792,6 +792,15 @@
                         <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"
                                                CommandParameter="{Binding}" />
                     </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseMove">
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.MouseMove}"
+                                               CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.PreviewMouseLeftButtonDown}"
+                                               CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+
                 </i:Interaction.Triggers>
                 <TabControl.ItemTemplate>
                     <DataTemplate>
@@ -1415,7 +1424,15 @@
                         <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"
                                                CommandParameter="{Binding}" />
                     </i:EventTrigger>
-                </i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseMove">
+                            <i:InvokeCommandAction Command="{Binding FilterViewModel.MouseMove}"
+                                                   CommandParameter="{Binding}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                            <i:InvokeCommandAction Command="{Binding FilterViewModel.PreviewMouseLeftButtonDown}"
+                                                   CommandParameter="{Binding}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                 <TabControl.Background>
                     <VisualBrush>
                         <VisualBrush.Visual>
