@@ -1,14 +1,12 @@
-﻿// *********************************************************************** Assembly : textFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: Parser.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="Parser.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
-using System;
+// ************************************************************************************
+
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -18,6 +16,26 @@ namespace TextFilter
 {
     public class Parser : Base
     {
+        //public void EnableLogFileMonitoring(bool enable)
+        //{
+        //    if (enable & !_logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged += logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //    else if (!enable & _logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in _logFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
+        //        }
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //}
+
         private int _filteredLinesCount;
 
         private FilterFile _filterFilePrevious;

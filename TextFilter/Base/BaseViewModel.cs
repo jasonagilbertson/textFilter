@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: BaseViewModel.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="BaseViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,6 +20,8 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
+        private Command _clearRecentCommand;
+
         public static FileWorkerItem UpdateViewCallback;
 
         private Command _closeAllCommand;
@@ -32,6 +33,8 @@ namespace TextFilter
         private Command _findNextCommand;
 
         private Command _gotFocusCommand;
+
+        private Command _gotoLineCommand;
 
         private Command _hideCommand;
 
@@ -67,6 +70,12 @@ namespace TextFilter
 
         public BaseViewModel()
         {
+        }
+
+        public Command ClearRecentCommand
+        {
+            get { return _clearRecentCommand ?? new Command(ClearRecentExecuted); }
+            set { _clearRecentCommand = value; }
         }
 
         public delegate void FileWorkerItem(WorkerItem workerItem);
@@ -132,6 +141,21 @@ namespace TextFilter
                 return _gotFocusCommand;
             }
             set { _gotFocusCommand = value; }
+        }
+
+        public Command GotoLineCommand
+        {
+            get
+            {
+                if (_gotoLineCommand == null)
+                {
+                    _gotoLineCommand = new Command(GotoLineExecuted);
+                }
+                _gotoLineCommand.CanExecute = true;
+
+                return _gotoLineCommand;
+            }
+            set { _gotoLineCommand = value; }
         }
 
         public Command HideCommand
@@ -350,6 +374,8 @@ namespace TextFilter
             }
         }
 
+        public abstract void ClearRecentExecuted();
+
         public void CloseAllFilesExecuted(object sender)
         {
             ObservableCollection<ITabViewModel<T>> items = new ObservableCollection<ITabViewModel<T>>(_tabItems);
@@ -435,6 +461,8 @@ namespace TextFilter
             }
         }
 
+        public abstract void GotoLineExecuted(object sender);
+
         public abstract void HideExecuted(object sender);
 
         public bool IsValidTabIndex()
@@ -474,7 +502,9 @@ namespace TextFilter
                     {
                         Command = SharedCommand,
                         CommandParameter = file,
-                        Header = file.Replace(directory, "").TrimStart('\\')
+                        Header = file.Replace(directory, "").TrimStart('\\'),
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor
                     };
 
                     menuCollection.Add(wpfMenuItem);
@@ -482,9 +512,13 @@ namespace TextFilter
 
                 foreach (string dir in new List<string>(dirs))
                 {
-                    MenuItem dItem = new MenuItem();
-                    dItem.Header = dir.Replace(directory, "").TrimStart('\\');
-                    dItem.ItemsSource = new ObservableCollection<MenuItem>();
+                    MenuItem dItem = new MenuItem()
+                    {
+                        Header = dir.Replace(directory, "").TrimStart('\\'),
+                        ItemsSource = new ObservableCollection<MenuItem>(),
+                        Background = Settings.BackgroundColor,
+                        Foreground = Settings.ForegroundColor
+                    };
 
                     foreach (MenuItem item in Menubuilder(dir))
                     {
@@ -503,23 +537,7 @@ namespace TextFilter
             }
         }
 
-        public void NewFileExecuted(object sender)
-        {
-            IFile<T> file = default(IFile<T>);
-
-            string tempTag = GenerateTempTagName();
-
-            if (IsValidTabIndex())
-            {
-                file = ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
-            }
-            else
-            {
-                file = ViewManager.NewFile(tempTag);
-            }
-
-            AddTabItem(file);
-        }
+        public abstract void NewFileExecuted(object sender);
 
         public void OpenDropExecuted(object sender)
         {
@@ -558,10 +576,18 @@ namespace TextFilter
             OpenFileExecuted(sender);
         }
 
+        public void Refresh()
+        {
+            // force reset of menus for shared filters. part of F5 refresh
+            _FilterViewModel.SharedCollection = Menubuilder(Settings.SharedFilterDirectory);
+        }
+
         public void ReloadFileExecuted(object sender)
         {
             IFile<T> file = default(IFile<T>);
             SetStatus("ReloadFile:enter");
+
+            Refresh();
 
             if (IsValidTabIndex())
             {
@@ -572,8 +598,6 @@ namespace TextFilter
                     return;
                 }
 
-                // force reset of menus for shared filters
-                Settings.Refresh();
                 ViewManager.CloseFile(tabItem.Tag);
                 RemoveTabItem(tabItem);
                 file = ViewManager.OpenFile(tabItem.Tag);
@@ -640,6 +664,8 @@ namespace TextFilter
         public void SaveModifiedFiles(object sender)
         {
             List<string> delList = new List<string>();
+            bool noPrompt = false;
+
             try
             {
                 foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
@@ -652,7 +678,7 @@ namespace TextFilter
                     }
 
                     // prompt for saving
-                    if (!TextFilterSettings.Settings.AutoSave)
+                    if (!TextFilterSettings.Settings.AutoSave & !noPrompt)
                     {
                         TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
 
@@ -667,7 +693,10 @@ namespace TextFilter
                             case TimedSaveDialog.Results.DontSave:
                                 item.Modified = false;
                                 break;
-
+                            case TimedSaveDialog.Results.DontSaveAll:
+                                noPrompt = true;
+                                item.Modified = false;
+                                break;
                             case TimedSaveDialog.Results.Save:
                                 SaveFileExecuted(item);
                                 item.Modified = false;
@@ -683,7 +712,7 @@ namespace TextFilter
                                 break;
                         }
                     }
-                    else
+                    else if(TextFilterSettings.Settings.AutoSave)
                     {
                         SaveFileExecuted(item);
                         item.Modified = false;
@@ -719,6 +748,7 @@ namespace TextFilter
                         SetStatus("DeleteTempFile: deleting temporary file:" + item.Tag);
                         File.Delete(item.Tag);
                     }
+
                     return true;
                 }
 

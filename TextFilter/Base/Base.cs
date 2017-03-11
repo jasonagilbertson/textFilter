@@ -1,18 +1,18 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: base.cs
+// Created: 9/6/2016
+// Modified: 3/6/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
-// <copyright file="Base.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TextFilter
@@ -41,7 +41,7 @@ namespace TextFilter
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
-
+        public Point CurrentMousePosition { get; private set; }
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -71,6 +71,45 @@ namespace TextFilter
             proc.StartInfo.UseShellExecute = true;
             proc.StartInfo.Verb = "runas";
             proc.Start();
+        }
+
+        public T FindVisualChild<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+
+            if (childCount > 0)
+            {
+                for (int i = 0; i < childCount; i++)
+                {
+                    UIElement child = VisualTreeHelper.GetChild(parent, i) as UIElement;
+                    if (child is T)
+                    {
+                        SetStatus("findvisualchild: found child");
+                        return VisualTreeHelper.GetChild(parent, i) as T;
+                    }
+                    else
+                    {
+                        if (VisualTreeHelper.GetChildrenCount(child) > 0)
+                        {
+                            T rChild = FindVisualChild<T>(child);
+                            if (rChild is T)
+                            {
+                                SetStatus("findvisualchild: found rchild");
+                                return rChild as T;
+                            }
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                SetStatus("findvisualchild: no children");
+            }
+
+            SetStatus("findvisualchild: child of type not found");
+            return null;
         }
 
         public T FindVisualParent<T>(UIElement element) where T : UIElement
@@ -175,6 +214,34 @@ namespace TextFilter
             {
                 Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
             }
+        }
+
+        public void MouseMove(object sender, MouseEventArgs e)
+        {
+            Point mpos = e.GetPosition(null);
+            Vector diff = this.CurrentMousePosition - mpos;
+
+            if (e.LeftButton == MouseButtonState.Pressed &&
+                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance &&
+                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                //if (this.FileView.SelectedItems.Count == 0)
+                {
+                    return;
+                }
+
+                // right about here you get the file urls of the selected items.
+                // should be quite easy, if not, ask.
+                //string[] files = ...;
+                string dataFormat = DataFormats.FileDrop;
+                //DataObject dataObject = new DataObject(dataFormat, files);
+                //DragDrop.DoDragDrop(this.FileView, dataObject, DragDropEffects.Copy);
+            }
+        }
+
+        public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            this.CurrentMousePosition = e.GetPosition(null);
         }
     }
 }

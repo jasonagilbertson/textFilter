@@ -3,7 +3,7 @@
 # textFilter  
 
 ## Current Download:  
-[textFilter.0.7.007.zip](https://github.com/jasonagilbertson/textFilter/releases/download/0.7.007/textFilter.0.7.007.zip) 
+[textFilter.exe.zip](https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.exe.zip/textFilter.exe.zip) 
 
 ## Documentation:  
 [Reference](https://github.com/jasonagilbertson/textFilter/blob/master/docs/overview.md)
@@ -27,11 +27,4 @@ textFilter is a utility designed to make filtering text files more efficient by 
 
 ## Notes:
 - The text files currently load into RAM regardless of size using standard .net. This is good as its fast to parse but can be bad depending on size of file the amount of RAM it uses can be sizeable. A 1 GB file averages around 3 GB of RAM.
-
-## Feedback:
-- If you have suggestions for features you would like to see or have any issues, please let me know.
-
-thanks
-
-
 

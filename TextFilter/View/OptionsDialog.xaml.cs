@@ -1,4 +1,13 @@
-﻿using System.Collections.Generic;
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: OptionsDialog.xaml.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
+//
+// ************************************************************************************
+
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 
@@ -58,6 +67,16 @@ namespace TextFilter
         {
             _dialogResult = OptionsDialogResult.edit;
             Disable();
+        }
+
+        private void buttonRecentFilterClear_Click(object sender, RoutedEventArgs e)
+        {
+            Base._FilterViewModel.ClearRecentExecuted();
+        }
+
+        private void buttonRecentLogClear_Click(object sender, RoutedEventArgs e)
+        {
+            Base._LogViewModel.ClearRecentExecuted();
         }
 
         private void buttonRegister_Click(object sender, RoutedEventArgs e)

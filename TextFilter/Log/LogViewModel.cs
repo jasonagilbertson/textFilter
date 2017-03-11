@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: LogViewModel.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="LogViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -27,8 +26,6 @@ namespace TextFilter
 
         private LogFileItem _filteredSelectedItem;
 
-        private Command _gotoLineCommand;
-
         private Command _keyDownCommand;
 
         private string _lineTotals;
@@ -39,7 +36,11 @@ namespace TextFilter
 
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
+        private ObservableCollection<WPFMenuItem> _recentCollection;
+
         private LogFileItem _unFilteredSelectedItem;
+
+        private Command _viewMessageCommand;
 
         public LogViewModel()
         {
@@ -73,19 +74,45 @@ namespace TextFilter
             set { _exportCommand = value; }
         }
 
-        public Command GotoLineCommand
+        public Command ViewMessageCommand
         {
             get
             {
-                if (_gotoLineCommand == null)
+                if (_viewMessageCommand == null)
                 {
-                    _gotoLineCommand = new Command(GotoLineExecuted);
+                    _viewMessageCommand = new Command(ViewMessageExecuted);
                 }
-                _gotoLineCommand.CanExecute = true;
+                _viewMessageCommand.CanExecute = true;
 
-                return _gotoLineCommand;
+                return _viewMessageCommand;
             }
-            set { _gotoLineCommand = value; }
+            set { _viewMessageCommand = value; }
+        }
+
+        private void ViewMessageExecuted(object sender)
+        {
+            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
+            string message = string.Empty;
+            int messageIndex = 0;
+
+            if (logTab != null)
+            {
+                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
+
+                if (logIndex <= logTab.ContentList.Count)
+                {
+                    message = ((LogFileItem)logTab.ContentList[logIndex]).Content;
+                    messageIndex = ((LogFileItem)logTab.ContentList[logIndex]).Index;
+                    TraceMessageDialog messageDialog = new TraceMessageDialog(message, messageIndex, CurrentFile().FileName);
+                    messageDialog.Show();
+                }
+                else
+                {
+                    SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
+                    return;
+                }
+
+            }
         }
 
         public Command KeyDownCommand
@@ -136,7 +163,13 @@ namespace TextFilter
         {
             get
             {
-                return (RecentCollectionBuilder(Settings.RecentLogFiles));
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+            }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+                OnPropertyChanged("RecentCollection");
             }
         }
 
@@ -173,6 +206,12 @@ namespace TextFilter
 
                 SelectedIndex = TabItems.Count - 1;
             }
+        }
+
+        public override void ClearRecentExecuted()
+        {
+            Settings.RecentLogFiles = new string[0];
+            UpdateRecentCollection();
         }
 
         public void CtrlEndExecuted(object sender)
@@ -237,6 +276,7 @@ namespace TextFilter
                 }
                 else
                 {
+                    PreviousIndex = SelectedIndex;
                     return;
                 }
 
@@ -409,7 +449,7 @@ namespace TextFilter
             }
         }
 
-        public void GotoLineExecuted(object sender)
+        public override void GotoLineExecuted(object sender)
         {
             try
             {
@@ -420,10 +460,16 @@ namespace TextFilter
                 {
                     index = Convert.ToInt32(sender);
                 }
-                else
-                {
-                    GotoLineDialog gotoDialog = new GotoLineDialog();
 
+                if (index == 0)
+                {
+                    index = SelectedTab.SelectedIndex;
+                }
+
+                if (sender == null)
+                {
+                    // display dialog to get index
+                    GotoLineDialog gotoDialog = new GotoLineDialog(index);
                     index = gotoDialog.WaitForResult();
                 }
 
@@ -451,6 +497,22 @@ namespace TextFilter
             {
                 SetStatus("GotoLineExecuted:exception" + e.ToString());
             }
+        }
+
+        public void GroomFiles()
+        {
+            // check if recent files are still valid
+            foreach (string file in (new List<string>(Settings.RecentLogFiles).ToList()))
+            {
+                if (!File.Exists(file))
+                {
+                    List<string> recent = Settings.RecentLogFiles.ToList();
+                    recent.Remove(file);
+                    Settings.RecentLogFiles = recent.ToArray();
+                }
+            }
+
+            UpdateRecentCollection();
         }
 
         public override void HideExecuted(object sender)
@@ -495,6 +557,10 @@ namespace TextFilter
                     dataGrid.ScrollIntoView(logFileItem);
                     dataGrid.SelectedItem = logFileItem;
                     dataGrid.SelectedIndex = dataGrid.Items.IndexOf(logFileItem);
+                    DataGridRow selectedRow = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+                    dataGrid.Focus();
+                    FocusManager.SetIsFocusScope(selectedRow, true);
+                    FocusManager.SetFocusedElement(selectedRow, selectedRow);
                 }
             }
             catch (Exception e)
@@ -536,6 +602,25 @@ namespace TextFilter
         {
             SetStatus("MouseWheelExecuted");
             throw new NotImplementedException();
+        }
+
+        public override void NewFileExecuted(object sender)
+        {
+            LogFile file = new LogFile();
+
+            string tempTag = GenerateTempTagName();
+
+            if (IsValidTabIndex())
+            {
+                file = (LogFile)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+            }
+            else
+            {
+                file = (LogFile)ViewManager.NewFile(tempTag);
+            }
+
+            AddTabItem(file);
+            UpdateRecentCollection();
         }
 
         public override void OpenFileExecuted(object sender)
@@ -585,6 +670,8 @@ namespace TextFilter
                     AddTabItem(logFile);
                 }
             }
+
+            UpdateRecentCollection();
         }
 
         public void PageDownExecuted(object sender)
@@ -876,6 +963,12 @@ namespace TextFilter
         {
             SetStatus("_LogViewModel.CollectionChanged: " + sender.ToString());
             FilterLogTabItems();
+        }
+
+        private void UpdateRecentCollection()
+        {
+            // setting to null forces refresh
+            RecentCollection = null;
         }
 
         public struct LogViewModelEvents

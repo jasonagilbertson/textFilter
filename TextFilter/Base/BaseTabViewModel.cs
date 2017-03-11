@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: BaseTabViewModel.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
-// <copyright file="BaseTabViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -311,10 +310,17 @@ namespace TextFilter
             else if (sender is ListBox)
             {
                 _selectedContent = (sender as ListBox).SelectedItems.Cast<T>().ToList();
+                _selectedIndex = (sender as ListBox).SelectedIndex;
             }
             else if (sender is DataGrid)
             {
                 _selectedContent = (sender as DataGrid).SelectedItems.Cast<T>().ToList();
+                IFileItem item = (IFileItem)_selectedContent.FirstOrDefault();
+
+                if (item != null)
+                {
+                    _selectedIndex = item.Index;
+                }
             }
         }
 

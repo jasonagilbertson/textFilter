@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: TextFilterSettings.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="TextFilterSettings.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -71,6 +70,8 @@ namespace TextFilter
             CurrentLogFiles,
 
             DebugFile,
+
+            FileExtensions,
 
             FilterDirectory,
 
@@ -182,7 +183,24 @@ namespace TextFilter
             }
             set
             {
-                _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
+                if (value.ToString() != _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.CountMaskedMatches).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.CountMaskedMatches).ToString());
+                }
+            }
+        }
+
+        public string CurrentFilterFilesString
+        {
+            get
+            {
+                return String.Join(";", CurrentFilterFiles);
+            }
+
+            set
+            {
+                CurrentFilterFiles = value.Split(';').ToList();
             }
         }
 
@@ -199,6 +217,18 @@ namespace TextFilter
             }
         }
 
+        public string CurrentLogFilesString
+        {
+            get
+            {
+                return String.Join(";", CurrentLogFiles);
+            }
+
+            set
+            {
+                CurrentLogFiles = value.Split(';').ToList();
+            }
+        }
         public List<string> CurrentLogFiles
         {
             get
@@ -224,6 +254,40 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.DebugFile).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.DebugFile).ToString());
+                }
+            }
+        }
+
+        public string[] FileExtensions
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.Split(new string[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileExtensions).ToString()].Value = string.Join(";", value);
+                    OnPropertyChanged((AppSettingNames.FileExtensions).ToString());
+                }
+            }
+        }
+
+        public string FileExtensionsString
+        {
+            get
+            {
+                return _appSettings[(AppSettingNames.FileExtensions).ToString()].Value;
+            }
+
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FileExtensions).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FileExtensions).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FileExtensions).ToString());
                 }
             }
         }
@@ -428,8 +492,6 @@ namespace TextFilter
             }
         }
 
-        public bool RefreshSharedFilterDirectory { get; set; }
-
         public bool SaveSessionInformation
         {
             get
@@ -585,13 +647,20 @@ namespace TextFilter
             }
         }
 
-        public bool ReadConfigFile()
+        public bool ReadConfigFile(string fileName = null)
         {
-            // check config file first
-            List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
-            if (results.Count == 1)
+            if (!string.IsNullOrEmpty(fileName))
             {
-                Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+                Settings.ConfigFile = fileName;
+            }
+            else
+            {
+                // check config file first
+                List<string> results = ProcessArg("/config:", Environment.GetCommandLineArgs());
+                if (results.Count == 1)
+                {
+                    Settings.ConfigFile = Environment.ExpandEnvironmentVariables(results[0]);
+                }
             }
 
             ConfigFile = !string.IsNullOrEmpty(ConfigFile) ? ConfigFile : string.Format("{0}.config", Process.GetCurrentProcess().MainModule.FileName);
@@ -628,19 +697,13 @@ namespace TextFilter
             CurrentFilterFiles = ProcessFiles(CurrentFilterFiles);
             CurrentLogFiles = ProcessFiles(CurrentLogFiles);
 
-            if (!ProcessCommandLine())
+            // fileName passed from processcommandline
+            if (string.IsNullOrEmpty(fileName) && !ProcessCommandLine())
             {
                 return false;
             }
 
             return true;
-        }
-
-        public void Refresh()
-        {
-            // f5 from gui
-            // only thing that needs refreshed are the shared menus
-            RefreshSharedFilterDirectory = true;
         }
 
         public void RemoveAllFilters()
@@ -661,12 +724,12 @@ namespace TextFilter
 
         public void RemoveFilterFile(string filterFile)
         {
-            List<string> logFiles = new List<string>(CurrentFilterFiles);
-            if (logFiles.Contains(filterFile))
+            List<string> filterFiles = new List<string>(CurrentFilterFiles);
+            if (filterFiles.Contains(filterFile))
             {
                 Debug.Print("Removing FilterFile:" + filterFile);
-                logFiles.Remove(filterFile);
-                CurrentFilterFiles = logFiles;
+                filterFiles.Remove(filterFile);
+                CurrentFilterFiles = filterFiles;
             }
         }
 
@@ -774,6 +837,11 @@ namespace TextFilter
                                 _appSettings[name].Value = "";
                                 break;
                             }
+                        case AppSettingNames.FileExtensions:
+                            {
+                                _appSettings[name].Value = ".log;.rvf;.rvconfig";
+                                break;
+                            }
                         case AppSettingNames.FileHistoryCount:
                             {
                                 _appSettings[name].Value = "20";
@@ -820,10 +888,9 @@ namespace TextFilter
                                 _appSettings[name].Value = "";
                                 break;
                             }
-
                         case AppSettingNames.SaveSessionInformation:
                             {
-                                _appSettings[name].Value = "True";
+                                _appSettings[name].Value = "False";
                                 break;
                             }
                         case AppSettingNames.VersionCheckFile:
@@ -831,13 +898,11 @@ namespace TextFilter
                                 _appSettings[name].Value = "https://raw.githubusercontent.com/jasonagilbertson/TextFilter/master/TextFilter/version.xml";
                                 break;
                             }
-
                         case AppSettingNames.WordWrap:
                             {
                                 _appSettings[name].Value = "True";
                                 break;
                             }
-
                         default:
                             {
                                 break;
@@ -942,12 +1007,17 @@ namespace TextFilter
                 if (arguments[1] != null)
                 {
                     string filename = arguments[1];
-                    if ((Path.GetExtension(filename).ToLower() == ".xml"
-                        | Path.GetExtension(filename).ToLower() == ".rvf"
+                    if ((Path.GetExtension(filename).ToLower() == ".rvf"
                         | Path.GetExtension(filename).ToLower() == ".tat")
                         && new FilterFileManager().FilterFileVersion(filename) != FilterFileManager.FilterFileVersionResult.NotAFilterFile)
                     {
                         Settings.AddFilterFile(Environment.ExpandEnvironmentVariables(filename));
+
+                    }
+                    else if(Path.GetExtension(filename).ToLower() == ".config"
+                        | Path.GetExtension(filename).ToLower() == ".rvconfig")
+                    {
+                        ReadConfigFile(filename);
                     }
                     else
                     {
@@ -975,12 +1045,8 @@ namespace TextFilter
             if (results.Count > 0)
             {
                 Settings.RemoveAllFilters();
-                if (results.Count > Settings.MaxMultiFileCount)
-                {
-                    SetStatus("max filter count reached:" + settings.MaxMultiFileCount);
-                }
 
-                for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                for (int i = 0; i < results.Count; i++)
                 {
                     Settings.AddFilterFile(results[i]);
                 }
@@ -990,12 +1056,8 @@ namespace TextFilter
             if (results.Count > 0)
             {
                 Settings.RemoveAllLogs();
-                if (results.Count > Settings.MaxMultiFileCount)
-                {
-                    SetStatus("max log count reached:" + settings.MaxMultiFileCount);
-                }
 
-                for (int i = 0; i < settings.MaxMultiFileCount & i < results.Count; i++)
+                for (int i = 0; i < results.Count; i++)
                 {
                     Settings.AddLogFile(results[i]);
                 }
@@ -1066,7 +1128,7 @@ namespace TextFilter
                                     Directory.GetFiles(
                                         Path.GetDirectoryName(cleanPath),
                                         Path.GetFileName(cleanPath),
-                                        SearchOption.AllDirectories).ToList());
+                                        SearchOption.TopDirectoryOnly).ToList());
                             }
                         }
                         catch (Exception e)
@@ -1081,6 +1143,12 @@ namespace TextFilter
                         SetStatus("unknown file type:" + cleanPath);
                         break;
                 }
+            }
+
+            if (files.Count > Settings.MaxMultiFileCount)
+            {
+                SetStatus("max filter count reached:" + settings.MaxMultiFileCount);
+                files.RemoveRange(MaxMultiFileCount - 1, files.Count - MaxMultiFileCount);
             }
 
             return files;

@@ -1,4 +1,13 @@
-﻿using System;
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: GotoLineDialog.xaml.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
+//
+// ************************************************************************************
+
+using System;
 using System.Windows;
 using System.Windows.Input;
 
@@ -6,11 +15,16 @@ namespace TextFilter
 {
     public partial class GotoLineDialog : Window
     {
-        public GotoLineDialog()
+        public GotoLineDialog(int index)
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             textBoxLineNumber.Focus();
+
+            if (index > 0)
+            {
+                textBoxLineNumber.Text = index.ToString();
+            }
         }
 
         public void Disable()

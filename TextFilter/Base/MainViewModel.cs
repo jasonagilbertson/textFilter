@@ -1,18 +1,18 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: mainviewmodel.cs
+// Created: 12/2/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
-// <copyright file="MainViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -32,8 +32,11 @@ namespace TextFilter
         private List<string> _colorNames = new List<string>();
         private Command _controlGotFocusCommand;
         private Command _controlLostFocusCommand;
-        private Command _copyCommand;
+
         private string _currentStatus;
+
+        private Command _duplicateWindowCommand;
+
         private Command _helpCommand;
 
         private Command _listViewSelectionChangedCommand;
@@ -138,21 +141,6 @@ namespace TextFilter
             set { _controlLostFocusCommand = value; }
         }
 
-        public Command CopyCommand
-        {
-            get
-            {
-                if (_copyCommand == null)
-                {
-                    _copyCommand = new Command(CopyExecuted);
-                }
-                _copyCommand.CanExecute = true;
-
-                return _copyCommand;
-            }
-            set { _copyCommand = value; }
-        }
-
         public string CurrentStatus
         {
             get
@@ -167,6 +155,27 @@ namespace TextFilter
                     OnPropertyChanged("CurrentStatus");
                 }
             }
+        }
+
+        public Command DuplicateWindowCommand
+        {
+            get
+            {
+                if (_duplicateWindowCommand == null)
+                {
+                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
+
+                return _duplicateWindowCommand;
+            }
+            set { _duplicateWindowCommand = value; }
+        }
+
+        public FilterViewModel FilterViewModel
+        {
+            get { return _FilterViewModel; }
+            set { _FilterViewModel = value; }
         }
 
         public Command HelpCommand
@@ -188,6 +197,12 @@ namespace TextFilter
         {
             get { return _listViewSelectionChangedCommand ?? new Command(ListViewSelectionChangedExecuted); }
             set { _listViewSelectionChangedCommand = value; }
+        }
+
+        public LogViewModel LogViewModel
+        {
+            get { return _LogViewModel; }
+            set { _LogViewModel = value; }
         }
 
         public TextFilterSettings Settings
@@ -275,42 +290,6 @@ namespace TextFilter
             _color.Clear();
         }
 
-        public void CopyExecuted(object contentList)
-        {
-            List<ListBoxItem> c_contentList = new List<ListBoxItem>();
-
-            try
-            {
-                if (contentList is List<ListBoxItem>)
-                {
-                    c_contentList = (List<ListBoxItem>)contentList;
-                }
-                else if (contentList is ObservableCollection<ListBoxItem>)
-                {
-                    c_contentList = new List<ListBoxItem>((ObservableCollection<ListBoxItem>)contentList);
-                }
-                else
-                {
-                    return;
-                }
-
-                HtmlFragment htmlFragment = new HtmlFragment();
-                foreach (ListBoxItem lbi in c_contentList)
-                {
-                    if (lbi != null && lbi.IsSelected)
-                    {
-                        htmlFragment.AddClipToList(lbi.Content.ToString(), lbi.Background, lbi.Foreground);
-                    }
-                }
-
-                htmlFragment.CopyListToClipboard();
-            }
-            catch (Exception ex)
-            {
-                SetStatus("Exception:CopyCmdExecute:" + ex.ToString());
-            }
-        }
-
         public List<string> GetColorNames()
         {
             const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
@@ -357,25 +336,7 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        StringBuilder args = new StringBuilder();
-                        if (Settings.CurrentFilterFiles.Count > 0)
-                        {
-                            args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
-                        }
-
-                        if (Settings.CurrentLogFiles.Count > 0)
-                        {
-                            if (args.Length > 0)
-                            {
-                                args.Append(" ");
-                            }
-
-                            args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
-                        }
-
-                        Settings.Save();
-                        CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
-                        Debug.Print(args.ToString());
+                        DuplicateWindow();
                         Application.Current.Shutdown();
                         break;
                     }
@@ -412,6 +373,8 @@ namespace TextFilter
                 default:
                     break;
             }
+
+            _FilterViewModel.Refresh();
         }
 
         public void VersionCheckExecuted(object sender)
@@ -434,8 +397,10 @@ namespace TextFilter
 
         private void AfterLaunch(bool silent)
         {
-            // force update of shared collection menu
-            var oc = _FilterViewModel.SharedCollection;
+            // clean recent lists
+            _FilterViewModel.GroomFiles();
+            _LogViewModel.GroomFiles();
+
             VersionCheck(silent);
         }
 
@@ -458,6 +423,34 @@ namespace TextFilter
             }
         }
 
+        private void DuplicateWindow()
+        {
+            StringBuilder args = new StringBuilder();
+            if (Settings.CurrentFilterFiles.Count > 0)
+            {
+                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
+            }
+
+            if (Settings.CurrentLogFiles.Count > 0)
+            {
+                if (args.Length > 0)
+                {
+                    args.Append(" ");
+                }
+
+                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
+            }
+
+            Settings.Save();
+            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+            Debug.Print(args.ToString());
+        }
+
+        private void DuplicateWindowExecuted(object sender)
+        {
+            DuplicateWindow();
+        }
+
         private void HandleNewCurrentStatus(object sender, string status)
         {
             CurrentStatus = status;
@@ -470,26 +463,29 @@ namespace TextFilter
 
         private void VersionCheck(bool silent)
         {
+            string destFile = string.Empty;
+            string downloadLocation = string.Empty;
+            string message = string.Empty;
+            string version = string.Empty;
+
             try
             {
                 if (string.IsNullOrEmpty(Settings.VersionCheckFile))
                 {
+                    message = "version check url not specified";
+
                     if (silent)
                     {
-                        SetStatus("VersionCheckExecuted:version check url not specified");
+                        SetStatus(message);
                     }
                     else
                     {
-                        MessageBox.Show("version check url not specified");
+                        MessageBox.Show(message);
                     }
-
                     return;
                 }
 
-                string version = string.Empty;
                 string workingVersion = Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion;
-                string downloadLocation = string.Empty;
-                string destFile = string.Empty;
                 string workingDir = Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName);
 
                 XmlDocument doc = new XmlDocument();
@@ -504,15 +500,7 @@ namespace TextFilter
                 }
                 if (string.IsNullOrEmpty(downloadLocation))
                 {
-                    string message = "unable to check version: " + Settings.VersionCheckFile;
-                    if (silent)
-                    {
-                        SetStatus("VersionCheck:" + message);
-                    }
-                    else
-                    {
-                        MessageBox.Show(message);
-                    }
+                    message = "unable to check version: " + Settings.VersionCheckFile;
                 }
                 else if (string.Compare(version, workingVersion, true) > 0)
                 {
@@ -531,19 +519,59 @@ namespace TextFilter
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
                             (new System.Net.WebClient()).DownloadFile(downloadLocation, downloadZip);
-                            MessageBox.Show(string.Format("New version has been downloaded from: {0} \n to: {1}.\nExtract zip and restart.", downloadLocation, downloadZip));
-                            CreateProcess("explorer.exe", workingDir);
+
+                            string downloadZipDir = string.Format("{0}-{1}", Path.GetFileNameWithoutExtension(downloadZip), version);
+
+                            if (Directory.Exists(downloadZipDir))
+                            {
+                                Directory.Delete(downloadZipDir, true);
+                            }
+
+                            // extract zip
+                            ZipFile.ExtractToDirectory(downloadZip, downloadZipDir);
+                            File.Delete(downloadZip);
+
+                            string currentExe = Process.GetCurrentProcess().MainModule.FileName;
+                            //string currentConfig = currentExe + ".config";
+                            string currentProcessName = Process.GetCurrentProcess().MainModule.ModuleName;
+                            string newExe = string.Format("{0}\\{1}", downloadZipDir, currentProcessName);
+                            //string newConfig = newExe + ".config";
+
+                            // overwrite exe
+                            if(File.Exists(currentExe + ".old"))
+                            {
+                                File.Delete(currentExe + ".old");
+                            }
+
+                            File.Move(currentExe, currentExe + ".old");
+                            File.Copy(newExe, currentExe, true);
+
+                            mbResult = MessageBox.Show("textFilter updated. do you want to restart textFilter now?", "New version updated", MessageBoxButton.YesNo);
+                            if (mbResult == MessageBoxResult.Yes)
+                            {
+                                // todo: merge configs?
+                                DuplicateWindow();
+                                Application.Current.Shutdown();
+                            }
                         }
                     }
                 }
+                else if (string.Compare(version, workingVersion, true) < 0)
+                {
+                    message = string.Format("running version is newer. running ver: {0} update ver: {1}", workingVersion, version);
+                }
                 else
                 {
-                    string message = "version is same: " + workingVersion;
-                    if (silent)
-                    {
-                        SetStatus("VersionCheck:" + message);
-                    }
-                    else
+                    message = "version is same: " + workingVersion;
+                }
+
+                if (silent)
+                {
+                    SetStatus("VersionCheck:" + message);
+                }
+                else
+                {
+                    if (!string.IsNullOrEmpty(message))
                     {
                         MessageBox.Show(message);
                     }
@@ -559,7 +587,7 @@ namespace TextFilter
                 }
                 else
                 {
-                    MessageBox.Show("Unable to read version info from " + Settings.VersionCheckFile);
+                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile,  e.ToString()),"update error");
                 }
 
                 return;

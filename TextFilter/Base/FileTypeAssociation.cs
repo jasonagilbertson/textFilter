@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: FileTypeAssociation.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 09-06-2015 ***********************************************************************
-// <copyright file="FileTypeAssociation.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using Microsoft.Win32;
 using System;
 using System.Diagnostics;
@@ -21,7 +20,7 @@ namespace TextFilter
     {
         private static FileTypeAssociation _fileTypeAssociation;
 
-        private string[] _extensions = new string[4] { ".csv", ".log", ".rvf", ".rvconfig" };
+        private string[] _extensions = TextFilterSettings.Settings.FileExtensions;
 
         private string _keyName = Process.GetCurrentProcess().ProcessName;
 
@@ -37,6 +36,7 @@ namespace TextFilter
 
         public FileTypeAssociation()
         {
+           
         }
 
         public static FileTypeAssociation Instance

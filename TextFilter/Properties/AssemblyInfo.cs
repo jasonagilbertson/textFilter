@@ -1,4 +1,15 @@
-﻿using System.Reflection;
+﻿// ***********************************************************************
+// Assembly : TextFilter
+// Author : jason Created : 09-06-2015
+//
+// ***********************************************************************
+// Last Modified By : jason Last Modified On : 1-13-2017
+// <copyright file="" company="">
+// </copyright>
+// <summary>
+// </summary>
+// ***********************************************************************
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 

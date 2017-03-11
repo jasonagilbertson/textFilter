@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: FilterFileManager.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-13-2015 ***********************************************************************
-// <copyright file="FilterFileManager.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -119,14 +118,14 @@ namespace TextFilter
 
             if (results == null | results != null && results.Count() == 0 | filterIndex >= 0)
             {
-                // no valid filters
+                // no empty / new filter item or index ge 0 (insert or remove)
                 FilterFileItem fileItem = new FilterFileItem();
 
                 filterFile.EnablePatternNotifications(false);
                 fileItem.Index = indexMax + 1;
 
                 SetStatus("ManageNewFilterFileItem:adding new line");
-                //filterFile.AddPatternNotification(fileItem, true);
+
                 if (filterIndex >= 0 && !remove)
                 {
                     // insert in new enabled filter item at specified index

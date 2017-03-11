@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: FilterViewModel.cs
+// Created: 11/14/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-13-2015 ***********************************************************************
-// <copyright file="FilterViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,24 +19,28 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace TextFilter
 {
     public class FilterViewModel : BaseViewModel<FilterFileItem>
     {
-        private Command _addFilterItemCommand;
         private string _filterHide;
         private Command _filterNotesCommand;
+        private Command _insertFilterItemCommand;
         private bool _quickFindAnd;
         private Command _quickFindChangedCommand;
         private int _quickFindIndex;
         private FilterFileItem _quickFindItem = new FilterFileItem() { Index = -1 };
         private Command _quickFindKeyPressCommand;
-        private ObservableCollection<ListBoxItem> _quickFindList;
+        private ObservableCollection<ListBoxItem> _quickFindList = new ObservableCollection<ListBoxItem>();
         private bool _quickFindNot;
         private bool _quickFindOr;
         private bool _quickFindRegex;
+        private string _quickFindText = string.Empty;
+        private Command _quickFindTextCommand;
+        private ObservableCollection<WPFMenuItem> _recentCollection;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
@@ -58,24 +61,6 @@ namespace TextFilter
             //TabItems.CollectionChanged += TabItems_CollectionChanged;
             // ViewManager.PropertyChanged += ViewManager_PropertyChanged;
             // ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
-        }
-
-        public Command AddFilterItemCommand
-        {
-            get
-            {
-                if (_addFilterItemCommand == null)
-                {
-                    _addFilterItemCommand = new Command(InsertFilterItemExecuted);
-                }
-                _addFilterItemCommand.CanExecute = true;
-
-                return _addFilterItemCommand;
-            }
-            set
-            {
-                _addFilterItemCommand = value;
-            }
         }
 
         public string FilterHide
@@ -122,6 +107,24 @@ namespace TextFilter
             set { _filterNotesCommand = value; }
         }
 
+        public Command InsertFilterItemCommand
+        {
+            get
+            {
+                if (_insertFilterItemCommand == null)
+                {
+                    _insertFilterItemCommand = new Command(InsertFilterItemExecuted);
+                }
+                _insertFilterItemCommand.CanExecute = true;
+
+                return _insertFilterItemCommand;
+            }
+            set
+            {
+                _insertFilterItemCommand = value;
+            }
+        }
+
         public bool QuickFindAnd
         {
             get
@@ -164,6 +167,8 @@ namespace TextFilter
             }
             set { _quickFindChangedCommand = value; }
         }
+
+        public ComboBox QuickFindCombo { get; private set; }
 
         public int QuickFindIndex
         {
@@ -299,11 +304,48 @@ namespace TextFilter
             }
         }
 
+        public string QuickFindText
+        {
+            get
+            {
+                return _quickFindText;
+            }
+            set
+            {
+                if (_quickFindText != value)
+                {
+                    _quickFindText = value;
+                    OnPropertyChanged("QuickFindText");
+                }
+            }
+        }
+
+        public Command QuickFindTextCommand
+        {
+            get
+            {
+                if (_quickFindTextCommand == null)
+                {
+                    _quickFindTextCommand = new Command(QuickFindTextExecuted);
+                }
+                _quickFindTextCommand.CanExecute = true;
+
+                return _quickFindTextCommand;
+            }
+            set { _quickFindTextCommand = value; }
+        }
+
         public ObservableCollection<WPFMenuItem> RecentCollection
         {
             get
             {
-                return (RecentCollectionBuilder(Settings.RecentFilterFiles));
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
+            }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
+                OnPropertyChanged("RecentCollection");
             }
         }
 
@@ -329,17 +371,13 @@ namespace TextFilter
         {
             get
             {
-                if (_sharedCollection == null || _sharedCollection.Count < 1 | Settings.RefreshSharedFilterDirectory)
-                {
-                    Settings.RefreshSharedFilterDirectory = false;
-                    _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
-                }
-
+                _sharedCollection = Menubuilder(Settings.SharedFilterDirectory);
                 return _sharedCollection;
             }
             set
             {
                 _sharedCollection = value;
+                OnPropertyChanged("SharedCollection");
             }
         }
 
@@ -385,6 +423,12 @@ namespace TextFilter
             }
 
             return fileItems;
+        }
+
+        public override void ClearRecentExecuted()
+        {
+            Settings.RecentFilterFiles = new string[0];
+            UpdateRecentCollection();
         }
 
         public FilterNeed CompareFilterList(List<FilterFileItem> previousFilterFileItems)
@@ -557,6 +601,79 @@ namespace TextFilter
             }
         }
 
+        public override void GotoLineExecuted(object sender)
+        {
+            FilterTabViewModel filterTab = (FilterTabViewModel)CurrentTab();
+            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
+
+            if (filterTab != null && logTab != null)
+            {
+                int filterIndex = -1;
+                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
+
+                if (logIndex <= logTab.ContentList.Count)
+                {
+                    filterIndex = logTab.ContentList[logIndex].FilterIndex;
+                }
+                else
+                {
+                    SetStatus("filter:gotoLine:error in index:" + filterIndex.ToString());
+                    return;
+                }
+
+                if (filterIndex >= 0)
+                {
+                    SetStatus("filter:gotoLine:" + filterIndex.ToString());
+                    ((Selector)filterTab.Viewer).SelectedIndex = filterIndex;
+
+                    DataGrid dataGrid = (DataGrid)CurrentTab().Viewer;
+                    FilterFileItem filterFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.Index == filterIndex);
+
+                    dataGrid.ScrollIntoView(filterFileItem);
+                    dataGrid.SelectedItem = filterFileItem;
+                    dataGrid.SelectedIndex = dataGrid.Items.IndexOf(filterFileItem);
+                    dataGrid.UpdateLayout();
+
+                    DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+                    DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(row);
+                    
+                    if (presenter != null)
+                    {
+                        DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(0) as DataGridCell;
+
+                        if (cell != null)
+                        {
+                            cell.Focus();
+                        }
+                    }
+                }
+                else if (filterIndex == -1)
+                {
+                    // quick filter
+                    if (QuickFindCombo != null)
+                    {
+                        Keyboard.Focus(QuickFindCombo);
+                    }
+                }
+            }
+        }
+
+        public void GroomFiles()
+        {
+            // check if recent filters are still valid
+            foreach (string file in (new List<string>(Settings.RecentFilterFiles).ToList()))
+            {
+                if (!File.Exists(file))
+                {
+                    List<string> recent = Settings.RecentFilterFiles.ToList();
+                    recent.Remove(file);
+                    Settings.RecentFilterFiles = recent.ToArray();
+                }
+            }
+
+            UpdateRecentCollection();
+        }
+
         public override void HideExecuted(object sender)
         {
             try
@@ -586,10 +703,56 @@ namespace TextFilter
             if (filterFile != null)
             {
                 int filterIndex = 0;
-                filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
+                if (CurrentTab().Viewer != null)
+                {
+                    filterIndex = ((Selector)CurrentTab().Viewer).SelectedIndex;
+                }
+
+                // add content from logfileitem to new filter
+                if (sender is TextBox)
+                {
+                    filterIndex = filterFile.ContentItems.Max(x => x.Index);
+                    TextBox textBox = (sender as TextBox);
+                    FilterFileItem fileItem = new FilterFileItem()
+                    {
+                        Enabled = true,
+                        Index = ++filterIndex,
+                        Notes = textBox.Text,
+                        Filterpattern = textBox.SelectedText
+                    };
+
+                    filterFile.ContentItems.Add(fileItem);
+                    // set filterindex to -1 to add new filter item at end of list
+                    filterIndex = -1;
+                }
 
                 ((FilterFileManager)ViewManager).ManageFilterFileItem(filterFile, filterIndex);
                 VerifyIndex();
+            }
+        }
+
+        public override void NewFileExecuted(object sender)
+        {
+            FilterFile file = new FilterFile();
+            string tempTag = GenerateTempTagName();
+
+            if (IsValidTabIndex())
+            {
+                file = (FilterFile)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+            }
+            else
+            {
+                file = (FilterFile)ViewManager.NewFile(tempTag);
+            }
+
+            AddTabItem(file);
+            VerifyIndex();
+            UpdateRecentCollection();
+
+            // add content from logfileitem content selectedtext to new filter
+            if (sender is TextBox)
+            {
+                InsertFilterItemExecuted(sender);
             }
         }
 
@@ -604,7 +767,7 @@ namespace TextFilter
             string[] logNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".rvf";
-            dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
+            dlg.Filter = "Filter Files (*.rvf)|*.rvf|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
             dlg.InitialDirectory = Settings.FilterDirectory ?? "";
             dlg.Multiselect = true;
 
@@ -636,6 +799,8 @@ namespace TextFilter
                     VerifyAndOpenFile(logName);
                 }
             }
+
+            UpdateRecentCollection();
         }
 
         public override void PasteText(object sender)
@@ -646,54 +811,68 @@ namespace TextFilter
         public void QuickFindChangedExecuted(object sender)
         {
             SetStatus(string.Format("quickfindchangedexecuted:enter: {0}", (sender is ComboBox)));
-
-            if (sender is ComboBox)
+            bool buttonStatus = (sender is Button);
+            bool comboQuickFind = (sender is ComboBox);
+            bool textBoxSelectedText = (sender is TextBox);
+                
+            // save combo if passed in
+            if (comboQuickFind && QuickFindCombo == null)
             {
-                ComboBox comboBox = (sender as ComboBox);
+                QuickFindCombo = (sender as ComboBox);
+            }
+
+            if (comboQuickFind)
+            {
                 QuickFindItem.Filterpattern = (sender as ComboBox).Text;
-                bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
-                foreach (ComboBoxItem item in comboBox.Items)
+            }
+            else if (textBoxSelectedText)
+            {
+                QuickFindText = (sender as TextBox).SelectedText;
+                QuickFindItem.Filterpattern = (sender as TextBox).SelectedText;
+            }
+
+            bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
+            foreach (ListBoxItem item in QuickFindList)
+            {
+                if ((string)item.Content == QuickFindItem.Filterpattern)
                 {
-                    if ((string)item.Content == QuickFindItem.Filterpattern)
-                    {
-                        foundItem = true;
-                        break;
-                    }
+                    foundItem = true;
+                    break;
                 }
+            }
 
-                if (!foundItem)
+            if (!foundItem)
+            {
+                QuickFindList.Insert(0, new ListBoxItem()
                 {
-                    comboBox.Items.Insert(0, new ComboBoxItem()
-                    {
-                        Content = QuickFindItem.Filterpattern,
-                        Background = Settings.BackgroundColor,
-                        Foreground = Settings.ForegroundColor,
-                        BorderBrush = Settings.BackgroundColor
-                    });
-                }
+                    Content = QuickFindItem.Filterpattern,
+                    Background = Settings.BackgroundColor,
+                    Foreground = Settings.ForegroundColor,
+                    BorderBrush = Settings.BackgroundColor
+                });
+            }
 
-                SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
-                if (string.IsNullOrEmpty(QuickFindItem.Filterpattern))
+            SetStatus(string.Format("quickfindchangedexecuted:string.length: {0}", QuickFindItem.Filterpattern.Length));
+            if (!buttonStatus && string.IsNullOrEmpty(QuickFindItem.Filterpattern))
+            {
+                QuickFindItem.Enabled = false;
+
+                if (FilterList().Count > 0)
                 {
-                    QuickFindItem.Enabled = false;
-
-                    if (FilterList().Count > 0)
-                    {
-                        // send filter request
-                        _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
-                    }
-                    else
-                    {
-                        // no filter show all
-                        _LogViewModel.FilterLogTabItems(FilterCommand.ShowAll);
-                    }
-
-                    return;
+                    // send filter request
+                    _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
                 }
                 else
                 {
-                    QuickFindItem.Enabled = true;
+                    // no filter show all
+                    _LogViewModel.FilterLogTabItems(FilterCommand.ShowAll);
                 }
+
+                return;
+            }
+            else if(!buttonStatus)
+            {
+                QuickFindItem.Enabled = true;
             }
 
             if (_quickFindRegex)
@@ -714,8 +893,48 @@ namespace TextFilter
                 QuickFindItem.Regex = false;
             }
 
-            // send filter request
-            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+            // status button toggle
+            if (buttonStatus)
+            {
+                CurrentStatusSetting setting;
+                object currentStatus = (sender as Button).Content;
+                if (currentStatus != null && Enum.TryParse(currentStatus.ToString().ToLower().Replace(" ", "_"), out setting))
+                {
+                    switch (setting)
+                    {
+                        case CurrentStatusSetting.enter_to_filter:
+                            _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+                            break;
+
+                        case CurrentStatusSetting.filtering:
+                        case CurrentStatusSetting.filtered:
+                        case CurrentStatusSetting.quick_filtered:
+                        case CurrentStatusSetting.showing_all:
+                            _LogViewModel.HideExecuted(null);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                else
+                {
+                    SetStatus("warning:unable to toggle status button");
+                }
+            }
+            else
+            {
+                // send filter request
+                _LogViewModel.FilterLogTabItems(FilterCommand.Filter);
+            }
+        }
+
+        public void QuickFindTextExecuted(object sender)
+        {
+            if (sender is TextBox)
+            {
+                QuickFindChangedExecuted((sender as TextBox));
+            }
         }
 
         public override void RenameTabItem(string logName)
@@ -762,7 +981,7 @@ namespace TextFilter
             string logName = string.Empty;
             Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
             dlg.DefaultExt = ".rvf";
-            dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
+            dlg.Filter = "Filter Files (*.rvf)|*.rvf|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
 
             dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? Settings.FilterDirectory;
 
@@ -919,22 +1138,23 @@ namespace TextFilter
         private void QuickFindKeyPressExecuted(object sender)
         {
             SetStatus(string.Format("quickfindKeyPressexecuted:enter: {0}", (sender is ComboBox)));
-            if (sender is ComboBox)
+
+            if (QuickFindCombo != null)
             {
-                if ((sender as ComboBox).Text.Length > 0)
+                if (QuickFindCombo.Text.Length > 0)
                 {
-                    if ((sender as ComboBox).Text != QuickFindItem.Filterpattern)
+                    if (QuickFindCombo.Text != QuickFindItem.Filterpattern)
                     {
                         SetCurrentStatus(CurrentStatusSetting.enter_to_filter);
                     }
 
-                    (sender as ComboBox).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("LightGreen"));
-                    (sender as ComboBox).BorderThickness = new Thickness(1.5);
+                    QuickFindCombo.BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("LightGreen"));
+                    QuickFindCombo.BorderThickness = new Thickness(1.5);
                 }
                 else
                 {
-                    (sender as ComboBox).BorderBrush = Settings.ForegroundColor;
-                    (sender as ComboBox).BorderThickness = new Thickness(1);
+                    QuickFindCombo.BorderBrush = Settings.ForegroundColor;
+                    QuickFindCombo.BorderThickness = new Thickness(1);
                     //QuickFindChangedExecuted(sender);
                 }
             }
@@ -965,6 +1185,12 @@ namespace TextFilter
         {
             SetStatus("filterViewModel:TabItems_CollectionChanged");
             OnPropertyChanged("TabItems");
+        }
+
+        private void UpdateRecentCollection()
+        {
+            // setting to null forces refresh
+            RecentCollection = null;
         }
 
         private void VerifyIndex(FilterFileItem filterFileItem = null)
@@ -1046,11 +1272,8 @@ namespace TextFilter
                         contentItems[i] = sortedFilterItems[i];
                         contentList[i].Index = i;
                         contentItems[i].Index = i;
-                        //sortedFilterItems[i].Index = i;
                     }
 
-                    // sync contentitems
-                    //filterFile.ContentItems = new ObservableCollection<FilterFileItem>(sortedFilterItems);
                     filterFile.EnablePatternNotifications(true);
                 }
             }
