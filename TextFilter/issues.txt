@@ -1,69 +1,8 @@
-﻿4/16 group count not implemented with parser setgroupcount()
+﻿quick filter not working
+runworkercompleted intermittently has issues
+files dont always open
+file size limitation
 
-
-07:35:35.353: Parser.ModifiedFilterFile:property changed event: SelectedIndex
-07:35:35.356: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.359: Parser:CurrentLogFile:exit: index: -1
-07:35:35.362: IsValidTabIndex: return: False, -1
-07:35:35.365: CurrentFile: warning: returning default T SelectedIndex: -1
-07:35:35.367: GetWorkers:enter:C:\temp\-new 0-.rvf, null
-07:35:35.370: Getworkers:searching by filter file file name: -new 0-.rvf
-07:35:35.373: Getworkers:searching by filter file tag: C:\temp\-new 0-.rvf
-07:35:35.376: Getworkers:return:worker count:0
-07:35:35.379: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.381: Parser:CurrentLogFile:exit: index: -1
-07:35:35.384: IsValidTabIndex: return: False, -1
-07:35:35.387: CurrentFile: warning: returning default T SelectedIndex: -1
-07:35:35.390: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.392: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.395: WorkerManager.ProcessWorker enter: worker: 341451253 worker.Modification: FilterModified
-07:35:35.399: ResetCurrentWorkersbyFilter:enter:341451253
-07:35:35.401: GetWorkers:enter:C:\temp\-new 0-.rvf, null
-07:35:35.404: Getworkers:searching by filter file file name: -new 0-.rvf
-07:35:35.407: Getworkers:searching by filter file tag: C:\temp\-new 0-.rvf
-07:35:35.410: Getworkers:return:worker count:0
-07:35:35.413: ResetCurrentWorkersbyFilter:no workers. exiting
-07:35:35.416: WorkerManager.ProcessWorker:workerItem.State:Unknown
-07:35:35.419: Parser:filterViewPropertyChanged:RecentCollection
-07:35:35.423: Parser.ModifiedFilterFile:enter
-07:35:35.426: Parser.ModifiedFilterFile:property changed event: RecentCollection
-07:35:35.428: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.432: Parser:CurrentLogFile:exit: index: -1
-07:35:35.434: IsValidTabIndex: return: False, -1
-07:35:35.437: CurrentFile: warning: returning default T SelectedIndex: -1
-07:35:35.440: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.443: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.446: WorkerManager.ProcessWorker enter: worker: 341451253 worker.Modification: FilterModified07:35:35.449: ResetCurrentWorkersbyFilter:enter:341451253
-07:35:35.451: GetWorkers:enter:C:\temp\-new 0-.rvf, null
-07:35:35.455: Getworkers:searching by filter file file name: -new 0-.rvf
-07:35:35.457: Getworkers:searching by filter file tag: C:\temp\-new 0-.rvf
-07:35:35.460: Getworkers:return:worker count:0
-07:35:35.463: ResetCurrentWorkersbyFilter:no workers. exiting
-07:35:35.466: WorkerManager.ProcessWorker:workerItem.State:Unknown
-07:35:35.470: Parser:filterViewPropertyChanged:RecentCollection
-07:35:35.473: Parser.ModifiedFilterFile:enter
-07:35:35.476: Parser.ModifiedFilterFile:property changed event: RecentCollection
-07:35:35.479: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.482: Parser:CurrentLogFile:exit: index: -1
-07:35:35.486: IsValidTabIndex: return: False, -1
-07:35:35.490: CurrentFile: warning: returning default T SelectedIndex: -1
-07:35:35.492: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.495: Parser:CurrentFilterFile:exit: index: 0
-07:35:35.498: WorkerManager.ProcessWorker enter: worker: 341451253 worker.Modification: FilterModified
-07:35:35.501: ResetCurrentWorkersbyFilter:enter:341451253
-07:35:35.503: GetWorkers:enter:C:\temp\-new 0-.rvf, null
-07:35:35.506: Getworkers:searching by filter file file name: -new 0-.rvf
-07:35:35.509: Getworkers:searching by filter file tag: C:\temp\-new 0-.rvf
-07:35:35.512: Getworkers:return:worker count:0
-07:35:35.515: ResetCurrentWorkersbyFilter:no workers. exiting
-07:35:35.518: WorkerManager.ProcessWorker:workerItem.State:Unknown
-07:35:35.526: RunWorkerCompleted:callback:enter: DoFilterWork:enter
-MMFConcurrentFilter: enter
-MMFConcurrentFilter: filterItems null. returning
-WorkerManager:DoFilterWork:exit
-
-07:35:35.529: UpdateView:enter
-07:35:35.532: UpdateView:exit
-07:35:35.548: MenuBuilder:exit: directory not specified.
-07:35:43.920: tab viewer set: System.Windows.Controls.DataGrid
-
+12:50:46.573: [1] RunWorkerCompleted:exception:System.InvalidOperationException: Operation has been cancelled.
+   at System.ComponentModel.RunWorkerCompletedEventArgs.get_Result()
+   at TextFilter.WorkerManager.<>c__DisplayClass34_0.<RunWorkerCompleted>b__0() in C:\Users\jason\Source\Repos\textFilter\TextFilter\Parser\WorkerManager.cs:line 728

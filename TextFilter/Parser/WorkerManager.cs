@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
@@ -21,7 +23,7 @@ namespace TextFilter
 {
     public class WorkerManager : WorkerFunctions
     {
-        public ReaderWriterLockSlim ListLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        public volatile ReaderWriterLockSlim ListLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
         private List<FilterFileItem> _previousFilterItems = new List<FilterFileItem>();
         private static WorkerManager _workerManager;
 
@@ -33,19 +35,129 @@ namespace TextFilter
             BGWorkers = new List<WorkerItem>();
         }
 
+        static WorkerManager()
+        {
+            if (_workerManager == null)
+            {
+                _workerManager = new WorkerManager();
+            }
+        }
         public static WorkerManager Instance
         {
             get
             {
-                if (_workerManager == null)
-                {
-                    _workerManager = new WorkerManager();
-                }
                 return _workerManager;
             }
         }
 
-        public List<WorkerItem> BGWorkers { get; set; }
+        private bool EnterWriteLock(bool tryOnly = false, [CallerMemberName]string memberName = "")
+        {
+            SetStatus(string.Format("WorkerManager:EnterWriteLock:enter:tryOnly:{0}. calling method:{1}", tryOnly, memberName));
+            if (!ListLock.IsWriteLockHeld & !ListLock.IsReadLockHeld)
+            {
+                if (tryOnly)
+                {
+                    while (true)
+                    {
+                        if (!ListLock.TryEnterWriteLock(100))
+                        {
+                            Thread.Yield();
+                            Thread.Sleep(100);
+                        }
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    ListLock.EnterWriteLock();
+                    return true;
+                }
+                
+            }
+            else if (ListLock.IsWriteLockHeld)
+            {
+                SetStatus(string.Format("WorkerManager:EnterWriteLock:Warning:write lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+                return true;
+            }
+
+            SetStatus(string.Format("WorkerManager:EnterWriteLock:Error:Unable to enter write lock:tryOnly:{0}. calling method:{1} returning false.", tryOnly, memberName));
+            return false;
+        }
+
+        private bool ExitWriteLock([CallerMemberName]string memberName = "")
+        {
+            SetStatus(string.Format("WorkerManager:ExitWriteLock:enter:calling method:{0}", memberName));
+            if (ListLock.IsWriteLockHeld)
+            {
+                    ListLock.ExitWriteLock();
+                    return true;
+            }
+
+            SetStatus(string.Format("WorkerManager:ExitWriteLock:Error:write lock not held:calling method:{0} returning false.", memberName));
+            return false;
+        }
+
+
+        private bool EnterReadLock(bool tryOnly = false, [CallerMemberName]string memberName = "")
+        {
+            SetStatus(string.Format("WorkerManager:EnterReadLock:enter:tryOnly:{0}. calling method:{1}", tryOnly, memberName));
+            if (!ListLock.IsWriteLockHeld & !ListLock.IsReadLockHeld)
+            {
+                if (tryOnly)
+                {
+                    while (true)
+                    {
+                        if (!ListLock.TryEnterReadLock(100))
+                        {
+                            Thread.Yield();
+                            Thread.Sleep(100);
+                        }
+
+                        return true;
+                    }
+                }
+                else
+                {
+                    ListLock.EnterReadLock();
+                    return true;
+                }
+
+            }
+            else if(ListLock.IsReadLockHeld)
+            {
+                SetStatus(string.Format("WorkerManager:EnterReadLock:Warning:read lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+                return true;
+            }
+            else if (ListLock.IsWriteLockHeld)
+            {
+                SetStatus(string.Format("WorkerManager:EnterReadLock:Warning:WRITE lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+                return true;
+            }
+
+            SetStatus(string.Format("WorkerManager:EnterReadLock:Error:Unable to enter read lock:tryOnly:{0}. calling method:{1} returning false.", tryOnly, memberName));
+            return false;
+        }
+
+        private bool ExitReadLock([CallerMemberName]string memberName = "")
+        {
+            SetStatus(string.Format("WorkerManager:ExitReadLock:enter:calling method:{0}", memberName));
+            if (ListLock.IsReadLockHeld)
+            {
+                ListLock.ExitReadLock();
+                return true;
+            }
+            else if (ListLock.IsWriteLockHeld)
+            {
+                SetStatus(string.Format("WorkerManager:ExitReadLock:Warning:WRITE lock already held:calling method:{0} returning true.", memberName));
+                return true;
+            }
+
+            SetStatus(string.Format("WorkerManager:ExitReadLock:Error:read lock not held:calling method:{0} returning false.", memberName));
+            return false;
+        }
+
+        private List<WorkerItem> BGWorkers { get; set; }
 
         public void AddWorkersByWorkerItemFilterFile(WorkerItem workerItem)
         {
@@ -157,7 +269,7 @@ namespace TextFilter
         {
             try
             {
-                ListLock.EnterWriteLock();
+                EnterWriteLock();
                 if (workerItem.BackGroundWorker != null && workerItem.BackGroundWorker.IsBusy && !workerItem.BackGroundWorker.CancellationPending)
                 {
                     SetStatus(string.Format("CancelWorker:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
@@ -181,7 +293,7 @@ namespace TextFilter
             }
             finally
             {
-                ListLock.ExitWriteLock();
+                ExitWriteLock();
             }
         }
 
@@ -252,11 +364,7 @@ namespace TextFilter
                 logFile == null ? "null" : logFile.Tag));
 #endif
             List<WorkerItem> workerItems = new List<WorkerItem>();
-            while(!ListLock.TryEnterReadLock(10))
-            {
-                //Thread.Sleep(100);
-                Thread.Yield();
-            }
+            EnterReadLock(true);
                         
             try
             {
@@ -474,10 +582,7 @@ namespace TextFilter
             }
             finally
             {
-                if (ListLock.IsReadLockHeld)
-                {
-                    ListLock.ExitReadLock();
-                }
+                ExitReadLock();
             }
         }
 
@@ -565,7 +670,7 @@ namespace TextFilter
                 // Cancel the asynchronous operation.
                 if (BGWorkers.Contains(workerItem))
                 {
-                    ListLock.EnterWriteLock();
+                    EnterWriteLock();
 
                     SetStatus("RemoveWorker:removing worker:" + workerItem.GetHashCode().ToString());
                     CancelWorker(workerItem);
@@ -582,10 +687,7 @@ namespace TextFilter
             }
             finally
             {
-                if (ListLock.IsWriteLockHeld)
-                {
-                    ListLock.ExitWriteLock();
-                }
+                    ExitWriteLock();
             }
         }
 
@@ -614,57 +716,79 @@ namespace TextFilter
         public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // keep all view modifications on main thread
+            SetStatus("RunWorkerCompleted:enter");
+
             Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
             {
-                ListLock.EnterWriteLock();
-                WorkerItem workerItem = ((WorkerItem)e.Result);
-                workerItem.BackGroundWorker.RunWorkerCompleted -= RunWorkerCompleted;
-                SetStatus(string.Format("RunWorkerCompleted:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
-                
-                // First, handle the case where an exception was thrown.
-                if (e.Error != null)
+                try
                 {
-                    SetStatus("RunWorkerCompleted: Error:" + e.ToString());
-                    SetStatus(e.Error.Message);
-                    workerItem.WorkerState = WorkerItem.State.Unknown;
-                }
-                else if (e.Cancelled)
-                {
-                    SetStatus("RunWorkerCompleted:Cancelled");
-                    workerItem.WorkerState = WorkerItem.State.Aborted;
-                }
-                else if (workerItem.WorkerState != WorkerItem.State.Aborted)
-                {
-                    //WorkerItem workerItem = ((WorkerItem)e.Result);
-                    workerItem.WorkerState = WorkerItem.State.Completed;
-                    SetStatus("RunWorkerCompleted:callback:enter: \n" + workerItem.Status.ToString());
-                    workerItem.Status.Clear();
+                    EnterWriteLock(true);
+                    WorkerItem workerItem;
 
-                    SetStatus(string.Format("RunWorkerCompleted:workeritem modification: {0}", workerItem.WorkerModification));
-
-                    switch (workerItem.WorkerModification)
+                    if (e.Result != null && e.Result is WorkerItem)
                     {
-                        case WorkerItem.Modification.FilterAdded:
-                        case WorkerItem.Modification.FilterRemoved:
-                            FilterViewModel.UpdateViewCallback(workerItem);
-                            break;
+                        workerItem = ((WorkerItem)e.Result);
+                    }
+                    else
+                    {
+                        SetStatus("RunWorkerCompleted:error:null eventargs. exiting function.");
+                        return;
+                    }
 
-                        case WorkerItem.Modification.FilterIndex:
-                        case WorkerItem.Modification.FilterModified:
-                        case WorkerItem.Modification.LogAdded:
-                        case WorkerItem.Modification.LogIndex:
-                        case WorkerItem.Modification.LogRemoved:
-                            LogViewModel.UpdateViewCallback(workerItem);
-                            break;
+                    workerItem.BackGroundWorker.RunWorkerCompleted -= RunWorkerCompleted;
+                    SetStatus(string.Format("RunWorkerCompleted:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
 
-                        default:
-                            SetStatus("RunWorkerCompleted:Cancelled");
-                            break;
+                    // First, handle the case where an exception was thrown.
+                    if (e.Error != null)
+                    {
+                        SetStatus("RunWorkerCompleted: Error:" + e.ToString());
+                        SetStatus(e.Error.Message);
+                        workerItem.WorkerState = WorkerItem.State.Unknown;
+                    }
+                    else if (e.Cancelled)
+                    {
+                        SetStatus("RunWorkerCompleted:Cancelled");
+                        workerItem.WorkerState = WorkerItem.State.Aborted;
+                    }
+                    else if (workerItem.WorkerState != WorkerItem.State.Aborted)
+                    {
+                        //WorkerItem workerItem = ((WorkerItem)e.Result);
+                        workerItem.WorkerState = WorkerItem.State.Completed;
+                        SetStatus("RunWorkerCompleted:callback:enter: \n" + workerItem.Status.ToString());
+                        workerItem.Status.Clear();
+
+                        SetStatus(string.Format("RunWorkerCompleted:workeritem modification: {0}", workerItem.WorkerModification));
+
+                        switch (workerItem.WorkerModification)
+                        {
+                            case WorkerItem.Modification.FilterAdded:
+                            case WorkerItem.Modification.FilterRemoved:
+                                FilterViewModel.UpdateViewCallback(workerItem);
+                                break;
+
+                            case WorkerItem.Modification.FilterIndex:
+                            case WorkerItem.Modification.FilterModified:
+                            case WorkerItem.Modification.LogAdded:
+                            case WorkerItem.Modification.LogIndex:
+                            case WorkerItem.Modification.LogRemoved:
+                                LogViewModel.UpdateViewCallback(workerItem);
+                                break;
+
+                            default:
+                                SetStatus("RunWorkerCompleted:Cancelled");
+                                break;
+                        }
                     }
                 }
-
-                ListLock.ExitWriteLock();
-                Mouse.OverrideCursor = null;
+                catch (Exception ex)
+                {
+                    SetStatus("RunWorkerCompleted:exception:" + ex.ToString());
+                }
+                finally
+                {
+                    ExitWriteLock();
+                    Mouse.OverrideCursor = null;
+                }
             });
         }
 
@@ -675,7 +799,7 @@ namespace TextFilter
             {
                 SetStatus(string.Format("StartWorker:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
 
-                ListLock.EnterWriteLock();
+                EnterWriteLock();
                 switch (workerItem.WorkerModification)
                 {
                     case WorkerItem.Modification.LogAdded:
@@ -690,12 +814,13 @@ namespace TextFilter
                     case WorkerItem.Modification.FilterModified:
                         workerItem.BackGroundWorker.DoWork -= DoFilterWork;
                         workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoFilterWork);
-                        ListLock.ExitWriteLock();
+                        ExitWriteLock();
                         Application.Current.Dispatcher.Invoke(() =>
                         {
                             workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
                         });
-                        ListLock.EnterWriteLock();
+
+                        EnterWriteLock();
 
                         break;
 
@@ -724,9 +849,13 @@ namespace TextFilter
                 SetStatus("StartWorker:worker started:exit");
                 return;
             }
+            catch (Exception e)
+            {
+                SetStatus("StartWorker:exception:" + e.ToString());
+            }
             finally
             {
-                ListLock.ExitWriteLock();
+                    ExitWriteLock();
             }
         }
 
@@ -734,7 +863,7 @@ namespace TextFilter
         {
             try
             {
-                ListLock.EnterWriteLock();
+                EnterWriteLock();
 
                 if (GetWorkers(workerItem).Count == 0)
                 {
@@ -765,10 +894,7 @@ namespace TextFilter
             }
             finally
             {
-                if (ListLock.IsWriteLockHeld)
-                {
-                    ListLock.ExitWriteLock();
-                }
+                ExitWriteLock();
             }
         }
 
@@ -817,49 +943,60 @@ namespace TextFilter
 
         private bool ResetCurrentWorkersByFilter(WorkerItem workerItem)
         {
-            SetStatus(string.Format("ResetCurrentWorkersbyFilter:enter:{0}", workerItem.GetHashCode()));
-            if (GetWorkers(workerItem.FilterFile).Count == 0)
-            {
-                SetStatus("ResetCurrentWorkersbyFilter:no workers. exiting");
-                return false;
-            }
-
-            ListLock.EnterWriteLock();
-            // to keep from resetting for same filter changes
-
-            if (workerItem.FilterFile != null)
-            {
-                //if(_FilterViewModel.CompareFilterList(_previousFilterItems) != FilterNeed.Current)
-                if (!CompareFilterLists(_previousFilterItems.ToList(), workerItem.FilterFile.ContentItems.ToList()))
+            try
+            { 
+                SetStatus(string.Format("ResetCurrentWorkersbyFilter:enter:{0}", workerItem.GetHashCode()));
+                if (GetWorkers(workerItem.FilterFile).Count == 0)
                 {
-                    SetStatus("ResetCurrentWorkersbyFilter:different filter hash. RESETTING");
-                    _previousFilterItems.Clear();
-                    foreach (FilterFileItem fileItem in workerItem.FilterFile.ContentItems)
-                    {
-                        _previousFilterItems.Add((FilterFileItem)fileItem.ShallowCopy());
-                    }
+                    SetStatus("ResetCurrentWorkersbyFilter:no workers. exiting");
+                    return false;
+                }
 
-                    foreach (WorkerItem item in GetWorkers(workerItem.FilterFile))
+                EnterWriteLock();
+                // to keep from resetting for same filter changes
+
+                if (workerItem.FilterFile != null)
+                {
+                    //if(_FilterViewModel.CompareFilterList(_previousFilterItems) != FilterNeed.Current)
+                    if (!CompareFilterLists(_previousFilterItems.ToList(), workerItem.FilterFile.ContentItems.ToList()))
                     {
-                        if (item.WorkerState == WorkerItem.State.Started)
+                        SetStatus("ResetCurrentWorkersbyFilter:different filter hash. RESETTING");
+                        _previousFilterItems.Clear();
+                        foreach (FilterFileItem fileItem in workerItem.FilterFile.ContentItems)
                         {
-                            CancelWorker(item);
+                            _previousFilterItems.Add((FilterFileItem)fileItem.ShallowCopy());
                         }
 
-                        item.WorkerState = workerItem.LogFile == item.LogFile ? WorkerItem.State.NotStarted : WorkerItem.State.Ready;
-                        SetStatus(string.Format("ResetCurrentWorkersbyFilter:resetting state:{0} new state:{1}", item.GetHashCode(), item.WorkerState));
-                        item.WorkerModification = WorkerItem.Modification.FilterModified;
+                        foreach (WorkerItem item in GetWorkers(workerItem.FilterFile))
+                        {
+                            if (item.WorkerState == WorkerItem.State.Started)
+                            {
+                                CancelWorker(item);
+                            }
+
+                            item.WorkerState = workerItem.LogFile == item.LogFile ? WorkerItem.State.NotStarted : WorkerItem.State.Ready;
+                            SetStatus(string.Format("ResetCurrentWorkersbyFilter:resetting state:{0} new state:{1}", item.GetHashCode(), item.WorkerState));
+                            item.WorkerModification = WorkerItem.Modification.FilterModified;
+                        }
                     }
                 }
+                else
+                {
+                    SetStatus("ResetCurrentWorkersbyFilter:null FilterFile");
+                }
+
+                return true;
             }
-            else
+            catch (Exception e)
             {
-                SetStatus("ResetCurrentWorkersbyFilter:null FilterFile");
+                SetStatus("ResetCurrentWorkersbyFilter:exception:" + e.ToString());
+                return false;
+            }
+            finally
+            {
+                ExitWriteLock();
             }
 
-            ListLock.ExitWriteLock();
-
-            return true;
         }
 
         private bool CompareFilterLists(List<FilterFileItem> previousFilterItems, List<FilterFileItem> currentFilterItems)
@@ -906,35 +1043,46 @@ namespace TextFilter
         private bool ResetWorkerStates(WorkerItem workerItem)
         {
             SetStatus("ResetWorkerStates:enter:");
-            ListLock.EnterWriteLock();
-            List<WorkerItem> workerItems = GetWorkers(workerItem);
-            WorkerItem.State newState = WorkerItem.State.Ready;
-
-            if (workerItems.Count == 0)
+            try
             {
+                EnterWriteLock();
+                List<WorkerItem> workerItems = GetWorkers(workerItem);
+                WorkerItem.State newState = WorkerItem.State.Ready;
+
+                if (workerItems.Count == 0)
+                {
+                    return false;
+                }
+                else if (workerItems.Count == 1)
+                {
+                    newState = WorkerItem.State.NotStarted;
+                }
+
+                foreach (WorkerItem item in workerItems)
+                {
+                    if (item.WorkerState == WorkerItem.State.Started)
+                    {
+                        CancelWorker(item);
+                    }
+                    else if (item.WorkerState != WorkerItem.State.Completed)
+                    {
+                        item.WorkerModification = workerItem.WorkerModification;
+                        item.WorkerState = newState;
+                        SetStatus("ResetWorkerStates:resetting state:" + item.WorkerState.ToString());
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                SetStatus("ResetWorkerStates:exception:" + e.ToString());
                 return false;
             }
-            else if (workerItems.Count == 1)
+            finally
             {
-                newState = WorkerItem.State.NotStarted;
+                ExitWriteLock();
             }
-
-            foreach (WorkerItem item in workerItems)
-            {
-                if (item.WorkerState == WorkerItem.State.Started)
-                {
-                    CancelWorker(item);
-                }
-                else if (item.WorkerState != WorkerItem.State.Completed)
-                {
-                    item.WorkerModification = workerItem.WorkerModification;
-                    item.WorkerState = newState;
-                    SetStatus("ResetWorkerStates:resetting state:" + item.WorkerState.ToString());
-                }
-            }
-
-            ListLock.ExitWriteLock();
-            return true;
         }
     }
 }

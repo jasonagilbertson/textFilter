@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 
@@ -20,17 +21,38 @@ namespace TextFilter
         public void DoWork(object data)
         {
             WorkerManager workerManager = (WorkerManager)data;
-            int ccount = 0;
-            int scount = 0;
+            int pccount = 0, ccount = 0;
+            int pscount = 0, scount = 0;
             try
             {
                 while (true)
                 {
-                    workerManager.ListLock.EnterReadLock();
+                    //if(!workerManager.ListLock.TryEnterReadLock(100))
+                    //{
+                    //    Debug.Print("jobmonitor:unable to get lock. skipping");
+                    //    Thread.Yield();
+                    //}
+                    //else
+                    //{ 
                     // see if any not completed
-                    scount = workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started);
-                    ccount = workerManager.BGWorkers.Count(x => x.WorkerState != WorkerItem.State.Completed);
-                    workerManager.ListLock.ExitReadLock();
+                    //scount = workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started);
+                    //ccount = workerManager.BGWorkers.Count(x => x.WorkerState != WorkerItem.State.Completed);
+
+                    scount = workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Started);
+                    ccount = workerManager.GetWorkers().Count(x => x.WorkerState != WorkerItem.State.Completed);
+                    
+                    if (scount != pscount | ccount != pccount)
+                        {
+                            SetStatus(string.Format("jobmonitor:status change:new not completed:{0} old not completed:{1} new started:{2} old started:{3}",ccount,pccount,scount,pscount));
+                            pscount = scount;
+                            pccount = ccount;
+                        }
+                    //}
+
+                    //if(workerManager.ListLock.IsReadLockHeld)
+                    //{
+                    //    workerManager.ListLock.ExitReadLock();
+                    //}
 
                     if (scount == 0 & ccount > 0)
                     {
@@ -50,10 +72,10 @@ namespace TextFilter
             }
             finally
             {
-                if (workerManager.ListLock.IsWriteLockHeld)
-                {
-                    workerManager.ListLock.ExitWriteLock();
-                }
+                //if (workerManager.ListLock.IsWriteLockHeld)
+                //{
+                //    workerManager.ListLock.ExitWriteLock();
+                //}
             }
         }
 
@@ -61,17 +83,17 @@ namespace TextFilter
         {
             SetStatus("jobmonitor:checkworkerstates:enter");
 
-            if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.NotStarted) > 0)
+            if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.NotStarted) > 0)
             {
-                workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.NotStarted));
+                _workerManager.StartWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.NotStarted));
             }
-            else if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Ready) > 0)
+            else if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Ready) > 0)
             {
-                workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Ready));
+                _workerManager.StartWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Ready));
             }
-            else if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Aborted) > 0)
+            else if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Aborted) > 0)
             {
-                workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Aborted));
+                _workerManager.StartWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Aborted));
             }
             else
             {
@@ -81,10 +103,10 @@ namespace TextFilter
 
         private void ManageWorkerStates()
         {
-            SetStatus("jobmonitor:ManageWorkerStates:enter:count:" + _workerManager.BGWorkers.Count);
+            SetStatus("jobmonitor:ManageWorkerStates:enter:count:" + _workerManager.GetWorkers().Count);
 
 //#if DEBUG
-            foreach (WorkerItem worker in _workerManager.BGWorkers)
+            foreach (WorkerItem worker in _workerManager.GetWorkers())
             {
                 SetStatus(string.Format("ManageWorkerStates:current states: {0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
                     worker.GetHashCode(),
@@ -94,25 +116,25 @@ namespace TextFilter
                     worker.WorkerModification));
             }
 //#endif
-            if (_workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started) == 0)
+            if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Started) == 0)
             {
                 SetStatus("ManageWorkerStates:no workers in Started state.");
-                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.NotStarted))
+                if (_workerManager.GetWorkers().Exists(x => x.WorkerState == WorkerItem.State.NotStarted))
                 {
                     SetStatus("ManageWorkerStates:starting worker in NotStarted state.");
-                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.NotStarted));
+                    _workerManager.ProcessWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.NotStarted));
                     return;
                 }
-                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.Aborted))
+                if (_workerManager.GetWorkers().Exists(x => x.WorkerState == WorkerItem.State.Aborted))
                 {
                     SetStatus("ManageWorkerStates:starting worker in Aborted state.");
-                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.Aborted));
+                    _workerManager.ProcessWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Aborted));
                     return;
                 }
-                if (_workerManager.BGWorkers.Exists(x => x.WorkerState == WorkerItem.State.Ready))
+                if (_workerManager.GetWorkers().Exists(x => x.WorkerState == WorkerItem.State.Ready))
                 {
                     SetStatus("ManageWorkerStates:starting worker in Ready state.");
-                    _workerManager.ProcessWorker(_workerManager.BGWorkers.First(x => x.WorkerState == WorkerItem.State.Ready));
+                    _workerManager.ProcessWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Ready));
                     return;
                 }
             }
