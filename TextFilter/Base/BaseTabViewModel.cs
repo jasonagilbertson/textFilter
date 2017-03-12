@@ -22,6 +22,7 @@ namespace TextFilter
     public struct BaseTabViewModelEvents
     {
         public static string SelectedIndex = "SelectedIndex";
+        public static string Enter = "Enter";
     }
 
     public abstract class BaseTabViewModel<T> : Base, ITabViewModel<T>, INotifyPropertyChanged

@@ -10,6 +10,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Text;
+using System.Collections.Generic;
 
 namespace TextFilter
 {

@@ -7,6 +7,7 @@
 //
 // ************************************************************************************
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -92,71 +93,71 @@ namespace TextFilter
             if (enable)
             {
                 _workerManager.EnableMonitor(true);
-                _FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
-                _LogViewModel.PropertyChanged += logViewManager_PropertyChanged;
+                //_FilterViewModel.PropertyChanged += filterViewManager_PropertyChanged;
+                //_LogViewModel.PropertyChanged += logViewManager_PropertyChanged;
 
-                EnableFilterFileMonitoring(true);
-                EnableLogFileMonitoring(true);
+                //EnableFilterFileMonitoring(true);
+                //EnableLogFileMonitoring(true);
             }
             else
             {
                 _workerManager.EnableMonitor(false);
-                _FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
-                _LogViewModel.PropertyChanged -= logViewManager_PropertyChanged;
+                //_FilterViewModel.PropertyChanged -= filterViewManager_PropertyChanged;
+                //_LogViewModel.PropertyChanged -= logViewManager_PropertyChanged;
 
-                EnableFilterFileMonitoring(false);
-                EnableLogFileMonitoring(false);
+                //EnableFilterFileMonitoring(false);
+                //EnableLogFileMonitoring(false);
                 _workerManager.CancelAllWorkers();
             }
         }
 
-        public void EnableFilterFileMonitoring(bool enable)
-        {
-            if (enable & !_filterMonitoringEnabled)
-            {
-                foreach (IFile<FilterFileItem> item in CurrentFilterFiles())
-                {
-                    item.ContentItems.CollectionChanged += filterItems_CollectionChanged;
-                }
+        //public void EnableFilterFileMonitoring(bool enable)
+        //{
+        //    if (enable & !_filterMonitoringEnabled)
+        //    {
+        //        foreach (IFile<FilterFileItem> item in CurrentFilterFiles())
+        //        {
+        //            item.ContentItems.CollectionChanged += filterItems_CollectionChanged;
+        //        }
 
-                _FilterViewModel.TabItems.CollectionChanged += filterItems_CollectionChanged;
-                _filterMonitoringEnabled = !_filterMonitoringEnabled;
-            }
-            else if (!enable & _filterMonitoringEnabled)
-            {
-                foreach (IFile<FilterFileItem> item in _previousFilterFiles)
-                {
-                    item.ContentItems.CollectionChanged -= filterItems_CollectionChanged;
-                }
+        //        _FilterViewModel.TabItems.CollectionChanged += filterItems_CollectionChanged;
+        //        _filterMonitoringEnabled = !_filterMonitoringEnabled;
+        //    }
+        //    else if (!enable & _filterMonitoringEnabled)
+        //    {
+        //        foreach (IFile<FilterFileItem> item in _previousFilterFiles)
+        //        {
+        //            item.ContentItems.CollectionChanged -= filterItems_CollectionChanged;
+        //        }
 
-                _FilterViewModel.TabItems.CollectionChanged -= filterItems_CollectionChanged;
-                _filterMonitoringEnabled = !_filterMonitoringEnabled;
-            }
-        }
+        //        _FilterViewModel.TabItems.CollectionChanged -= filterItems_CollectionChanged;
+        //        _filterMonitoringEnabled = !_filterMonitoringEnabled;
+        //    }
+        //}
 
-        public void EnableLogFileMonitoring(bool enable)
-        {
-            if (enable & !_logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in CurrentLogFiles())
-                {
-                    item.ContentItems.CollectionChanged += logItems_CollectionChanged;
-                }
+        //public void EnableLogFileMonitoring(bool enable)
+        //{
+        //    if (enable & !_logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in CurrentLogFiles())
+        //        {
+        //            item.ContentItems.CollectionChanged += logItems_CollectionChanged;
+        //        }
 
-                _LogViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-            else if (!enable & _logMonitoringEnabled)
-            {
-                foreach (IFile<LogFileItem> item in CurrentLogFiles())
-                {
-                    item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
-                }
+        //        _LogViewModel.TabItems.CollectionChanged += logItems_CollectionChanged;
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //    else if (!enable & _logMonitoringEnabled)
+        //    {
+        //        foreach (IFile<LogFileItem> item in CurrentLogFiles())
+        //        {
+        //            item.ContentItems.CollectionChanged -= logItems_CollectionChanged;
+        //        }
 
-                _LogViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
-                _logMonitoringEnabled = !_logMonitoringEnabled;
-            }
-        }
+        //        _LogViewModel.TabItems.CollectionChanged -= logItems_CollectionChanged;
+        //        _logMonitoringEnabled = !_logMonitoringEnabled;
+        //    }
+        //}
 
         public void filterItems_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
@@ -174,10 +175,16 @@ namespace TextFilter
             {
             }
 
+            // todo: fix this?
+            if (e.PropertyName == "RecentCollection" | e.PropertyName == "LineTotals" | e.PropertyName == "QuickFindText")
+            {
+                return;
+            }
+
             ModifiedFilterFile(e);
 
             //check worker
-
+            
             // todo : re parse current log with new selected filter bool ret =
             // ParseFile(_FilterViewModel.CurrentFile(), _LogViewModel.CurrentFile());
         }
@@ -185,6 +192,7 @@ namespace TextFilter
         public void logItems_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             SetStatus("Parser:logItemsCollectionChanged");
+            
             ModifiedLogFile(e);
         }
 
@@ -192,6 +200,12 @@ namespace TextFilter
         {
             SetStatus("Parser:logViewPropertyChanged:" + e.PropertyName);
             // todo: determine what changed and run parser new log or remove log
+
+            // todo: fix this?
+            if (e.PropertyName == "RecentCollection" | e.PropertyName == "LineTotals" | e.PropertyName == "QuickFindText")
+            {
+                return;
+            }
 
             ModifiedLogFile(e);
         }
@@ -310,6 +324,15 @@ namespace TextFilter
                     }
                 }
 
+                if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.Enter)
+                {
+                    // if enter then make sure filter file exists
+                    if(CurrentFilterFile() == null)
+                    {
+                        return;
+                    }
+                }
+
                 workerItem = new WorkerItem()
                 {
                     FilterFile = CurrentFilterFile(),
@@ -374,7 +397,7 @@ namespace TextFilter
                 {
                     case NotifyCollectionChangedAction.Add:
                         {
-                            SetStatus("Parser.ModifiedLogFile:new log file added");
+                            SetStatus("Parser.ModifiedLogFile:new log file added");                            
                             workerItem = new WorkerItem()
                             {
                                 LogFile = (LogFile)((LogTabViewModel)col.NewItems[0]).File,

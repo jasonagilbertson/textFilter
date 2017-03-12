@@ -1312,7 +1312,7 @@ namespace TextFilter
                 }
             }
 
-            //OnPropertyChanged(sender, e);
+           // OnPropertyChanged(sender, e);
         }
 
         private void WriteFilterList(List<FilterFileItem> currentItems, string name)

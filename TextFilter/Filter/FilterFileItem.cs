@@ -7,6 +7,7 @@
 //
 // ************************************************************************************
 
+using System;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -42,7 +43,7 @@ namespace TextFilter
         public static string Regex = "Regex";
     }
 
-    public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged
+    public class FilterFileItem : ListBoxItem, IFileItem, INotifyPropertyChanged, ICloneable
     {
         private string _backgroundColor;
 
@@ -350,8 +351,6 @@ namespace TextFilter
             }
         }
 
-        // for tat 'type' text or marker
-
         public string TatType { get; set; }
 
         public void OnPropertyChanged(string name)
@@ -363,11 +362,13 @@ namespace TextFilter
             }
         }
 
-        // public event PropertyChangedEventHandler PropertyChanged;
-
         public IFileItem ShallowCopy()
         {
             return (FilterFileItem)MemberwiseClone();
+        }
+        public object Clone()
+        {
+            throw new NotImplementedException();
         }
     }
 }

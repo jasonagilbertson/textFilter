@@ -58,9 +58,14 @@ namespace TextFilter
                 // https: //msdn.microsoft.com/en-us/library/gg578045(v=vs.110).aspx
                 Regex.CacheSize = filterItems.Count;
                 Nullable<long> lowest = new Nullable<long>();
-
                 int inclusionFilterCount = filterItems.Count(x => x.Include == true);
-                ParallelLoopResult loopResult = Parallel.ForEach(workerItem.LogFile.ContentItems, (logItem, state) =>
+
+                ParallelOptions po = new ParallelOptions
+                {
+                    MaxDegreeOfParallelism = Environment.ProcessorCount // / 2
+                };
+
+                ParallelLoopResult loopResult = Parallel.ForEach(workerItem.LogFile.ContentItems, po, (logItem, state) =>
                 {
                     if (state.ShouldExitCurrentIteration)
                     {
@@ -89,7 +94,7 @@ namespace TextFilter
 
                     if (string.IsNullOrEmpty(logItem.Content))
                     {
-                        workerItem.Status.AppendLine(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId, logItem.Content));
+                       // workerItem.Status.AppendLine(string.Format("ApplyFilter: logItem.Content empty={0}:{1}", Thread.CurrentThread.ManagedThreadId, logItem.Content));
                         // used for goto line as it needs all line items
                         logItem.FilterIndex = int.MinValue;
                         return;
@@ -458,7 +463,7 @@ namespace TextFilter
             int threadCount = 1;
             if (bytes.Length > 1000000)
             {
-                threadCount = 8;
+                threadCount = Math.Max(Environment.ProcessorCount, 8);
             }
 
             int bposition = logFile.HasBom ? logFile.Encoding.GetPreamble().Length : 0;

@@ -1,16 +1,18 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: workermanager.cs
+// File: WorkerManager.cs
 // Created: 9/6/2016
-// Modified: 2/11/2017
+// Modified: 3/11/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -19,7 +21,8 @@ namespace TextFilter
 {
     public class WorkerManager : WorkerFunctions
     {
-        public ReaderWriterLockSlim ListLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        public ReaderWriterLockSlim ListLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
+        private List<FilterFileItem> _previousFilterItems = new List<FilterFileItem>();
         private static WorkerManager _workerManager;
 
         private JobMonitor _monitor;
@@ -152,51 +155,33 @@ namespace TextFilter
 
         public void CancelWorker(WorkerItem workerItem)
         {
-            if (workerItem.BackGroundWorker != null && workerItem.BackGroundWorker.IsBusy && !workerItem.BackGroundWorker.CancellationPending)
+            try
             {
-                SetStatus(string.Format("CancelWorker:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
-                    workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
-                    workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
-                Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
+                ListLock.EnterWriteLock();
+                if (workerItem.BackGroundWorker != null && workerItem.BackGroundWorker.IsBusy && !workerItem.BackGroundWorker.CancellationPending)
                 {
-                    workerItem.BackGroundWorker.CancelAsync();
-                });
-                //while (workerItem.BackGroundWorker.IsBusy)
-                //{
-                //    Thread.Sleep(10);
-                //}
-
-                workerItem.WorkerState = WorkerItem.State.Aborted;
-            }
-        }
-
-        public void CompleteWorker(BackgroundWorker worker)
-        {
-            SetStatus("CompleteWorker:enter");
-
-            if (GetWorkers().Exists(x => x.BackGroundWorker == worker))
-            {
-                foreach (WorkerItem workerItem in GetWorkers().Where(x => x.BackGroundWorker == worker))
-                {
-                    SetStatus(string.Format("CompleteWorker: completing worker: {0} {1} {2}", workerItem.GetHashCode(),
+                    SetStatus(string.Format("CancelWorker:cancelling worker: {0} {1} {2}", workerItem.GetHashCode(),
                         workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
                         workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
-                    workerItem.WorkerState = WorkerItem.State.Completed;
+                    Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
+                    {
+                        workerItem.BackGroundWorker.CancelAsync();
+                    });
+                    //while (workerItem.BackGroundWorker.IsBusy)
+                    //{
+                    //    Thread.Sleep(10);
+                    //}
+
+                    workerItem.WorkerState = WorkerItem.State.Aborted;
                 }
             }
-            else if (GetWorkers().Exists(x => x.WorkerState == WorkerItem.State.Started))
+            catch (Exception e)
             {
-                foreach (WorkerItem workerItem in GetWorkers().Where(x => x.WorkerState == WorkerItem.State.Started))
-                {
-                    SetStatus(string.Format("CompleteWorker: completing started worker: {0} {1} {2}", workerItem.GetHashCode(),
-                        workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
-                        workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
-                    workerItem.WorkerState = WorkerItem.State.Completed;
-                }
+                SetStatus("CancelWorker:exception: " + e.ToString());
             }
-            else
+            finally
             {
-                SetStatus("CompleteWorker:Error: worker does not exist:" + worker.GetHashCode().ToString());
+                ListLock.ExitWriteLock();
             }
         }
 
@@ -240,14 +225,39 @@ namespace TextFilter
 
         public List<WorkerItem> GetWorkers(FilterFile filterFile = null, LogFile logFile = null, bool baseFile = false)
         {
+            List<WorkerItem> workerItems = GetWorkersInternal(filterFile, logFile, baseFile);
+#if DEBUG
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("getworkers returned:");
+
+            foreach (WorkerItem workerItem in workerItems)
+            {
+                sb.AppendLine(string.Format("\tworker: {0} modification: {1} state: {2} logfile: {3} filterfile: {4}", 
+                    workerItem.GetHashCode(), 
+                    workerItem.WorkerModification, 
+                    workerItem.WorkerState, 
+                    workerItem.LogFile, 
+                    workerItem.FilterFile));
+            }
+
+            SetStatus(sb.ToString());
+#endif
+            return workerItems;
+        }
+        private List<WorkerItem> GetWorkersInternal(FilterFile filterFile = null, LogFile logFile = null, bool baseFile = false)
+        {
 #if DEBUG
             SetStatus(string.Format("GetWorkers:enter:{0}, {1}",
                 filterFile == null ? "null" : filterFile.Tag,
                 logFile == null ? "null" : logFile.Tag));
 #endif
             List<WorkerItem> workerItems = new List<WorkerItem>();
-
-            ListLock.EnterWriteLock();
+            while(!ListLock.TryEnterReadLock(10))
+            {
+                //Thread.Sleep(100);
+                Thread.Yield();
+            }
+                        
             try
             {
                 //foreach(WorkerItem item in _workerManager.BGWorkers)
@@ -464,7 +474,10 @@ namespace TextFilter
             }
             finally
             {
-                ListLock.ExitWriteLock();
+                if (ListLock.IsReadLockHeld)
+                {
+                    ListLock.ExitReadLock();
+                }
             }
         }
 
@@ -476,7 +489,7 @@ namespace TextFilter
                 return false;
             }
 
-            SetStatus(string.Format("WorkerManager.ProcessWorker enter: worker: {0} worker.Modification: {1}", workerItem.GetHashCode(), workerItem.WorkerModification.ToString()));
+            SetStatus(string.Format("WorkerManager.ProcessWorker enter: worker: {0} current worker.Modification: {1}", workerItem.GetHashCode(), workerItem.WorkerModification.ToString()));
 
             switch (workerItem.WorkerModification)
             {
@@ -491,15 +504,17 @@ namespace TextFilter
                 case WorkerItem.Modification.FilterModified:
                     ResetCurrentWorkersByFilter(workerItem);
                     break;
-
                 case WorkerItem.Modification.FilterIndex:
                 case WorkerItem.Modification.LogIndex:
                     {
-                        ResetWorkerStates(workerItem);
                         if (workerItem.WorkerState == WorkerItem.State.Completed)
                         {
                             LogViewModel.UpdateViewCallback(workerItem);
                             return true;
+                        }
+                        else
+                        {
+                            ResetWorkerStates(workerItem);
                         }
                     }
                     break;
@@ -539,12 +554,19 @@ namespace TextFilter
 
         public void RemoveWorker(WorkerItem workerItem)
         {
+            if(workerItem == null)
+            {
+                SetStatus("RemoveWorker: workerItem null, returning.");
+                return;
+            }
+
             try
             {
                 // Cancel the asynchronous operation.
                 if (BGWorkers.Contains(workerItem))
                 {
                     ListLock.EnterWriteLock();
+
                     SetStatus("RemoveWorker:removing worker:" + workerItem.GetHashCode().ToString());
                     CancelWorker(workerItem);
                     BGWorkers.Remove(workerItem);
@@ -594,22 +616,31 @@ namespace TextFilter
             // keep all view modifications on main thread
             Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
             {
+                ListLock.EnterWriteLock();
+                WorkerItem workerItem = ((WorkerItem)e.Result);
+                workerItem.BackGroundWorker.RunWorkerCompleted -= RunWorkerCompleted;
+                SetStatus(string.Format("RunWorkerCompleted:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
+                
                 // First, handle the case where an exception was thrown.
                 if (e.Error != null)
                 {
                     SetStatus("RunWorkerCompleted: Error:" + e.ToString());
                     SetStatus(e.Error.Message);
+                    workerItem.WorkerState = WorkerItem.State.Unknown;
                 }
                 else if (e.Cancelled)
                 {
                     SetStatus("RunWorkerCompleted:Cancelled");
+                    workerItem.WorkerState = WorkerItem.State.Aborted;
                 }
-                else if (((WorkerItem)e.Result).WorkerState != WorkerItem.State.Aborted)
+                else if (workerItem.WorkerState != WorkerItem.State.Aborted)
                 {
-                    WorkerItem workerItem = ((WorkerItem)e.Result);
+                    //WorkerItem workerItem = ((WorkerItem)e.Result);
                     workerItem.WorkerState = WorkerItem.State.Completed;
-                    SetStatus("RunWorkerCompleted:callback:enter: " + workerItem.Status.ToString());
+                    SetStatus("RunWorkerCompleted:callback:enter: \n" + workerItem.Status.ToString());
                     workerItem.Status.Clear();
+
+                    SetStatus(string.Format("RunWorkerCompleted:workeritem modification: {0}", workerItem.WorkerModification));
 
                     switch (workerItem.WorkerModification)
                     {
@@ -632,6 +663,7 @@ namespace TextFilter
                     }
                 }
 
+                ListLock.ExitWriteLock();
                 Mouse.OverrideCursor = null;
             });
         }
@@ -639,55 +671,71 @@ namespace TextFilter
         public void StartWorker(WorkerItem workerItem)
         {
             // This method runs on background thread.
-            SetStatus(string.Format("StartWorker:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
-
-            switch (workerItem.WorkerModification)
+            try
             {
-                case WorkerItem.Modification.LogAdded:
-                    workerItem.BackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(DoLogWork);
-                    break;
+                SetStatus(string.Format("StartWorker:enter: worker: {0} WorkerModification:{1} state:{2}", workerItem.GetHashCode(), workerItem.WorkerModification, workerItem.WorkerState));
 
-                case WorkerItem.Modification.FilterIndex:
-                case WorkerItem.Modification.LogIndex:
+                ListLock.EnterWriteLock();
+                switch (workerItem.WorkerModification)
+                {
+                    case WorkerItem.Modification.LogAdded:
+                        workerItem.BackGroundWorker.DoWork -= DoLogWork;
+                        workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoLogWork);
+                        break;
 
-                case WorkerItem.Modification.FilterAdded:
-                case WorkerItem.Modification.FilterModified:
-                    workerItem.BackGroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(DoFilterWork);
-                    Application.Current.Dispatcher.InvokeAsync((Action)delegate ()
-                    {
-                        workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
-                    });
-                    break;
+                    case WorkerItem.Modification.FilterIndex:
+                    case WorkerItem.Modification.LogIndex:
 
-                default:
-                    SetStatus("StartWorker:not configured WorkerModification:" + workerItem.WorkerModification.ToString());
-                    workerItem.WorkerState = WorkerItem.State.Completed;
+                    case WorkerItem.Modification.FilterAdded:
+                    case WorkerItem.Modification.FilterModified:
+                        workerItem.BackGroundWorker.DoWork -= DoFilterWork;
+                        workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoFilterWork);
+                        ListLock.ExitWriteLock();
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
+                        });
+                        ListLock.EnterWriteLock();
+
+                        break;
+
+                    default:
+                        SetStatus("StartWorker:not configured WorkerModification:" + workerItem.WorkerModification.ToString());
+                        workerItem.WorkerState = WorkerItem.State.Completed;
+                        return;
+                }
+
+                // this shouldnt happen
+                if (workerItem.BackGroundWorker.IsBusy)
+                {
+                    SetStatus("StartWorker:error worker already running! returning. configured WorkerModification:" + workerItem.WorkerModification.ToString());
                     return;
-            }
+                }
 
-            // this shouldnt happen
-            if (workerItem.BackGroundWorker.IsBusy)
-            {
-                SetStatus("StartWorker:error worker already running! returning. configured WorkerModification:" + workerItem.WorkerModification.ToString());
+                Mouse.OverrideCursor = Cursors.AppStarting;
+                CancelAllWorkers();
+                workerItem.BackGroundWorker.WorkerSupportsCancellation = true;
+                //workerItem.BackGroundWorker.RunWorkerCompleted -= RunWorkerCompleted;
+                workerItem.BackGroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
+
+                // Start the asynchronous operation.
+                workerItem.WorkerState = WorkerItem.State.Started;
+                workerItem.BackGroundWorker.RunWorkerAsync(workerItem);
+                SetStatus("StartWorker:worker started:exit");
                 return;
             }
-
-            Mouse.OverrideCursor = Cursors.AppStarting;
-            CancelAllWorkers();
-            workerItem.BackGroundWorker.WorkerSupportsCancellation = true;
-            workerItem.BackGroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(RunWorkerCompleted);
-
-            // Start the asynchronous operation.
-            workerItem.WorkerState = WorkerItem.State.Started;
-            workerItem.BackGroundWorker.RunWorkerAsync(workerItem);
-            SetStatus("StartWorker:worker started:exit");
-            return;
+            finally
+            {
+                ListLock.ExitWriteLock();
+            }
         }
 
         private void AddWorker(WorkerItem workerItem)
         {
             try
             {
+                ListLock.EnterWriteLock();
+
                 if (GetWorkers(workerItem).Count == 0)
                 {
                     if (workerItem.WorkerState == WorkerItem.State.NotStarted)
@@ -702,7 +750,7 @@ namespace TextFilter
                         workerItem.LogFile == null ? "" : workerItem.LogFile.FileName,
                         workerItem.FilterFile == null ? "" : workerItem.FilterFile.FileName));
 
-                    ListLock.EnterWriteLock();
+
                     BGWorkers.Add(workerItem);
                     // RestartWorkers();
                 }
@@ -776,25 +824,89 @@ namespace TextFilter
                 return false;
             }
 
-            foreach (WorkerItem item in GetWorkers(workerItem.FilterFile))
-            {
-                if (item.WorkerState == WorkerItem.State.Started)
-                {
-                    CancelWorker(item);
-                }
+            ListLock.EnterWriteLock();
+            // to keep from resetting for same filter changes
 
-                item.WorkerState = workerItem.LogFile == item.LogFile ? WorkerItem.State.NotStarted : WorkerItem.State.Ready;
-                SetStatus(string.Format("ResetCurrentWorkersbyFilter:resetting state:{0} new state:{1}", workerItem.GetHashCode(), item.WorkerState));
-                item.WorkerModification = WorkerItem.Modification.FilterModified;
+            if (workerItem.FilterFile != null)
+            {
+                //if(_FilterViewModel.CompareFilterList(_previousFilterItems) != FilterNeed.Current)
+                if (!CompareFilterLists(_previousFilterItems.ToList(), workerItem.FilterFile.ContentItems.ToList()))
+                {
+                    SetStatus("ResetCurrentWorkersbyFilter:different filter hash. RESETTING");
+                    _previousFilterItems.Clear();
+                    foreach (FilterFileItem fileItem in workerItem.FilterFile.ContentItems)
+                    {
+                        _previousFilterItems.Add((FilterFileItem)fileItem.ShallowCopy());
+                    }
+
+                    foreach (WorkerItem item in GetWorkers(workerItem.FilterFile))
+                    {
+                        if (item.WorkerState == WorkerItem.State.Started)
+                        {
+                            CancelWorker(item);
+                        }
+
+                        item.WorkerState = workerItem.LogFile == item.LogFile ? WorkerItem.State.NotStarted : WorkerItem.State.Ready;
+                        SetStatus(string.Format("ResetCurrentWorkersbyFilter:resetting state:{0} new state:{1}", item.GetHashCode(), item.WorkerState));
+                        item.WorkerModification = WorkerItem.Modification.FilterModified;
+                    }
+                }
+            }
+            else
+            {
+                SetStatus("ResetCurrentWorkersbyFilter:null FilterFile");
             }
 
+            ListLock.ExitWriteLock();
+
+            return true;
+        }
+
+        private bool CompareFilterLists(List<FilterFileItem> previousFilterItems, List<FilterFileItem> currentFilterItems)
+        {
+            if(previousFilterItems == null & currentFilterItems == null)
+            {
+                SetStatus("WorkerManager:CompareFilterLists:both null. returning true.");
+                return true;
+            }
+
+            if(previousFilterItems == null | currentFilterItems == null)
+            {
+                SetStatus("WorkerManager:CompareFilterLists:one null. returning false.");
+                return false;
+            }
+
+            foreach (FilterFileItem item in currentFilterItems.OrderBy(x => x.Index))
+            {
+                FilterFileItem previousItem = previousFilterItems.FirstOrDefault(x => x.Index == item.Index);
+                if (previousItem == null)
+                {
+                    SetStatus("WorkerManager:CompareFilterLists:previous null, returning false.");
+                    return false;
+                }
+                SetStatus(string.Format("CompareFilterLists:current:index: {0} enabled: {1} exclude: {2} regex: {3} filterpattern: {4} backgroundcolor: {5} foregroundcolor {6} ", item.Index, item.Enabled, item.Exclude, item.Regex, item.Filterpattern, item.BackgroundColor, item.ForegroundColor));
+                SetStatus(string.Format("CompareFilterLists:previous:index: {0} enabled: {1} exclude: {2} regex: {3} filterpattern: {4} backgroundcolor: {5} foregroundcolor {6} ", previousItem.Index, previousItem.Enabled, previousItem.Exclude, previousItem.Regex, previousItem.Filterpattern, previousItem.BackgroundColor, previousItem.ForegroundColor));
+
+                if (previousItem.Filterpattern != item.Filterpattern
+                    | previousItem.Enabled != item.Enabled
+                    | previousItem.Exclude != item.Exclude
+                    | previousItem.Regex != item.Regex)
+            //        | previousItem.ForegroundColor != item.ForegroundColor
+            //        | previousItem.BackgroundColor != item.BackgroundColor)
+                {
+                    SetStatus("WorkerManager:CompareFilterLists:previous different, returning false.");
+                    return false;
+                }
+            }
+
+            SetStatus("WorkerManager:CompareFilterLists:same items. returning true.");
             return true;
         }
 
         private bool ResetWorkerStates(WorkerItem workerItem)
         {
             SetStatus("ResetWorkerStates:enter:");
-
+            ListLock.EnterWriteLock();
             List<WorkerItem> workerItems = GetWorkers(workerItem);
             WorkerItem.State newState = WorkerItem.State.Ready;
 
@@ -821,6 +933,7 @@ namespace TextFilter
                 }
             }
 
+            ListLock.ExitWriteLock();
             return true;
         }
     }

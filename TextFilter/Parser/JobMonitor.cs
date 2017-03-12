@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 
 namespace TextFilter
@@ -25,17 +26,19 @@ namespace TextFilter
             {
                 while (true)
                 {
-                    _workerManager.ListLock.EnterReadLock();
+                    workerManager.ListLock.EnterReadLock();
                     // see if any not completed
-                    scount = _workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started);
-                    ccount = _workerManager.BGWorkers.Count(x => x.WorkerState != WorkerItem.State.Completed);
-                    _workerManager.ListLock.ExitReadLock();
+                    scount = workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started);
+                    ccount = workerManager.BGWorkers.Count(x => x.WorkerState != WorkerItem.State.Completed);
+                    workerManager.ListLock.ExitReadLock();
+
                     if (scount == 0 & ccount > 0)
                     {
+                        
                         CheckWorkerStates(workerManager);
-                        _workerManager.ListLock.EnterWriteLock();
+                       // workerManager.ListLock.EnterWriteLock();
                         ManageWorkerStates();
-                        _workerManager.ListLock.ExitWriteLock();
+                       // workerManager.ListLock.ExitWriteLock();
 
                         Thread.Sleep(10);
                     }
@@ -56,17 +59,19 @@ namespace TextFilter
 
         private void CheckWorkerStates(WorkerManager workerManager)
         {
+            SetStatus("jobmonitor:checkworkerstates:enter");
+
             if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.NotStarted) > 0)
             {
                 workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.NotStarted));
             }
             else if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Ready) > 0)
             {
-                workerManager.StartWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Ready));
+                workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Ready));
             }
             else if (workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Aborted) > 0)
             {
-                workerManager.StartWorker(_workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Aborted));
+                workerManager.StartWorker(workerManager.GetWorkers().First(x => x.WorkerState == WorkerItem.State.Aborted));
             }
             else
             {
@@ -76,20 +81,19 @@ namespace TextFilter
 
         private void ManageWorkerStates()
         {
-            SetStatus("ManageWorkerStates:enter:count:" + _workerManager.BGWorkers.Count);
+            SetStatus("jobmonitor:ManageWorkerStates:enter:count:" + _workerManager.BGWorkers.Count);
 
-#if DEBUG
+//#if DEBUG
             foreach (WorkerItem worker in _workerManager.BGWorkers)
             {
-                SetStatus(string.Format("ManageWorkerStates:{0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
-
+                SetStatus(string.Format("ManageWorkerStates:current states: {0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
                     worker.GetHashCode(),
                     worker.LogFile == null ? string.Empty : worker.LogFile.Tag,
                     worker.FilterFile == null ? string.Empty : worker.FilterFile.Tag,
                     worker.WorkerState,
                     worker.WorkerModification));
             }
-#endif
+//#endif
             if (_workerManager.BGWorkers.Count(x => x.WorkerState == WorkerItem.State.Started) == 0)
             {
                 SetStatus("ManageWorkerStates:no workers in Started state.");

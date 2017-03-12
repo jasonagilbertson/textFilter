@@ -70,11 +70,11 @@ namespace TextFilter
                 }
 
                 SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
-                Base.NewCurrentStatus += HandleNewCurrentStatus;
-
                 Base._Parser = new Parser();
+                Base.NewCurrentStatus += HandleNewCurrentStatus;
                 Base._FilterViewModel = new FilterViewModel();
                 Base._LogViewModel = new LogViewModel();
+                
                 _Parser.Enable(true);
 
                 App.Current.MainWindow.Title = string.Format("{0} {1}",

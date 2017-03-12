@@ -64,7 +64,8 @@ namespace TextFilter
         {
             if (e.Key == Key.Enter)
             {
-                Base._FilterViewModel.FilterLogExecuted();
+                Base._FilterViewModel.OnPropertyChanged(BaseTabViewModelEvents.Enter);
+                //Base._FilterViewModel.FilterLogExecuted();
             }
         }
     }

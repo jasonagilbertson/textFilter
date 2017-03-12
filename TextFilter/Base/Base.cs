@@ -29,6 +29,8 @@ namespace TextFilter
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private object statusLock = new object();
+
         public enum CurrentStatusSetting
         {
             enter_to_filter,
@@ -193,26 +195,38 @@ namespace TextFilter
 
         public void SetStatus(string status)
         {
+            int count = 0;
+
             if (status.ToLower().StartsWith("fatal:"))
             {
                 MessageBox.Show(status, "Oh Snap! TextFilter exception", MessageBoxButton.OK);
             }
 
-            try
+            lock (statusLock) 
             {
-                if (!string.IsNullOrEmpty(TextFilterSettings.Settings.DebugFile))
+                while(count < 10)
                 {
-                    using (System.IO.StreamWriter file = new System.IO.StreamWriter(TextFilterSettings.Settings.DebugFile, true))
+                    try
                     {
-                        file.WriteLine(string.Format("{0}: {1}", DateTime.Now.ToString("hh:mm:ss.fff"), status));
-                    }
-                }
+                        if (!string.IsNullOrEmpty(TextFilterSettings.Settings.DebugFile))
+                        {
+                            using (System.IO.StreamWriter file = new System.IO.StreamWriter(TextFilterSettings.Settings.DebugFile, true))
+                            {
+                                file.WriteLine(string.Format("{0}: [{1}] {2}", DateTime.Now.ToString("hh:mm:ss.fff"), System.Threading.Thread.CurrentThread.ManagedThreadId, status));
+                            }
+                        }
 
-                Debug.Print(status);
-            }
-            catch (Exception e)
-            {
-                Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
+                        Debug.Print(status);
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
+                    }
+
+                    System.Threading.Thread.Sleep(10);
+                    count++;
+                }
             }
         }
 
