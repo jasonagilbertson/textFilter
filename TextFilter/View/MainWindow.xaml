@@ -733,6 +733,7 @@
 
             <!--  vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv FILTER FILE DATA vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv  -->
             <TabControl x:Name="tabFilters"
+                        Focusable="True"
                         Grid.Row="1"
                         Margin="0,0,0,0"
                         HorizontalAlignment="Stretch"
@@ -754,6 +755,10 @@
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding FilterViewModel.GotFocusCommand}"
+                                               CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeave">
+                        <i:InvokeCommandAction Command="{Binding FilterViewModel.LostFocusCommand}"
                                                CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
@@ -1343,6 +1348,7 @@
             <TabControl x:Name="tabLogs"
                         Grid.Row="3"
                         HorizontalAlignment="Stretch"
+                        Focusable="True"
                         VerticalAlignment="Stretch"
                         BorderBrush="{Binding Source={StaticResource settings},
                                               Path=Settings.ForegroundColor}"
@@ -1355,6 +1361,10 @@
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="GotFocus">
                         <i:InvokeCommandAction Command="{Binding LogViewModel.GotFocusCommand}"
+                                               CommandParameter="{Binding}" />
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="MouseLeave">
+                        <i:InvokeCommandAction Command="{Binding LogViewModel.LostFocusCommand}"
                                                CommandParameter="{Binding}" />
                     </i:EventTrigger>
                 </i:Interaction.Triggers>

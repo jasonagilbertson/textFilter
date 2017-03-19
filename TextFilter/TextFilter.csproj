@@ -146,6 +146,7 @@
     <Compile Include="Base\BaseViewModel.cs" />
     <Compile Include="Base\BindingProxy.cs" />
     <Compile Include="Base\Command.cs" />
+    <Compile Include="Base\DragDrop.cs" />
     <Compile Include="Base\WPFMenuItem.cs" />
     <Compile Include="Base\FileItem.cs" />
     <Compile Include="Base\FileTypeAssociation.cs" />

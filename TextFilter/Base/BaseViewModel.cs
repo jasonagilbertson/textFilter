@@ -11,11 +11,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace TextFilter
 {
@@ -33,9 +35,11 @@ namespace TextFilter
 
         private Command _hideCommand;
 
+        private Command _lostFocusCommand;
+
         private Command _newCommand;
 
-        private Command _openCommand;
+        private Command _dragOutCommand;
 
         private bool _openDialogVisible;
 
@@ -94,12 +98,6 @@ namespace TextFilter
             set { _copyFilePathCommand = value; }
         }
 
-        public Command DragDropCommand
-        {
-            get { return _openCommand ?? new Command(OpenDropExecuted); }
-            set { _openCommand = value; }
-        }
-
         public Command FindNextCommand
         {
             get
@@ -145,6 +143,21 @@ namespace TextFilter
             set { _hideCommand = value; }
         }
 
+        public Command LostFocusCommand
+        {
+            get
+            {
+                if (_lostFocusCommand == null)
+                {
+                    _lostFocusCommand = new Command(LostFocusExecuted);
+                }
+                _lostFocusCommand.CanExecute = true;
+
+                return _lostFocusCommand;
+            }
+            set { _lostFocusCommand = value; }
+        }
+
         public Command NewCommand
         {
             get
@@ -162,8 +175,8 @@ namespace TextFilter
 
         public Command OpenCommand
         {
-            get { return _openCommand ?? new Command(OpenFileExecuted); }
-            set { _openCommand = value; }
+            get { return _dragOutCommand ?? new Command(OpenFileExecuted); }
+            set { _dragOutCommand = value; }
         }
 
         public bool OpenDialogVisible
@@ -446,6 +459,20 @@ namespace TextFilter
             return retVal;
         }
 
+        public void LostFocusExecuted(object sender)
+        {
+            
+            if (CurrentFile() != null && (Mouse.LeftButton == MouseButtonState.Pressed))
+            {
+                SetStatus(string.Format("NOTIMPLEMENTED:LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), CurrentFile()));
+                DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { CurrentFile().Tag });
+                DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
+
+            }
+
+            SetStatus("LostFocusExecuted:drag:" + (Mouse.LeftButton == MouseButtonState.Pressed));
+        }
+
         public ObservableCollection<MenuItem> Menubuilder(string directory)
         {
             ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
@@ -512,17 +539,6 @@ namespace TextFilter
 
             AddTabItem(file);
         }
-
-        public void OpenDropExecuted(object sender)
-        {
-            SetStatus("OpenDrop: " + sender.GetType().ToString());
-            SetStatus("OpenDrop: " + sender.ToString());
-            if (sender is string)
-            {
-                SetStatus("OpenDrop: " + (sender as string));
-            }
-        }
-
         public abstract void OpenFileExecuted(object sender);
 
         public abstract void PasteText(object sender);
