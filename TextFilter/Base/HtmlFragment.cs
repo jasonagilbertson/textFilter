@@ -1,12 +1,16 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: HtmlFragment.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-09-2015 ***********************************************************************
+// ************************************************************************************
+
+// ***********************************************************************
 // <copyright file="HtmlFragment.cs" company="http://msdn.microsoft.com/library/default.asp?url=/workshop/networking/clipboard/htmlclipboard.asp">
 //     Copyright © 2015
 // </copyright>
-// <summary>
-// </summary>
 // ***********************************************************************
 
 namespace TextFilter

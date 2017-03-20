@@ -1,4 +1,13 @@
-﻿using System;
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: TimedSaveDialog.xaml.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
+//
+// ************************************************************************************
+
+using System;
 using System.ComponentModel;
 using System.Threading;
 using System.Windows;
@@ -8,12 +17,12 @@ namespace TextFilter
 {
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
-        private const int _timerSecs = 10;
-
+        private const int _timerSecs = 1;
         private EventHandler _handler;
         private Results _result;
         private ManualResetEvent _timedOut;
         private DispatcherTimer _timer;
+        private int _totalTimerSecs = 5;
 
         public TimedSaveDialog(string fileName)
         {
@@ -27,10 +36,19 @@ namespace TextFilter
         public enum Results
         {
             Unknown,
-            Save,
-            SaveAs,
+            Disable,
             DontSave,
-            Disable
+            DontSaveAll,
+            Save,
+            SaveAs
+        }
+
+        public void CloseDialog()
+        {
+            _timer.Tick -= _handler;
+            _timer.Stop();
+            Disable();
+            this.Close();
         }
 
         public void Disable()
@@ -58,33 +76,43 @@ namespace TextFilter
         private void buttonDisable_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.Disable;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonDontSave_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.DontSave;
-            OnTimedEvent(null, null);
+            CloseDialog();
+        }
+
+        private void buttonDontSaveAll_Click(object sender, RoutedEventArgs e)
+        {
+            _result = Results.DontSaveAll;
+            CloseDialog();
         }
 
         private void buttonSave_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.Save;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void buttonSaveAs_Click(object sender, RoutedEventArgs e)
         {
             _result = Results.SaveAs;
-            OnTimedEvent(null, null);
+            CloseDialog();
         }
 
         private void OnTimedEvent(object sender, EventArgs e)
         {
-            _timer.Tick -= _handler;
-            _timer.Stop();
-            Disable();
-            this.Close();
+            if (_totalTimerSecs-- > 0)
+            {
+                labelTimerLeft.Content = _totalTimerSecs;
+            }
+            else
+            {
+                CloseDialog();
+            }
         }
 
         private void StartTimer()

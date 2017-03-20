@@ -1,7 +1,13 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: AsyncVirtualizingCollection.cs
+// Created: 9/6/2016
+// Modified: 2/11/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-31-2015 ***********************************************************************
+// ************************************************************************************
+
+// ***********************************************************************
 // <copyright file="AsyncVirtualizingCollection.cs" company="http://www.codeproject.com/Articles/34405/WPF-Data-Virtualization">
 //     Copyright © 2015
 // </copyright>

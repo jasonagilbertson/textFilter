@@ -1710,14 +1710,11 @@
             <Grid SnapsToDevicePixels="true">
                 <Rectangle x:Name="Bg"
                            Fill="{TemplateBinding Background}"
-                           RadiusX="2"
-                           RadiusY="2"
                            Stroke="{TemplateBinding BorderBrush}"
-                           StrokeThickness="1" />
+                           StrokeThickness="0"
+                           Margin="-1" />
                 <Rectangle x:Name="InnerBorder"
-                           Margin="1"
-                           RadiusX="2"
-                           RadiusY="2" />
+                           Margin="-1" />
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"
@@ -2043,7 +2040,7 @@
                                                    Fill="{StaticResource SubMenuBackgroundBrush}" />
                                     </Canvas>
                                     <ItemsPresenter x:Name="ItemsPresenter"
-                                                    Margin="2"
+                                                    Margin="-1"
                                                     Grid.IsSharedSizeScope="true"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle"
                                                     KeyboardNavigation.TabNavigation="Cycle"
@@ -2311,7 +2308,7 @@
                                                    Fill="{StaticResource SubMenuBackgroundBrush}" />
                                     </Canvas>
                                     <ItemsPresenter x:Name="ItemsPresenter"
-                                                    Margin="2"
+                                                    Margin="-1"
                                                     Grid.IsSharedSizeScope="true"
                                                     KeyboardNavigation.DirectionalNavigation="Cycle"
                                                     KeyboardNavigation.TabNavigation="Cycle"

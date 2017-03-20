@@ -3,7 +3,9 @@
 # TextFilter Configuration File
 
 Below is the configuration file that controls some of the window behavior.
-Currently none of this information can be directly set from the gui.
+This information can be directly set from the gui. See Options -> Settings
+![](../TextFilter/Images/tf-setting-reference-1.png)
+
 If for some reason config file is lost, on next launch, a new config file will be generated.
 If for some reason config file is corrupt, rename / delete config file and relaunch textFilter.
 

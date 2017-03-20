@@ -1,13 +1,12 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: Base.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
-// <copyright file="Base.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
+
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -86,6 +85,45 @@ namespace TextFilter
 
                 parent = VisualTreeHelper.GetParent(parent) as UIElement;
             }
+            return null;
+        }
+
+        public T FindVisualChild<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            int childCount = VisualTreeHelper.GetChildrenCount(parent);
+            
+            if (childCount > 0)
+            {
+                for (int i = 0; i < childCount; i++)
+                {
+                    UIElement child = VisualTreeHelper.GetChild(parent, i) as UIElement;
+                    if (child is T)
+                    {
+                        SetStatus("findvisualchild: found child");
+                        return VisualTreeHelper.GetChild(parent, i) as T;
+                    }
+                    else
+                    {
+                        if(VisualTreeHelper.GetChildrenCount(child) > 0)
+                        {
+                            T rChild = FindVisualChild<T>(child);
+                            if (rChild is T)
+                            {
+                                SetStatus("findvisualchild: found rchild");
+                                return rChild as T;
+                            }
+                        }
+                    }
+
+                }
+            }
+            else
+            {
+                SetStatus("findvisualchild: no children");
+            }
+
+            SetStatus("findvisualchild: child of type not found");
             return null;
         }
 

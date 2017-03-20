@@ -1,4 +1,15 @@
-﻿using System.Reflection;
+﻿// ***********************************************************************
+// Assembly : TextFilter
+// Author : jason Created : 09-06-2015
+//
+// ***********************************************************************
+// Last Modified By : jason Last Modified On : 1-13-2017
+// <copyright file="" company="">
+// </copyright>
+// <summary>
+// </summary>
+// ***********************************************************************
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 
@@ -41,6 +52,6 @@ using System.Windows;
 //
 // You can specify all the values or you can default the Build and Revision Numbers by using the '*'
 // as shown below: [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.7.0.008")]
-[assembly: AssemblyFileVersion("0.7.0.008")]
+[assembly: AssemblyVersion("0.7.0.012")]
+[assembly: AssemblyFileVersion("0.7.0.012")]
 [assembly: GuidAttribute("9BD5B347-AF37-414D-AE8B-2D6FA05B051D")]

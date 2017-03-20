@@ -1,13 +1,11 @@
-﻿// *********************************************************************** Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: IViewModel.cs
+// Created: 12/24/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
 //
-// Last Modified By : jason Last Modified On : 10-25-2015 ***********************************************************************
-// <copyright file="IViewModel.cs" company="">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
 
 namespace TextFilter
 {
@@ -16,11 +14,15 @@ namespace TextFilter
         // ITabViewModel<T> SelectedTabItem { get; set; }
         event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
 
+        Command ClearRecentCommand { get; set; }
+
         Command CloseCommand { get; set; }
 
         Command FindNextCommand { get; set; }
 
         Command GotFocusCommand { get; set; }
+
+        Command GotoLineCommand { get; set; }
 
         Command HideCommand { get; set; }
 
@@ -39,6 +41,8 @@ namespace TextFilter
         IFileManager<T> ViewManager { get; set; }
 
         void AddTabItem(IFile<T> fileProperties);
+
+        void ClearRecentExecuted();
 
         void CloseAllFilesExecuted(object sender);
 

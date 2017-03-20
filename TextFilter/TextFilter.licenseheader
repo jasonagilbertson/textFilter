@@ -1,0 +1,21 @@
+﻿extensions: designer.cs generated.cs
+extensions: .cs .cpp .h
+// ************************************************************************************
+// Assembly: %Namespace%
+// File: %FileName%
+// Created: %CreationMonth%/%CreationDay%/%CreationYear%
+// Modified: %CurrentMonth%/%CurrentDay%/%CurrentYear%
+// Copyright (c) %CurrentYear% %UserDisplayName%
+//
+// ************************************************************************************
+
+extensions: .aspx .ascx
+<%-- 
+Copyright (c) 2017 jason gilbertson
+--%>
+extensions: .vb
+'Sample license text.
+extensions:  .xml .config .xsd
+<!--
+Sample license text.
+-->
