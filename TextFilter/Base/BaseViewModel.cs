@@ -558,8 +558,6 @@ namespace TextFilter
 
         public abstract void NewFileExecuted(object sender);
 
-            AddTabItem(file);
-        }
         public abstract void OpenFileExecuted(object sender);
 
         public abstract void PasteText(object sender);

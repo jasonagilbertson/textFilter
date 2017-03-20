@@ -1,14 +1,12 @@
-﻿// *********************************************************************** 
-// Assembly : TextFilter
-// Author : jason Created : 09-06-2015
+﻿// ************************************************************************************
+// Assembly: TextFilter
+// File: Base.cs
+// Created: 9/6/2016
+// Modified: 2/12/2017
+// Copyright (c) 2017 jason gilbertson
+// file="http://dlaa.me/blog/post/9917797">
 //
-// Last Modified By : jason Last Modified On : 10-25-2015 
-// <copyright file="http://dlaa.me/blog/post/9917797">
-//     Copyright © 2015
-// </copyright>
-// <summary>
-// </summary>
-// ***********************************************************************
+// ************************************************************************************
 
 using System;
 using System.Collections.Generic;
