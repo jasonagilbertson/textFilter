@@ -29,18 +29,19 @@ namespace TextFilter
     {
         public System.Timers.Timer _timer;
         private StringBuilder _color = new StringBuilder();
+
         private List<string> _colorNames = new List<string>();
+
         private Command _controlGotFocusCommand;
 
         private Command _controlLostFocusCommand;
 
         private string _currentStatus;
-
-        private Command _duplicateWindowCommand;
-
+        
         private Command _helpCommand;
 
         private Command _listViewSelectionChangedCommand;
+
         private TextFilterSettings _settings;
 
         private Command _settingsCommand;
@@ -159,21 +160,7 @@ namespace TextFilter
             }
         }
 
-        public Command DuplicateWindowCommand
-        {
-            get
-            {
-                if (_duplicateWindowCommand == null)
-                {
-                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
-                }
-                _duplicateWindowCommand.CanExecute = true;
-
-                return _duplicateWindowCommand;
-            }
-            set { _duplicateWindowCommand = value; }
-        }
-
+       
         public FilterViewModel FilterViewModel
         {
             get { return _FilterViewModel; }
@@ -338,7 +325,7 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        DuplicateWindow();
+                        NewWindow();
                         Application.Current.Shutdown();
                         break;
                     }
@@ -425,34 +412,6 @@ namespace TextFilter
                 //    (sender as Control).BorderBrush = Settings.ForegroundColor;
                 //    (sender as Control).BorderThickness = new Thickness(1);
             }
-        }
-
-        private void DuplicateWindow()
-        {
-            StringBuilder args = new StringBuilder();
-            if (Settings.CurrentFilterFiles.Count > 0)
-            {
-                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
-            }
-
-            if (Settings.CurrentLogFiles.Count > 0)
-            {
-                if (args.Length > 0)
-                {
-                    args.Append(" ");
-                }
-
-                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
-            }
-
-            Settings.Save();
-            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
-            Debug.Print(args.ToString());
-        }
-
-        private void DuplicateWindowExecuted(object sender)
-        {
-            DuplicateWindow();
         }
 
         private void HandleNewCurrentStatus(object sender, string status)
@@ -549,7 +508,7 @@ namespace TextFilter
                             if (mbResult == MessageBoxResult.Yes)
                             {
                                 // todo: merge configs?
-                                DuplicateWindow();
+                                NewWindow();
                                 Application.Current.Shutdown();
                             }
                         }

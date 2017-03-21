@@ -42,7 +42,7 @@ namespace TextFilter
 
         private Command _newCommand;
 
-        private Command _dragOutCommand;
+        private Command _openCommand;
 
         private bool _openDialogVisible;
 
@@ -199,8 +199,8 @@ namespace TextFilter
 
         public Command OpenCommand
         {
-            get { return _dragOutCommand ?? new Command(OpenFileExecuted); }
-            set { _dragOutCommand = value; }
+            get { return _openCommand ?? new Command(OpenFileExecuted); }
+            set { _openCommand = value; }
         }
 
         public bool OpenDialogVisible
@@ -489,12 +489,25 @@ namespace TextFilter
 
         public void LostFocusExecuted(object sender)
         {
-            
-            if (CurrentFile() != null && (Mouse.LeftButton == MouseButtonState.Pressed))
+            string currentFile = CurrentFile() == null ? null : CurrentFile().Tag;
+
+            if (currentFile != null && (Mouse.LeftButton == MouseButtonState.Pressed))
             {
-                SetStatus(string.Format("NOTIMPLEMENTED:LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), CurrentFile()));
-                DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { CurrentFile().Tag });
-                DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
+                SetStatus(string.Format("LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+
+                if (Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    // launch new instance
+                    SetStatus(string.Format("LostFocusExecuted:new instance:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+                    NewWindow(currentFile);
+                }
+                else
+                {
+                    // add to clipboard for drag out
+                    SetStatus(string.Format("LostFocusExecuted:drag out:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+                    DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { currentFile });
+                    DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
+                }
 
             }
 

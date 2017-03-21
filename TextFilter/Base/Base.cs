@@ -24,6 +24,8 @@ namespace TextFilter
 
         public bool _transitioning;
 
+        private Command _duplicateWindowCommand;
+
         public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,6 +42,20 @@ namespace TextFilter
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
+        public Command DuplicateWindowCommand
+        {
+            get
+            {
+                if (_duplicateWindowCommand == null)
+                {
+                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
+
+                return _duplicateWindowCommand;
+            }
+            set { _duplicateWindowCommand = value; }
+        }
 
         public void CreateProcess(string process, string arguments = null)
         {
@@ -60,6 +76,10 @@ namespace TextFilter
                 SetStatus("CreateProcess: exception" + e.ToString());
             }
         }
+        public void DuplicateWindowExecuted(object sender)
+        {
+            NewWindow();
+        }
 
         public void ExecuteAsAdmin(string fileName, string arguments)
         {
@@ -72,27 +92,11 @@ namespace TextFilter
             proc.Start();
         }
 
-        public T FindVisualParent<T>(UIElement element) where T : UIElement
-        {
-            var parent = element;
-            while (parent != null)
-            {
-                var correctlyTyped = parent as T;
-                if (correctlyTyped != null)
-                {
-                    return correctlyTyped;
-                }
-
-                parent = VisualTreeHelper.GetParent(parent) as UIElement;
-            }
-            return null;
-        }
-
         public T FindVisualChild<T>(UIElement element) where T : UIElement
         {
             var parent = element;
             int childCount = VisualTreeHelper.GetChildrenCount(parent);
-            
+
             if (childCount > 0)
             {
                 for (int i = 0; i < childCount; i++)
@@ -105,7 +109,7 @@ namespace TextFilter
                     }
                     else
                     {
-                        if(VisualTreeHelper.GetChildrenCount(child) > 0)
+                        if (VisualTreeHelper.GetChildrenCount(child) > 0)
                         {
                             T rChild = FindVisualChild<T>(child);
                             if (rChild is T)
@@ -124,6 +128,22 @@ namespace TextFilter
             }
 
             SetStatus("findvisualchild: child of type not found");
+            return null;
+        }
+
+        public T FindVisualParent<T>(UIElement element) where T : UIElement
+        {
+            var parent = element;
+            while (parent != null)
+            {
+                var correctlyTyped = parent as T;
+                if (correctlyTyped != null)
+                {
+                    return correctlyTyped;
+                }
+
+                parent = VisualTreeHelper.GetParent(parent) as UIElement;
+            }
             return null;
         }
 
@@ -162,6 +182,38 @@ namespace TextFilter
             return null;
         }
 
+        public void NewWindow(string file = "")
+        {
+            StringBuilder args = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(file))
+            {
+                // unknown file type from drag out
+                args.Append(file);
+            }
+            else
+            {
+                
+                if (TextFilterSettings.Settings.CurrentFilterFiles.Count > 0)
+                {
+                    args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", TextFilterSettings.Settings.CurrentFilterFiles)));
+                }
+
+                if (TextFilterSettings.Settings.CurrentLogFiles.Count > 0)
+                {
+                    if (args.Length > 0)
+                    {
+                        args.Append(" ");
+                    }
+
+                    args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", TextFilterSettings.Settings.CurrentLogFiles)));
+                }
+            }
+
+            TextFilterSettings.Settings.Save();
+            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+            Debug.Print(args.ToString());
+        }
         public void OnPropertyChanged(string name)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(name));
