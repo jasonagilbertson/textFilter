@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -508,7 +507,6 @@ namespace TextFilter
                     DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { currentFile });
                     DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
                 }
-
             }
 
             SetStatus("LostFocusExecuted:drag:" + (Mouse.LeftButton == MouseButtonState.Pressed));
@@ -715,10 +713,12 @@ namespace TextFilter
                             case TimedSaveDialog.Results.DontSave:
                                 item.Modified = false;
                                 break;
+
                             case TimedSaveDialog.Results.DontSaveAll:
                                 noPrompt = true;
                                 item.Modified = false;
                                 break;
+
                             case TimedSaveDialog.Results.Save:
                                 SaveFileExecuted(item);
                                 item.Modified = false;
@@ -734,7 +734,7 @@ namespace TextFilter
                                 break;
                         }
                     }
-                    else if(TextFilterSettings.Settings.AutoSave)
+                    else if (TextFilterSettings.Settings.AutoSave)
                     {
                         SaveFileExecuted(item);
                         item.Modified = false;

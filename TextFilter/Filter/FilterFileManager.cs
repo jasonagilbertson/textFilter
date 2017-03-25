@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: FilterFileManager.cs
-// Created: 9/6/2016
-// Modified: 2/11/2017
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -10,6 +10,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -131,6 +132,7 @@ namespace TextFilter
                     // insert in new enabled filter item at specified index
                     fileItem.Enabled = true;
                     fileItem.Index = filterIndex;
+                    SetFilterItemColors(filterFile, fileItem);
                     filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Insert(filterIndex, fileItem);
                 }
@@ -142,6 +144,8 @@ namespace TextFilter
                 }
                 else
                 {
+                    // add at end
+                    SetFilterItemColors(filterFile, fileItem);
                     filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Add(fileItem);
                 }
@@ -291,13 +295,32 @@ namespace TextFilter
                 {
                     FilterFileItem fileItem = new FilterFileItem();
                     fileItem.Count = 0;
-                    fileItem.BackgroundColor = ReadStringNodeChildItem(root, "backgroundcolor", i);
+
+                    if(string.IsNullOrEmpty(ReadStringNodeChildItem(root, "backgroundcolor", i)) 
+                        & string.IsNullOrEmpty(ReadStringNodeChildItem(root, "foregroundcolor", i)))
+                    {
+                        if(_FilterViewModel != null)
+                        {
+                            SetFilterItemColors(filterFile, fileItem);
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(ReadStringNodeChildItem(root, "backgroundcolor", i)))
+                    {
+                        fileItem.BackgroundColor = ReadStringNodeChildItem(root, "backgroundcolor", i);
+                    }
+
                     fileItem.CaseSensitive = ReadBoolNodeChildItem(root, "casesensitive", i);
                     fileItem.Enabled = ReadBoolNodeChildItem(root, "enabled", i);
                     fileItem.Exclude = ReadBoolNodeChildItem(root, "exclude", i);
                     fileItem.Regex = ReadBoolNodeChildItem(root, "regex", i);
                     fileItem.Filterpattern = ReadStringNodeChildItem(root, "filterpattern", i);
-                    fileItem.ForegroundColor = ReadStringNodeChildItem(root, "foregroundcolor", i);
+
+                    if (!string.IsNullOrEmpty(ReadStringNodeChildItem(root, "foregroundcolor", i)))
+                    {
+                        fileItem.ForegroundColor = ReadStringNodeChildItem(root, "foregroundcolor", i);
+                    }
+
                     fileItem.Index = ReadIntNodeChildItem(root, "index", i);
                     fileItem.Notes = ReadStringNodeChildItem(root, "notes", i);
 
@@ -449,14 +472,14 @@ namespace TextFilter
             KnownColor[] allColors = new KnownColor[colorsArray.Length];
             Array.Copy(colorsArray, allColors, colorsArray.Length);
 
-            Color newColor = System.Drawing.Color.FromArgb(0xff,
+            System.Drawing.Color newColor = System.Drawing.Color.FromArgb(0xff,
                                 Convert.ToByte(rgbColor.Substring(0, 2), 16),
                                 Convert.ToByte(rgbColor.Substring(2, 2), 16),
                                 Convert.ToByte(rgbColor.Substring(4, 2), 16));
 
             foreach (KnownColor color in allColors)
             {
-                Color tempColor = Color.FromKnownColor(color);
+                System.Drawing.Color tempColor = System.Drawing.Color.FromKnownColor(color);
                 if (!tempColor.IsSystemColor
                     && tempColor.R == newColor.R
                     && tempColor.G == newColor.G
@@ -709,6 +732,74 @@ namespace TextFilter
                 SetStatus("SaveAsTat exception:" + e.ToString());
                 return false;
             }
+        }
+
+        public FilterFileItem SetFilterItemColors(FilterFile filterFile, FilterFileItem fileItem)
+        {
+
+            if(!Settings.AutoPopulateColors)
+            {
+                return fileItem;
+            }
+
+            // string backgroundColor = fileItem.BackgroundColor;
+            string backgroundColor = Settings.GetColorNames().ElementAt(new Random().Next(Settings.WebColors.Count - 1));
+            bool preferredColors = true;
+
+            List<string> backgroundColors = new List<string>();
+
+            while (backgroundColor != null)
+            {
+                List<string> contrastColors = TextFilterSettings.Settings.GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors);
+
+                foreach (FilterFileItem item in filterFile.ContentItems)
+                {
+                    Debug.Print("SetFilterItemColors:checking background colors: filterFileItem:{0} backgroundColor:{1}", item.BackgroundColor, backgroundColor);
+                    if (item.BackgroundColor == backgroundColor)
+                    {
+                        Debug.Print("SetFilterItemColors:checking foreground colors: filterFileItem:{0} contrastColors:{1}", item.ForegroundColor, contrastColors.Contains(item.ForegroundColor));
+                        if (contrastColors.Contains(item.ForegroundColor))
+                        {
+                            contrastColors.Remove(item.ForegroundColor);
+                        }
+                    }
+                }
+
+                if (contrastColors.Count > 0)
+                {
+                    //TextFilterSettings.Settings.FilterBackgroundColorDefaultString = backgroundColor;
+                    fileItem.BackgroundColor = backgroundColor;
+                    fileItem.ForegroundColor = contrastColors
+                        .ToList()
+                        .ElementAtOrDefault((new Random()
+                        .Next(contrastColors.Count - 1)));
+
+                    break;
+                }
+
+                backgroundColors.Add(backgroundColor);
+                backgroundColor = TextFilterSettings.Settings
+                    .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
+                    .ToList()
+                    .Where(x => !backgroundColors.Contains(x))
+                    .FirstOrDefault();
+
+                if (backgroundColor == null && !preferredColors)
+                {
+                    break;
+                }
+                else
+                {
+                    preferredColors = false;
+                    backgroundColor = TextFilterSettings.Settings
+                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
+                        .ToList()
+                        .Where(x => !backgroundColors.Contains(x))
+                        .FirstOrDefault();
+                }
+            }
+
+            return fileItem;
         }
     }
 }

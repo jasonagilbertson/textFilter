@@ -9,16 +9,12 @@
 // ************************************************************************************
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace TextFilter
 {
-    class DragDrop : Base
+    internal class DragDrop : Base
     {
         public static DragDropEffects DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, DragDropEffects allowedEffects)
         {
@@ -35,8 +31,37 @@ namespace TextFilter
             return (DragDropEffects)(finalEffect[0]);
         }
 
+        private static class NativeMethods
+        {
+            public const int DRAGDROP_S_CANCEL = 0x00040101;
+            public const int DRAGDROP_S_DROP = 0x00040100;
+            public const int DRAGDROP_S_USEDEFAULTCURSORS = 0x00040102;
+            public const int S_FALSE = 1;
+            public const int S_OK = 0;
+
+            [ComImport]
+            [Guid("00000121-0000-0000-C000-000000000046")]
+            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+            public interface IDropSource
+            {
+                [PreserveSig]
+                int QueryContinueDrag(int fEscapePressed, uint grfKeyState);
+
+                [PreserveSig]
+                int GiveFeedback(uint dwEffect);
+            }
+
+            [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true, PreserveSig = false)]
+            public static extern void DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, IDropSource dropSource, int allowedEffects, int[] finalEffect);
+        }
+
         private class DropSource : NativeMethods.IDropSource
         {
+            public int GiveFeedback(uint dwEffect)
+            {
+                return NativeMethods.DRAGDROP_S_USEDEFAULTCURSORS;
+            }
+
             public int QueryContinueDrag(int fEscapePressed, uint grfKeyState)
             {
                 var escapePressed = (0 != fEscapePressed);
@@ -51,35 +76,6 @@ namespace TextFilter
                 }
                 return NativeMethods.S_OK;
             }
-
-            public int GiveFeedback(uint dwEffect)
-            {
-                return NativeMethods.DRAGDROP_S_USEDEFAULTCURSORS;
-            }
         }
-
-        private static class NativeMethods
-        {
-            public const int DRAGDROP_S_DROP = 0x00040100;
-            public const int DRAGDROP_S_CANCEL = 0x00040101;
-            public const int DRAGDROP_S_USEDEFAULTCURSORS = 0x00040102;
-            public const int S_OK = 0;
-            public const int S_FALSE = 1;
-            
-            [ComImport]
-            [Guid("00000121-0000-0000-C000-000000000046")]
-            [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-            public interface IDropSource
-            {
-                [PreserveSig]
-                int QueryContinueDrag(int fEscapePressed, uint grfKeyState);
-                [PreserveSig]
-                int GiveFeedback(uint dwEffect);
-            }
-            [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true, PreserveSig = false)]
-            public static extern void DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, IDropSource dropSource, int allowedEffects, int[] finalEffect);
-
-        }
-
     }
 }

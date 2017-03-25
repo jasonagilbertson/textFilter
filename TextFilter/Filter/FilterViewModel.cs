@@ -632,7 +632,7 @@ namespace TextFilter
 
                     DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
                     DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(row);
-                    
+
                     if (presenter != null)
                     {
                         DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(0) as DataGridCell;
@@ -716,6 +716,8 @@ namespace TextFilter
                         Notes = textBox.Text,
                         Filterpattern = textBox.SelectedText
                     };
+
+                    ((FilterFileManager)ViewManager).SetFilterItemColors(filterFile, fileItem);
 
                     filterFile.ContentItems.Add(fileItem);
                     // set filterindex to -1 to add new filter item at end of list
@@ -810,7 +812,7 @@ namespace TextFilter
             bool buttonStatus = (sender is Button);
             bool comboQuickFind = (sender is ComboBox);
             bool textBoxSelectedText = (sender is TextBox);
-                
+
             // save combo if passed in
             if (comboQuickFind && QuickFindCombo == null)
             {
@@ -866,7 +868,7 @@ namespace TextFilter
 
                 return;
             }
-            else if(!buttonStatus)
+            else if (!buttonStatus)
             {
                 QuickFindItem.Enabled = true;
             }

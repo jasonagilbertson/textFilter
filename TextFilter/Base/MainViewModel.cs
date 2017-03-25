@@ -1,14 +1,13 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: mainviewmodel.cs
-// Created: 12/2/2016
-// Modified: 2/11/2017
+// File: MainViewModel.cs
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -20,7 +19,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml;
 
 namespace TextFilter
@@ -30,14 +28,12 @@ namespace TextFilter
         public System.Timers.Timer _timer;
         private StringBuilder _color = new StringBuilder();
 
-        private List<string> _colorNames = new List<string>();
-
         private Command _controlGotFocusCommand;
 
         private Command _controlLostFocusCommand;
 
         private string _currentStatus;
-        
+
         private Command _helpCommand;
 
         private Command _listViewSelectionChangedCommand;
@@ -64,7 +60,6 @@ namespace TextFilter
                     return;
                 }
 
-                _colorNames = GetColorNames();
                 // clean up old log file if exists
                 if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
                 {
@@ -160,7 +155,6 @@ namespace TextFilter
             }
         }
 
-       
         public FilterViewModel FilterViewModel
         {
             get { return _FilterViewModel; }
@@ -258,10 +252,10 @@ namespace TextFilter
                 _color.Append(e.Key.ToString());
                 ComboBox comboBox = (sender as ComboBox);
 
-                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
+                string color = Settings.GetColorNames().FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
                 if (String.IsNullOrEmpty(color))
                 {
-                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
+                    color = Settings.GetColorNames().FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
                 }
                 if (!String.IsNullOrEmpty(color))
                 {
@@ -277,22 +271,6 @@ namespace TextFilter
         public void ColorComboSelected()
         {
             _color.Clear();
-        }
-
-        public List<string> GetColorNames()
-        {
-            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-
-            List<string> list = new List<string>();
-            foreach (var prop in typeof(Colors).GetProperties(flags))
-            {
-                if (prop.PropertyType.FullName == "System.Windows.Media.Color")
-                {
-                    Debug.Print(prop.PropertyType.FullName);
-                    list.Add(prop.Name);
-                }
-            }
-            return list;
         }
 
         public void HelpExecuted(object sender)
@@ -496,7 +474,7 @@ namespace TextFilter
                             //string newConfig = newExe + ".config";
 
                             // overwrite exe
-                            if(File.Exists(currentExe + ".old"))
+                            if (File.Exists(currentExe + ".old"))
                             {
                                 File.Delete(currentExe + ".old");
                             }
@@ -545,7 +523,7 @@ namespace TextFilter
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile,  e.ToString()),"update error");
+                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile, e.ToString()), "update error");
                 }
 
                 return;
