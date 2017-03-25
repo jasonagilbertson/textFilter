@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: TextFilterSettings.cs
-// Created: 9/6/2016
-// Modified: 2/11/2017
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows.Media;
 using System.Xml;
@@ -27,10 +28,10 @@ namespace TextFilter
         private static TextFilterSettings settings;
 
         private KeyValueConfigurationCollection _appSettings;
-
         private Configuration _Config;
-
         private ExeConfigurationFileMap _ConfigFileMap;
+        private List<Color> _webColors;
+        private Dictionary<string, Color> _webColorsPair = new Dictionary<string, Color>();
 
         static TextFilterSettings()
         {
@@ -42,6 +43,8 @@ namespace TextFilter
 
         public TextFilterSettings()
         {
+            // todo: this is getting initialized twice
+            _webColors = GetColors();
         }
 
         public enum ResourceType
@@ -59,6 +62,8 @@ namespace TextFilter
 
         private enum AppSettingNames
         {
+            AutoPopulateColors,
+
             AutoSave,
 
             BackgroundColor,
@@ -76,6 +81,8 @@ namespace TextFilter
             FilterDirectory,
 
             FilterHide,
+
+            FilterIndexVisible,
 
             FileHistoryCount,
 
@@ -120,6 +127,21 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.AutoSave).ToString());
+                }
+            }
+        }
+        public bool AutoPopulateColors
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.AutoPopulateColors).ToString());
                 }
             }
         }
@@ -191,19 +213,6 @@ namespace TextFilter
             }
         }
 
-        public string CurrentFilterFilesString
-        {
-            get
-            {
-                return String.Join(";", CurrentFilterFiles);
-            }
-
-            set
-            {
-                CurrentFilterFiles = value.Split(';').ToList();
-            }
-        }
-
         public List<string> CurrentFilterFiles
         {
             get
@@ -217,18 +226,19 @@ namespace TextFilter
             }
         }
 
-        public string CurrentLogFilesString
+        public string CurrentFilterFilesString
         {
             get
             {
-                return String.Join(";", CurrentLogFiles);
+                return String.Join(";", CurrentFilterFiles);
             }
 
             set
             {
-                CurrentLogFiles = value.Split(';').ToList();
+                CurrentFilterFiles = value.Split(';').ToList();
             }
         }
+
         public List<string> CurrentLogFiles
         {
             get
@@ -239,6 +249,19 @@ namespace TextFilter
             set
             {
                 _appSettings[(AppSettingNames.CurrentLogFiles).ToString()].Value = string.Join(";", value);
+            }
+        }
+
+        public string CurrentLogFilesString
+        {
+            get
+            {
+                return String.Join(";", CurrentLogFiles);
+            }
+
+            set
+            {
+                CurrentLogFiles = value.Split(';').ToList();
             }
         }
 
@@ -336,6 +359,22 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.FilterHide).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.FilterHide).ToString());
+                }
+            }
+        }
+
+        public bool FilterIndexVisible
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.FilterIndexVisible).ToString()].Value.ToString()));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.FilterIndexVisible).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.FilterIndexVisible).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.FilterIndexVisible).ToString());
                 }
             }
         }
@@ -540,6 +579,14 @@ namespace TextFilter
             }
         }
 
+        public List<Color> WebColors
+        {
+            get
+            {
+                return _webColors;
+            }
+        }
+
         public bool WordWrap
         {
             get
@@ -599,6 +646,89 @@ namespace TextFilter
             }
         }
 
+        public Color GetColor(string colorName)
+        {
+            return (Color)_webColorsPair.FirstOrDefault(x => x.Key == colorName).Value;
+        }
+
+        public List<string> GetColorNames()
+        {
+            return _webColorsPair.Select(x => x.Key).ToList<string>();
+        }
+
+        public List<string> GetContrastingColors(Color input_color, bool preferredColors)
+        {
+            // get the colorspace as an ArrayList
+            List<string> contrastColors = new List<string>();
+            Dictionary<string, KeyValuePair<double, Color>> tempColors = new Dictionary<string, KeyValuePair<double, Color>>();
+            bool preferDark = PreferredDarkColorRange(input_color);
+
+            // initialize the RGB-Values of input_color
+            double dbl_input_red = Convert.ToDouble(input_color.R);
+            double dbl_input_green = Convert.ToDouble(input_color.G);
+            double dbl_input_blue = Convert.ToDouble(input_color.B);
+            //double dbl_input_alpha = Convert.ToDouble(input_color.A);
+            // the Euclidean distance to be computed
+            // set this to an arbitrary number
+            // must be greater than the largest possible distance (appr. 441.7)
+            double distance = 0;
+            // store the interim result
+            double temp = 0;
+            // RGB-Values of test colors
+            double dbl_test_red;
+            double dbl_test_green;
+            double dbl_test_blue;
+            //double dbl_test_alpha;
+            Color farthest_color = Colors.Transparent;
+            Color nearest_color = Colors.Transparent;
+            int contrastMin = 300;
+            int count = 0;
+            double[] distances = new double[_webColors.Count];
+            double total = 0;
+
+            foreach (KeyValuePair<string, Color> color in _webColorsPair)
+            {
+                // compute the Euclidean distance between the two colors
+                // note, that the alpha-component is not used in this example
+                dbl_test_red = Math.Pow(Convert.ToDouble(((Color)color.Value).R) - dbl_input_red, 2.0);
+                dbl_test_green = Math.Pow(Convert.ToDouble(((Color)color.Value).G) - dbl_input_green, 2.0);
+                dbl_test_blue = Math.Pow(Convert.ToDouble(((Color)color.Value).B) - dbl_input_blue, 2.0);
+                //dbl_test_alpha = Math.Pow(Convert.ToDouble(((Color)color.Value).A) - dbl_input_alpha, 2.0);
+                //temp = Math.Sqrt(dbl_test_blue + dbl_test_green + dbl_test_red + dbl_test_alpha);
+                temp = Math.Sqrt(dbl_test_blue + dbl_test_green + dbl_test_red);
+
+                tempColors.Add(color.Key, new KeyValuePair<double, Color>(temp, color.Value));
+
+                // explore the result and store the nearest color
+                if (temp > distance)
+                {
+                    distance = temp;
+                    farthest_color = (Color)color.Value;
+                }
+
+                distances[count++] = temp;
+                total += temp;
+            }
+
+            SetStatus(string.Format("farthest color: {0}", farthest_color));
+            SetStatus(string.Format("farthest: {0} ", distance));
+
+            if (preferredColors)
+            {
+                // use these first
+                contrastColors = tempColors.Where(x => x.Value.Key >= contrastMin && PreferredDarkColorRange(x.Value.Value) != preferDark).Select(x => x.Key).ToList<string>();
+            }
+            else
+            {
+                // use when preferred colors have been used
+                contrastColors = tempColors.Where(x => x.Value.Key >= contrastMin).Select(x => x.Key).ToList<string>();
+            }
+
+            SetStatus(string.Format("count: {0} count above average: {1}", _webColors.Count, contrastColors.Count));
+
+            return contrastColors;
+        }
+
         public ResourceType GetPathType(string path)
         {
             try
@@ -645,6 +775,12 @@ namespace TextFilter
                 SetStatus("GetPathType:Exception" + e.ToString());
                 return ResourceType.Error;
             }
+        }
+
+        public bool PreferredDarkColorRange(Color c)
+        {
+            double l = 0.2126 * c.ScR + 0.7152 * c.ScG + 0.0722 * c.ScB;
+            return l < 0.5 ? false : true;
         }
 
         public bool ReadConfigFile(string fileName = null)
@@ -811,6 +947,11 @@ namespace TextFilter
                                 _appSettings[name].Value = "False";
                                 break;
                             }
+                        case AppSettingNames.AutoPopulateColors:
+                            {
+                                _appSettings[name].Value = "True";
+                                break;
+                            }
                         case AppSettingNames.BackgroundColor:
                             {
                                 _appSettings[name].Value = "AliceBlue";
@@ -852,6 +993,12 @@ namespace TextFilter
                                 _appSettings[name].Value = "False";
                                 break;
                             }
+                        case AppSettingNames.FilterIndexVisible:
+                            {
+                                _appSettings[name].Value = "False";
+                                break;
+                            }
+
                         case AppSettingNames.FontName:
                             {
                                 _appSettings[name].Value = "Lucida Console";
@@ -925,6 +1072,35 @@ namespace TextFilter
         private void DisplayHelp()
         {
             Console.WriteLine(Properties.Resources.DisplayHelp);
+        }
+
+        private List<Color> GetColors()
+        {
+            PropertyInfo[] propertyInfos = (typeof(Colors)).GetProperties(BindingFlags.Public | BindingFlags.Static | BindingFlags.NonPublic);
+            List<Color> colors = new List<Color>();
+
+            foreach (PropertyInfo property in propertyInfos)
+            {
+                if (property.PropertyType.Equals(typeof(Color)))
+                {
+                    Color color = (Color)property.GetValue((typeof(Color)), null);
+                    Debug.Print("GetColors():Checking color: " + property.Name);
+
+                    if (property.Name == "Transparent")
+                    {
+                        continue;
+                    }
+
+                    if (!_webColorsPair.ContainsKey(property.Name))
+                    {
+                        Debug.Print("GetColors():adding color: " + property.Name);
+                        colors.Add(color);
+                        _webColorsPair.Add(property.Name, color);
+                    }
+                }
+            }
+
+            return colors;
         }
 
         private string[] ManageRecentFiles(string logFile, string[] recentLogFiles)
@@ -1013,9 +1189,8 @@ namespace TextFilter
                         && new FilterFileManager().FilterFileVersion(filename) != FilterFileManager.FilterFileVersionResult.NotAFilterFile)
                     {
                         Settings.AddFilterFile(Environment.ExpandEnvironmentVariables(filename));
-
                     }
-                    else if(Path.GetExtension(filename).ToLower() == ".config"
+                    else if (Path.GetExtension(filename).ToLower() == ".config"
                         | Path.GetExtension(filename).ToLower() == ".rvconfig")
                     {
                         ReadConfigFile(filename);

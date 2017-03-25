@@ -36,7 +36,6 @@ namespace TextFilter
 
         public FileTypeAssociation()
         {
-           
         }
 
         public static FileTypeAssociation Instance

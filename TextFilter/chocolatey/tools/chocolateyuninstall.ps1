@@ -40,7 +40,7 @@ if ($key.Count -eq 1) {
     $key | % {Write-Warning "- $_.DisplayName"}
 }
 
-Uninstall-ChocolateyZipPackage $packageName $packageNameZip 
+Uninstall-ChocolateyZipPackage $packageName $packageNameZip
 ## Remove any shortcuts you added
 
 # cleanup old program files

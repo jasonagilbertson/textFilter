@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: Base.cs
-// Created: 9/6/2016
-// Modified: 2/12/2017
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -42,6 +42,7 @@ namespace TextFilter
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
+
         public Command DuplicateWindowCommand
         {
             get
@@ -76,6 +77,7 @@ namespace TextFilter
                 SetStatus("CreateProcess: exception" + e.ToString());
             }
         }
+
         public void DuplicateWindowExecuted(object sender)
         {
             NewWindow();
@@ -119,7 +121,6 @@ namespace TextFilter
                             }
                         }
                     }
-
                 }
             }
             else
@@ -193,7 +194,6 @@ namespace TextFilter
             }
             else
             {
-                
                 if (TextFilterSettings.Settings.CurrentFilterFiles.Count > 0)
                 {
                     args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", TextFilterSettings.Settings.CurrentFilterFiles)));
@@ -214,6 +214,7 @@ namespace TextFilter
             CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
             Debug.Print(args.ToString());
         }
+
         public void OnPropertyChanged(string name)
         {
             OnPropertyChanged(this, new PropertyChangedEventArgs(name));

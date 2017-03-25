@@ -15,7 +15,6 @@
 // Copyright (c) 2015 company="http://www.codeproject.com/Articles/274982/Commands-in-MVVM">
 // ************************************************************************************
 
-
 using System;
 using System.ComponentModel;
 using System.Threading;
