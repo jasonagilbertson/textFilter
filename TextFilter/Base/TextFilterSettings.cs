@@ -60,7 +60,7 @@ namespace TextFilter
             Url
         }
 
-        private enum AppSettingNames
+        public enum AppSettingNames
         {
             AutoPopulateColors,
 

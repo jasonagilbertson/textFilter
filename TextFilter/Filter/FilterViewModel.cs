@@ -695,6 +695,10 @@ namespace TextFilter
         {
             SetStatus("InsertFilterItemExecuted");
             FilterFile filterFile = (FilterFile)CurrentFile();
+            if (filterFile == null)
+            {
+                NewFileExecuted(sender);
+            }
 
             if (filterFile != null)
             {

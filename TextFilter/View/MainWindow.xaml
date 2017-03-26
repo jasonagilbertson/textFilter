@@ -1488,6 +1488,12 @@
                             </DataGrid.CellStyle>
 
                             <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding Path=FilterIndex}"
+                                                    Header="FilterIndex"
+                                                    Visibility="{Binding Data.FilterIndexVisibility,
+                                                                         Source={StaticResource proxyLog},
+                                                                         Converter={StaticResource BoolToVis}}" />
+
                                 <DataGridTextColumn Binding="{Binding Path=Index}"
                                                     Header="Index"
                                                     SortDirection="Ascending" />
