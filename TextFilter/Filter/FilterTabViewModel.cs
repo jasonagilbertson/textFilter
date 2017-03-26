@@ -15,6 +15,12 @@ namespace TextFilter
 
         public FilterTabViewModel()
         {
+            TextFilterSettings.Settings.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        ~FilterTabViewModel()
+        {
+            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
         }
 
         public bool MaskedVisibility
@@ -30,6 +36,14 @@ namespace TextFilter
                     _maskedVisibility = value;
                     OnPropertyChanged("MaskedVisibility");
                 }
+            }
+        }
+
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == (TextFilterSettings.AppSettingNames.CountMaskedMatches).ToString())
+            {
+                MaskedVisibility = TextFilterSettings.Settings.CountMaskedMatches;
             }
         }
     }

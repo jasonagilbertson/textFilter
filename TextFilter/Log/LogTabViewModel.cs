@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: LogTabViewModel.cs
-// Created: 9/6/2016
-// Modified: 2/11/2017
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -13,6 +13,8 @@ namespace TextFilter
     {
         public int MaxGroupCount = 4;
 
+        private bool _filterIndexVisibility = TextFilterSettings.Settings.FilterIndexVisible;
+
         private bool _group1Visibility = false;
 
         private bool _group2Visibility = false;
@@ -20,10 +22,31 @@ namespace TextFilter
         private bool _group3Visibility = false;
 
         private bool _group4Visibility = false;
-
         public LogTabViewModel()
         {
             // List<LogFileItem> ContentList = new List<LogFileItem>();
+            TextFilterSettings.Settings.PropertyChanged += Settings_PropertyChanged;
+        }
+
+        ~LogTabViewModel()
+        {
+            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
+        }
+
+        public bool FilterIndexVisibility
+        {
+            get
+            {
+                return _filterIndexVisibility;
+            }
+            set
+            {
+                if (_filterIndexVisibility != value)
+                {
+                    _filterIndexVisibility = value;
+                    OnPropertyChanged("FilterIndexVisibility");
+                }
+            }
         }
 
         public bool Group1Visibility
@@ -138,6 +161,13 @@ namespace TextFilter
             }
         }
 
+        private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == (TextFilterSettings.AppSettingNames.FilterIndexVisible).ToString())
+            {
+                FilterIndexVisibility = TextFilterSettings.Settings.FilterIndexVisible;
+            }
+        }
         public struct LogTabViewModelEvents
         {
             public static string Group1Visibility = "Group1Visibility";

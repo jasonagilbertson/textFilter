@@ -89,12 +89,16 @@ namespace TextFilter
 
                 T castedProp = child as T;
                 if (castedProp != null)
+                {
                     return castedProp;
+                }
 
                 castedProp = GetFirstChildByType<T>(child);
 
                 if (castedProp != null)
+                {
                     return castedProp;
+                }
             }
             return null;
         }
