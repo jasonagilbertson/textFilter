@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: BaseViewModel.cs
-// Created: 9/6/2016
-// Modified: 2/12/2017
+// Created: 3/19/2017
+// Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -327,18 +327,6 @@ namespace TextFilter
             }
         }
 
-        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
-        {
-            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
-
-            if (row != null)
-            {
-                return FindVisualChild<TextBox>(row);
-            }
-
-            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
-            return new TextBox();
-        }
         public TextFilterSettings Settings
         {
             get { return settings; }
@@ -767,6 +755,18 @@ namespace TextFilter
             OpenFileExecuted(sender);
         }
 
+        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
+        {
+            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+
+            if (row != null)
+            {
+                return FindVisualChild<TextBox>(row);
+            }
+
+            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
+            return new TextBox();
+        }
         private bool DeleteIfTempFile(IFile<T> item)
         {
             try

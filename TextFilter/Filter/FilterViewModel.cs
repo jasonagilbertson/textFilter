@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: FilterViewModel.cs
-// Created: 11/14/2016
-// Modified: 2/12/2017
+// Created: 3/19/2017
+// Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -157,47 +157,6 @@ namespace TextFilter
             set
             {
                 _newFilterFromTextCommand = value;
-            }
-        }
-
-        private void NewFilterFromTextExecuted(object sender)
-        {
-            NewFileExecuted(sender);
-            InsertFilterItemFromTextExecuted(sender);
-        }
-
-        private void InsertFilterItemFromTextExecuted(object sender)
-        {
-            TextBox textBox = new TextBox();
-
-            if(sender is DataGrid)
-            {
-                // from hotkey ctrl+shift+a and ctrl+shift+n
-                textBox = TextBoxFromDataGrid(sender as DataGrid);
-            }
-            else if(sender is ComboBox)
-            {
-                // from quick filter hotkey ctrl+shift+a and ctrl+shift+n
-                //textBox.Text = (sender as ComboBox).Text;
-                textBox.SelectedText = (sender as ComboBox).Text;
-            }
-            else if(sender is TextBox)
-            {
-                // from selected text context menu in logfile view
-                textBox = sender as TextBox;
-            }
-            else
-            {
-                return;
-            }
-
-            if (CurrentFile() == null)
-            {
-                NewFilterFromTextExecuted(textBox);
-            }
-            else
-            {
-                InsertFilterItemExecuted(textBox);
             }
         }
 
@@ -1004,11 +963,11 @@ namespace TextFilter
         public void QuickFindTextExecuted(object sender)
         {
             TextBox textBox = new TextBox();
-            if(sender is DataGrid)
+            if (sender is DataGrid)
             {
                 textBox = TextBoxFromDataGrid(sender as DataGrid);
             }
-            else if(sender is TextBox)
+            else if (sender is TextBox)
             {
                 textBox = (sender as TextBox);
             }
@@ -1016,9 +975,9 @@ namespace TextFilter
             {
                 return;
             }
-            
+
             QuickFindChangedExecuted(textBox);
-            
+
         }
 
         public override void RenameTabItem(string logName)
@@ -1208,6 +1167,46 @@ namespace TextFilter
             }
         }
 
+        private void InsertFilterItemFromTextExecuted(object sender)
+        {
+            TextBox textBox = new TextBox();
+
+            if (sender is DataGrid)
+            {
+                // from hotkey ctrl+shift+a and ctrl+shift+n
+                textBox = TextBoxFromDataGrid(sender as DataGrid);
+            }
+            else if (sender is ComboBox)
+            {
+                // from quick filter hotkey ctrl+shift+a and ctrl+shift+n
+                //textBox.Text = (sender as ComboBox).Text;
+                textBox.SelectedText = (sender as ComboBox).Text;
+            }
+            else if (sender is TextBox)
+            {
+                // from selected text context menu in logfile view
+                textBox = sender as TextBox;
+            }
+            else
+            {
+                return;
+            }
+
+            if (CurrentFile() == null)
+            {
+                NewFilterFromTextExecuted(textBox);
+            }
+            else
+            {
+                InsertFilterItemExecuted(textBox);
+            }
+        }
+
+        private void NewFilterFromTextExecuted(object sender)
+        {
+            NewFileExecuted(sender);
+            InsertFilterItemFromTextExecuted(sender);
+        }
         private void QuickFindKeyPressExecuted(object sender)
         {
             SetStatus(string.Format("quickfindKeyPressexecuted:enter: {0}", (sender is ComboBox)));
