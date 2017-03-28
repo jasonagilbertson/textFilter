@@ -97,6 +97,12 @@ namespace TextFilter
         public T FindVisualChild<T>(UIElement element) where T : UIElement
         {
             var parent = element;
+            if(parent == null)
+            {
+                SetStatus("findvisualchild: error: no parent");
+                return default(T);
+            }
+
             int childCount = VisualTreeHelper.GetChildrenCount(parent);
 
             if (childCount > 0)

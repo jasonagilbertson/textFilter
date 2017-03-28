@@ -702,6 +702,18 @@
                         <KeyBinding Key="Enter"
                                     Command="{Binding FilterViewModel.QuickFindChangedCommand}"
                                     CommandParameter="{Binding ElementName=comboboxQuickFind}" />
+                        <KeyBinding Key="A"
+                                    Modifiers="Control+Shift"
+                                    Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.InsertFilterItemFromTextCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+                        <KeyBinding Key="N"
+                                    Modifiers="Control+Shift"
+                                    Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.NewFromTextCommand}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}}" />
+
+
                     </ComboBox.InputBindings>
                 </ComboBox>
                 <GridSplitter Grid.Column="1"
@@ -871,6 +883,17 @@
                                                               Path=FilterViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
+                                <KeyBinding Key="N"
+                                            Modifiers="Control+Shift"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.NewFromTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                <KeyBinding Key="Q"
+                                            Modifiers="Control+Shift"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.QuickFindTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
@@ -1517,10 +1540,11 @@
                                                                   BorderBrush="{Binding Source={StaticResource settings},
                                                                     Path=Settings.BackgroundColor}"
                                                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.InsertFilterItemCommand}"
+                                                                    Path=FilterViewModel.InsertFilterItemFromTextCommand}"
                                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
+                                                                  InputGestureText="Ctrl+Shift+A"
                                                                   Header="add to existing filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
@@ -1528,10 +1552,11 @@
                                                                   BorderBrush="{Binding Source={StaticResource settings},
                                                                     Path=Settings.BackgroundColor}"
                                                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.NewCommand}"
+                                                                    Path=FilterViewModel.NewFromTextCommand}"
                                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
+                                                                  InputGestureText="Ctrl+Shift+N"
                                                                   Header="add to new filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                         <MenuItem Background="{Binding Source={StaticResource settings},
@@ -1563,6 +1588,7 @@
                                                                   CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget}"
                                                                   Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
+                                                                  InputGestureText="Ctrl+Shift+Q"
                                                                   Header="quick filter"
                                                                   Style="{DynamicResource MenuItemStyle1}" />
                                                     </ContextMenu>
@@ -1653,16 +1679,21 @@
                                                               Path=LogViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
+                                <KeyBinding Key="A"
+                                            Modifiers="Control+Shift"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.InsertFilterItemFromTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                                 <KeyBinding Key="N"
                                             Modifiers="Control+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.NewCommand}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=TextBox}, Path=PlacementTarget}" />
+                                                                Path=FilterViewModel.NewFromTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                                 <KeyBinding Key="Q"
-                                            Modifiers="Control"
+                                            Modifiers="Control+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.QuickFindTextCommand}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}, Path=SelectedItem}" />
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
