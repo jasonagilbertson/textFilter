@@ -327,6 +327,18 @@ namespace TextFilter
             }
         }
 
+        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
+        {
+            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+
+            if (row != null)
+            {
+                return FindVisualChild<TextBox>(row);
+            }
+
+            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
+            return new TextBox();
+        }
         public TextFilterSettings Settings
         {
             get { return settings; }

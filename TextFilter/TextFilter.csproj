@@ -17,24 +17,24 @@
     <PublishUrl>\\127.0.0.1\c%24\Users\jag\OneDrive\tools-home\JasonGi\RegexViewer\RegexViewer\bin\x64\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
-    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateEnabled>false</UpdateEnabled>
     <UpdateMode>Background</UpdateMode>
     <UpdateInterval>30</UpdateInterval>
     <UpdateIntervalUnits>Days</UpdateIntervalUnits>
     <UpdatePeriodically>true</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
+    <MapFileExtensions>false</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
     <ProductName>RegexViewer</ProductName>
     <PublisherName>jagilber</PublisherName>
     <SuiteName>jagilber</SuiteName>
-    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>publish.htm</WebPage>
+    <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <ApplicationRevision>21</ApplicationRevision>
     <ApplicationVersion>1.0.0.21</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperEnabled>false</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -382,6 +382,36 @@
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
     </PublishFile>
+    <PublishFile Include="textFilter.exe">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>ManifestEntryPoint</FileType>
+    </PublishFile>
+    <PublishFile Include="textFilter.exe.config">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+    <PublishFile Include="textFilter.exe.manifest">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Auto</PublishState>
+      <IncludeHash>False</IncludeHash>
+      <FileType>ManifestEntryPoint</FileType>
+    </PublishFile>
     <PublishFile Include="zh-Hans\System.Windows.Interactivity.resources">
       <Visible>False</Visible>
       <Group>
@@ -420,32 +450,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <FileAssociation Include=".csv">
-      <Visible>False</Visible>
-      <Description>csv</Description>
-      <Progid>RegexViewer.csv</Progid>
-      <DefaultIcon>RegexViewer.ico</DefaultIcon>
-    </FileAssociation>
-    <FileAssociation Include=".log">
-      <Visible>False</Visible>
-      <Description>log</Description>
-      <Progid>RegexViewer.log</Progid>
-      <DefaultIcon>RegexViewer.ico</DefaultIcon>
-    </FileAssociation>
-    <FileAssociation Include=".rvf">
-      <Visible>False</Visible>
-      <Description>RegexViewer filter</Description>
-      <Progid>RegexViewer.rvf</Progid>
-      <DefaultIcon>RegexViewer.ico</DefaultIcon>
-    </FileAssociation>
-    <FileAssociation Include=".txt">
-      <Visible>False</Visible>
-      <Description>txt</Description>
-      <Progid>RegexViewer.txt</Progid>
-      <DefaultIcon>RegexViewer.ico</DefaultIcon>
-    </FileAssociation>
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="version.xml" />
   </ItemGroup>
