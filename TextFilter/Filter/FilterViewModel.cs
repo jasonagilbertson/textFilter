@@ -858,8 +858,10 @@ namespace TextFilter
             }
             else if (textBoxSelectedText)
             {
-                QuickFindText = (sender as TextBox).SelectedText;
-                QuickFindItem.Filterpattern = (sender as TextBox).SelectedText;
+                TextBox textBox = sender as TextBox;
+                string text = string.IsNullOrEmpty(textBox.SelectedText) ? textBox.Text : textBox.SelectedText;
+                QuickFindText = text;
+                QuickFindItem.Filterpattern = text;
             }
 
             bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
