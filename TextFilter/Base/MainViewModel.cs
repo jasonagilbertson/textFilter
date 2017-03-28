@@ -403,6 +403,7 @@ namespace TextFilter
             string downloadLocation = string.Empty;
             string message = string.Empty;
             string version = string.Empty;
+            string notes = string.Empty;
 
             try
             {
@@ -433,6 +434,7 @@ namespace TextFilter
                 {
                     version = root.SelectSingleNode("version").InnerText;
                     downloadLocation = root.SelectSingleNode("download").InnerText;
+                    notes = root.SelectSingleNode("notes").InnerText;
                 }
                 if (string.IsNullOrEmpty(downloadLocation))
                 {
@@ -450,7 +452,7 @@ namespace TextFilter
                     }
                     else
                     {
-                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}?", downloadLocation), "New version", MessageBoxButton.YesNo);
+                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}\n{1}?", downloadLocation, notes), "New version", MessageBoxButton.YesNo);
                         if (mbResult == MessageBoxResult.Yes)
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
@@ -494,7 +496,7 @@ namespace TextFilter
                 }
                 else if (string.Compare(version, workingVersion, true) < 0)
                 {
-                    message = string.Format("running version is newer. running ver: {0} update ver: {1}", workingVersion, version);
+                    message = string.Format("running version is newer. running ver: {0} update ver: {1}\n{2}", workingVersion, version, notes);
                 }
                 else
                 {
