@@ -17,13 +17,15 @@ namespace TextFilter
 
         Command CloseCommand { get; set; }
 
-        Command DragDropCommand { get; set; }
-
         Command FindNextCommand { get; set; }
+
+        Command GotFocusCommand { get; set; }
 
         Command GotoLineCommand { get; set; }
 
         Command HideCommand { get; set; }
+
+        Command LostFocusCommand { get; set; }
 
         Command OpenCommand { get; set; }
 
@@ -51,17 +53,17 @@ namespace TextFilter
 
         void FindNextExecuted(object sender);
 
-        void GotoLineExecuted(object sender);
+        void GotFocusExecuted(object sender);
 
         void HideExecuted(object sender);
 
         bool IsValidTabIndex();
 
+        void LostFocusExecuted(object sender);
+
         void NewFileExecuted(object sender);
 
         void OnPropertyChanged(string name);
-
-        void OpenDropExecuted(object sender);
 
         void OpenFileExecuted(object sender);
 

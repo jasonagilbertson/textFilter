@@ -1,14 +1,13 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: mainviewmodel.cs
-// Created: 12/2/2016
-// Modified: 2/11/2017
+// File: MainViewModel.cs
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -20,7 +19,6 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Xml;
 
 namespace TextFilter
@@ -29,17 +27,16 @@ namespace TextFilter
     {
         public System.Timers.Timer _timer;
         private StringBuilder _color = new StringBuilder();
-        private List<string> _colorNames = new List<string>();
+
         private Command _controlGotFocusCommand;
         private Command _controlLostFocusCommand;
 
         private string _currentStatus;
 
-        private Command _duplicateWindowCommand;
-
         private Command _helpCommand;
 
         private Command _listViewSelectionChangedCommand;
+
         private TextFilterSettings _settings;
 
         private Command _settingsCommand;
@@ -62,7 +59,6 @@ namespace TextFilter
                     return;
                 }
 
-                _colorNames = GetColorNames();
                 // clean up old log file if exists
                 if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
                 {
@@ -155,21 +151,6 @@ namespace TextFilter
                     OnPropertyChanged("CurrentStatus");
                 }
             }
-        }
-
-        public Command DuplicateWindowCommand
-        {
-            get
-            {
-                if (_duplicateWindowCommand == null)
-                {
-                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
-                }
-                _duplicateWindowCommand.CanExecute = true;
-
-                return _duplicateWindowCommand;
-            }
-            set { _duplicateWindowCommand = value; }
         }
 
         public FilterViewModel FilterViewModel
@@ -269,10 +250,10 @@ namespace TextFilter
                 _color.Append(e.Key.ToString());
                 ComboBox comboBox = (sender as ComboBox);
 
-                string color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
+                string color = Settings.GetColorNames().FirstOrDefault(c => Regex.IsMatch(c, "^" + _color.ToString(), RegexOptions.IgnoreCase));
                 if (String.IsNullOrEmpty(color))
                 {
-                    color = _colorNames.FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
+                    color = Settings.GetColorNames().FirstOrDefault(c => Regex.IsMatch(c, _color.ToString(), RegexOptions.IgnoreCase));
                 }
                 if (!String.IsNullOrEmpty(color))
                 {
@@ -288,22 +269,6 @@ namespace TextFilter
         public void ColorComboSelected()
         {
             _color.Clear();
-        }
-
-        public List<string> GetColorNames()
-        {
-            const BindingFlags flags = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-
-            List<string> list = new List<string>();
-            foreach (var prop in typeof(Colors).GetProperties(flags))
-            {
-                if (prop.PropertyType.FullName == "System.Windows.Media.Color")
-                {
-                    Debug.Print(prop.PropertyType.FullName);
-                    list.Add(prop.Name);
-                }
-            }
-            return list;
         }
 
         public void HelpExecuted(object sender)
@@ -336,7 +301,7 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        DuplicateWindow();
+                        NewWindow();
                         Application.Current.Shutdown();
                         break;
                     }
@@ -423,34 +388,6 @@ namespace TextFilter
             }
         }
 
-        private void DuplicateWindow()
-        {
-            StringBuilder args = new StringBuilder();
-            if (Settings.CurrentFilterFiles.Count > 0)
-            {
-                args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", Settings.CurrentFilterFiles)));
-            }
-
-            if (Settings.CurrentLogFiles.Count > 0)
-            {
-                if (args.Length > 0)
-                {
-                    args.Append(" ");
-                }
-
-                args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", Settings.CurrentLogFiles)));
-            }
-
-            Settings.Save();
-            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
-            Debug.Print(args.ToString());
-        }
-
-        private void DuplicateWindowExecuted(object sender)
-        {
-            DuplicateWindow();
-        }
-
         private void HandleNewCurrentStatus(object sender, string status)
         {
             CurrentStatus = status;
@@ -467,6 +404,7 @@ namespace TextFilter
             string downloadLocation = string.Empty;
             string message = string.Empty;
             string version = string.Empty;
+            string notes = string.Empty;
 
             try
             {
@@ -497,6 +435,7 @@ namespace TextFilter
                 {
                     version = root.SelectSingleNode("version").InnerText;
                     downloadLocation = root.SelectSingleNode("download").InnerText;
+                    notes = root.SelectSingleNode("notes").InnerText;
                 }
                 if (string.IsNullOrEmpty(downloadLocation))
                 {
@@ -514,7 +453,7 @@ namespace TextFilter
                     }
                     else
                     {
-                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}?", downloadLocation), "New version", MessageBoxButton.YesNo);
+                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}\n{1}?", downloadLocation, notes), "New version", MessageBoxButton.YesNo);
                         if (mbResult == MessageBoxResult.Yes)
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
@@ -538,7 +477,7 @@ namespace TextFilter
                             //string newConfig = newExe + ".config";
 
                             // overwrite exe
-                            if(File.Exists(currentExe + ".old"))
+                            if (File.Exists(currentExe + ".old"))
                             {
                                 File.Delete(currentExe + ".old");
                             }
@@ -550,7 +489,7 @@ namespace TextFilter
                             if (mbResult == MessageBoxResult.Yes)
                             {
                                 // todo: merge configs?
-                                DuplicateWindow();
+                                NewWindow();
                                 Application.Current.Shutdown();
                             }
                         }
@@ -558,7 +497,7 @@ namespace TextFilter
                 }
                 else if (string.Compare(version, workingVersion, true) < 0)
                 {
-                    message = string.Format("running version is newer. running ver: {0} update ver: {1}", workingVersion, version);
+                    message = string.Format("running version is newer. running ver: {0} update ver: {1}\n{2}", workingVersion, version, notes);
                 }
                 else
                 {
@@ -587,7 +526,7 @@ namespace TextFilter
                 }
                 else
                 {
-                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile,  e.ToString()),"update error");
+                    MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile, e.ToString()), "update error");
                 }
 
                 return;

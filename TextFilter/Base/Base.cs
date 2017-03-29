@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: base.cs
-// Created: 9/6/2016
-// Modified: 3/6/2017
+// File: Base.cs
+// Created: 3/19/2017
+// Modified: 3/25/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -25,6 +25,8 @@ namespace TextFilter
 
         public bool _transitioning;
 
+        private Command _duplicateWindowCommand;
+
         public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -43,7 +45,22 @@ namespace TextFilter
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
         public static Parser _Parser { get; set; }
-        public Point CurrentMousePosition { get; private set; }
+
+        public Command DuplicateWindowCommand
+        {
+            get
+            {
+                if (_duplicateWindowCommand == null)
+                {
+                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
+
+                return _duplicateWindowCommand;
+            }
+            set { _duplicateWindowCommand = value; }
+        }
+
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -64,6 +81,11 @@ namespace TextFilter
             }
         }
 
+        public void DuplicateWindowExecuted(object sender)
+        {
+            NewWindow();
+        }
+
         public void ExecuteAsAdmin(string fileName, string arguments)
         {
             Process proc = new Process();
@@ -78,6 +100,12 @@ namespace TextFilter
         public T FindVisualChild<T>(UIElement element) where T : UIElement
         {
             var parent = element;
+            if(parent == null)
+            {
+                SetStatus("findvisualchild: error: no parent");
+                return default(T);
+            }
+
             int childCount = VisualTreeHelper.GetChildrenCount(parent);
 
             if (childCount > 0)
@@ -102,7 +130,6 @@ namespace TextFilter
                             }
                         }
                     }
-
                 }
             }
             else
@@ -163,6 +190,38 @@ namespace TextFilter
                     return castedProp;
             }
             return null;
+        }
+
+        public void NewWindow(string file = "")
+        {
+            StringBuilder args = new StringBuilder();
+
+            if (!string.IsNullOrEmpty(file))
+            {
+                // unknown file type from drag out
+                args.Append(file);
+            }
+            else
+            {
+                if (TextFilterSettings.Settings.CurrentFilterFiles.Count > 0)
+                {
+                    args.Append(string.Format("/filter: \"{0}\"", string.Join("\";\"", TextFilterSettings.Settings.CurrentFilterFiles)));
+                }
+
+                if (TextFilterSettings.Settings.CurrentLogFiles.Count > 0)
+                {
+                    if (args.Length > 0)
+                    {
+                        args.Append(" ");
+                    }
+
+                    args.Append(string.Format("/log: \"{0}\"", string.Join("\";\"", TextFilterSettings.Settings.CurrentLogFiles)));
+                }
+            }
+
+            TextFilterSettings.Settings.Save();
+            CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
+            Debug.Print(args.ToString());
         }
 
         public void OnPropertyChanged(string name)

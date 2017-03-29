@@ -2,4 +2,6 @@
 <updateinfo>
   <version>0.7.0.012</version>
   <download>https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.exe.zip/textFilter.exe.zip</download>
+  <notes>0.7.0.015 - added autocolor, hotkey add filter item, filterindex column
+0.7.0.012 - added go to filter, view message</notes>
 </updateinfo>

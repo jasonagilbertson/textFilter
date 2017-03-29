@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: FilterViewModel.cs
-// Created: 11/14/2016
-// Modified: 2/12/2017
+// Created: 3/19/2017
+// Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -29,6 +29,8 @@ namespace TextFilter
         private string _filterHide;
         private Command _filterNotesCommand;
         private Command _insertFilterItemCommand;
+        private Command _insertFilterItemFromTextCommand;
+        private Command _newFilterFromTextCommand;
         private bool _quickFindAnd;
         private Command _quickFindChangedCommand;
         private int _quickFindIndex;
@@ -122,6 +124,42 @@ namespace TextFilter
             set
             {
                 _insertFilterItemCommand = value;
+            }
+        }
+
+        public Command InsertFilterItemFromTextCommand
+        {
+            get
+            {
+                if (_insertFilterItemFromTextCommand == null)
+                {
+                    _insertFilterItemFromTextCommand = new Command(InsertFilterItemFromTextExecuted);
+                }
+                _insertFilterItemFromTextCommand.CanExecute = true;
+
+                return _insertFilterItemFromTextCommand;
+            }
+            set
+            {
+                _insertFilterItemFromTextCommand = value;
+            }
+        }
+
+        public Command NewFromTextCommand
+        {
+            get
+            {
+                if (_newFilterFromTextCommand == null)
+                {
+                    _newFilterFromTextCommand = new Command(NewFilterFromTextExecuted);
+                }
+                _newFilterFromTextCommand.CanExecute = true;
+
+                return _newFilterFromTextCommand;
+            }
+            set
+            {
+                _newFilterFromTextCommand = value;
             }
         }
 
@@ -636,7 +674,7 @@ namespace TextFilter
 
                     DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
                     DataGridCellsPresenter presenter = FindVisualChild<DataGridCellsPresenter>(row);
-                    
+
                     if (presenter != null)
                     {
                         DataGridCell cell = presenter.ItemContainerGenerator.ContainerFromIndex(0) as DataGridCell;
@@ -718,8 +756,10 @@ namespace TextFilter
                         Enabled = true,
                         Index = ++filterIndex,
                         Notes = textBox.Text,
-                        Filterpattern = textBox.SelectedText
+                        Filterpattern = string.IsNullOrEmpty(textBox.SelectedText) ? textBox.Text : textBox.SelectedText
                     };
+
+                    ((FilterFileManager)ViewManager).SetFilterItemColors(filterFile, fileItem);
 
                     filterFile.ContentItems.Add(fileItem);
                     // set filterindex to -1 to add new filter item at end of list
@@ -749,11 +789,6 @@ namespace TextFilter
             VerifyIndex();
             UpdateRecentCollection();
 
-            // add content from logfileitem content selectedtext to new filter
-            if (sender is TextBox)
-            {
-                InsertFilterItemExecuted(sender);
-            }
         }
 
         public override void OpenFileExecuted(object sender)
@@ -814,7 +849,7 @@ namespace TextFilter
             bool buttonStatus = (sender is Button);
             bool comboQuickFind = (sender is ComboBox);
             bool textBoxSelectedText = (sender is TextBox);
-                
+
             // save combo if passed in
             if (comboQuickFind && QuickFindCombo == null)
             {
@@ -827,8 +862,10 @@ namespace TextFilter
             }
             else if (textBoxSelectedText)
             {
-                QuickFindText = (sender as TextBox).SelectedText;
-                QuickFindItem.Filterpattern = (sender as TextBox).SelectedText;
+                TextBox textBox = sender as TextBox;
+                string text = string.IsNullOrEmpty(textBox.SelectedText) ? textBox.Text : textBox.SelectedText;
+                QuickFindText = text;
+                QuickFindItem.Filterpattern = text;
             }
 
             bool foundItem = string.IsNullOrEmpty(QuickFindItem.Filterpattern);
@@ -870,7 +907,7 @@ namespace TextFilter
 
                 return;
             }
-            else if(!buttonStatus)
+            else if (!buttonStatus)
             {
                 QuickFindItem.Enabled = true;
             }
@@ -931,10 +968,22 @@ namespace TextFilter
 
         public void QuickFindTextExecuted(object sender)
         {
-            if (sender is TextBox)
+            TextBox textBox = new TextBox();
+            if (sender is DataGrid)
             {
-                QuickFindChangedExecuted((sender as TextBox));
+                textBox = TextBoxFromDataGrid(sender as DataGrid);
             }
+            else if (sender is TextBox)
+            {
+                textBox = (sender as TextBox);
+            }
+            else
+            {
+                return;
+            }
+
+            QuickFindChangedExecuted(textBox);
+
         }
 
         public override void RenameTabItem(string logName)
@@ -1135,6 +1184,46 @@ namespace TextFilter
             }
         }
 
+        private void InsertFilterItemFromTextExecuted(object sender)
+        {
+            TextBox textBox = new TextBox();
+
+            if (sender is DataGrid)
+            {
+                // from hotkey ctrl+shift+a and ctrl+shift+n
+                textBox = TextBoxFromDataGrid(sender as DataGrid);
+            }
+            else if (sender is ComboBox)
+            {
+                // from quick filter hotkey ctrl+shift+a and ctrl+shift+n
+                //textBox.Text = (sender as ComboBox).Text;
+                textBox.SelectedText = (sender as ComboBox).Text;
+            }
+            else if (sender is TextBox)
+            {
+                // from selected text context menu in logfile view
+                textBox = sender as TextBox;
+            }
+            else
+            {
+                return;
+            }
+
+            if (CurrentFile() == null)
+            {
+                NewFilterFromTextExecuted(textBox);
+            }
+            else
+            {
+                InsertFilterItemExecuted(textBox);
+            }
+        }
+
+        private void NewFilterFromTextExecuted(object sender)
+        {
+            NewFileExecuted(sender);
+            InsertFilterItemFromTextExecuted(sender);
+        }
         private void QuickFindKeyPressExecuted(object sender)
         {
             SetStatus(string.Format("quickfindKeyPressexecuted:enter: {0}", (sender is ComboBox)));

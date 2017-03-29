@@ -74,47 +74,6 @@ namespace TextFilter
             set { _exportCommand = value; }
         }
 
-        public Command ViewMessageCommand
-        {
-            get
-            {
-                if (_viewMessageCommand == null)
-                {
-                    _viewMessageCommand = new Command(ViewMessageExecuted);
-                }
-                _viewMessageCommand.CanExecute = true;
-
-                return _viewMessageCommand;
-            }
-            set { _viewMessageCommand = value; }
-        }
-
-        private void ViewMessageExecuted(object sender)
-        {
-            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
-            string message = string.Empty;
-            int messageIndex = 0;
-
-            if (logTab != null)
-            {
-                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
-
-                if (logIndex <= logTab.ContentList.Count)
-                {
-                    message = ((LogFileItem)logTab.ContentList[logIndex]).Content;
-                    messageIndex = ((LogFileItem)logTab.ContentList[logIndex]).Index;
-                    TraceMessageDialog messageDialog = new TraceMessageDialog(message, messageIndex, CurrentFile().FileName);
-                    messageDialog.Show();
-                }
-                else
-                {
-                    SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
-                    return;
-                }
-
-            }
-        }
-
         public Command KeyDownCommand
         {
             get
@@ -181,11 +140,30 @@ namespace TextFilter
             }
         }
 
+        public Command ViewMessageCommand
+        {
+            get
+            {
+                if (_viewMessageCommand == null)
+                {
+                    _viewMessageCommand = new Command(ViewMessageExecuted);
+                }
+                _viewMessageCommand.CanExecute = true;
+
+                return _viewMessageCommand;
+            }
+            set { _viewMessageCommand = value; }
+        }
+
         public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            // dont handle count updates
-            SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
-            FilterLogTabItems();
+            // dont handle count updates or updates to quickfind
+            if (e.PropertyName != "QuickFindText")
+            {
+                SetStatus("LogViewModel.FilterViewModel.PropertyChanged: " + e.PropertyName);
+
+                FilterLogTabItems();
+            }
         }
 
         public override void AddTabItem(IFile<LogFileItem> logFile)
@@ -969,6 +947,31 @@ namespace TextFilter
         {
             // setting to null forces refresh
             RecentCollection = null;
+        }
+
+        private void ViewMessageExecuted(object sender)
+        {
+            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
+            string message = string.Empty;
+            int messageIndex = 0;
+
+            if (logTab != null)
+            {
+                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
+
+                if (logIndex <= logTab.ContentList.Count)
+                {
+                    message = (logTab.ContentList[logIndex]).Content;
+                    messageIndex = (logTab.ContentList[logIndex]).Index;
+                    TraceMessageDialog messageDialog = new TraceMessageDialog(message, messageIndex, CurrentFile().FileName);
+                    messageDialog.Show();
+                }
+                else
+                {
+                    SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
+                    return;
+                }
+            }
         }
 
         public struct LogViewModelEvents

@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: BaseViewModel.cs
-// Created: 9/6/2016
-// Modified: 2/12/2017
+// Created: 3/19/2017
+// Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace TextFilter
 {
@@ -37,6 +38,8 @@ namespace TextFilter
         private Command _gotoLineCommand;
 
         private Command _hideCommand;
+
+        private Command _lostFocusCommand;
 
         private Command _newCommand;
 
@@ -107,12 +110,6 @@ namespace TextFilter
             set { _copyFilePathCommand = value; }
         }
 
-        public Command DragDropCommand
-        {
-            get { return _openCommand ?? new Command(OpenDropExecuted); }
-            set { _openCommand = value; }
-        }
-
         public Command FindNextCommand
         {
             get
@@ -171,6 +168,21 @@ namespace TextFilter
                 return _hideCommand;
             }
             set { _hideCommand = value; }
+        }
+
+        public Command LostFocusCommand
+        {
+            get
+            {
+                if (_lostFocusCommand == null)
+                {
+                    _lostFocusCommand = new Command(LostFocusExecuted);
+                }
+                _lostFocusCommand.CanExecute = true;
+
+                return _lostFocusCommand;
+            }
+            set { _lostFocusCommand = value; }
         }
 
         public Command NewCommand
@@ -482,6 +494,32 @@ namespace TextFilter
             return retVal;
         }
 
+        public void LostFocusExecuted(object sender)
+        {
+            string currentFile = CurrentFile() == null ? null : CurrentFile().Tag;
+
+            if (currentFile != null && (Mouse.LeftButton == MouseButtonState.Pressed))
+            {
+                SetStatus(string.Format("LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+
+                if (Keyboard.Modifiers == ModifierKeys.Control)
+                {
+                    // launch new instance
+                    SetStatus(string.Format("LostFocusExecuted:new instance:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+                    NewWindow(currentFile);
+                }
+                else
+                {
+                    // add to clipboard for drag out
+                    SetStatus(string.Format("LostFocusExecuted:drag out:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+                    DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { currentFile });
+                    DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
+                }
+            }
+
+            SetStatus("LostFocusExecuted:drag:" + (Mouse.LeftButton == MouseButtonState.Pressed));
+        }
+
         public ObservableCollection<MenuItem> Menubuilder(string directory)
         {
             ObservableCollection<MenuItem> menuCollection = new ObservableCollection<MenuItem>();
@@ -538,16 +576,6 @@ namespace TextFilter
         }
 
         public abstract void NewFileExecuted(object sender);
-
-        public void OpenDropExecuted(object sender)
-        {
-            SetStatus("OpenDrop: " + sender.GetType().ToString());
-            SetStatus("OpenDrop: " + sender.ToString());
-            if (sender is string)
-            {
-                SetStatus("OpenDrop: " + (sender as string));
-            }
-        }
 
         public abstract void OpenFileExecuted(object sender);
 
@@ -693,10 +721,12 @@ namespace TextFilter
                             case TimedSaveDialog.Results.DontSave:
                                 item.Modified = false;
                                 break;
+
                             case TimedSaveDialog.Results.DontSaveAll:
                                 noPrompt = true;
                                 item.Modified = false;
                                 break;
+
                             case TimedSaveDialog.Results.Save:
                                 SaveFileExecuted(item);
                                 item.Modified = false;
@@ -712,7 +742,7 @@ namespace TextFilter
                                 break;
                         }
                     }
-                    else if(TextFilterSettings.Settings.AutoSave)
+                    else if (TextFilterSettings.Settings.AutoSave)
                     {
                         SaveFileExecuted(item);
                         item.Modified = false;
@@ -733,8 +763,18 @@ namespace TextFilter
             OpenFileExecuted(sender);
         }
 
-        public abstract void UpdateView(WorkerItem workerItem);
+        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
+        {
+            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
 
+            if (row != null)
+            {
+                return FindVisualChild<TextBox>(row);
+            }
+
+            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
+            return new TextBox();
+        }
         private bool DeleteIfTempFile(IFile<T> item)
         {
             try
