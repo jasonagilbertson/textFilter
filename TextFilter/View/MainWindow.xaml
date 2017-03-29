@@ -858,8 +858,9 @@
                             <DataGrid.Resources>
                                 <local:BindingProxy x:Key="proxyFilter"
                                                     Data="{Binding}" />
-                                <Style BasedOn="{StaticResource {x:Type DataGridColumnHeader}}"
-                                       TargetType="{x:Type DataGridColumnHeader}">
+                                <!-- BasedOn="{StaticResource {x:Type DataGridColumnHeader}}" 
+                               
+                                <Style TargetType="{x:Type DataGridColumnHeader}">
                                     <Setter Property="Background"
                                             Value="Gainsboro" />
                                     <Setter Property="Foreground"
@@ -872,7 +873,7 @@
                                             Value="1" />
                                     <Setter Property="Padding"
                                             Value="2,0,2,0" />
-                                </Style>
+                                </Style> -->
 
                             </DataGrid.Resources>
 

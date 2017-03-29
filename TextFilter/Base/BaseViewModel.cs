@@ -1,7 +1,7 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: BaseViewModel.cs
-// Created: 3/19/2017
+// Created: 3/28/2017
 // Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
@@ -21,10 +21,8 @@ namespace TextFilter
 {
     public abstract class BaseViewModel<T> : Base, INotifyPropertyChanged, IViewModel<T>
     {
-        private Command _clearRecentCommand;
-
         public static FileWorkerItem UpdateViewCallback;
-
+        private Command _clearRecentCommand;
         private Command _closeAllCommand;
 
         private Command _closeCommand;
@@ -75,14 +73,13 @@ namespace TextFilter
         {
         }
 
+        public delegate void FileWorkerItem(WorkerItem workerItem);
+
         public Command ClearRecentCommand
         {
             get { return _clearRecentCommand ?? new Command(ClearRecentExecuted); }
             set { _clearRecentCommand = value; }
         }
-
-        public delegate void FileWorkerItem(WorkerItem workerItem);
-
         public Command CloseAllCommand
         {
             get { return _closeAllCommand ?? new Command(CloseAllFilesExecuted); }
@@ -775,6 +772,8 @@ namespace TextFilter
             SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
             return new TextBox();
         }
+
+        public abstract void UpdateView(WorkerItem workerItem);
         private bool DeleteIfTempFile(IFile<T> item)
         {
             try

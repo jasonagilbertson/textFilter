@@ -312,6 +312,19 @@ namespace TextFilter
             else if (e is PropertyChangedEventArgs)
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
+                // to prevent index property change from overwriting new filter addition before it gets processed
+
+                WorkerItem baseWorker = _workerManager.GetWorkers(CurrentFilterFile(), null, true).FirstOrDefault();
+                if ((baseWorker.FilterFile.ContentItems == null
+                    || baseWorker.FilterFile.ContentItems != null
+                    && baseWorker.FilterFile.ContentItems.Count == 0)
+                    && (baseWorker.WorkerState != WorkerItem.State.Completed
+                    && baseWorker.WorkerModification == WorkerItem.Modification.FilterAdded))
+                {
+                    SetStatus("Parser.ModifiedFilterFile:returning with no change to worker.");
+                    return;
+                }
+
 
                 if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
@@ -319,6 +332,7 @@ namespace TextFilter
                     {
                         workerItem = _workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).First();
                         workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
+                        SetStatus("Parser.ModifiedFilterFile:setting WorkerModification to FilterIndex.");
                         _workerManager.ProcessWorker(workerItem);
                         return;
                     }
@@ -430,11 +444,26 @@ namespace TextFilter
 
                 if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
+                    // to prevent index property change from overwriting new log addition before it gets processed
+
+                    WorkerItem baseWorker = _workerManager.GetWorkers(null, CurrentLogFile(), true).FirstOrDefault();
+                    if((baseWorker.LogFile.ContentItems == null
+                        || baseWorker.LogFile.ContentItems != null 
+                        && baseWorker.LogFile.ContentItems.Count == 0)
+                        && (baseWorker.WorkerState != WorkerItem.State.Completed
+                        && baseWorker.WorkerModification == WorkerItem.Modification.LogAdded))
+                    {
+                        SetStatus("Parser.ModifiedLogFile:returning with no change to worker.");
+                        return;
+                    }
+
                     if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
                     {
                         workerItem = _workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).First();
 
                         workerItem.WorkerModification = WorkerItem.Modification.LogIndex;
+
+                        SetStatus("Parser.ModifiedLogFile:setting worker modification to LogIndex.");
                         _workerManager.ProcessWorker(workerItem);
                         return;
                     }

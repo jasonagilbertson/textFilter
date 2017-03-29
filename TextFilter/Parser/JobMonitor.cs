@@ -66,7 +66,11 @@ namespace TextFilter
                     }
                     else
                     {
+#if DEBUG                        
+                        Thread.Sleep(1000);
+#else
                         Thread.Sleep(100);
+#endif
                     }
                 }
             }
@@ -81,7 +85,7 @@ namespace TextFilter
 
         private void CheckWorkerStates(WorkerManager workerManager)
         {
-            SetStatus("jobmonitor:checkworkerstates:enter");
+            Debug.Print("jobmonitor:checkworkerstates:enter");
 
             if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.NotStarted) > 0)
             {
@@ -97,15 +101,15 @@ namespace TextFilter
             }
             else
             {
-                //SetStatus("WorkerManager.ProcessWorker:workerItem not ready or notstarted. exiting.");
+                SetStatus("WorkerManager.ProcessWorker:workerItem not ready or notstarted. exiting.");
             }
         }
 
         private void ManageWorkerStates()
         {
-            SetStatus("jobmonitor:ManageWorkerStates:enter:count:" + _workerManager.GetWorkers().Count);
+            Debug.Print("jobmonitor:ManageWorkerStates:enter:count:" + _workerManager.GetWorkers().Count);
 
-//#if DEBUG
+#if DEBUG
             foreach (WorkerItem worker in _workerManager.GetWorkers())
             {
                 SetStatus(string.Format("ManageWorkerStates:current states: {0} logfile:{1} filterfile:{2} state: {3} modification: {4}",
@@ -115,7 +119,7 @@ namespace TextFilter
                     worker.WorkerState,
                     worker.WorkerModification));
             }
-//#endif
+#endif
             if (_workerManager.GetWorkers().Count(x => x.WorkerState == WorkerItem.State.Started) == 0)
             {
                 SetStatus("ManageWorkerStates:no workers in Started state.");
@@ -139,7 +143,7 @@ namespace TextFilter
                 }
             }
 
-            SetStatus("ManageWorkerStates:exiting");
+            // SetStatus("ManageWorkerStates:exiting");
         }
 
         internal void Abort()

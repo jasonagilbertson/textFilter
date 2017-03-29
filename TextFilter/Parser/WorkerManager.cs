@@ -50,98 +50,65 @@ namespace TextFilter
             }
         }
 
-        private bool EnterWriteLock(bool tryOnly = false, [CallerMemberName]string memberName = "")
+        private bool EnterWriteLock([CallerMemberName]string memberName = "")
         {
-            SetStatus(string.Format("WorkerManager:EnterWriteLock:enter:tryOnly:{0}. calling method:{1}", tryOnly, memberName));
+            // SetStatus(string.Format("WorkerManager:EnterWriteLock:enter:calling method:{0}", memberName));
             if (!ListLock.IsWriteLockHeld & !ListLock.IsReadLockHeld)
             {
-                if (tryOnly)
-                {
-                    while (true)
-                    {
-                        if (!ListLock.TryEnterWriteLock(100))
-                        {
-                            Thread.Yield();
-                            Thread.Sleep(100);
-                        }
-
-                        return true;
-                    }
-                }
-                else
-                {
-                    ListLock.EnterWriteLock();
-                    return true;
-                }
-                
+                ListLock.EnterWriteLock();
+                return true;
             }
             else if (ListLock.IsWriteLockHeld)
             {
-                SetStatus(string.Format("WorkerManager:EnterWriteLock:Warning:write lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+                Debug.Print(string.Format("WorkerManager:EnterWriteLock:Warning:write lock already held:calling method:{0} returning true.", memberName));
                 return true;
             }
 
-            SetStatus(string.Format("WorkerManager:EnterWriteLock:Error:Unable to enter write lock:tryOnly:{0}. calling method:{1} returning false.", tryOnly, memberName));
+            SetStatus(string.Format("WorkerManager:EnterWriteLock:Error:Unable to enter write lock:calling method:{0} returning false.", memberName));
             return false;
         }
 
         private bool ExitWriteLock([CallerMemberName]string memberName = "")
         {
-            SetStatus(string.Format("WorkerManager:ExitWriteLock:enter:calling method:{0}", memberName));
+            // SetStatus(string.Format("WorkerManager:ExitWriteLock:enter:calling method:{0}", memberName));
             if (ListLock.IsWriteLockHeld)
             {
                     ListLock.ExitWriteLock();
                     return true;
             }
 
-            SetStatus(string.Format("WorkerManager:ExitWriteLock:Error:write lock not held:calling method:{0} returning false.", memberName));
+            Debug.Print(string.Format("WorkerManager:ExitWriteLock:Warning:write lock not held:calling method:{0} returning false.", memberName));
             return false;
         }
 
 
-        private bool EnterReadLock(bool tryOnly = false, [CallerMemberName]string memberName = "")
+        private bool EnterReadLock([CallerMemberName]string memberName = "")
         {
-            SetStatus(string.Format("WorkerManager:EnterReadLock:enter:tryOnly:{0}. calling method:{1}", tryOnly, memberName));
+            // SetStatus(string.Format("WorkerManager:EnterReadLock:enter:calling method:{0}", memberName));
             if (!ListLock.IsWriteLockHeld & !ListLock.IsReadLockHeld)
             {
-                if (tryOnly)
-                {
-                    while (true)
-                    {
-                        if (!ListLock.TryEnterReadLock(100))
-                        {
-                            Thread.Yield();
-                            Thread.Sleep(100);
-                        }
-
-                        return true;
-                    }
-                }
-                else
-                {
                     ListLock.EnterReadLock();
                     return true;
-                }
-
             }
             else if(ListLock.IsReadLockHeld)
             {
-                SetStatus(string.Format("WorkerManager:EnterReadLock:Warning:read lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+
+                Debug.Print(string.Format("WorkerManager:EnterReadLock:Warning:read lock already held:calling method:{0} returning true.", memberName));
                 return true;
             }
             else if (ListLock.IsWriteLockHeld)
             {
-                SetStatus(string.Format("WorkerManager:EnterReadLock:Warning:WRITE lock already held:tryOnly:{0}. calling method:{1} returning true.", tryOnly, memberName));
+                Debug.Print(string.Format("WorkerManager:EnterReadLock:Warning:WRITE lock already held:calling method:{0} returning true.", memberName));
                 return true;
             }
 
-            SetStatus(string.Format("WorkerManager:EnterReadLock:Error:Unable to enter read lock:tryOnly:{0}. calling method:{1} returning false.", tryOnly, memberName));
+            SetStatus(string.Format("WorkerManager:EnterReadLock:Error:Unable to enter read lock:calling method:{0} returning false.", memberName));
             return false;
         }
 
         private bool ExitReadLock([CallerMemberName]string memberName = "")
         {
-            SetStatus(string.Format("WorkerManager:ExitReadLock:enter:calling method:{0}", memberName));
+            // SetStatus(string.Format("WorkerManager:ExitReadLock:enter:calling method:{0}", memberName));
             if (ListLock.IsReadLockHeld)
             {
                 ListLock.ExitReadLock();
@@ -149,11 +116,11 @@ namespace TextFilter
             }
             else if (ListLock.IsWriteLockHeld)
             {
-                SetStatus(string.Format("WorkerManager:ExitReadLock:Warning:WRITE lock already held:calling method:{0} returning true.", memberName));
+                Debug.Print(string.Format("WorkerManager:ExitReadLock:Warning:WRITE lock already held:calling method:{0} returning true.", memberName));
                 return true;
             }
 
-            SetStatus(string.Format("WorkerManager:ExitReadLock:Error:read lock not held:calling method:{0} returning false.", memberName));
+            Debug.Print(string.Format("WorkerManager:ExitReadLock:Warning:read lock not held:calling method:{0} returning false.", memberName));
             return false;
         }
 
@@ -348,8 +315,8 @@ namespace TextFilter
                     workerItem.GetHashCode(), 
                     workerItem.WorkerModification, 
                     workerItem.WorkerState, 
-                    workerItem.LogFile, 
-                    workerItem.FilterFile));
+                    workerItem.LogFile != null ? workerItem.LogFile.Tag : "null" , 
+                    workerItem.FilterFile != null ? workerItem.FilterFile.Tag : "null"));
             }
 
             SetStatus(sb.ToString());
@@ -358,13 +325,13 @@ namespace TextFilter
         }
         private List<WorkerItem> GetWorkersInternal(FilterFile filterFile = null, LogFile logFile = null, bool baseFile = false)
         {
-#if DEBUG
-            SetStatus(string.Format("GetWorkers:enter:{0}, {1}",
+
+            Debug.Print(string.Format("GetWorkers:enter:{0}, {1}",
                 filterFile == null ? "null" : filterFile.Tag,
                 logFile == null ? "null" : logFile.Tag));
-#endif
+
             List<WorkerItem> workerItems = new List<WorkerItem>();
-            EnterReadLock(true);
+            EnterReadLock();
                         
             try
             {
@@ -383,9 +350,9 @@ namespace TextFilter
 
                 if (filterFile != null && logFile != null)
                 {
-#if DEBUG
-                    SetStatus(string.Format("Getworkers:searching by filter file and log object"));
-#endif
+
+                    Debug.Print(string.Format("Getworkers:searching by filter file and log object"));
+
                     if (_workerManager.BGWorkers.Exists(x => x.FilterFile != null && x.LogFile != null && x.FilterFile == filterFile && x.LogFile == logFile))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.FilterFile != null && x.LogFile != null && x.FilterFile == filterFile && x.LogFile == logFile).ToList();
@@ -398,18 +365,15 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (filterFile != null && !string.IsNullOrEmpty(filterFile.Tag) && logFile != null && !string.IsNullOrEmpty(logFile.Tag))
                 {
-#if DEBUG
-                    SetStatus(string.Format("Getworkers:searching by filter file tag: {0} and log file tag: {1}", filterFile.Tag, logFile.Tag));
-#endif
+                    Debug.Print(string.Format("Getworkers:searching by filter file tag: {0} and log file tag: {1}", filterFile.Tag, logFile.Tag));
+
                     if (_workerManager.BGWorkers.Exists(x => x.FilterFile != null && x.LogFile != null && x.FilterFile.Tag == filterFile.Tag && x.LogFile.Tag == logFile.Tag))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.FilterFile != null && x.LogFile != null && x.FilterFile.Tag == filterFile.Tag && x.LogFile.Tag == logFile.Tag).ToList();
@@ -422,18 +386,15 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (filterFile != null && !string.IsNullOrEmpty(filterFile.FileName) && logFile != null && !string.IsNullOrEmpty(logFile.FileName))
                 {
-#if DEBUG
-                    SetStatus(string.Format("Getworkers:searching by filter file name: {0} and log file name: {1}", filterFile.FileName, logFile.FileName));
-#endif
+                    Debug.Print(string.Format("Getworkers:searching by filter file name: {0} and log file name: {1}", filterFile.FileName, logFile.FileName));
+
                     if (_workerManager.BGWorkers.Exists(x => x.FilterFile != null && x.LogFile != null && x.FilterFile.FileName == filterFile.FileName && x.LogFile.FileName == logFile.FileName))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.FilterFile != null && x.LogFile != null && x.FilterFile.FileName == filterFile.FileName && x.LogFile.FileName == logFile.FileName).ToList();
@@ -444,17 +405,15 @@ namespace TextFilter
                         SetStatus("Error:Getworkers:duplicate workers");
                     }
 
-#if DEBUG
-                    SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                    Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                     return workerItems;
                 }
 
                 if (filterFile != null && !string.IsNullOrEmpty(filterFile.FileName))
                 {
-#if DEBUG
-                    SetStatus("Getworkers:searching by filter file file name: " + filterFile.FileName);
-#endif
+
+                    Debug.Print("Getworkers:searching by filter file file name: " + filterFile.FileName);
+
                     if (_workerManager.BGWorkers.Exists(x => x.FilterFile != null && x.FilterFile.FileName == filterFile.FileName))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.FilterFile != null && x.FilterFile.FileName == filterFile.FileName).ToList();
@@ -471,18 +430,15 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (filterFile != null && !string.IsNullOrEmpty(filterFile.Tag))
                 {
-#if DEBUG
-                    SetStatus("Getworkers:searching by filter file tag: " + filterFile.Tag);
-#endif
+                    Debug.Print("Getworkers:searching by filter file tag: " + filterFile.Tag);
+
                     if (_workerManager.BGWorkers.Exists(x => x.FilterFile != null && x.FilterFile.Tag == filterFile.Tag))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.FilterFile != null && x.FilterFile.Tag == filterFile.Tag).ToList();
@@ -499,18 +455,16 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (logFile != null && !string.IsNullOrEmpty(logFile.Tag))
                 {
-#if DEBUG
-                    SetStatus("Getworkers:searching by log file tag: " + logFile.Tag);
-#endif
+                    Debug.Print("Getworkers:searching by log file tag: " + logFile.Tag);
+
                     if (_workerManager.BGWorkers.Exists(x => x.LogFile != null && x.LogFile.Tag == logFile.Tag))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.LogFile != null && x.LogFile.Tag == logFile.Tag).ToList();
@@ -527,18 +481,16 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (logFile != null && !string.IsNullOrEmpty(logFile.FileName))
                 {
-#if DEBUG
-                    SetStatus("Getworkers:searching by log file name: " + logFile.FileName);
-#endif
+
+                    Debug.Print("Getworkers:searching by log file name: " + logFile.FileName);
+
                     if (_workerManager.BGWorkers.Exists(x => x.LogFile != null && x.LogFile.FileName == logFile.FileName))
                     {
                         workerItems = _workerManager.BGWorkers.Where(x => x.LogFile != null && x.LogFile.FileName == logFile.FileName).ToList();
@@ -555,24 +507,18 @@ namespace TextFilter
 
                     if (workerItems.Count >= 1)
                     {
-#if DEBUG
-                        SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
+                        Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                         return workerItems;
                     }
                 }
 
                 if (logFile == null && filterFile == null)
                 {
-#if DEBUG
-                    SetStatus("Getworkers:returning all workers");
-#endif
+                    Debug.Print("Getworkers:returning all workers");
                     workerItems = _workerManager.BGWorkers.ToList();
                 }
-#if DEBUG
-                SetStatus("Getworkers:return:worker count:" + workerItems.Count);
-#endif
 
+                Debug.Print("Getworkers:return:worker count:" + workerItems.Count);
                 return workerItems;
             }
             catch (Exception e)
@@ -722,7 +668,7 @@ namespace TextFilter
             {
                 try
                 {
-                    EnterWriteLock(true);
+                    EnterWriteLock();
                     WorkerItem workerItem;
 
                     if (e.Result != null && e.Result is WorkerItem)
@@ -803,31 +749,37 @@ namespace TextFilter
                 switch (workerItem.WorkerModification)
                 {
                     case WorkerItem.Modification.LogAdded:
-                        workerItem.BackGroundWorker.DoWork -= DoLogWork;
-                        workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoLogWork);
-                        break;
-
-                    case WorkerItem.Modification.FilterIndex:
+                        {
+                            workerItem.BackGroundWorker.DoWork -= DoLogWork;
+                            workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoLogWork);
+                            break;
+                        }
                     case WorkerItem.Modification.LogIndex:
-
+                    case WorkerItem.Modification.FilterIndex:
+                        {
+                            goto case WorkerItem.Modification.FilterAdded;
+                        }
                     case WorkerItem.Modification.FilterAdded:
                     case WorkerItem.Modification.FilterModified:
-                        workerItem.BackGroundWorker.DoWork -= DoFilterWork;
-                        workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoFilterWork);
-                        ExitWriteLock();
-                        Application.Current.Dispatcher.Invoke(() =>
                         {
-                            workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
-                        });
+                            workerItem.BackGroundWorker.DoWork -= DoFilterWork;
+                            workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoFilterWork);
+                            ExitWriteLock();
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
+                            });
 
-                        EnterWriteLock();
+                            EnterWriteLock();
 
-                        break;
-
+                            break;
+                        }
                     default:
-                        SetStatus("StartWorker:not configured WorkerModification:" + workerItem.WorkerModification.ToString());
-                        workerItem.WorkerState = WorkerItem.State.Completed;
-                        return;
+                        {
+                            SetStatus("StartWorker:not configured WorkerModification:" + workerItem.WorkerModification.ToString());
+                            workerItem.WorkerState = WorkerItem.State.Completed;
+                            return;
+                        }
                 }
 
                 // this shouldnt happen
@@ -900,6 +852,9 @@ namespace TextFilter
 
         private void DoFilterWork(object sender, DoWorkEventArgs e)
         {
+            Debug.Assert(sender is BackgroundWorker);
+            Debug.Assert(e.Argument is WorkerItem);
+
             BackgroundWorker bgWorker;
             bgWorker = (BackgroundWorker)sender;
 
@@ -907,10 +862,10 @@ namespace TextFilter
 
             workerItem.Status.AppendLine("DoFilterWork:enter");
 
-            if (workerItem.FilterFile.ContentItems.Count == 0)
-            {
+           // if (workerItem.FilterFile.ContentItems.Count == 0)
+           // {
                 //workerItem.FilterFile.ContentItems = (ObservableCollection<IFileItem>)MMFConcurrentRead(workerItem).LogFile.ContentItems;
-            }
+           // }
             e.Result = MMFConcurrentFilter(workerItem);
 
             if (bgWorker.CancellationPending)
@@ -924,6 +879,9 @@ namespace TextFilter
 
         private void DoLogWork(object sender, DoWorkEventArgs e)
         {
+            Debug.Assert(sender is BackgroundWorker);
+            Debug.Assert(e.Argument is WorkerItem);
+
             BackgroundWorker bgWorker;
             bgWorker = (BackgroundWorker)sender;
 

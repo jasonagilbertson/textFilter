@@ -1,8 +1,8 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
 // File: Base.cs
-// Created: 3/19/2017
-// Modified: 3/25/2017
+// Created: 3/28/2017
+// Modified: 3/28/2017
 // Copyright (c) 2017 jason gilbertson
 //
 // ************************************************************************************
@@ -27,12 +27,11 @@ namespace TextFilter
 
         private Command _duplicateWindowCommand;
 
+        private object statusLock = new object();
+
         public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
-
-        private object statusLock = new object();
-
         public enum CurrentStatusSetting
         {
             enter_to_filter,
@@ -243,6 +242,11 @@ namespace TextFilter
             }
         }
 
+        public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            // not implemented
+        }
+
         public void SetCurrentStatus(CurrentStatusSetting status)
         {
             EventHandler<string> newCurrentStatus = NewCurrentStatus;
@@ -287,34 +291,6 @@ namespace TextFilter
                     count++;
                 }
             }
-        }
-
-        public void MouseMove(object sender, MouseEventArgs e)
-        {
-            Point mpos = e.GetPosition(null);
-            Vector diff = this.CurrentMousePosition - mpos;
-
-            if (e.LeftButton == MouseButtonState.Pressed &&
-                Math.Abs(diff.X) > SystemParameters.MinimumHorizontalDragDistance &&
-                Math.Abs(diff.Y) > SystemParameters.MinimumVerticalDragDistance)
-            {
-                //if (this.FileView.SelectedItems.Count == 0)
-                {
-                    return;
-                }
-
-                // right about here you get the file urls of the selected items.
-                // should be quite easy, if not, ask.
-                //string[] files = ...;
-                string dataFormat = DataFormats.FileDrop;
-                //DataObject dataObject = new DataObject(dataFormat, files);
-                //DragDrop.DoDragDrop(this.FileView, dataObject, DragDropEffects.Copy);
-            }
-        }
-
-        public void PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.CurrentMousePosition = e.GetPosition(null);
         }
     }
 }
