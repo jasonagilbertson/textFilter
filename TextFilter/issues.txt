@@ -2,7 +2,7 @@
 x runworkercompleted intermittently has issues
 x files dont always open
 file size limitation
-ctrl+shift+n not adding selected text to new filter consistently due to timing of new tab opening
+x ctrl+shift+n not adding selected text to new filter consistently due to timing of new tab opening
 background color defaults for filterpattern
 - should i use transparent? its in list
 add back some of the autocolor
