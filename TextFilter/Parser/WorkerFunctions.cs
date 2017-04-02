@@ -433,7 +433,7 @@ namespace TextFilter
                     filterCount,
                     logFile.Tag));
 
-                workerItem.FilteredList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2));
+                workerItem.FilteredList = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex > -2 && workerItem.VerifiedFilterItems.First(y => y.Index == x.FilterIndex).Enabled));
                 return workerItem;
             }
             catch (Exception e)

@@ -462,6 +462,18 @@ namespace TextFilter
             return tempTag;
         }
 
+        public IFile<T> GetFile(string tag)
+        {
+            IFile<T> file = default(IFile<T>);
+
+            file =  ViewManager.FileManager.FirstOrDefault(x => x.Tag == tag);
+            if (file == null)
+            {
+                SetStatus(string.Format("GetFile: warning: returning default T tag: {0}", tag));
+            }
+
+            return file;
+        }
         public void GotFocusExecuted(object sender)
         {
             if (CurrentFile() != null)

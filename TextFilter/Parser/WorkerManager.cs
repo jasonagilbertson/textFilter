@@ -754,22 +754,32 @@ namespace TextFilter
                             workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoLogWork);
                             break;
                         }
+                    case WorkerItem.Modification.FilterAdded:
+                        {
+                            //Application.Current.Dispatcher.Invoke(() =>
+                            //{
+                            //    Debug.Assert(workerItem.FilterFile == (FilterFile)_FilterViewModel.GetFile(workerItem.FilterFile.Tag));
+                            //    workerItem.FilterFile = (FilterFile)_FilterViewModel.GetFile(workerItem.FilterFile.Tag);
+                            //});
+
+                            workerItem.WorkerModification = WorkerItem.Modification.FilterAdded;
+                            workerItem.WorkerState = WorkerItem.State.Completed;
+                            return;
+                            //goto case WorkerItem.Modification.FilterModified;
+                        }
                     case WorkerItem.Modification.LogIndex:
                     case WorkerItem.Modification.FilterIndex:
-                        {
-                            goto case WorkerItem.Modification.FilterAdded;
-                        }
-                    case WorkerItem.Modification.FilterAdded:
                     case WorkerItem.Modification.FilterModified:
                         {
                             workerItem.BackGroundWorker.DoWork -= DoFilterWork;
                             workerItem.BackGroundWorker.DoWork += new DoWorkEventHandler(DoFilterWork);
+
                             ExitWriteLock();
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
+                                //workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
+                                VerifyFilterPatterns(workerItem);
                             });
-
                             EnterWriteLock();
 
                             break;
@@ -792,7 +802,6 @@ namespace TextFilter
                 Mouse.OverrideCursor = Cursors.AppStarting;
                 CancelAllWorkers();
                 workerItem.BackGroundWorker.WorkerSupportsCancellation = true;
-                //workerItem.BackGroundWorker.RunWorkerCompleted -= RunWorkerCompleted;
                 workerItem.BackGroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(RunWorkerCompleted);
 
                 // Start the asynchronous operation.

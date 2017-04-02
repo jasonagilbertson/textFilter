@@ -1,8 +1,16 @@
 ﻿quick filter not working
-runworkercompleted intermittently has issues
-files dont always open
+x runworkercompleted intermittently has issues
+x files dont always open
 file size limitation
+ctrl+shift+n not adding selected text to new filter consistently due to timing of new tab opening
+background color defaults for filterpattern
+- should i use transparent? its in list
+add back some of the autocolor
+- default to background color
+- flip to foreground
+- then random
+drag out when full screen not working
+add filterindex to export
+add hotkey to export
+add meta info to export and ctrl+shift+c
 
-12:50:46.573: [1] RunWorkerCompleted:exception:System.InvalidOperationException: Operation has been cancelled.
-   at System.ComponentModel.RunWorkerCompletedEventArgs.get_Result()
-   at TextFilter.WorkerManager.<>c__DisplayClass34_0.<RunWorkerCompleted>b__0() in C:\Users\jason\Source\Repos\textFilter\TextFilter\Parser\WorkerManager.cs:line 728

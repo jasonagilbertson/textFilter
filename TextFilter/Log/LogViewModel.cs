@@ -644,7 +644,7 @@ namespace TextFilter
                         return;
                     }
 
-                    // make new tab parser will open file on event
+                    // parser will open file on event
                     AddTabItem(logFile);
                 }
             }
@@ -880,7 +880,7 @@ namespace TextFilter
                 return;
             }
 
-            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
+            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.Tag == workerItem.LogFile.Tag);
             logTab.SetGroupCount(workerItem.FilterGroupCount);
             if (workerItem.FilterNeed == FilterNeed.ShowAll)
             {

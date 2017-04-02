@@ -313,8 +313,10 @@ namespace TextFilter
             {
                 SetStatus("Parser.ModifiedFilterFile:property changed event: " + (e as PropertyChangedEventArgs).PropertyName);
                 // to prevent index property change from overwriting new filter addition before it gets processed
+                FilterFile currentFilterFile = CurrentFilterFile();
+                LogFile currentLogFile = CurrentLogFile();
 
-                WorkerItem baseWorker = _workerManager.GetWorkers(CurrentFilterFile(), null, true).FirstOrDefault();
+                WorkerItem baseWorker = _workerManager.GetWorkers(currentFilterFile, null, true).FirstOrDefault();
                 if ((baseWorker.FilterFile.ContentItems == null
                     || baseWorker.FilterFile.ContentItems != null
                     && baseWorker.FilterFile.ContentItems.Count == 0)
@@ -328,9 +330,9 @@ namespace TextFilter
 
                 if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.SelectedIndex)
                 {
-                    if ((_workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).Count > 0))
+                    if ((_workerManager.GetWorkers(currentFilterFile, currentLogFile).Count > 0))
                     {
-                        workerItem = _workerManager.GetWorkers(CurrentFilterFile(), CurrentLogFile()).First();
+                        workerItem = _workerManager.GetWorkers(currentFilterFile, currentLogFile).First();
                         workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
                         SetStatus("Parser.ModifiedFilterFile:setting WorkerModification to FilterIndex.");
                         _workerManager.ProcessWorker(workerItem);
@@ -341,24 +343,41 @@ namespace TextFilter
                 if ((e as PropertyChangedEventArgs).PropertyName == BaseTabViewModelEvents.Enter)
                 {
                     // if enter then make sure filter file exists
-                    if(CurrentFilterFile() == null)
+                    if(currentFilterFile == null)
                     {
                         return;
                     }
                 }
 
-                workerItem = new WorkerItem()
-                {
-                    FilterFile = CurrentFilterFile(),
-                    WorkerModification = WorkerItem.Modification.Unknown,
-                    FilterNeed = FilterNeed.Unknown,
-                    LogFile = _LogViewModel == null ? null : CurrentLogFile()
-                };
+                // get worker item
+                List<WorkerItem> workerItems = _workerManager.GetWorkers(currentFilterFile, currentLogFile);
 
-                if (CurrentFilterFile() != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName))
+                if (workerItems.Count == 1)
+                {
+                    // use existing 
+                    workerItem = workerItems.ElementAt(0);
+                    workerItem.WorkerModification = WorkerItem.Modification.Unknown;
+                    workerItem.FilterNeed = FilterNeed.Unknown;
+                }
+                else
+                {
+                    // create new
+                    SetStatus("Parser:ModifiedFilterFile:warning, unable to find worker item. creating new...");
+
+                    workerItem = new WorkerItem()
+                    {
+                        FilterFile = currentFilterFile,
+                        WorkerModification = WorkerItem.Modification.Unknown,
+                        FilterNeed = FilterNeed.Unknown,
+                        LogFile = _LogViewModel == null ? null : currentLogFile
+                    };
+
+                }
+
+                if (currentFilterFile != null && _previousFilterFiles.Exists(x => x.FileName != null && x.FileName == currentFilterFile.FileName))
                 {
                     SetStatus("Parser:ModifiedFilterFile:have previous version");
-                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.FileName != null && x.FileName == CurrentFilterFile().FileName);
+                    FilterFile previousVersionFilterFile = _previousFilterFiles.First(x => x.FileName != null && x.FileName == currentFilterFile.FileName);
                     workerItem.FilterNeed = _FilterViewModel.CompareFilterList(previousVersionFilterFile.ContentItems.ToList());
                 }
                 else
@@ -366,12 +385,12 @@ namespace TextFilter
                     workerItem.FilterNeed = FilterNeed.Filter;
                 }
 
-                if (CurrentFilterFile() != _filterFilePrevious)
+                if (currentFilterFile != _filterFilePrevious)
                 {
                     SetStatus("Parser:ModifiedFilterFile:current filter file changed");
                     workerItem.WorkerModification = WorkerItem.Modification.FilterIndex;
                     workerItem.FilterNeed = FilterNeed.Current;
-                    _filterFilePrevious = CurrentFilterFile();
+                    _filterFilePrevious = currentFilterFile;
                 }
 
                 switch (workerItem.FilterNeed)
