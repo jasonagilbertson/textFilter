@@ -246,10 +246,6 @@ namespace TextFilter
                     {
                         workerItem.BackGroundWorker.CancelAsync();
                     });
-                    //while (workerItem.BackGroundWorker.IsBusy)
-                    //{
-                    //    Thread.Sleep(10);
-                    //}
 
                     workerItem.WorkerState = WorkerItem.State.Aborted;
                 }
@@ -698,7 +694,6 @@ namespace TextFilter
                     }
                     else if (workerItem.WorkerState != WorkerItem.State.Aborted)
                     {
-                        //WorkerItem workerItem = ((WorkerItem)e.Result);
                         workerItem.WorkerState = WorkerItem.State.Completed;
                         SetStatus("RunWorkerCompleted:callback:enter: \n" + workerItem.Status.ToString());
                         workerItem.Status.Clear();
@@ -756,16 +751,9 @@ namespace TextFilter
                         }
                     case WorkerItem.Modification.FilterAdded:
                         {
-                            //Application.Current.Dispatcher.Invoke(() =>
-                            //{
-                            //    Debug.Assert(workerItem.FilterFile == (FilterFile)_FilterViewModel.GetFile(workerItem.FilterFile.Tag));
-                            //    workerItem.FilterFile = (FilterFile)_FilterViewModel.GetFile(workerItem.FilterFile.Tag);
-                            //});
-
                             workerItem.WorkerModification = WorkerItem.Modification.FilterAdded;
                             workerItem.WorkerState = WorkerItem.State.Completed;
                             return;
-                            //goto case WorkerItem.Modification.FilterModified;
                         }
                     case WorkerItem.Modification.LogIndex:
                     case WorkerItem.Modification.FilterIndex:
@@ -777,7 +765,6 @@ namespace TextFilter
                             ExitWriteLock();
                             Application.Current.Dispatcher.Invoke(() =>
                             {
-                                //workerItem.VerifiedFilterItems = VerifyFilterPatterns(workerItem).VerifiedFilterItems;
                                 VerifyFilterPatterns(workerItem);
                             });
                             EnterWriteLock();
@@ -871,10 +858,6 @@ namespace TextFilter
 
             workerItem.Status.AppendLine("DoFilterWork:enter");
 
-           // if (workerItem.FilterFile.ContentItems.Count == 0)
-           // {
-                //workerItem.FilterFile.ContentItems = (ObservableCollection<IFileItem>)MMFConcurrentRead(workerItem).LogFile.ContentItems;
-           // }
             e.Result = MMFConcurrentFilter(workerItem);
 
             if (bgWorker.CancellationPending)
@@ -924,7 +907,6 @@ namespace TextFilter
 
                 if (workerItem.FilterFile != null)
                 {
-                    //if(_FilterViewModel.CompareFilterList(_previousFilterItems) != FilterNeed.Current)
                     if (!CompareFilterLists(_previousFilterItems.ToList(), workerItem.FilterFile.ContentItems.ToList()))
                     {
                         SetStatus("ResetCurrentWorkersbyFilter:different filter hash. RESETTING");

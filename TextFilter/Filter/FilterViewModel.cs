@@ -1187,28 +1187,7 @@ namespace TextFilter
 
         private void InsertFilterItemFromTextExecuted(object sender)
         {
-            TextBox textBox = new TextBox();
-
-            if (sender is DataGrid)
-            {
-                // from hotkey ctrl+shift+a and ctrl+shift+n
-                textBox = TextBoxFromDataGrid(sender as DataGrid);
-            }
-            else if (sender is ComboBox)
-            {
-                // from quick filter hotkey ctrl+shift+a and ctrl+shift+n
-                //textBox.Text = (sender as ComboBox).Text;
-                textBox.SelectedText = (sender as ComboBox).Text;
-            }
-            else if (sender is TextBox)
-            {
-                // from selected text context menu in logfile view
-                textBox = sender as TextBox;
-            }
-            else
-            {
-                return;
-            }
+            TextBox textBox = TextBoxFromSender(sender);
 
             if (CurrentFile() == null)
             {
@@ -1222,8 +1201,9 @@ namespace TextFilter
 
         private void NewFilterFromTextExecuted(object sender)
         {
+            TextBox textBox = TextBoxFromSender(sender);
             NewFileExecuted(sender);
-            InsertFilterItemFromTextExecuted(sender);
+            InsertFilterItemExecuted(textBox);
         }
         private void QuickFindKeyPressExecuted(object sender)
         {
@@ -1277,6 +1257,29 @@ namespace TextFilter
             OnPropertyChanged("TabItems");
         }
 
+        private TextBox TextBoxFromSender(object sender)
+        {
+            TextBox textBox = new TextBox();
+
+            if (sender is DataGrid)
+            {
+                // from hotkey ctrl+shift+a and ctrl+shift+n
+                textBox = TextBoxFromDataGrid(sender as DataGrid);
+            }
+            else if (sender is ComboBox)
+            {
+                // from quick filter hotkey ctrl+shift+a and ctrl+shift+n
+                //textBox.Text = (sender as ComboBox).Text;
+                textBox.SelectedText = (sender as ComboBox).Text;
+            }
+            else if (sender is TextBox)
+            {
+                // from selected text context menu in logfile view
+                textBox = sender as TextBox;
+            }
+
+            return textBox;
+        }
         private void UpdateRecentCollection()
         {
             // setting to null forces refresh
