@@ -187,9 +187,11 @@ namespace TextFilter
         public override IFile<FilterFileItem> OpenFile(string fileName)
         {
             FilterFile filterFile = new FilterFile();
-            SetStatus("OpenFile:enter: " + fileName);
+
             try
             {
+                SetStatus("OpenFile:enter: " + fileName);
+
                 if (FileManager.Exists(x => String.Compare(x.Tag, fileName, true) == 0))
                 {
                     SetStatus("file already open:" + fileName);

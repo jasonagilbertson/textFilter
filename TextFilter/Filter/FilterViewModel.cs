@@ -795,7 +795,7 @@ namespace TextFilter
                 silent = true;
             }
 
-            string[] logNames;
+            string[] filterNames;
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.DefaultExt = ".rvf";
             dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
@@ -808,12 +808,12 @@ namespace TextFilter
             if (silent)
             {
                 result = true;
-                logNames = new string[1] { (sender as string) };
+                filterNames = new string[1] { (sender as string) };
             }
             else
             {
                 result = dlg.ShowDialog();
-                logNames = dlg.FileNames;
+                filterNames = dlg.FileNames;
             }
 
             if (result != true)
@@ -821,13 +821,13 @@ namespace TextFilter
                 return;
             }
 
-            foreach (string logName in logNames)
+            foreach (string filterName in filterNames)
             {
                 // Process open file dialog box results
-                if (File.Exists(logName))
+                if (File.Exists(filterName))
                 {
-                    SetStatus(string.Format("opening file:{0}", logName));
-                    VerifyAndOpenFile(logName);
+                    SetStatus(string.Format("opening filter:{0}", filterName));
+                    VerifyAndOpenFile(filterName);
                 }
             }
 
@@ -1132,6 +1132,7 @@ namespace TextFilter
                 return false;
             }
 
+            // parser will open file on event
             AddTabItem(filterFile);
 
             return true;

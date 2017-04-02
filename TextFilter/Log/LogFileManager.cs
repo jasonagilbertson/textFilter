@@ -472,7 +472,7 @@ namespace TextFilter
 
         public override IFile<LogFileItem> OpenFile(string fileName)
         {
-            IFile<LogFileItem> logFile = new LogFile();
+            LogFile logFile = new LogFile();
 
             try
             {

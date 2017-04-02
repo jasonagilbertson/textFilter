@@ -868,6 +868,24 @@ namespace TextFilter
             }
         }
 
+        public override void UpdateView(WorkerItem workerItem)
+        {
+            SetStatus("UpdateView:enter");
+            if (workerItem.LogFile == null)
+            {
+                SetStatus("UpdateView:LogFile null:exit");
+                return;
+            }
+
+            LogTabViewModel logTab = (LogTabViewModel)TabItems.FirstOrDefault(x => x.File.FileName == workerItem.LogFile.FileName);
+            logTab.SetGroupCount(workerItem.FilterGroupCount);
+            if (workerItem.FilterNeed == FilterNeed.ShowAll)
+            {
+                // no filter, display all
+                logTab.ContentList = workerItem.LogFile.ContentItems;
+            }
+        }
+
         private List<FilterFileItem> GetPreviousFilter()
         {
             SetStatus("GetPreviousFilter item count: " + _previousFilterFileItems.Count);
