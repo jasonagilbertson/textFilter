@@ -17,7 +17,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 
-//using System.Windows.Media;
 using System.Xml;
 
 namespace TextFilter
@@ -745,7 +744,7 @@ namespace TextFilter
             }
 
             // string backgroundColor = fileItem.BackgroundColor;
-            string backgroundColor = Settings.GetColorNames().ElementAt(new Random().Next(Settings.WebColors.Count - 1));
+            string backgroundColor = TextFilterSettings.Settings.BackgroundColorString; // Settings.GetColorNames().ElementAt(new Random().Next(Settings.WebColors.Count - 1));
             bool preferredColors = true;
 
             List<string> backgroundColors = new List<string>();
