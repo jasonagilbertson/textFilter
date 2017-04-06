@@ -779,11 +779,21 @@ namespace TextFilter
                 }
 
                 backgroundColors.Add(backgroundColor);
-                backgroundColor = TextFilterSettings.Settings
-                    .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
-                    .ToList()
-                    .Where(x => !backgroundColors.Contains(x))
-                    .FirstOrDefault();
+
+                if (!backgroundColors.Contains(TextFilterSettings.Settings.ForegroundColorString))
+                {
+                    // use foreground color after background color
+                    backgroundColor = TextFilterSettings.Settings.ForegroundColorString;
+                }
+                else
+                {
+                    // use contrasting color
+                    backgroundColor = TextFilterSettings.Settings
+                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
+                        .ToList()
+                        .Where(x => !backgroundColors.Contains(x))
+                        .FirstOrDefault();
+                }
 
                 if (backgroundColor == null && !preferredColors)
                 {
