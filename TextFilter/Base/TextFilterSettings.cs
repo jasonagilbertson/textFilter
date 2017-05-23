@@ -1107,15 +1107,16 @@ namespace TextFilter
         {
             List<string> newList = new List<string>(recentLogFiles);
 
-            if (newList.Contains(logFile))
+            if (newList.Contains(logFile, StringComparer.OrdinalIgnoreCase))
             {
                 newList.Remove(logFile);
             }
 
             while (newList.Count >= settings.FileHistoryCount)
             {
-                newList.RemoveAt(0);
+                newList.RemoveAt(newList.Count -1);
             }
+
             if (GetPathType(logFile) != ResourceType.Url)
             {
                 if (!File.Exists(logFile))
@@ -1123,8 +1124,8 @@ namespace TextFilter
                     return (newList.ToArray());
                 }
             }
-            newList.Add(logFile);
 
+            newList.Insert(0,logFile);
             return newList.ToArray();
         }
 
