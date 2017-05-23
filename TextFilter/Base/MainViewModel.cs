@@ -404,6 +404,7 @@ namespace TextFilter
             string message = string.Empty;
             string version = string.Empty;
             string notes = string.Empty;
+            XmlNode node = null;
 
             try
             {
@@ -432,9 +433,18 @@ namespace TextFilter
 
                 if (root.Name.ToLower() == "updateinfo")
                 {
-                    version = root.SelectSingleNode("version").InnerText;
-                    downloadLocation = root.SelectSingleNode("download").InnerText;
-                    notes = root.SelectSingleNode("notes").InnerText;
+                    if ((node = root.SelectSingleNode("version")) != null)
+                    {
+                        version = node.InnerText;
+                    }
+                    if ((node = root.SelectSingleNode("download")) != null)
+                    {
+                        downloadLocation = node.InnerText;
+                    }
+                    if ((node = root.SelectSingleNode("notes")) != null)
+                    {
+                        notes = node.InnerText;
+                    }
                 }
                 if (string.IsNullOrEmpty(downloadLocation))
                 {
@@ -452,7 +462,7 @@ namespace TextFilter
                     }
                     else
                     {
-                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}\n{1}?", downloadLocation, notes), "New version", MessageBoxButton.YesNo);
+                        MessageBoxResult mbResult = MessageBox.Show(string.Format("New version available.\n Do you want to download from {0}?\n{1}", downloadLocation, notes), "New version", MessageBoxButton.YesNo);
                         if (mbResult == MessageBoxResult.Yes)
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
