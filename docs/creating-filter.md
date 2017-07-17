@@ -56,7 +56,7 @@ Here are a couple of sites that I have used:
 ### Escaping
 - Escaping is the way to tell the parser to process the following character as a literal and NOT as a part of the regex expression syntax.
 - To build regex expressions, there are multiple `special characters` (like in any language) that have a different meaning. 
-- For Regex, the escape character is a blackslash `\` (which is the same as C#).
+- For Regex, the escape character is a backslash `\` (which is the same as C#).
 - From the above wildcards and or`ing, we have already identified 3 special characters (4 counting the escape character itself). (.,*,|,\)
   - **Example 1**: I want to search for a `.` in a trace. `.` is a special character that matches any single character. Given the sample text `this is a test. Where is the period?` we can use the escape character `\` to specify that the `.` is the literal character we are searching for. The regular expression would be `\.` to search for the period in the trace.
   - **Example 2**: I want to search for a trace that has a `\` in it. `\` is a special character that is the escape character. Given the sample text `HKEY_LOCAL_MACHINE\SOFTWARE` we again use the escape character `\` to specify the following character will be a literal. The regular expression would be `\\` to search for a trace with a backslash in it.

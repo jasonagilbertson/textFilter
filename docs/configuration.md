@@ -1,13 +1,15 @@
 ![](../TextFilter/Images/ico.png)
 
-# TextFilter Configuration File
+# TextFilter Settings
 
-Below is the configuration file that controls some of the window behavior.
-This information can be directly set from the gui. See Options -> Settings
+
+This information can be directly set from the gui. 
+## Options -> Settings
 ![](../TextFilter/Images/tf-setting-reference-1.png)
 
-If for some reason config file is lost, on next launch, a new config file will be generated.
-If for some reason config file is corrupt, rename / delete config file and relaunch textFilter.
+Below are the underlying configuration value definitions and file where all settings are stored.
+If config file is lost, on next launch, a new config file will be generated.
+If config file is corrupt, rename / delete config file and relaunch textFilter.
 
 ## Known issues: 
 - If running multiple instances of textFilter, the first instance is the only one that will save information to the textFilter.exe.config file. This will be fixed in future version.

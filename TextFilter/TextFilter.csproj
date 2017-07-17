@@ -14,7 +14,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\127.0.0.1\c%24\Users\jag\OneDrive\tools-home\JasonGi\RegexViewer\RegexViewer\bin\x64\publish\</PublishUrl>
+    <PublishUrl>\\127.0.0.1\c%24\Users\jag\OneDrive\tools-home\JasonGi\textFilter\textFilter\bin\x64\publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -25,7 +25,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>false</MapFileExtensions>
     <TargetCulture>en</TargetCulture>
-    <ProductName>RegexViewer</ProductName>
+    <ProductName>textFilter</ProductName>
     <PublisherName>jagilber</PublisherName>
     <SuiteName>jagilber</SuiteName>
     <WebPage>publish.htm</WebPage>
@@ -90,7 +90,7 @@
     <ManifestCertificateThumbprint>8216ADE8F8AE3B58EC53E86E882E713790F86103</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>RegexViewer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>textFilter_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>

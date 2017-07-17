@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace RegexViewer
+namespace textFilter
 {
     /// <summary>
     /// Interaction logic for TimedSaveDialog.xaml
