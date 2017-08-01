@@ -920,26 +920,31 @@ namespace TextFilter
 
         private void ViewMessageExecuted(object sender)
         {
-            LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
-            string message = string.Empty;
-            int messageIndex = 0;
-
-            if (logTab != null)
+            try
             {
-                int logIndex = ((Selector)logTab.Viewer).SelectedIndex;
+                LogTabViewModel logTab = (LogTabViewModel)_LogViewModel.CurrentTab();
+                string message = string.Empty;
 
-                if (logIndex <= logTab.ContentList.Count)
+                if (logTab != null)
                 {
-                    message = (logTab.ContentList[logIndex]).Content;
-                    messageIndex = (logTab.ContentList[logIndex]).Index;
-                    TraceMessageDialog messageDialog = new TraceMessageDialog(message, messageIndex, CurrentFile().FileName);
-                    messageDialog.Show();
+                    int logIndex = logTab.SelectedIndex;
+                    message = logTab.ContentList.First(x => x.Index == logTab.SelectedIndex).Content;
+
+                    if (!string.IsNullOrEmpty(message))
+                    {
+                        TraceMessageDialog messageDialog = new TraceMessageDialog(message, logIndex, CurrentFile().FileName);
+                        messageDialog.Show();
+                    }
+                    else
+                    {
+                        SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
+                        return;
+                    }
                 }
-                else
-                {
-                    SetStatus("log:viewmessage:error in index:" + logIndex.ToString());
-                    return;
-                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("viewmessageexecuted:exception: " + e.ToString());
             }
         }
 
