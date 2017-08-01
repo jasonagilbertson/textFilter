@@ -755,9 +755,7 @@ namespace TextFilter
                         Filterpattern = string.IsNullOrEmpty(textBox.SelectedText) ? textBox.Text : textBox.SelectedText
                     };
 
-                    ((FilterFileManager)ViewManager).SetFilterItemColors(filterFile, fileItem);
-
-                    filterFile.ContentItems.Add(fileItem);
+                    filterFile.ContentItems.Add(((FilterFileManager)ViewManager).SetFilterItemColors(filterFile, fileItem));
                     // set filterindex to -1 to add new filter item at end of list
                     filterIndex = -1;
                 }

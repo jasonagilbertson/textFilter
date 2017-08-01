@@ -131,7 +131,7 @@ namespace TextFilter
                     // insert in new enabled filter item at specified index
                     fileItem.Enabled = true;
                     fileItem.Index = filterIndex;
-                    SetFilterItemColors(filterFile, fileItem);
+                    fileItem = SetFilterItemColors(filterFile, fileItem);
                     filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Insert(filterIndex, fileItem);
                 }
@@ -144,7 +144,7 @@ namespace TextFilter
                 else
                 {
                     // add at end
-                    SetFilterItemColors(filterFile, fileItem);
+                    fileItem = SetFilterItemColors(filterFile, fileItem);
                     filterFile.AddPatternNotification(fileItem, true);
                     filterFile.ContentItems.Add(fileItem);
                 }
@@ -302,7 +302,7 @@ namespace TextFilter
                     {
                         if(_FilterViewModel != null)
                         {
-                            SetFilterItemColors(filterFile, fileItem);
+                            fileItem = SetFilterItemColors(filterFile, fileItem);
                         }
                     }
 
