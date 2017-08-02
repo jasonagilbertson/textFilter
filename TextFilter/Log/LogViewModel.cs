@@ -387,18 +387,8 @@ namespace TextFilter
                     filterIndex = Convert.ToInt32(sender);
                     SetStatus(string.Format("LogViewModel.FindNextExecuted: sender is filter. filterindex: {0} index: {1} ", filterIndex, index));
                 }
-
-                if(Keyboard.IsKeyDown(Key.LeftShift) | Keyboard.IsKeyDown(Key.RightShift))
-                {
-                    nextLogFileItem = CurrentFile().ContentItems.LastOrDefault(
-                        x => x.FilterIndex == filterIndex && x.Index < index);
-                }
-                else
-                {
-                    nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
-                        x => x.FilterIndex == filterIndex && x.Index > index);
-                }
-
+                
+                nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.FilterIndex == filterIndex && x.Index > index);
                 
                 if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
                 {
@@ -408,8 +398,8 @@ namespace TextFilter
                 else
                 {
                     // try from beginning
-                    nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
-                        x => x.FilterIndex == filterIndex && x.Index >= 0);
+                    nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.FilterIndex == filterIndex && x.Index >= 0);
+
                     if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
                     {
                         SetStatus(string.Format("LogViewModel.FindNextExecuted: find first. filterindex: {0} index: {1} ", filterIndex, nextLogFileItem.Index));
@@ -432,6 +422,65 @@ namespace TextFilter
             catch (Exception e)
             {
                 SetStatus("LogViewModel.FindNextExecuted:exception" + e.ToString());
+            }
+        }
+
+        public override void FindPreviousExecuted(object sender)
+        {
+            try
+            {
+                int filterIndex = -1;
+                int index = 0;
+                LogFileItem previousLogFileItem = new LogFileItem();
+
+                if (((Selector)CurrentTab().Viewer).SelectedItem != null)
+                {
+                    filterIndex = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).FilterIndex ?? 0;
+                    index = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).Index ?? 0;
+                    SetStatus(string.Format("LogViewModel.FindPreviousExecuted: setting log file index. filterindex: {0} index: {1} ", filterIndex, index));
+                }
+
+                if ((sender is int))
+                {
+                    filterIndex = Convert.ToInt32(sender);
+                    SetStatus(string.Format("LogViewModel.FindPreviousExecuted: sender is filter. filterindex: {0} index: {1} ", filterIndex, index));
+                }
+
+                previousLogFileItem = CurrentFile().ContentItems.LastOrDefault(x => x.FilterIndex == filterIndex && x.Index < index);
+
+                if (previousLogFileItem != null && previousLogFileItem.Index >= 0)
+                {
+                    SetStatus(string.Format("LogViewModel.FindPreviousExecuted: find Previous. filterindex: {0} index: {1} ", filterIndex, previousLogFileItem.Index));
+                    GotoLineExecuted(previousLogFileItem.Index);
+                }
+                else
+                {
+                    // try from end
+                    int maxIndex = CurrentFile().ContentItems.Max(y => y.Index);
+                    previousLogFileItem = CurrentFile().ContentItems.LastOrDefault(x => x.FilterIndex == filterIndex && x.Index <= maxIndex);
+
+                    if (previousLogFileItem != null && previousLogFileItem.Index <= maxIndex)
+                    {
+                        SetStatus(string.Format("LogViewModel.FindPreviousExecuted: find last. filterindex: {0} index: {1} ", filterIndex, previousLogFileItem.Index));
+                        GotoLineExecuted(previousLogFileItem.Index);
+                    }
+                    else
+                    {
+                        SetStatus(string.Format("LogViewModel.FindPreviousExecuted: not found! filterindex: {0} index: {1} ", filterIndex, index));
+                        SetStatus(string.Format("QuickFindItem: filter pattern: {0} include: {1} exclude: {2}",
+                            _FilterViewModel.QuickFindItem.Filterpattern,
+                            _FilterViewModel.QuickFindItem.Include,
+                            _FilterViewModel.QuickFindItem.Exclude));
+                        foreach (FilterFileItem item in _FilterViewModel.FilterList())
+                        {
+                            SetStatus(string.Format("file item:{0}:{1}:{2}", item.Index, item.Filterpattern, item.Exclude, item.Include));
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                SetStatus("LogViewModel.FindPreviousExecuted:exception" + e.ToString());
             }
         }
 

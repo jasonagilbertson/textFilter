@@ -31,6 +31,8 @@ namespace TextFilter
 
         private Command _findNextCommand;
 
+        private Command _findPreviousCommand;
+
         private Command _gotFocusCommand;
 
         private Command _gotoLineCommand;
@@ -119,6 +121,21 @@ namespace TextFilter
                 return _findNextCommand;
             }
             set { _findNextCommand = value; }
+        }
+
+        public Command FindPreviousCommand
+        {
+            get
+            {
+                if (_findPreviousCommand == null)
+                {
+                    _findPreviousCommand = new Command(FindPreviousExecuted);
+                }
+                _findPreviousCommand.CanExecute = true;
+
+                return _findPreviousCommand;
+            }
+            set { _findPreviousCommand = value; }
         }
 
         public Command GotFocusCommand
@@ -435,6 +452,8 @@ namespace TextFilter
         }
 
         public abstract void FindNextExecuted(object sender);
+
+        public abstract void FindPreviousExecuted(object sender);
 
         public string GenerateTempTagName()
         {

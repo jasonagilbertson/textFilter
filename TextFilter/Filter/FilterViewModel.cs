@@ -635,6 +635,30 @@ namespace TextFilter
             }
         }
 
+        public override void FindPreviousExecuted(object sender)
+        {
+            try
+            {
+                SetStatus("FilterViewModel.FindPreviousExecuted: enter");
+                // get clean index that has empty and disabled filters removed
+                int cleanFilterIndex = -1;
+                if (sender is string && (sender as string) == "QUICKFIND")
+                {
+                    SetStatus("FilterViewModel.FindPreviousExecuted: sender is quick find");
+                    cleanFilterIndex = -1;
+                }
+                else if (((Selector)CurrentTab().Viewer) != null)
+                {
+                    cleanFilterIndex = (FilterList().FirstOrDefault(x => x == (FilterFileItem)((Selector)CurrentTab().Viewer).SelectedItem)).Index;
+                }
+
+                _LogViewModel.FindPreviousExecuted(cleanFilterIndex);
+            }
+            catch (Exception e)
+            {
+                SetStatus("findPreviousexecuted:exception" + e.ToString());
+            }
+        }
         public override void GotoLineExecuted(object sender)
         {
             FilterTabViewModel filterTab = (FilterTabViewModel)CurrentTab();

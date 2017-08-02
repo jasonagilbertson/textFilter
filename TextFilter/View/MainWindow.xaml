@@ -579,7 +579,7 @@
                                 CommandParameter="QUICKFIND"
                                 Gesture="F3" />
                     <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
-                                                  Path=FilterViewModel.FindNextCommand}"
+                                                  Path=FilterViewModel.FindPreviousCommand}"
                                 CommandParameter="QUICKFIND"
                                 Gesture="Shift+F3" />
                 </Grid.InputBindings>
@@ -888,7 +888,7 @@
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
                                 <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
-                                                              Path=FilterViewModel.FindNextCommand}"
+                                                              Path=FilterViewModel.FindPreviousCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="Shift+F3" />
                                 <KeyBinding Key="N"
@@ -967,7 +967,7 @@
                                               BorderBrush="{Binding Source={StaticResource settings},
                                                                     Path=Settings.BackgroundColor}"
                                               Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=FilterViewModel.FindNextCommand}"
+                                                                Path=FilterViewModel.FindPreviousCommand}"
                                               CommandParameter="{Binding}"
                                               Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
@@ -1311,7 +1311,7 @@
                                   BorderBrush="{Binding Source={StaticResource settings},
                                                         Path=Settings.BackgroundColor}"
                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                    Path=FilterViewModel.FindNextCommand}"
+                                                    Path=FilterViewModel.FindPreviousCommand}"
                                   CommandParameter="{Binding}"
                                   Foreground="{Binding Source={StaticResource settings},
                                                        Path=Settings.ForegroundColor}"
@@ -1710,7 +1710,7 @@
                                             Command="{Binding CopyCommand}"
                                             Modifiers="Control" />
                                 <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
-                                                              Path=LogViewModel.FindNextCommand}"
+                                                              Path=LogViewModel.FindPreviousCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="Shift+F3" />
                                 <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
@@ -1805,7 +1805,7 @@
                                               BorderBrush="{Binding Source={StaticResource settings},
                                                                     Path=Settings.BackgroundColor}"
                                               Command="{Binding Source={StaticResource mainViewModel},
-                                                                Path=LogViewModel.FindNextCommand}"
+                                                                Path=LogViewModel.FindPreviousCommand}"
                                               CommandParameter="{Binding}"
                                               Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
@@ -2008,7 +2008,7 @@
                                   BorderBrush="{Binding Source={StaticResource settings},
                                                         Path=Settings.BackgroundColor}"
                                   Command="{Binding Source={StaticResource mainViewModel},
-                                                    Path=LogViewModel.FindNextCommand}"
+                                                    Path=LogViewModel.FindPreviousCommand}"
                                   CommandParameter="{Binding}"
                                   Foreground="{Binding Source={StaticResource settings},
                                                        Path=Settings.ForegroundColor}"

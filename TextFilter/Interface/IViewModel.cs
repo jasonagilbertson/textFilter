@@ -54,6 +54,8 @@ namespace TextFilter
 
         void FindNextExecuted(object sender);
 
+        void FindPreviousExecuted(object sender);
+
         IFile<T> GetFile(string tag);
 
         void GotFocusExecuted(object sender);
