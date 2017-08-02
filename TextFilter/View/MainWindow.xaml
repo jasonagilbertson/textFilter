@@ -578,6 +578,10 @@
                                                   Path=FilterViewModel.FindNextCommand}"
                                 CommandParameter="QUICKFIND"
                                 Gesture="F3" />
+                    <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                                  Path=FilterViewModel.FindNextCommand}"
+                                CommandParameter="QUICKFIND"
+                                Gesture="Shift+F3" />
                 </Grid.InputBindings>
                 <ToggleButton Name="toggleButtonRegex"
                               Width="40"
@@ -883,6 +887,10 @@
                                                               Path=FilterViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
                                             Gesture="F3" />
+                                <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                                              Path=FilterViewModel.FindNextCommand}"
+                                            CommandParameter="{Binding}"
+                                            Gesture="Shift+F3" />
                                 <KeyBinding Key="N"
                                             Modifiers="Control+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
@@ -954,6 +962,19 @@
                                               Header="find next"
                                               InputGestureText="F3"
                                               Style="{DynamicResource MenuItemStyle1}" />
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                                    Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.FindNextCommand}"
+                                              CommandParameter="{Binding}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.ForegroundColor}"
+                                              Header="find previous"
+                                              InputGestureText="Shift+F3"
+                                              Style="{DynamicResource MenuItemStyle1}" />
+
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
                                               BorderBrush="{Binding Source={StaticResource settings},
@@ -1285,6 +1306,19 @@
                                   Header="find next"
                                   InputGestureText="F3"
                                   Style="{DynamicResource MenuItemStyle1}" />
+                        <MenuItem Background="{Binding Source={StaticResource settings},
+                                                       Path=Settings.BackgroundColor}"
+                                  BorderBrush="{Binding Source={StaticResource settings},
+                                                        Path=Settings.BackgroundColor}"
+                                  Command="{Binding Source={StaticResource mainViewModel},
+                                                    Path=FilterViewModel.FindNextCommand}"
+                                  CommandParameter="{Binding}"
+                                  Foreground="{Binding Source={StaticResource settings},
+                                                       Path=Settings.ForegroundColor}"
+                                  Header="find previous"
+                                  InputGestureText="Shift+F3"
+                                  Style="{DynamicResource MenuItemStyle1}" />
+
                         <MenuItem Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"
                                   BorderBrush="{Binding Source={StaticResource settings},
@@ -1678,6 +1712,10 @@
                                 <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                                               Path=LogViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
+                                            Gesture="Shift+F3" />
+                                <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                                              Path=LogViewModel.FindNextCommand}"
+                                            CommandParameter="{Binding}"
                                             Gesture="F3" />
                                 <KeyBinding Key="A"
                                             Modifiers="Control+Shift"
@@ -1761,6 +1799,18 @@
                                                                    Path=Settings.ForegroundColor}"
                                               Header="find next"
                                               InputGestureText="F3"
+                                              Style="{DynamicResource MenuItemStyle1}" />
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                                    Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=LogViewModel.FindNextCommand}"
+                                              CommandParameter="{Binding}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                                                   Path=Settings.ForegroundColor}"
+                                              Header="find previous"
+                                              InputGestureText="Shift+F3"
                                               Style="{DynamicResource MenuItemStyle1}" />
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"
@@ -1952,6 +2002,18 @@
                                                        Path=Settings.ForegroundColor}"
                                   Header="find next"
                                   InputGestureText="F3"
+                                  Style="{DynamicResource MenuItemStyle1}" />
+                        <MenuItem Background="{Binding Source={StaticResource settings},
+                                                       Path=Settings.BackgroundColor}"
+                                  BorderBrush="{Binding Source={StaticResource settings},
+                                                        Path=Settings.BackgroundColor}"
+                                  Command="{Binding Source={StaticResource mainViewModel},
+                                                    Path=LogViewModel.FindNextCommand}"
+                                  CommandParameter="{Binding}"
+                                  Foreground="{Binding Source={StaticResource settings},
+                                                       Path=Settings.ForegroundColor}"
+                                  Header="find previous"
+                                  InputGestureText="Shift+F3"
                                   Style="{DynamicResource MenuItemStyle1}" />
                         <MenuItem Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"

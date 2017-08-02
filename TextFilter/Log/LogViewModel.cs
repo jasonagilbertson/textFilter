@@ -373,6 +373,7 @@ namespace TextFilter
             {
                 int filterIndex = -1;
                 int index = 0;
+                LogFileItem nextLogFileItem = new LogFileItem();
 
                 if (((Selector)CurrentTab().Viewer).SelectedItem != null)
                 {
@@ -387,8 +388,18 @@ namespace TextFilter
                     SetStatus(string.Format("LogViewModel.FindNextExecuted: sender is filter. filterindex: {0} index: {1} ", filterIndex, index));
                 }
 
-                LogFileItem nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
+                if(Keyboard.IsKeyDown(Key.LeftShift) | Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    nextLogFileItem = CurrentFile().ContentItems.LastOrDefault(
+                        x => x.FilterIndex == filterIndex && x.Index < index);
+                }
+                else
+                {
+                    nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(
                         x => x.FilterIndex == filterIndex && x.Index > index);
+                }
+
+                
                 if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
                 {
                     SetStatus(string.Format("LogViewModel.FindNextExecuted: find next. filterindex: {0} index: {1} ", filterIndex, nextLogFileItem.Index));
