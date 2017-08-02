@@ -248,7 +248,6 @@ namespace TextFilter
                     return filterFile;
                 }
 
-                List<FilterFileItem> filterFileItems = new List<FilterFileItem>();
                 FilterFileVersionResult filterFileVersion = FilterFileVersion(fileName);
 
                 if (filterFileVersion == FilterFileVersionResult.NotAFilterFile)
@@ -291,6 +290,7 @@ namespace TextFilter
                 }
 
                 filterFile.IsNew = false;
+                filterFile.ContentItems = new ObservableCollection<FilterFileItem>();
 
                 for (int i = 0; i < root.ChildNodes.Count; i++)
                 {
@@ -325,10 +325,9 @@ namespace TextFilter
                     fileItem.Index = ReadIntNodeChildItem(root, "index", i);
                     fileItem.Notes = ReadStringNodeChildItem(root, "notes", i);
 
-                    filterFileItems.Add(fileItem);
+                    filterFile.ContentItems.Add(fileItem);
                 }
 
-                filterFile.ContentItems = new ObservableCollection<FilterFileItem>(filterFileItems);
                 SetStatus("ReadFile:exit: " + fileName);
                 return filterFile;
             }
@@ -774,7 +773,7 @@ namespace TextFilter
                         .ToList()
                         .ElementAtOrDefault((new Random()
                         .Next(contrastColors.Count - 1)));
-
+                    filterFile.Modified = true;
                     break;
                 }
 
@@ -799,7 +798,7 @@ namespace TextFilter
                 {
                     break;
                 }
-                else
+                else if (backgroundColor == null && preferredColors)
                 {
                     preferredColors = false;
                     backgroundColor = TextFilterSettings.Settings

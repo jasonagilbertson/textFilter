@@ -84,7 +84,7 @@ namespace TextFilter
 
         private void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
-            if ((sender is FilterFileItem) && e.PropertyName != FilterFileItemEvents.Count)
+            if ((sender is FilterFileItem) && e.PropertyName != FilterFileItemEvents.Count && e.PropertyName != FilterFileItemEvents.MaskedCount)
             {
                 Modified = true;
             }
