@@ -409,6 +409,7 @@ namespace TextFilter
             {
                 DeleteIfTempFile(CurrentFile());
                 ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                SaveModifiedFile(tabItem.Tag);
 
                 if (!ViewManager.CloseFile(tabItem.Tag))
                 {
@@ -719,7 +720,7 @@ namespace TextFilter
 
             try
             {
-                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager.Where(x => x.Modified == true)))
+                foreach (IFile<T> item in new List<IFile<T>>(ViewManager.FileManager))
                 {
                     // set tab index to current
                     SelectedIndex = TabItems.IndexOf(TabItems.First(x => x.Tag == item.Tag));
@@ -728,56 +729,76 @@ namespace TextFilter
                         continue;
                     }
 
-                    // prompt for saving
-                    if (!TextFilterSettings.Settings.AutoSave & !noPrompt)
-                    {
-                        TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
-
-                        dialog.Enable();
-
-                        switch (dialog.WaitForResult())
-                        {
-                            case TimedSaveDialog.Results.Disable:
-                                TextFilterSettings.Settings.AutoSave = true;
-                                break;
-
-                            case TimedSaveDialog.Results.DontSave:
-                                item.Modified = false;
-                                break;
-
-                            case TimedSaveDialog.Results.DontSaveAll:
-                                noPrompt = true;
-                                item.Modified = false;
-                                break;
-
-                            case TimedSaveDialog.Results.Save:
-                                SaveFileExecuted(item);
-                                item.Modified = false;
-                                break;
-
-                            case TimedSaveDialog.Results.SaveAs:
-                                SaveFileAsExecuted(item);
-                                item.Modified = false;
-                                break;
-
-                            case TimedSaveDialog.Results.Unknown:
-                                // dont worry about errors since we are closing.
-                                break;
-                        }
-                    }
-                    else if (TextFilterSettings.Settings.AutoSave)
-                    {
-                        SaveFileExecuted(item);
-                        item.Modified = false;
-                    }
-
-                    DeleteIfTempFile(item);
+                    noPrompt = SaveModifiedFile(noPrompt, item);
                 }
             }
             catch (Exception e)
             {
                 SetStatus("SaveModifiedFiles: exception: " + e.ToString());
             }
+        }
+
+        public void SaveModifiedFile(object sender)
+        {
+            if (sender is string)
+            {
+                IFile<T> item = ViewManager.FileManager.FirstOrDefault(x => x.Tag.ToLower() == (sender as string).ToLower());
+                SaveModifiedFile(false, item);
+            }
+        }
+        private bool SaveModifiedFile(bool noPrompt, IFile<T> item)
+        {
+            if (item == default(IFile<T>) || item.Modified == false)
+            {
+                SetStatus("SaveModifiedFile: not modified. returning");
+                return noPrompt;
+            }
+
+            // prompt for saving
+            if (!TextFilterSettings.Settings.AutoSave & !noPrompt)
+            {
+                TimedSaveDialog dialog = new TimedSaveDialog(item.Tag);
+
+                dialog.Enable();
+
+                switch (dialog.WaitForResult())
+                {
+                    case TimedSaveDialog.Results.Disable:
+                        TextFilterSettings.Settings.AutoSave = true;
+                        break;
+
+                    case TimedSaveDialog.Results.DontSave:
+                        item.Modified = false;
+                        break;
+
+                    case TimedSaveDialog.Results.DontSaveAll:
+                        noPrompt = true;
+                        item.Modified = false;
+                        break;
+
+                    case TimedSaveDialog.Results.Save:
+                        SaveFileExecuted(item);
+                        item.Modified = false;
+                        break;
+
+                    case TimedSaveDialog.Results.SaveAs:
+                        SaveFileAsExecuted(item);
+                        item.Modified = false;
+                        break;
+
+                    case TimedSaveDialog.Results.Unknown:
+                        // dont worry about errors since we are closing.
+                        break;
+                }
+            }
+            else if (TextFilterSettings.Settings.AutoSave)
+            {
+                SaveFileExecuted(item);
+                item.Modified = false;
+            }
+
+            DeleteIfTempFile(item);
+            return noPrompt;
         }
 
         public void SharedFileExecuted(object sender)

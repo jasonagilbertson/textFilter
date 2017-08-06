@@ -14,6 +14,8 @@ namespace TextFilter
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
+        bool _modified = false;
+
         public BaseFile()
         {
             Modified = false;
@@ -29,7 +31,19 @@ namespace TextFilter
 
         public bool IsReadOnly { get; set; }
 
-        public bool Modified { get; set; }
+        public bool Modified
+        {
+            get
+            {
+                return _modified;
+            }
+
+            set
+            {
+                SetStatus(string.Format("setting modified file = {0}", value));
+                _modified = value;
+            }
+        }
 
         public string Tag { get; set; }
     }

@@ -29,7 +29,7 @@ namespace TextFilter
             {
                 if (FileManager.Exists(x => String.Compare(x.Tag, FileName, true) == 0))
                 {
-                    SetStatus("file not open. removing:" + FileName);
+                    SetStatus("file open. removing:" + FileName);
                     FileManager.Remove(FileManager.Find(x => String.Compare(x.Tag, FileName, true) == 0));
                     if (typeof(T) == typeof(FilterFileItem))
                     {

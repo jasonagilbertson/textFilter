@@ -371,7 +371,7 @@ namespace TextFilter
                 xmlw.WriteStartElement("filterinfo");
 
                 xmlw.WriteStartElement("filterversion");
-                xmlw.WriteString(DateTime.Now.ToString("yyMMddss"));
+                xmlw.WriteString(DateTime.Now.ToString("yy-MM-dd-hh-mm-ss"));
                 xmlw.WriteEndElement();
 
                 xmlw.WriteStartElement("filternotes");

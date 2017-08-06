@@ -81,5 +81,6 @@ namespace TextFilter
         void SaveFileAsExecuted(object sender);
 
         void SaveFileExecuted(object sender);
+        void SaveModifiedFile(object sender);
     }
 }
