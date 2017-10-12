@@ -5,6 +5,7 @@
 // Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
 // file="http://dlaa.me/blog/post/9917797">
+// file="https://bhrnjica.net/2014/04/28/drag-and-drop-item-outside-wpf-application/">
 //
 // ************************************************************************************
 

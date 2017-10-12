@@ -37,6 +37,10 @@
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
+                                      Path=LogViewModel.DiplayAllDialogCommand}"
+                    CommandParameter="{Binding}"
+                    Gesture="Ctrl+D" />
+        <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.ExportCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+E" />
@@ -154,6 +158,17 @@
                           Foreground="{Binding Source={StaticResource settings},
                                                Path=Settings.ForegroundColor}"
                           Header="copy file _path"
+                          Style="{DynamicResource MenuItemStyle1}" />
+                <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                          BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                          Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=LogViewModel.DisplayAllDialogCommand}"
+                          Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                          Header="view _all dialog"
+                          InputGestureText="Ctrl+D"
                           Style="{DynamicResource MenuItemStyle1}" />
                 <MenuItem Background="{Binding Source={StaticResource settings},
                                                Path=Settings.BackgroundColor}"
@@ -1776,6 +1791,17 @@
                                               Foreground="{Binding Source={StaticResource settings},
                                                                    Path=Settings.ForegroundColor}"
                                               Header="copy file path"
+                                              Style="{DynamicResource MenuItemStyle1}" />
+                                    <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                            Path=LogViewModel.DisplayAllDialogCommand}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                                              Header="view _all dialog"
+                                              InputGestureText="Ctrl+D"
                                               Style="{DynamicResource MenuItemStyle1}" />
                                     <MenuItem Background="{Binding Source={StaticResource settings},
                                                                    Path=Settings.BackgroundColor}"

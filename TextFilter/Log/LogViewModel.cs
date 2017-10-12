@@ -24,6 +24,8 @@ namespace TextFilter
     {
         public static LogFileContentItems UpdateLogFile;
 
+        private Command _displayAllDialogCommand;
+
         private Command _exportCommand;
 
         private LogFileItem _filteredSelectedItem;
@@ -61,6 +63,24 @@ namespace TextFilter
 
         public delegate void LogFileContentItems(LogFile logFile);
 
+        public Command DiplayAllDialogCommand
+        {
+            get
+            {
+                if(_displayAllDialogCommand == null)
+                {
+                    _displayAllDialogCommand = new Command(DisplayAllDialogExecuted);
+                }
+
+                _displayAllDialogCommand.CanExecute = true;
+                return _displayAllDialogCommand;
+            }
+
+            set
+            {
+                _displayAllDialogCommand = value;
+            }
+        }
         public Command ExportCommand
         {
             get
@@ -205,7 +225,11 @@ namespace TextFilter
             throw new NotImplementedException();
         }
 
-        public void ExportExecuted(object sender)
+        public void DisplayAllDialogExecuted(object sender)
+        {
+
+        }
+            public void ExportExecuted(object sender)
         {
             try
             {
