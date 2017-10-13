@@ -1,0 +1,30 @@
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.AttachableCollection`1: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.Behavior: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.BehaviorCollection: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.CustomPropertyValueEditor: type is a value type.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.CustomPropertyValueEditorAttribute: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.DefaultTriggerAttribute: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.DependencyObjectHelper: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.EventObserver: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TriggerBase: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.EventTriggerBase: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.Interaction: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TriggerAction: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.InvokeCommandAction: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.NameResolvedEventArgs: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.NameResolver: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TargetedTriggerAction: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TriggerActionCollection: type has no family visible contructors.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TriggerCollection: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for System.Windows.Interactivity.TypeConstraintAttribute: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for Microsoft.Expression.BlendSDK.RuntimeVersion: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for Microsoft.Expression.BlendSDK.VersionConstants: type is sealed.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate stub for ExceptionStringTable: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for System.Windows.Interactivity.IAttachedObject: type is an interface.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for System.Windows.Interactivity.CustomPropertyValueEditor: type is an enum.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for System.Windows.Interactivity.DependencyObjectHelper+<GetSelfAndAncestors>d__0: type is not supported because of internal limitations.
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for System.Windows.Interactivity.NameResolvedEventArgs: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for System.Windows.Interactivity.NameResolver: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for Microsoft.Expression.BlendSDK.RuntimeVersion: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for Microsoft.Expression.BlendSDK.VersionConstants: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).
+G:\github\textFilter\TextFilter\Fakes\System.Windows.Interactivity.fakes : warning : Cannot generate shim for ExceptionStringTable: type is not visible to exported or assembly(System.Windows.Interactivity.Fakes).

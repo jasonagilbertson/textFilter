@@ -1,0 +1,2180 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>System.Windows.Interactivity.Fakes</name>
+    </assembly>
+    <members>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1">
+            <summary>Shim type of System.Windows.Interactivity.AttachableCollection`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.#ctor(System.Windows.Interactivity.AttachableCollection{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of AttachableCollection`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of AttachableCollection`1.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.AttachDependencyObject">
+            <summary>Sets the shim of AttachableCollection`1.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.Detach">
+            <summary>Sets the shim of AttachableCollection`1.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.OnCollectionChangedObjectNotifyCollectionChangedEventArgs">
+            <summary>Sets the shim of AttachableCollection`1.OnCollectionChanged(Object sender, NotifyCollectionChangedEventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.VerifyAddT0">
+            <summary>Sets the shim of AttachableCollection`1.VerifyAdd(!0 item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AllInstances.VerifySnapshotIntegrity">
+            <summary>Sets the shim of AttachableCollection`1.VerifySnapshotIntegrity()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AssociatedObjectGet">
+            <summary>Sets the shim of AttachableCollection`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of AttachableCollection`1.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.AttachDependencyObject">
+            <summary>Sets the shim of AttachableCollection`1.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.Specialized.INotifyCollectionChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.ComponentModel.INotifyPropertyChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.ICollection)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.IEnumerable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.IList)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.Generic.ICollection{`0})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.Generic.IEnumerable{`0})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Bind(System.Collections.Generic.IList{`0})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Constructor">
+            <summary>Sets the shim of AttachableCollection`1.AttachableCollection`1()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.Detach">
+            <summary>Sets the shim of AttachableCollection`1.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.OnCollectionChangedObjectNotifyCollectionChangedEventArgs">
+            <summary>Sets the shim of AttachableCollection`1.OnCollectionChanged(Object sender, NotifyCollectionChangedEventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.VerifyAddT0">
+            <summary>Sets the shim of AttachableCollection`1.VerifyAdd(!0 item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimAttachableCollection`1.VerifySnapshotIntegrity">
+            <summary>Sets the shim of AttachableCollection`1.VerifySnapshotIntegrity()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehavior">
+            <summary>Shim type of System.Windows.Interactivity.Behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior.#ctor(System.Windows.Interactivity.Behavior)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AssociatedObjectChangedAddEventHandler">
+            <summary>Sets the shim of Behavior.add_AssociatedObjectChanged(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AssociatedObjectChangedRemoveEventHandler">
+            <summary>Sets the shim of Behavior.remove_AssociatedObjectChanged(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of Behavior.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of Behavior.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AssociatedTypeGet">
+            <summary>Sets the shim of Behavior.get_AssociatedType()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.AttachDependencyObject">
+            <summary>Sets the shim of Behavior.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of Behavior.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.Detach">
+            <summary>Sets the shim of Behavior.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.OnAssociatedObjectChanged">
+            <summary>Sets the shim of Behavior.OnAssociatedObjectChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.OnAttached">
+            <summary>Sets the shim of Behavior.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AllInstances.OnDetaching">
+            <summary>Sets the shim of Behavior.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AssociatedObjectChangedAddEventHandler">
+            <summary>Sets the shim of Behavior.add_AssociatedObjectChanged(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AssociatedObjectChangedRemoveEventHandler">
+            <summary>Sets the shim of Behavior.remove_AssociatedObjectChanged(EventHandler value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AssociatedObjectGet">
+            <summary>Sets the shim of Behavior.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of Behavior.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AssociatedTypeGet">
+            <summary>Sets the shim of Behavior.get_AssociatedType()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.AttachDependencyObject">
+            <summary>Sets the shim of Behavior.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.ConstructorType">
+            <summary>Sets the shim of Behavior.Behavior(Type associatedType)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.CreateInstanceCore">
+            <summary>Sets the shim of Behavior.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.Detach">
+            <summary>Sets the shim of Behavior.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.OnAssociatedObjectChanged">
+            <summary>Sets the shim of Behavior.OnAssociatedObjectChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.OnAttached">
+            <summary>Sets the shim of Behavior.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior.OnDetaching">
+            <summary>Sets the shim of Behavior.OnDetaching()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehavior`1">
+            <summary>Shim type of System.Windows.Interactivity.Behavior`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior`1.#ctor(System.Windows.Interactivity.Behavior{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehavior`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior`1.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of Behavior`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior`1.AssociatedObjectGet">
+            <summary>Sets the shim of Behavior`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehavior`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehavior`1.Constructor">
+            <summary>Sets the shim of Behavior`1.Behavior`1()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehaviorCollection">
+            <summary>Shim type of System.Windows.Interactivity.BehaviorCollection</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.#ctor(System.Windows.Interactivity.BehaviorCollection)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of BehaviorCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances.ItemAddedBehavior">
+            <summary>Sets the shim of BehaviorCollection.ItemAdded(Behavior item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances.ItemRemovedBehavior">
+            <summary>Sets the shim of BehaviorCollection.ItemRemoved(Behavior item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances.OnAttached">
+            <summary>Sets the shim of BehaviorCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.AllInstances.OnDetaching">
+            <summary>Sets the shim of BehaviorCollection.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.Specialized.INotifyCollectionChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.ComponentModel.INotifyPropertyChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.ICollection)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.IEnumerable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.IList)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.Generic.ICollection{System.Windows.Interactivity.Behavior})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.Generic.IEnumerable{System.Windows.Interactivity.Behavior})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Bind(System.Collections.Generic.IList{System.Windows.Interactivity.Behavior})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.Constructor">
+            <summary>Sets the shim of BehaviorCollection.BehaviorCollection()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.CreateInstanceCore">
+            <summary>Sets the shim of BehaviorCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.ItemAddedBehavior">
+            <summary>Sets the shim of BehaviorCollection.ItemAdded(Behavior item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.ItemRemovedBehavior">
+            <summary>Sets the shim of BehaviorCollection.ItemRemoved(Behavior item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.OnAttached">
+            <summary>Sets the shim of BehaviorCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimBehaviorCollection.OnDetaching">
+            <summary>Sets the shim of BehaviorCollection.OnDetaching()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute">
+            <summary>Shim type of System.Windows.Interactivity.CustomPropertyValueEditorAttribute</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.#ctor(System.Windows.Interactivity.CustomPropertyValueEditorAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.AllInstances.CustomPropertyValueEditorGet">
+            <summary>Sets the shim of CustomPropertyValueEditorAttribute.get_CustomPropertyValueEditor()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.AllInstances.CustomPropertyValueEditorSetCustomPropertyValueEditor">
+            <summary>Sets the shim of CustomPropertyValueEditorAttribute.set_CustomPropertyValueEditor(CustomPropertyValueEditor value)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.ConstructorCustomPropertyValueEditor">
+            <summary>Sets the shim of CustomPropertyValueEditorAttribute.CustomPropertyValueEditorAttribute(CustomPropertyValueEditor customPropertyValueEditor)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.CustomPropertyValueEditorGet">
+            <summary>Sets the shim of CustomPropertyValueEditorAttribute.get_CustomPropertyValueEditor()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimCustomPropertyValueEditorAttribute.CustomPropertyValueEditorSetCustomPropertyValueEditor">
+            <summary>Sets the shim of CustomPropertyValueEditorAttribute.set_CustomPropertyValueEditor(CustomPropertyValueEditor value)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute">
+            <summary>Shim type of System.Windows.Interactivity.DefaultTriggerAttribute</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.#ctor(System.Windows.Interactivity.DefaultTriggerAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.AllInstances.Instantiate">
+            <summary>Sets the shim of DefaultTriggerAttribute.Instantiate()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.AllInstances.ParametersGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_Parameters()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.AllInstances.TargetTypeGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_TargetType()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.AllInstances.TriggerTypeGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_TriggerType()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.ConstructorTypeTypeObject">
+            <summary>Sets the shim of DefaultTriggerAttribute.DefaultTriggerAttribute(Type targetType, Type triggerType, Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.ConstructorTypeTypeObjectArray">
+            <summary>Sets the shim of DefaultTriggerAttribute.DefaultTriggerAttribute(Type targetType, Type triggerType, Object[] parameters)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.Instantiate">
+            <summary>Sets the shim of DefaultTriggerAttribute.Instantiate()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.ParametersGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_Parameters()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.TargetTypeGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_TargetType()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDefaultTriggerAttribute.TriggerTypeGet">
+            <summary>Sets the shim of DefaultTriggerAttribute.get_TriggerType()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper">
+            <summary>Shim type of System.Windows.Interactivity.DependencyObjectHelper</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimDependencyObjectHelper.GetSelfAndAncestorsDependencyObject">
+            <summary>Sets the shim of DependencyObjectHelper.GetSelfAndAncestors(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventObserver">
+            <summary>Shim type of System.Windows.Interactivity.EventObserver</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventObserver.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventObserver.#ctor(System.Windows.Interactivity.EventObserver)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventObserver.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventObserver.AllInstances.Dispose">
+            <summary>Sets the shim of EventObserver.Dispose()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventObserver.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventObserver.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventObserver.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventObserver.Bind(System.IDisposable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventObserver.ConstructorEventInfoObjectDelegate">
+            <summary>Sets the shim of EventObserver.EventObserver(EventInfo eventInfo, Object target, Delegate handler)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventObserver.Dispose">
+            <summary>Sets the shim of EventObserver.Dispose()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTrigger">
+            <summary>Shim type of System.Windows.Interactivity.EventTrigger</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.#ctor(System.Windows.Interactivity.EventTrigger)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTrigger.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.AllInstances.EventNameGet">
+            <summary>Sets the shim of EventTrigger.get_EventName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.AllInstances.EventNameSetString">
+            <summary>Sets the shim of EventTrigger.set_EventName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.AllInstances.GetEventName">
+            <summary>Sets the shim of EventTrigger.GetEventName()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTrigger.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.Constructor">
+            <summary>Sets the shim of EventTrigger.EventTrigger()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.ConstructorString">
+            <summary>Sets the shim of EventTrigger.EventTrigger(String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.EventNameGet">
+            <summary>Sets the shim of EventTrigger.get_EventName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.EventNameSetString">
+            <summary>Sets the shim of EventTrigger.set_EventName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.GetEventName">
+            <summary>Sets the shim of EventTrigger.GetEventName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.OnEventNameChangedObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of EventTrigger.OnEventNameChanged(Object sender, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTrigger.StaticConstructor">
+            <summary>Sets the shim of EventTrigger.EventTrigger()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTriggerBase">
+            <summary>Shim type of System.Windows.Interactivity.EventTriggerBase</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.#ctor(System.Windows.Interactivity.EventTriggerBase)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of EventTriggerBase.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.IsLoadedRegisteredGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsLoadedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.IsLoadedRegisteredSetBoolean">
+            <summary>Sets the shim of EventTriggerBase.set_IsLoadedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.IsSourceChangedRegisteredGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsSourceChangedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.IsSourceChangedRegisteredSetBoolean">
+            <summary>Sets the shim of EventTriggerBase.set_IsSourceChangedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.IsSourceNameSetGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsSourceNameSet()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnAttached">
+            <summary>Sets the shim of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnBehaviorHostChangedObjectEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnBehaviorHostChanged(Object sender, EventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnDetaching">
+            <summary>Sets the shim of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnEventEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnEventImplObjectEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnEventImpl(Object sender, EventArgs eventArgs)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnEventNameChangedStringString">
+            <summary>Sets the shim of EventTriggerBase.OnEventNameChanged(String oldEventName, String newEventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnSourceChangedImplObjectObject">
+            <summary>Sets the shim of EventTriggerBase.OnSourceChangedImpl(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.OnSourceChangedObjectObject">
+            <summary>Sets the shim of EventTriggerBase.OnSourceChanged(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.RegisterEventObjectString">
+            <summary>Sets the shim of EventTriggerBase.RegisterEvent(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.RegisterLoadedFrameworkElement">
+            <summary>Sets the shim of EventTriggerBase.RegisterLoaded(FrameworkElement associatedElement)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.RegisterSourceChanged">
+            <summary>Sets the shim of EventTriggerBase.RegisterSourceChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceGet">
+            <summary>Sets the shim of EventTriggerBase.get_Source()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceNameGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceNameSetString">
+            <summary>Sets the shim of EventTriggerBase.set_SourceName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceObjectGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceObjectSetObject">
+            <summary>Sets the shim of EventTriggerBase.set_SourceObject(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.SourceTypeConstraintGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.UnregisterEventImplObjectString">
+            <summary>Sets the shim of EventTriggerBase.UnregisterEventImpl(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.UnregisterEventObjectString">
+            <summary>Sets the shim of EventTriggerBase.UnregisterEvent(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.UnregisterLoadedFrameworkElement">
+            <summary>Sets the shim of EventTriggerBase.UnregisterLoaded(FrameworkElement associatedElement)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AllInstances.UnregisterSourceChanged">
+            <summary>Sets the shim of EventTriggerBase.UnregisterSourceChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of EventTriggerBase.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.ConstructorType">
+            <summary>Sets the shim of EventTriggerBase.EventTriggerBase(Type sourceTypeConstraint)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsLoadedRegisteredGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsLoadedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsLoadedRegisteredSetBoolean">
+            <summary>Sets the shim of EventTriggerBase.set_IsLoadedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsSourceChangedRegisteredGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsSourceChangedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsSourceChangedRegisteredSetBoolean">
+            <summary>Sets the shim of EventTriggerBase.set_IsSourceChangedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsSourceNameSetGet">
+            <summary>Sets the shim of EventTriggerBase.get_IsSourceNameSet()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.IsValidEventEventInfo">
+            <summary>Sets the shim of EventTriggerBase.IsValidEvent(EventInfo eventInfo)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnAttached">
+            <summary>Sets the shim of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnBehaviorHostChangedObjectEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnBehaviorHostChanged(Object sender, EventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnDetaching">
+            <summary>Sets the shim of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnEventEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnEventImplObjectEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnEventImpl(Object sender, EventArgs eventArgs)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnEventNameChangedStringString">
+            <summary>Sets the shim of EventTriggerBase.OnEventNameChanged(String oldEventName, String newEventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnSourceChangedImplObjectObject">
+            <summary>Sets the shim of EventTriggerBase.OnSourceChangedImpl(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnSourceChangedObjectObject">
+            <summary>Sets the shim of EventTriggerBase.OnSourceChanged(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnSourceNameChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnSourceNameChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.OnSourceObjectChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of EventTriggerBase.OnSourceObjectChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.RegisterEventObjectString">
+            <summary>Sets the shim of EventTriggerBase.RegisterEvent(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.RegisterLoadedFrameworkElement">
+            <summary>Sets the shim of EventTriggerBase.RegisterLoaded(FrameworkElement associatedElement)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.RegisterSourceChanged">
+            <summary>Sets the shim of EventTriggerBase.RegisterSourceChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceGet">
+            <summary>Sets the shim of EventTriggerBase.get_Source()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceNameGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceNameSetString">
+            <summary>Sets the shim of EventTriggerBase.set_SourceName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceObjectGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceObjectSetObject">
+            <summary>Sets the shim of EventTriggerBase.set_SourceObject(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.SourceTypeConstraintGet">
+            <summary>Sets the shim of EventTriggerBase.get_SourceTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.StaticConstructor">
+            <summary>Sets the shim of EventTriggerBase.EventTriggerBase()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.UnregisterEventImplObjectString">
+            <summary>Sets the shim of EventTriggerBase.UnregisterEventImpl(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.UnregisterEventObjectString">
+            <summary>Sets the shim of EventTriggerBase.UnregisterEvent(Object obj, String eventName)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.UnregisterLoadedFrameworkElement">
+            <summary>Sets the shim of EventTriggerBase.UnregisterLoaded(FrameworkElement associatedElement)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase.UnregisterSourceChanged">
+            <summary>Sets the shim of EventTriggerBase.UnregisterSourceChanged()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1">
+            <summary>Shim type of System.Windows.Interactivity.EventTriggerBase`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.#ctor(System.Windows.Interactivity.EventTriggerBase{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.AllInstances.OnSourceChangedImplObjectObject">
+            <summary>Sets the shim of EventTriggerBase`1.OnSourceChangedImpl(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.AllInstances.OnSourceChangedT0T0">
+            <summary>Sets the shim of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.AllInstances.SourceGet">
+            <summary>Sets the shim of EventTriggerBase`1.get_Source()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.Constructor">
+            <summary>Sets the shim of EventTriggerBase`1.EventTriggerBase`1()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.OnSourceChangedImplObjectObject">
+            <summary>Sets the shim of EventTriggerBase`1.OnSourceChangedImpl(Object oldSource, Object newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.OnSourceChangedT0T0">
+            <summary>Sets the shim of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimEventTriggerBase`1.SourceGet">
+            <summary>Sets the shim of EventTriggerBase`1.get_Source()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimInteraction">
+            <summary>Shim type of System.Windows.Interactivity.Interaction</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInteraction.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInteraction.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInteraction.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.GetBehaviorsDependencyObject">
+            <summary>Sets the shim of Interaction.GetBehaviors(DependencyObject obj)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.GetTriggersDependencyObject">
+            <summary>Sets the shim of Interaction.GetTriggers(DependencyObject obj)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.IsElementLoadedFrameworkElement">
+            <summary>Sets the shim of Interaction.IsElementLoaded(FrameworkElement element)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.OnBehaviorsChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of Interaction.OnBehaviorsChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.OnTriggersChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of Interaction.OnTriggersChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.ShouldRunInDesignModeGet">
+            <summary>Sets the shim of Interaction.get_ShouldRunInDesignMode()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.ShouldRunInDesignModeSetBoolean">
+            <summary>Sets the shim of Interaction.set_ShouldRunInDesignMode(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInteraction.StaticConstructor">
+            <summary>Sets the shim of Interaction.Interaction()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction">
+            <summary>Shim type of System.Windows.Interactivity.InvokeCommandAction</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.#ctor(System.Windows.Interactivity.InvokeCommandAction)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandGet">
+            <summary>Sets the shim of InvokeCommandAction.get_Command()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandNameGet">
+            <summary>Sets the shim of InvokeCommandAction.get_CommandName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandNameSetString">
+            <summary>Sets the shim of InvokeCommandAction.set_CommandName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandParameterGet">
+            <summary>Sets the shim of InvokeCommandAction.get_CommandParameter()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandParameterSetObject">
+            <summary>Sets the shim of InvokeCommandAction.set_CommandParameter(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.CommandSetICommand">
+            <summary>Sets the shim of InvokeCommandAction.set_Command(ICommand value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.InvokeObject">
+            <summary>Sets the shim of InvokeCommandAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.AllInstances.ResolveCommand">
+            <summary>Sets the shim of InvokeCommandAction.ResolveCommand()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandGet">
+            <summary>Sets the shim of InvokeCommandAction.get_Command()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandNameGet">
+            <summary>Sets the shim of InvokeCommandAction.get_CommandName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandNameSetString">
+            <summary>Sets the shim of InvokeCommandAction.set_CommandName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandParameterGet">
+            <summary>Sets the shim of InvokeCommandAction.get_CommandParameter()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandParameterSetObject">
+            <summary>Sets the shim of InvokeCommandAction.set_CommandParameter(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.CommandSetICommand">
+            <summary>Sets the shim of InvokeCommandAction.set_Command(ICommand value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.Constructor">
+            <summary>Sets the shim of InvokeCommandAction.InvokeCommandAction()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.InvokeObject">
+            <summary>Sets the shim of InvokeCommandAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.ResolveCommand">
+            <summary>Sets the shim of InvokeCommandAction.ResolveCommand()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimInvokeCommandAction.StaticConstructor">
+            <summary>Sets the shim of InvokeCommandAction.InvokeCommandAction()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs">
+            <summary>Shim type of System.Windows.Interactivity.PreviewInvokeEventArgs</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.#ctor(System.Windows.Interactivity.PreviewInvokeEventArgs)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.AllInstances.CancellingGet">
+            <summary>Sets the shim of PreviewInvokeEventArgs.get_Cancelling()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.AllInstances.CancellingSetBoolean">
+            <summary>Sets the shim of PreviewInvokeEventArgs.set_Cancelling(Boolean value)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.CancellingGet">
+            <summary>Sets the shim of PreviewInvokeEventArgs.get_Cancelling()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.CancellingSetBoolean">
+            <summary>Sets the shim of PreviewInvokeEventArgs.set_Cancelling(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimPreviewInvokeEventArgs.Constructor">
+            <summary>Sets the shim of PreviewInvokeEventArgs.PreviewInvokeEventArgs()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction">
+            <summary>Shim type of System.Windows.Interactivity.TargetedTriggerAction</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.#ctor(System.Windows.Interactivity.TargetedTriggerAction)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.IsTargetChangedRegisteredGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_IsTargetChangedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.IsTargetChangedRegisteredSetBoolean">
+            <summary>Sets the shim of TargetedTriggerAction.set_IsTargetChangedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.IsTargetNameSetGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_IsTargetNameSet()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.OnAttached">
+            <summary>Sets the shim of TargetedTriggerAction.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.OnBehaviorHostChangedObjectEventArgs">
+            <summary>Sets the shim of TargetedTriggerAction.OnBehaviorHostChanged(Object sender, EventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.OnDetaching">
+            <summary>Sets the shim of TargetedTriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.OnTargetChangedImplObjectObject">
+            <summary>Sets the shim of TargetedTriggerAction.OnTargetChangedImpl(Object oldTarget, Object newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.RegisterTargetChanged">
+            <summary>Sets the shim of TargetedTriggerAction.RegisterTargetChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_Target()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetNameGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetNameSetString">
+            <summary>Sets the shim of TargetedTriggerAction.set_TargetName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetObjectGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetObjectSetObject">
+            <summary>Sets the shim of TargetedTriggerAction.set_TargetObject(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.TargetTypeConstraintGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AllInstances.UnregisterTargetChanged">
+            <summary>Sets the shim of TargetedTriggerAction.UnregisterTargetChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.ConstructorType">
+            <summary>Sets the shim of TargetedTriggerAction.TargetedTriggerAction(Type targetTypeConstraint)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.IsTargetChangedRegisteredGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_IsTargetChangedRegistered()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.IsTargetChangedRegisteredSetBoolean">
+            <summary>Sets the shim of TargetedTriggerAction.set_IsTargetChangedRegistered(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.IsTargetNameSetGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_IsTargetNameSet()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnAttached">
+            <summary>Sets the shim of TargetedTriggerAction.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnBehaviorHostChangedObjectEventArgs">
+            <summary>Sets the shim of TargetedTriggerAction.OnBehaviorHostChanged(Object sender, EventArgs e)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnDetaching">
+            <summary>Sets the shim of TargetedTriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnTargetChangedImplObjectObject">
+            <summary>Sets the shim of TargetedTriggerAction.OnTargetChangedImpl(Object oldTarget, Object newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnTargetNameChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of TargetedTriggerAction.OnTargetNameChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.OnTargetObjectChangedDependencyObjectDependencyPropertyChangedEventArgs">
+            <summary>Sets the shim of TargetedTriggerAction.OnTargetObjectChanged(DependencyObject obj, DependencyPropertyChangedEventArgs args)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.RegisterTargetChanged">
+            <summary>Sets the shim of TargetedTriggerAction.RegisterTargetChanged()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.StaticConstructor">
+            <summary>Sets the shim of TargetedTriggerAction.TargetedTriggerAction()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_Target()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetNameGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetName()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetNameSetString">
+            <summary>Sets the shim of TargetedTriggerAction.set_TargetName(String value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetObjectGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetObjectSetObject">
+            <summary>Sets the shim of TargetedTriggerAction.set_TargetObject(Object value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.TargetTypeConstraintGet">
+            <summary>Sets the shim of TargetedTriggerAction.get_TargetTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction.UnregisterTargetChanged">
+            <summary>Sets the shim of TargetedTriggerAction.UnregisterTargetChanged()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1">
+            <summary>Shim type of System.Windows.Interactivity.TargetedTriggerAction`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.#ctor(System.Windows.Interactivity.TargetedTriggerAction{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.AllInstances.OnTargetChangedImplObjectObject">
+            <summary>Sets the shim of TargetedTriggerAction`1.OnTargetChangedImpl(Object oldTarget, Object newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.AllInstances.OnTargetChangedT0T0">
+            <summary>Sets the shim of TargetedTriggerAction`1.OnTargetChanged(!0 oldTarget, !0 newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.AllInstances.TargetGet">
+            <summary>Sets the shim of TargetedTriggerAction`1.get_Target()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.Constructor">
+            <summary>Sets the shim of TargetedTriggerAction`1.TargetedTriggerAction`1()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.OnTargetChangedImplObjectObject">
+            <summary>Sets the shim of TargetedTriggerAction`1.OnTargetChangedImpl(Object oldTarget, Object newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.OnTargetChangedT0T0">
+            <summary>Sets the shim of TargetedTriggerAction`1.OnTargetChanged(!0 oldTarget, !0 newTarget)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTargetedTriggerAction`1.TargetGet">
+            <summary>Sets the shim of TargetedTriggerAction`1.get_Target()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerAction">
+            <summary>Shim type of System.Windows.Interactivity.TriggerAction</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction.#ctor(System.Windows.Interactivity.TriggerAction)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerAction.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of TriggerAction.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerAction.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.AttachDependencyObject">
+            <summary>Sets the shim of TriggerAction.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.CallInvokeObject">
+            <summary>Sets the shim of TriggerAction.CallInvoke(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.Detach">
+            <summary>Sets the shim of TriggerAction.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.IsEnabledGet">
+            <summary>Sets the shim of TriggerAction.get_IsEnabled()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.IsEnabledSetBoolean">
+            <summary>Sets the shim of TriggerAction.set_IsEnabled(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.IsHostedGet">
+            <summary>Sets the shim of TriggerAction.get_IsHosted()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.IsHostedSetBoolean">
+            <summary>Sets the shim of TriggerAction.set_IsHosted(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.OnAttached">
+            <summary>Sets the shim of TriggerAction.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AllInstances.OnDetaching">
+            <summary>Sets the shim of TriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerAction.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of TriggerAction.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerAction.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.AttachDependencyObject">
+            <summary>Sets the shim of TriggerAction.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.CallInvokeObject">
+            <summary>Sets the shim of TriggerAction.CallInvoke(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.ConstructorType">
+            <summary>Sets the shim of TriggerAction.TriggerAction(Type associatedObjectTypeConstraint)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.CreateInstanceCore">
+            <summary>Sets the shim of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.Detach">
+            <summary>Sets the shim of TriggerAction.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.IsEnabledGet">
+            <summary>Sets the shim of TriggerAction.get_IsEnabled()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.IsEnabledSetBoolean">
+            <summary>Sets the shim of TriggerAction.set_IsEnabled(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.IsHostedGet">
+            <summary>Sets the shim of TriggerAction.get_IsHosted()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.IsHostedSetBoolean">
+            <summary>Sets the shim of TriggerAction.set_IsHosted(Boolean value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.OnAttached">
+            <summary>Sets the shim of TriggerAction.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.OnDetaching">
+            <summary>Sets the shim of TriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction.StaticConstructor">
+            <summary>Sets the shim of TriggerAction.TriggerAction()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerAction`1">
+            <summary>Shim type of System.Windows.Interactivity.TriggerAction`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.#ctor(System.Windows.Interactivity.TriggerAction{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerAction`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerAction`1.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerAction`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerAction`1.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerAction`1.Constructor">
+            <summary>Sets the shim of TriggerAction`1.TriggerAction`1()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection">
+            <summary>Shim type of System.Windows.Interactivity.TriggerActionCollection</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.#ctor(System.Windows.Interactivity.TriggerActionCollection)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of TriggerActionCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances.ItemAddedTriggerAction">
+            <summary>Sets the shim of TriggerActionCollection.ItemAdded(TriggerAction item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances.ItemRemovedTriggerAction">
+            <summary>Sets the shim of TriggerActionCollection.ItemRemoved(TriggerAction item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances.OnAttached">
+            <summary>Sets the shim of TriggerActionCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.AllInstances.OnDetaching">
+            <summary>Sets the shim of TriggerActionCollection.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.Specialized.INotifyCollectionChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.ComponentModel.INotifyPropertyChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.ICollection)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.IEnumerable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.IList)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.Generic.ICollection{System.Windows.Interactivity.TriggerAction})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.Generic.IEnumerable{System.Windows.Interactivity.TriggerAction})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Bind(System.Collections.Generic.IList{System.Windows.Interactivity.TriggerAction})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.Constructor">
+            <summary>Sets the shim of TriggerActionCollection.TriggerActionCollection()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.CreateInstanceCore">
+            <summary>Sets the shim of TriggerActionCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.ItemAddedTriggerAction">
+            <summary>Sets the shim of TriggerActionCollection.ItemAdded(TriggerAction item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.ItemRemovedTriggerAction">
+            <summary>Sets the shim of TriggerActionCollection.ItemRemoved(TriggerAction item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.OnAttached">
+            <summary>Sets the shim of TriggerActionCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerActionCollection.OnDetaching">
+            <summary>Sets the shim of TriggerActionCollection.OnDetaching()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerBase">
+            <summary>Shim type of System.Windows.Interactivity.TriggerBase</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase.#ctor(System.Windows.Interactivity.TriggerBase)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.ActionsGet">
+            <summary>Sets the shim of TriggerBase.get_Actions()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.ActionsGet">
+            <summary>Sets the shim of TriggerBase.get_Actions()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerBase.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of TriggerBase.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerBase.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.AttachDependencyObject">
+            <summary>Sets the shim of TriggerBase.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.Detach">
+            <summary>Sets the shim of TriggerBase.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.InvokeActionsObject">
+            <summary>Sets the shim of TriggerBase.InvokeActions(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.OnAttached">
+            <summary>Sets the shim of TriggerBase.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.OnDetaching">
+            <summary>Sets the shim of TriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.PreviewInvokeAddEventHandlerOfPreviewInvokeEventArgs">
+            <summary>Sets the shim of TriggerBase.add_PreviewInvoke(EventHandler`1&lt;PreviewInvokeEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AllInstances.PreviewInvokeRemoveEventHandlerOfPreviewInvokeEventArgs">
+            <summary>Sets the shim of TriggerBase.remove_PreviewInvoke(EventHandler`1&lt;PreviewInvokeEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerBase.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AssociatedObjectSystemWindowsInteractivityIAttachedObjectget">
+            <summary>Sets the shim of TriggerBase.System.Windows.Interactivity.IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerBase.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.AttachDependencyObject">
+            <summary>Sets the shim of TriggerBase.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.ConstructorType">
+            <summary>Sets the shim of TriggerBase.TriggerBase(Type associatedObjectTypeConstraint)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.CreateInstanceCore">
+            <summary>Sets the shim of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.Detach">
+            <summary>Sets the shim of TriggerBase.Detach()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.InvokeActionsObject">
+            <summary>Sets the shim of TriggerBase.InvokeActions(Object parameter)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.OnAttached">
+            <summary>Sets the shim of TriggerBase.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.OnDetaching">
+            <summary>Sets the shim of TriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.PreviewInvokeAddEventHandlerOfPreviewInvokeEventArgs">
+            <summary>Sets the shim of TriggerBase.add_PreviewInvoke(EventHandler`1&lt;PreviewInvokeEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.PreviewInvokeRemoveEventHandlerOfPreviewInvokeEventArgs">
+            <summary>Sets the shim of TriggerBase.remove_PreviewInvoke(EventHandler`1&lt;PreviewInvokeEventArgs&gt; value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase.StaticConstructor">
+            <summary>Sets the shim of TriggerBase.TriggerBase()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerBase`1">
+            <summary>Shim type of System.Windows.Interactivity.TriggerBase`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.#ctor(System.Windows.Interactivity.TriggerBase{`0})">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.AllInstances.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerBase`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.AllInstances.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerBase`1.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.AssociatedObjectGet">
+            <summary>Sets the shim of TriggerBase`1.get_AssociatedObject()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.AssociatedObjectTypeConstraintGet">
+            <summary>Sets the shim of TriggerBase`1.get_AssociatedObjectTypeConstraint()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerBase`1.Constructor">
+            <summary>Sets the shim of TriggerBase`1.TriggerBase`1()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerCollection">
+            <summary>Shim type of System.Windows.Interactivity.TriggerCollection</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.#ctor(System.Windows.Interactivity.TriggerCollection)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances.CreateInstanceCore">
+            <summary>Sets the shim of TriggerCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances.ItemAddedTriggerBase">
+            <summary>Sets the shim of TriggerCollection.ItemAdded(TriggerBase item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances.ItemRemovedTriggerBase">
+            <summary>Sets the shim of TriggerCollection.ItemRemoved(TriggerBase item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances.OnAttached">
+            <summary>Sets the shim of TriggerCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.AllInstances.OnDetaching">
+            <summary>Sets the shim of TriggerCollection.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Windows.Media.Animation.IAnimatable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.Specialized.INotifyCollectionChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.ComponentModel.INotifyPropertyChanged)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Windows.Interactivity.IAttachedObject)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.ICollection)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.IEnumerable)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.IList)">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.Generic.ICollection{System.Windows.Interactivity.TriggerBase})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.Generic.IEnumerable{System.Windows.Interactivity.TriggerBase})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Bind(System.Collections.Generic.IList{System.Windows.Interactivity.TriggerBase})">
+            <summary>Binds the members of the interface to the shim.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.Constructor">
+            <summary>Sets the shim of TriggerCollection.TriggerCollection()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.CreateInstanceCore">
+            <summary>Sets the shim of TriggerCollection.CreateInstanceCore()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.ItemAddedTriggerBase">
+            <summary>Sets the shim of TriggerCollection.ItemAdded(TriggerBase item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.ItemRemovedTriggerBase">
+            <summary>Sets the shim of TriggerCollection.ItemRemoved(TriggerBase item)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.OnAttached">
+            <summary>Sets the shim of TriggerCollection.OnAttached()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTriggerCollection.OnDetaching">
+            <summary>Sets the shim of TriggerCollection.OnDetaching()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute">
+            <summary>Shim type of System.Windows.Interactivity.TypeConstraintAttribute</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.#ctor">
+            <summary>Initializes a new shim instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.#ctor(System.Windows.Interactivity.TypeConstraintAttribute)">
+            <summary>Initializes a new shim for the given instance</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.AllInstances">
+            <summary>Define shims for all instances members</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.AllInstances.ConstraintGet">
+            <summary>Sets the shim of TypeConstraintAttribute.get_Constraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.AllInstances.ConstraintSetType">
+            <summary>Sets the shim of TypeConstraintAttribute.set_Constraint(Type value)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.BehaveAsCurrent">
+            <summary>Assigns the &apos;Current&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.BehaveAsNotImplemented">
+            <summary>Assigns the &apos;NotImplemented&apos; behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.Behavior">
+            <summary>Assigns the behavior for all methods of the shimmed type</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.ConstraintGet">
+            <summary>Sets the shim of TypeConstraintAttribute.get_Constraint()</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.ConstraintSetType">
+            <summary>Sets the shim of TypeConstraintAttribute.set_Constraint(Type value)</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.ShimTypeConstraintAttribute.ConstructorType">
+            <summary>Sets the shim of TypeConstraintAttribute.TypeConstraintAttribute(Type constraint)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubBehavior`1">
+            <summary>Stub type of System.Windows.Interactivity.Behavior`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubBehavior`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.CreateInstanceCore">
+            <summary>Sets the stub of Behavior.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.CreateInstanceCore01">
+            <summary>Sets the stub of Behavior.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.InitializeStub">
+            <summary>Initializes a new instance of type StubBehavior</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubBehavior`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubBehavior`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.OnAttached">
+            <summary>Sets the stub of Behavior.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.OnAttached01">
+            <summary>Sets the stub of Behavior.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.OnDetaching">
+            <summary>Sets the stub of Behavior.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.OnDetaching01">
+            <summary>Sets the stub of Behavior.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubBehavior`1.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubBehavior`1.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubEventTrigger">
+            <summary>Stub type of System.Windows.Interactivity.EventTrigger</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.#ctor(System.String)">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTrigger.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.CreateInstanceCore">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.CreateInstanceCore01">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.GetEventName">
+            <summary>Sets the stub of EventTrigger.GetEventName()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.GetEventName01">
+            <summary>Sets the stub of EventTrigger.GetEventName()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.InitializeStub">
+            <summary>Initializes a new instance of type StubEventTrigger</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTrigger.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTrigger.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnAttached">
+            <summary>Sets the stub of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnAttached01">
+            <summary>Sets the stub of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnDetaching">
+            <summary>Sets the stub of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnDetaching01">
+            <summary>Sets the stub of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnEvent(System.EventArgs)">
+            <summary>Sets the stub of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnEventEventArgs">
+            <summary>Sets the stub of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.OnSourceChanged(System.Object,System.Object)">
+            <summary>Sets the stub of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.OnSourceChangedObjectObject">
+            <summary>Sets the stub of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTrigger.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTrigger.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1">
+            <summary>Stub type of System.Windows.Interactivity.EventTriggerBase`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CreateInstanceCore">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.CreateInstanceCore01">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetEventName">
+            <summary>Sets the stub of EventTriggerBase.GetEventName()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.GetEventName01">
+            <summary>Sets the stub of EventTriggerBase.GetEventName()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.InitializeStub">
+            <summary>Initializes a new instance of type StubEventTriggerBase</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnAttached">
+            <summary>Sets the stub of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnAttached01">
+            <summary>Sets the stub of EventTriggerBase.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnDetaching">
+            <summary>Sets the stub of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnDetaching01">
+            <summary>Sets the stub of EventTriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnEvent(System.EventArgs)">
+            <summary>Sets the stub of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnEventEventArgs">
+            <summary>Sets the stub of EventTriggerBase.OnEvent(EventArgs eventArgs)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnSourceChanged(`0,`0)">
+            <summary>Sets the stub of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.OnSourceChangedT0T0">
+            <summary>Sets the stub of EventTriggerBase`1.OnSourceChanged(!0 oldSource, !0 newSource)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubEventTriggerBase`1.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubIAttachedObject">
+            <summary>Stub type of System.Windows.Interactivity.IAttachedObject</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubIAttachedObject.#ctor">
+            <summary>Initializes a new instance of type StubIAttachedObject</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubIAttachedObject.System#Windows#Interactivity#IAttachedObject#AssociatedObject">
+            <summary>Sets the stub of IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubIAttachedObject.AssociatedObjectGet">
+            <summary>Sets the stub of IAttachedObject.get_AssociatedObject()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubIAttachedObject.AttachDependencyObject">
+            <summary>Sets the stub of IAttachedObject.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubIAttachedObject.Detach">
+            <summary>Sets the stub of IAttachedObject.Detach()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubIAttachedObject.System#Windows#Interactivity#IAttachedObject#Attach(System.Windows.DependencyObject)">
+            <summary>Sets the stub of IAttachedObject.Attach(DependencyObject dependencyObject)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubIAttachedObject.System#Windows#Interactivity#IAttachedObject#Detach">
+            <summary>Sets the stub of IAttachedObject.Detach()</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs">
+            <summary>Stub type of System.Windows.Interactivity.PreviewInvokeEventArgs</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs.InitializeStub">
+            <summary>Initializes a new instance of type StubPreviewInvokeEventArgs</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubPreviewInvokeEventArgs.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1">
+            <summary>Stub type of System.Windows.Interactivity.TargetedTriggerAction`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CreateInstanceCore">
+            <summary>Sets the stub of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.CreateInstanceCore01">
+            <summary>Sets the stub of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.InitializeStub">
+            <summary>Initializes a new instance of type StubTargetedTriggerAction</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.Invoke(System.Object)">
+            <summary>Sets the stub of TriggerAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.InvokeObject">
+            <summary>Sets the stub of TriggerAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnAttached">
+            <summary>Sets the stub of TargetedTriggerAction.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnAttached01">
+            <summary>Sets the stub of TargetedTriggerAction.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnDetaching">
+            <summary>Sets the stub of TargetedTriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnDetaching01">
+            <summary>Sets the stub of TargetedTriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnTargetChanged(`0,`0)">
+            <summary>Sets the stub of TargetedTriggerAction`1.OnTargetChanged(!0 oldTarget, !0 newTarget)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.OnTargetChangedT0T0">
+            <summary>Sets the stub of TargetedTriggerAction`1.OnTargetChanged(!0 oldTarget, !0 newTarget)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTargetedTriggerAction`1.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubTriggerAction`1">
+            <summary>Stub type of System.Windows.Interactivity.TriggerAction`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CreateInstanceCore">
+            <summary>Sets the stub of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.CreateInstanceCore01">
+            <summary>Sets the stub of TriggerAction.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.InitializeStub">
+            <summary>Initializes a new instance of type StubTriggerAction</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerAction`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerAction`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.Invoke(System.Object)">
+            <summary>Sets the stub of TriggerAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.InvokeObject">
+            <summary>Sets the stub of TriggerAction.Invoke(Object parameter)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnAttached">
+            <summary>Sets the stub of TriggerAction.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnAttached01">
+            <summary>Sets the stub of TriggerAction.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnDetaching">
+            <summary>Sets the stub of TriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnDetaching01">
+            <summary>Sets the stub of TriggerAction.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerAction`1.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerAction`1.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="T:System.Windows.Interactivity.Fakes.StubTriggerBase`1">
+            <summary>Stub type of System.Windows.Interactivity.TriggerBase`1</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.#ctor">
+            <summary>Initializes a new instance</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CallBase">
+            <summary>Gets or sets a value that indicates if the base method should be called instead of the fallback behavior</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CloneCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CloneCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CloneCurrentValueCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CloneCurrentValueCoreFreezable">
+            <summary>Sets the stub of Freezable.CloneCurrentValueCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CreateInstanceCore">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.CreateInstanceCore01">
+            <summary>Sets the stub of TriggerBase.CreateInstanceCore()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.FreezeCore(System.Boolean)">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.FreezeCoreBoolean">
+            <summary>Sets the stub of Animatable.FreezeCore(Boolean isChecking)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.GetAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.GetAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.GetCurrentValueAsFrozenCore(System.Windows.Freezable)">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.GetCurrentValueAsFrozenCoreFreezable">
+            <summary>Sets the stub of Freezable.GetCurrentValueAsFrozenCore(Freezable sourceFreezable)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.InitializeStub">
+            <summary>Initializes a new instance of type StubTriggerBase</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerBase`1.InstanceBehavior">
+            <summary>Gets or sets the instance behavior.</summary>
+        </member>
+        <member name="P:System.Windows.Interactivity.Fakes.StubTriggerBase`1.InstanceObserver">
+            <summary>Gets or sets the instance observer.</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnAttached">
+            <summary>Sets the stub of TriggerBase.OnAttached()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnAttached01">
+            <summary>Sets the stub of TriggerBase.OnAttached()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnChanged">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnChanged01">
+            <summary>Sets the stub of Freezable.OnChanged()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnDetaching">
+            <summary>Sets the stub of TriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnDetaching01">
+            <summary>Sets the stub of TriggerBase.OnDetaching()</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.OnPropertyChangedDependencyPropertyChangedEventArgs">
+            <summary>Sets the stub of Freezable.OnPropertyChanged(DependencyPropertyChangedEventArgs e)</summary>
+        </member>
+        <member name="M:System.Windows.Interactivity.Fakes.StubTriggerBase`1.ShouldSerializeProperty(System.Windows.DependencyProperty)">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+        <member name="F:System.Windows.Interactivity.Fakes.StubTriggerBase`1.ShouldSerializePropertyDependencyProperty">
+            <summary>Sets the stub of DependencyObject.ShouldSerializeProperty(DependencyProperty dp)</summary>
+        </member>
+    </members>
+</doc>
