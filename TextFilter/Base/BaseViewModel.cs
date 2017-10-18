@@ -530,7 +530,7 @@ namespace TextFilter
                 {
                     // launch new instance
                     SetStatus(string.Format("LostFocusExecuted:new instance:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
-                    NewWindow(currentFile);
+                    NewWindow(true, currentFile);
                 }
                 else
                 {

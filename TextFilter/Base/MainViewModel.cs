@@ -303,7 +303,7 @@ namespace TextFilter
             {
                 case OptionsDialog.OptionsDialogResult.apply:
                     {
-                        NewWindow();
+                        NewWindow(true);
                         Application.Current.Shutdown();
                         break;
                     }
@@ -498,7 +498,7 @@ namespace TextFilter
                             if (mbResult == MessageBoxResult.Yes)
                             {
                                 // todo: merge configs?
-                                NewWindow();
+                                NewWindow(true);
                                 Application.Current.Shutdown();
                             }
                         }

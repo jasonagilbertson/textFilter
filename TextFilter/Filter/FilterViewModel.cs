@@ -1050,7 +1050,7 @@ namespace TextFilter
             dlg.DefaultExt = ".rvf";
             dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
 
-            dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? Settings.FilterDirectory;
+            dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) != string.Empty ? Path.GetDirectoryName(tabItem.Tag): Settings.FilterDirectory;
 
             string extension = string.IsNullOrEmpty(Path.GetExtension(tabItem.Tag)) ? ".rvf" : Path.GetExtension(tabItem.Tag);
             string fileName = Path.GetFileNameWithoutExtension(tabItem.Tag) + extension;

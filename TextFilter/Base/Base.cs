@@ -26,6 +26,8 @@ namespace TextFilter
 
         private Command _duplicateWindowCommand;
 
+        private Command _newWindowCommand;
+
         public static event EventHandler<string> NewCurrentStatus;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -58,6 +60,20 @@ namespace TextFilter
             set { _duplicateWindowCommand = value; }
         }
 
+        public Command NewWindowCommand
+        {
+            get
+            {
+                if (_newWindowCommand == null)
+                {
+                    _newWindowCommand = new Command(NewWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
+
+                return _newWindowCommand;
+            }
+            set { _newWindowCommand = value; }
+        }
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -80,9 +96,13 @@ namespace TextFilter
 
         public void DuplicateWindowExecuted(object sender)
         {
-            NewWindow();
+            NewWindow(true);
         }
 
+        public void NewWindowExecuted(object sender)
+        {
+            NewWindow(false);
+        }
         public void ExecuteAsAdmin(string fileName, string arguments)
         {
             Process proc = new Process();
@@ -189,7 +209,7 @@ namespace TextFilter
             return null;
         }
 
-        public void NewWindow(string file = "")
+        public void NewWindow(bool withTabs = false, string file = "")
         {
             StringBuilder args = new StringBuilder();
 
@@ -198,7 +218,7 @@ namespace TextFilter
                 // unknown file type from drag out
                 args.Append(file);
             }
-            else
+            else if(withTabs)
             {
                 if (TextFilterSettings.Settings.CurrentFilterFiles.Count > 0)
                 {
