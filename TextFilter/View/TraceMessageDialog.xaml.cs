@@ -22,16 +22,15 @@ namespace TextFilter
     public partial class TraceMessageDialog : Window
     {
         private string _initialMessage = string.Empty;
-        private string _xmlMessage = string.Empty;
         private string _jsonMessage = string.Empty;
-
+        private string _xmlMessage = string.Empty;
         public TraceMessageDialog(string message, int id, string file)
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             _initialMessage = message;
             Title = string.Format("{0} - {1}", id, file);
-            textBoxTraceMessage.Text = _initialMessage.Replace(",", ",\r\n").Replace(";", ";\r\n").Replace(". ", ". \r\n").Replace("\t", "\r\n");
+            textBoxTraceMessage.Text = FormatMessage(_initialMessage);
             _xmlMessage = CheckXml(_initialMessage);
 
             if (!string.IsNullOrEmpty(_xmlMessage))
@@ -45,7 +44,7 @@ namespace TextFilter
                 string formattedJson = JsonFormat(jsonMessage.ToString());
                 if (formattedJson != string.Empty)
                 {
-                    textBoxTraceMessage.Text = string.Format("{0}\r\n{1}", _initialMessage.Replace(jsonMessage.ToString(), ""), formattedJson);
+                    textBoxTraceMessage.Text = string.Format("{0}\r\n{1}", FormatMessage(_initialMessage.Replace(jsonMessage.ToString(), "")), formattedJson);
                 }
             }
 
@@ -61,6 +60,7 @@ namespace TextFilter
             this.Hide();
             this.Close();
         }
+
         public string WaitForResult()
         {
             this.ShowDialog();
@@ -96,6 +96,10 @@ namespace TextFilter
             }
         }
 
+        private string FormatMessage(string initialMessage)
+        {
+            return initialMessage.Replace(",", ",\r\n").Replace(";", ";\r\n").Replace(". ", ". \r\n").Replace("\t", "\r\n");
+        }
         private string JsonFormat(string text)
         {
             try
