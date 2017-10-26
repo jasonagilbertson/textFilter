@@ -67,7 +67,7 @@ namespace TextFilter
         {
             get
             {
-                if(_displayAllDialogCommand == null)
+                if (_displayAllDialogCommand == null)
                 {
                     _displayAllDialogCommand = new Command(DisplayAllDialogExecuted);
                 }
@@ -229,7 +229,7 @@ namespace TextFilter
         {
 
         }
-            public void ExportExecuted(object sender)
+        public void ExportExecuted(object sender)
         {
             try
             {
@@ -411,9 +411,9 @@ namespace TextFilter
                     filterIndex = Convert.ToInt32(sender);
                     SetStatus(string.Format("LogViewModel.FindNextExecuted: sender is filter. filterindex: {0} index: {1} ", filterIndex, index));
                 }
-                
+
                 nextLogFileItem = CurrentFile().ContentItems.FirstOrDefault(x => x.FilterIndex == filterIndex && x.Index > index);
-                
+
                 if (nextLogFileItem != null && nextLogFileItem.Index >= 0)
                 {
                     SetStatus(string.Format("LogViewModel.FindNextExecuted: find next. filterindex: {0} index: {1} ", filterIndex, nextLogFileItem.Index));
@@ -892,11 +892,11 @@ namespace TextFilter
 
                     tabItem.IsNew = false;
                     ViewManager.SaveFile(logName, logFile);
-					Settings.AddFilterFile(logName);
-					UpdateRecentCollection();
+                    Settings.AddFilterFile(logName);
+                    UpdateRecentCollection();
 
-					// open filtered view into new tab if not a '-new ##-' tab
-					if (string.Compare(tabItem.Tag, logName, true) != 0
+                    // open filtered view into new tab if not a '-new ##-' tab
+                    if (string.Compare(tabItem.Tag, logName, true) != 0
                         && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                     {
                         if (!exportConfg)
@@ -949,13 +949,13 @@ namespace TextFilter
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
-					Settings.AddFilterFile(tabItem.Tag);
-					UpdateRecentCollection();
-				}
-			}
+                    Settings.AddFilterFile(tabItem.Tag);
+                    UpdateRecentCollection();
+                }
+            }
         }
 
-      
+
         private List<FilterFileItem> GetPreviousFilter()
         {
             SetStatus("GetPreviousFilter item count: " + _previousFilterFileItems.Count);

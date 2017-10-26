@@ -633,8 +633,8 @@ namespace TextFilter
                 CurrentFilterFiles = filterFiles;
             }
 
-			RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
-		}
+            RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+        }
 
         public void AddLogFile(string logFile)
         {
@@ -645,8 +645,8 @@ namespace TextFilter
                 CurrentLogFiles = logFiles;
             }
 
-			RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
-		}
+            RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+        }
 
         public Color GetColor(string colorName)
         {
@@ -870,8 +870,8 @@ namespace TextFilter
                 CurrentFilterFiles = filterFiles;
             }
 
-			RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
-		}
+            RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+        }
 
         public void RemoveLogFile(string logFile)
         {
@@ -883,8 +883,8 @@ namespace TextFilter
                 CurrentLogFiles = logFiles;
             }
 
-			RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
-		}
+            RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+        }
 
         public void Save()
         {

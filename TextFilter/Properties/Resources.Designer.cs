@@ -73,8 +73,8 @@ namespace TextFilter.Properties {
         ////?
         ///
         ///Example 1: open a specified filter file and specified log file
-        ///	- C:\temp\TextFilter&gt;TextFilter.exe /filter: eventlog-filter.rvf /log: ascii.txt
-        ///	- For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: &quot;i love folder spaces\even [rest of string was truncated]&quot;;.
+        ///    - C:\temp\TextFilter&gt;TextFilter.exe /filter: eventlog-filter.rvf /log: ascii.txt
+        ///    - For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: &quot;i love folder spaces\even [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DisplayHelp {
             get {
