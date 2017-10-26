@@ -1090,6 +1090,7 @@ namespace TextFilter
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
+                    file.Modified = false;
                     Settings.AddFilterFile(tabItem.Tag);
                     UpdateRecentCollection();
                 }
@@ -1136,6 +1137,7 @@ namespace TextFilter
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
+                    file.Modified = false;
                     Settings.AddFilterFile(tabItem.Tag);
                     UpdateRecentCollection();
                 }
