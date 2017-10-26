@@ -1021,6 +1021,7 @@ namespace TextFilter
             }
 
             Settings.AddFilterFile(logName);
+			UpdateRecentCollection();
         }
 
         public override void SaveFileAsExecuted(object sender)
@@ -1081,18 +1082,18 @@ namespace TextFilter
             {
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
-
                 RenameTabItem(logName);
-
-                // SaveFileExecuted(null);
                 FilterFile file = (FilterFile)CurrentFile();
-                if (file != null)
+
+				if (file != null)
                 {
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
-                }
-            }
+					Settings.AddFilterFile(tabItem.Tag);
+					UpdateRecentCollection();
+				}
+			}
 
             return;
         }
@@ -1126,7 +1127,7 @@ namespace TextFilter
             {
                 // if saving new file
                 SaveFileAsExecuted(tabItem);
-            }
+			}
             else
             {
                 FilterFile file = (FilterFile)CurrentFile();
@@ -1135,7 +1136,9 @@ namespace TextFilter
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
-                }
+					Settings.AddFilterFile(tabItem.Tag);
+					UpdateRecentCollection();
+				}
             }
         }
 

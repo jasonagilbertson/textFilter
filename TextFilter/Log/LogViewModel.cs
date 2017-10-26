@@ -892,9 +892,11 @@ namespace TextFilter
 
                     tabItem.IsNew = false;
                     ViewManager.SaveFile(logName, logFile);
+					Settings.AddFilterFile(logName);
+					UpdateRecentCollection();
 
-                    // open filtered view into new tab if not a '-new ##-' tab
-                    if (string.Compare(tabItem.Tag, logName, true) != 0
+					// open filtered view into new tab if not a '-new ##-' tab
+					if (string.Compare(tabItem.Tag, logName, true) != 0
                         && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                     {
                         if (!exportConfg)
@@ -934,7 +936,6 @@ namespace TextFilter
 
             SetStatus(string.Format("LogViewModel.SaveFileExecuted:header: {0} tag: {1}", tabItem.Header, tabItem.Tag, tabItem.Name));
 
-            //if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
             if (tabItem.IsNew)
             {
                 // if saving new file
@@ -948,8 +949,10 @@ namespace TextFilter
                     tabItem.IsNew = false;
                     file.ContentItems = tabItem.ContentList;
                     ViewManager.SaveFile(tabItem.Tag, file);
-                }
-            }
+					Settings.AddFilterFile(tabItem.Tag);
+					UpdateRecentCollection();
+				}
+			}
         }
 
       

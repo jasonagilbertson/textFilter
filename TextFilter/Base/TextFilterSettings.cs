@@ -631,9 +631,10 @@ namespace TextFilter
             {
                 filterFiles.Add(filterFile);
                 CurrentFilterFiles = filterFiles;
-                RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
             }
-        }
+
+			RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+		}
 
         public void AddLogFile(string logFile)
         {
@@ -642,9 +643,10 @@ namespace TextFilter
             {
                 logFiles.Add(logFile);
                 CurrentLogFiles = logFiles;
-                RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
             }
-        }
+
+			RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+		}
 
         public Color GetColor(string colorName)
         {
@@ -867,7 +869,9 @@ namespace TextFilter
                 filterFiles.Remove(filterFile);
                 CurrentFilterFiles = filterFiles;
             }
-        }
+
+			RecentFilterFiles = ManageRecentFiles(filterFile, RecentFilterFiles);
+		}
 
         public void RemoveLogFile(string logFile)
         {
@@ -878,7 +882,9 @@ namespace TextFilter
                 logFiles.Remove(logFile);
                 CurrentLogFiles = logFiles;
             }
-        }
+
+			RecentLogFiles = ManageRecentFiles(logFile, RecentLogFiles);
+		}
 
         public void Save()
         {
