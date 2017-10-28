@@ -2825,6 +2825,7 @@
                          Margin="{TemplateBinding Padding}"
                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                         CaretBrush="{TemplateBinding Foreground}"
                          IsReadOnly="{Binding IsReadOnly,
                                               RelativeSource={RelativeSource TemplatedParent}}"
                          Style="{StaticResource ComboBoxEditableTextBox}" />

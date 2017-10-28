@@ -279,7 +279,6 @@
     <None Include="chocolatey\textfilter.nuspec" />
     <None Include="chocolatey\tools\chocolateyinstall.ps1" />
     <None Include="chocolatey\tools\chocolateyuninstall.ps1" />
-    <Fakes Include="Fakes\System.Windows.Interactivity.fakes" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

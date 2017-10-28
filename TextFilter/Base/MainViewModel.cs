@@ -109,36 +109,6 @@ namespace TextFilter
             }
         }
 
-        public Command ControlGotFocusCommand
-        {
-            get
-            {
-                if (_controlGotFocusCommand == null)
-                {
-                    _controlGotFocusCommand = new Command(ControlGotFocusExecuted);
-                }
-                _controlGotFocusCommand.CanExecute = true;
-
-                return _controlGotFocusCommand;
-            }
-            set { _controlGotFocusCommand = value; }
-        }
-
-        public Command ControlLostFocusCommand
-        {
-            get
-            {
-                if (_controlLostFocusCommand == null)
-                {
-                    _controlLostFocusCommand = new Command(ControlLostFocusExecuted);
-                }
-                _controlLostFocusCommand.CanExecute = true;
-
-                return _controlLostFocusCommand;
-            }
-            set { _controlLostFocusCommand = value; }
-        }
-
         public string CurrentStatus
         {
             get
@@ -371,25 +341,6 @@ namespace TextFilter
             _LogViewModel.GroomFiles();
 
             VersionCheck(silent);
-        }
-
-        private void ControlGotFocusExecuted(object sender)
-        {
-            //if (sender is Control)
-            //{
-            //    (sender as Control).BorderBrush = ((SolidColorBrush)new BrushConverter().ConvertFromString("Chartreuse"));
-            //    (sender as Control).BorderThickness = new Thickness(2);
-            //}
-        }
-
-        private void ControlLostFocusExecuted(object sender)
-        {
-            if (sender is ComboBox && string.IsNullOrEmpty((sender as ComboBox).Text))
-            {
-                _FilterViewModel.QuickFindChangedExecuted(sender);
-                //    (sender as Control).BorderBrush = Settings.ForegroundColor;
-                //    (sender as Control).BorderThickness = new Thickness(1);
-            }
         }
 
         private void HandleNewCurrentStatus(object sender, string status)
