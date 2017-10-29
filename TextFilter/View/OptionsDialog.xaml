@@ -141,8 +141,7 @@
                   HorizontalAlignment="Left"
                   BorderBrush="{Binding Source={StaticResource settings},
                                         Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
+                  Foreground="Black"
                   GotFocus="colorCombo_Selected"
                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
                   KeyDown="colorCombo_KeyDown"
@@ -519,8 +518,7 @@
                                        Path=Settings.BackgroundColor}"
                   BorderBrush="{Binding Source={StaticResource settings},
                                         Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
+                  Foreground="Black"
                   ItemsSource="{Binding Source={StaticResource settings},
                                         Path=Settings.FontNameList}"
                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -582,8 +580,7 @@
                   HorizontalAlignment="Left"
                   BorderBrush="{Binding Source={StaticResource settings},
                                         Path=Settings.ForegroundColor}"
-                  Foreground="{Binding Source={StaticResource settings},
-                                       Path=Settings.ForegroundColor}"
+                  Foreground="Black"
                   GotFocus="colorCombo_Selected"
                   ItemsSource="{Binding Source={StaticResource colorPropertiesOdp}}"
                   KeyDown="colorCombo_KeyDown"
