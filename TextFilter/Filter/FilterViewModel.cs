@@ -774,13 +774,13 @@ namespace TextFilter
                     FilterFileItem fileItem = new FilterFileItem()
                     {
                         Enabled = true,
-                        Index = ++filterIndex,
+                        Index = -1,
                         Notes = textBox.Text,
                         Filterpattern = string.IsNullOrEmpty(textBox.SelectedText) ? textBox.Text : textBox.SelectedText
                     };
 
                     filterFile.ContentItems.Add(((FilterFileManager)ViewManager).SetFilterItemColors(filterFile, fileItem));
-                    // set filterindex to -1 to add new filter item at end of list
+                    // set filterindex to -1 to add new filter item at beginning of list
                     filterIndex = -1;
                 }
 
