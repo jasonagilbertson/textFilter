@@ -10,25 +10,41 @@
 // ************************************************************************************
 
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Input;
 
 namespace TextFilter
 {
     internal class DragDrop : Base
     {
+        static Point startingPoint = new Point();
+        static DateTime dropTime = new DateTime();
         public static DragDropEffects DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, DragDropEffects allowedEffects)
         {
+            Debug.Print("DoDragDrop:enter:");
+            startingPoint = Mouse.GetPosition(null);
+            dropTime = DateTime.Now;
+
             int[] finalEffect = new int[1];
             try
             {
-                NativeMethods.DoDragDrop(dataObject, new DropSource(), (int)allowedEffects, finalEffect);
+                if ((Mouse.LeftButton == MouseButtonState.Pressed))
+                {
+                    NativeMethods.DoDragDrop(dataObject, new DropSource(), (int)allowedEffects, finalEffect);
+                }
+                else
+                {
+                    Debug.Print("DoDragDrop:mouse button not pressed:");
+                }
             }
             catch (Exception e)
             {
-                System.Diagnostics.Debug.Print("DoDragDrop:exception:" + e.ToString());
+                Debug.Print("DoDragDrop:exception:" + e.ToString());
             }
 
+            Debug.Print("DoDragDrop:exit:");
             return (DragDropEffects)(finalEffect[0]);
         }
 
@@ -66,14 +82,32 @@ namespace TextFilter
             public int QueryContinueDrag(int fEscapePressed, uint grfKeyState)
             {
                 var escapePressed = (0 != fEscapePressed);
+                Debug.Print(string.Format("QueryContinueDrag escapePressed: {0}", escapePressed));
+                Debug.Print(string.Format("QueryContinueDrag left mouse button pressed: {0}", (Mouse.LeftButton == MouseButtonState.Pressed)));
+                bool timedOut = DateTime.Now.Subtract(dropTime).TotalSeconds > 5;
                 var keyStates = (DragDropKeyStates)grfKeyState;
-                if (escapePressed)
+
+                if(timedOut)
+                {
+                    Debug.Print(string.Format("QueryContinueDrag timedOut: {0}", timedOut));
+                    return NativeMethods.DRAGDROP_S_CANCEL;
+                }
+                else if (escapePressed)
                 {
                     return NativeMethods.DRAGDROP_S_CANCEL;
                 }
                 else if (DragDropKeyStates.None == (keyStates & DragDropKeyStates.LeftMouseButton))
                 {
-                    return NativeMethods.DRAGDROP_S_DROP;
+                    double distance = Point.Subtract(Mouse.GetPosition(null), startingPoint).Length;
+                    Debug.Print(string.Format("QueryContinueDrag distance: {0}", distance));
+                    if (distance > 100)
+                    {
+                        return NativeMethods.DRAGDROP_S_DROP;
+                    }
+                    else
+                    {
+                        return NativeMethods.DRAGDROP_S_CANCEL;
+                    }
                 }
                 return NativeMethods.S_OK;
             }
