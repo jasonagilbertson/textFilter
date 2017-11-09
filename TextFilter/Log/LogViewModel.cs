@@ -903,6 +903,7 @@ namespace TextFilter
                         if (!exportConfg)
                         {
                             AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
+                            ((LogFile)CurrentFile()).Modified = false;
                         }
                     }
                     else
