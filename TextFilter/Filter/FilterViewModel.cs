@@ -43,7 +43,6 @@ namespace TextFilter
         private bool _quickFindRegex;
         private string _quickFindText = string.Empty;
         private Command _quickFindTextCommand;
-        private ObservableCollection<WPFMenuItem> _recentCollection;
         private Command _removeFilterItemCommand;
         private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
@@ -368,20 +367,6 @@ namespace TextFilter
                 return _quickFindTextCommand;
             }
             set { _quickFindTextCommand = value; }
-        }
-
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
-            {
-                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
-            }
-
-            set
-            {
-                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
-                OnPropertyChanged("RecentCollection");
-            }
         }
 
         public Command RemoveFilterItemCommand
@@ -789,26 +774,6 @@ namespace TextFilter
             }
         }
 
-        public override void NewFileExecuted(object sender)
-        {
-            FilterFile file = new FilterFile();
-            string tempTag = GenerateTempTagName();
-
-            if (IsValidTabIndex())
-            {
-                file = (FilterFile)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
-            }
-            else
-            {
-                file = (FilterFile)ViewManager.NewFile(tempTag);
-            }
-
-            AddTabItem(file);
-            VerifyIndex();
-            UpdateRecentCollection();
-
-        }
-
         public override void OpenFileExecuted(object sender)
         {
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
@@ -1004,46 +969,24 @@ namespace TextFilter
 
         }
 
-        public override void RenameTabItem(string logName)
-        {
-            // rename tab
-            ITabViewModel<FilterFileItem> tabItem = TabItems[SelectedIndex];
-            Settings.RemoveFilterFile(tabItem.Tag);
-
-            if (CurrentFile() != null)
-            {
-                tabItem.Tag = CurrentFile().Tag = logName;
-                CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
-            }
-            else
-            {
-                SetStatus("RenameTabItem:error: current file is null: " + logName);
-            }
-
-            Settings.AddFilterFile(logName);
-            UpdateRecentCollection();
-        }
-
         public override void SaveFileAsExecuted(object sender)
         {
-            ITabViewModel<FilterFileItem> tabItem;
+            IFile<FilterFileItem> fileItem;
 
-            if (sender is TabItem)
+            if (sender is IFile<FilterFileItem>)
             {
-                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
+                fileItem = (IFile<FilterFileItem>)(sender);
             }
             else
             {
-                if (IsValidTabIndex())
-                {
-                    tabItem = (ITabViewModel<FilterFileItem>)TabItems[SelectedIndex];
-                }
-                else
-                {
+                fileItem = CurrentFile();
+
+                if (fileItem == null || fileItem == default(IFile<FilterFileItem>))
+                { 
                     return;
                 }
             }
-
+            
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
 
             string logName = string.Empty;
@@ -1051,10 +994,13 @@ namespace TextFilter
             dlg.DefaultExt = ".rvf";
             dlg.Filter = "Filter Files (*.rvf;*.xml)|*.rvf;*.xml|Tat Files (*.tat)|*.tat|All Files (*.*)|*.*";
 
-            dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) != string.Empty ? Path.GetDirectoryName(tabItem.Tag): Settings.FilterDirectory;
+            // set initial directory to configured directory if file is new and in temp dir and if filter dir is writable
+            dlg.InitialDirectory = (Path.GetDirectoryName(fileItem.Tag) != string.Empty
+                    & !fileItem.Tag.ToLower().Contains(Path.GetTempPath().ToLower()))
+                    && Settings.IsDirectoryWritable(Settings.FilterDirectory) ? Path.GetDirectoryName(fileItem.Tag): Settings.FilterDirectory;
 
-            string extension = string.IsNullOrEmpty(Path.GetExtension(tabItem.Tag)) ? ".rvf" : Path.GetExtension(tabItem.Tag);
-            string fileName = Path.GetFileNameWithoutExtension(tabItem.Tag) + extension;
+            string extension = string.IsNullOrEmpty(Path.GetExtension(fileItem.Tag)) ? ".rvf" : Path.GetExtension(fileItem.Tag);
+            string fileName = Path.GetFileNameWithoutExtension(fileItem.Tag) + extension;
 
             dlg.FileName = fileName;
 
@@ -1083,65 +1029,14 @@ namespace TextFilter
                 // Save document
                 SetStatus(string.Format("saving file:{0}", logName));
                 RenameTabItem(logName);
-                FilterFile file = (FilterFile)CurrentFile();
-
-                if (file != null)
-                {
-                    tabItem.IsNew = false;
-                    file.ContentItems = tabItem.ContentList;
-                    ViewManager.SaveFile(tabItem.Tag, file);
-                    file.Modified = false;
-                    Settings.AddFilterFile(tabItem.Tag);
-                    UpdateRecentCollection();
-                }
+                fileItem.IsNew = false;
+                ViewManager.SaveFile(fileItem.Tag, fileItem);
+                fileItem.Modified = false;
+                Settings.AddFilterFile(fileItem.Tag);
+                UpdateRecentCollection();
             }
 
             return;
-        }
-
-        public override void SaveFileExecuted(object sender)
-        {
-            ITabViewModel<FilterFileItem> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<FilterFileItem>)(sender as TabItem);
-            }
-            else
-            {
-                if (IsValidTabIndex())
-                {
-                    tabItem = (ITabViewModel<FilterFileItem>)TabItems[SelectedIndex];
-                }
-                else
-                {
-                    // can get here by having no filters and hitting save file.
-                    // todo: disable save file if no tab items
-                    return;
-                }
-            }
-
-            SetStatus(string.Format("FilterViewModel.SaveFileExecuted:header: {0} tag: {1}", tabItem.Header, tabItem.Tag, tabItem.Name));
-
-            //if (string.IsNullOrEmpty(tabItem.Tag) || Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
-            if (tabItem.IsNew)
-            {
-                // if saving new file
-                SaveFileAsExecuted(tabItem);
-            }
-            else
-            {
-                FilterFile file = (FilterFile)CurrentFile();
-                if (file != null)
-                {
-                    tabItem.IsNew = false;
-                    file.ContentItems = tabItem.ContentList;
-                    ViewManager.SaveFile(tabItem.Tag, file);
-                    file.Modified = false;
-                    Settings.AddFilterFile(tabItem.Tag);
-                    UpdateRecentCollection();
-                }
-            }
         }
 
         internal bool VerifyAndOpenFile(string fileName)
@@ -1215,6 +1110,7 @@ namespace TextFilter
         {
             TextBox textBox = TextBoxFromSender(sender);
             NewFileExecuted(sender);
+            VerifyIndex();
             InsertFilterItemExecuted(textBox);
         }
         private void QuickFindKeyPressExecuted(object sender)

@@ -66,7 +66,8 @@ namespace TextFilter
                 {
                     if (Path.GetExtension(filename).ToLower() == ".xml"
                         | Path.GetExtension(filename).ToLower() == ".rvf"
-                        | Path.GetExtension(filename).ToLower() == ".tat")
+                        | Path.GetExtension(filename).ToLower() == ".tat"
+                        | Path.GetExtension(filename).ToLower() == ".tmp")
                     {
                         if (Base._FilterViewModel.VerifyAndOpenFile(filename))
                         {

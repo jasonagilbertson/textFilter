@@ -442,32 +442,38 @@ namespace TextFilter
             }
         }
 
-        public override IFile<LogFileItem> ManageFileProperties(string LogName, IFile<LogFileItem> logFile)
+        public override IFile<LogFileItem> ManageFileProperties(string fileName, IFile<LogFileItem> logFile)
         {
             // filename is used to name tab
-            logFile.FileName = Path.GetFileName(LogName);
+            logFile.FileName = Path.GetFileName(fileName);
 
             // tag is used to keep complete file name and path
-            logFile.Tag = LogName;
+            logFile.Tag = fileName;
 
             return logFile;
         }
 
-        public override IFile<LogFileItem> NewFile(string fileName, ObservableCollection<LogFileItem> logFileItems = null)
+        public override IFile<LogFileItem> NewFile(string fileName, ObservableCollection<LogFileItem> fileItems = null)
         {
             SetStatus("NewFile:enter: " + fileName);
-            LogFile logFile = new LogFile();
-            if (logFileItems != null)
+            LogFile file = new LogFile();
+
+            // make temp file
+            string tempFilePath = Path.GetTempFileName();
+            file.Tag = tempFilePath;
+
+            if (fileItems != null)
             {
-                logFile.ContentItems = logFileItems;
+                file.ContentItems = fileItems;
             }
 
-            FileManager.Add(ManageFileProperties(fileName, logFile));
-            logFile.Modified = true;
+            SaveFile(tempFilePath, file);
+            FileManager.Add(ManageFileProperties(fileName, file));
+            file.Tag = tempFilePath;
+            file.IsNew = true;
             Settings.AddLogFile(fileName);
             OnPropertyChanged("LogFileManager");
-            SetStatus("NewFile:exit: " + fileName);
-            return logFile;
+            return file;
         }
 
         public override IFile<LogFileItem> OpenFile(string fileName)

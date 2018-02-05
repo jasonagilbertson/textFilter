@@ -19,6 +19,7 @@ namespace TextFilter
 {
     internal class DragDrop : Base
     {
+        // todo: review once ver 0.8.x merged
         static Point startingPoint = new Point();
         static DateTime dropTime = new DateTime();
         public static DragDropEffects DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, DragDropEffects allowedEffects)

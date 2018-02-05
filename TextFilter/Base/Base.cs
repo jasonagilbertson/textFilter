@@ -215,8 +215,14 @@ namespace TextFilter
 
             if (!string.IsNullOrEmpty(file))
             {
-                // unknown file type from drag out
-                args.Append(file);
+                if (this is FilterViewModel)
+                {
+                    args.Append(string.Format("/filter: \"{0}\"", file));
+                }
+                else
+                {
+                    args.Append(string.Format("/log: \"{0}\"", file));
+                }
             }
             else if(withTabs)
             {

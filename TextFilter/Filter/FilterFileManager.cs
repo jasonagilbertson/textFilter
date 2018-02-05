@@ -84,10 +84,10 @@ namespace TextFilter
             }
         }
 
-        public override IFile<FilterFileItem> ManageFileProperties(string LogName, IFile<FilterFileItem> filterFile)
+        public override IFile<FilterFileItem> ManageFileProperties(string fileName, IFile<FilterFileItem> filterFile)
         {
-            filterFile.FileName = Path.GetFileName(LogName);
-            filterFile.Tag = LogName;
+            filterFile.FileName = Path.GetFileName(fileName);
+            filterFile.Tag = fileName;
 
             // todo rework this:
             ((FilterFile)filterFile).EnablePatternNotifications(false);
@@ -171,16 +171,28 @@ namespace TextFilter
             }
         }
 
-        public override IFile<FilterFileItem> NewFile(string LogName, ObservableCollection<FilterFileItem> fileItems = null)
+        public override IFile<FilterFileItem> NewFile(string fileName, ObservableCollection<FilterFileItem> fileItems = null)
         {
-            FilterFile filterFile = new FilterFile();
-            ManageFilterFileItem(filterFile);
+            SetStatus("NewFile:enter: " + fileName);
+            FilterFile file = new FilterFile();
 
-            FileManager.Add(ManageFileProperties(LogName, filterFile));
+            // make temp file
+            string tempFilePath = Path.GetTempFileName();
+            file.Tag = tempFilePath;
 
-            Settings.AddFilterFile(LogName);
+            if (fileItems != null)
+            {
+                file.ContentItems = fileItems;
+            }
+
+            SaveFile(tempFilePath, file);
+            ManageFilterFileItem(file);
+            FileManager.Add(ManageFileProperties(fileName, file));
+            file.Tag = tempFilePath;
+            file.IsNew = true;
+            Settings.AddFilterFile(fileName);
             OnPropertyChanged("FilterFileManager");
-            return filterFile;
+            return file;
         }
 
         public override IFile<FilterFileItem> OpenFile(string fileName)

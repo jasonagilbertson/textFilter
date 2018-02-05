@@ -40,8 +40,6 @@ namespace TextFilter
 
         private List<FilterFileItem> _previousFilterFileItems = new List<FilterFileItem>();
 
-        private ObservableCollection<WPFMenuItem> _recentCollection;
-
         private LogFileItem _unFilteredSelectedItem;
 
         private Command _viewMessageCommand;
@@ -137,20 +135,6 @@ namespace TextFilter
             set
             {
                 _parser = value;
-            }
-        }
-
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
-            {
-                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-            }
-
-            set
-            {
-                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-                OnPropertyChanged("RecentCollection");
             }
         }
 
@@ -663,25 +647,6 @@ namespace TextFilter
             throw new NotImplementedException();
         }
 
-        public override void NewFileExecuted(object sender)
-        {
-            LogFile file = new LogFile();
-
-            string tempTag = GenerateTempTagName();
-
-            if (IsValidTabIndex())
-            {
-                file = (LogFile)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
-            }
-            else
-            {
-                file = (LogFile)ViewManager.NewFile(tempTag);
-            }
-
-            AddTabItem(file);
-            UpdateRecentCollection();
-        }
-
         public override void OpenFileExecuted(object sender)
         {
             SetStatus("opening file");
@@ -754,8 +719,6 @@ namespace TextFilter
                 return;
             }
 
-            LogFile tempLogFile = new LogFile();
-
             ObservableCollection<LogFileItem> logFileItems = new ObservableCollection<LogFileItem>();
             int index = 0;
             foreach (string line in rawText.Split(new string[] { "\r\n" }, StringSplitOptions.None))
@@ -768,196 +731,91 @@ namespace TextFilter
                 logFileItems.Add(logFileItem);
             }
 
-            // save pasted text to a file first then add empty tab event will populate tab from temp
-            // file tmp2606.tmp in user %temp%
-            string tempFilePath = Path.GetTempFileName();
-            tempLogFile.Tag = tempFilePath;
-            tempLogFile.ContentItems = logFileItems;
-            _logFileManager.SaveFile(tempFilePath, tempLogFile);
-
-            // temp file name from paste text is being sent and has already been saved but needs new temp name
-            IFile<LogFileItem> file = _logFileManager.OpenFile(tempFilePath);
-
-            // set to new as save file sets to false and this needs to be set to verify temp file
-            // on modified file close
-            //file.IsNew = true;
+            IFile<LogFileItem> file = _logFileManager.NewFile(GenerateTempTagName(), logFileItems);
             file.Modified = true;
-            // change temp file name to generic -new ##- name only and not tag
-            file.FileName = GenerateTempTagName();
             AddTabItem(file);
-        }
-
-        public override void RenameTabItem(string logName)
-        {
-            // rename tab
-            ITabViewModel<LogFileItem> tabItem = TabItems[SelectedIndex];
-            Settings.RemoveLogFile(tabItem.Tag);
-            if (CurrentFile() != null)
-            {
-                tabItem.Tag = CurrentFile().Tag = logName;
-                CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(logName);
-            }
-            else
-            {
-                SetStatus("RenameTabItem:error: current file is null: " + logName);
-            }
-
-            Settings.AddLogFile(logName);
         }
 
         public override void SaveFileAsExecuted(object sender)
         {
-            bool exportConfg = false;
-            ITabViewModel<LogFileItem> tabItem;
+            IFile<LogFileItem> fileItem;
 
-            LogFile logFile = new LogFile();
-
-            if (sender is LogFile)
+            if (sender is IFile<LogFileItem>)
             {
-                // export configuration uses this
-                exportConfg = true;
-                logFile = sender as LogFile;
-            }
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<LogFileItem>)(sender as TabItem);
+                fileItem = (IFile<LogFileItem>)(sender);
             }
             else
             {
-                if (IsValidTabIndex())
-                {
-                    tabItem = (ITabViewModel<LogFileItem>)TabItems[SelectedIndex];
-                }
-                else
+                fileItem = CurrentFile();
+
+                if (fileItem == null || fileItem == default(IFile<FilterFileItem>))
                 {
                     return;
                 }
             }
 
-            if (string.IsNullOrEmpty(tabItem.Tag))
+            bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
+
+            string logName = string.Empty;
+            Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
+
+            dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
+
+            // set initial directory to configured directory if file is new and in temp dir
+            dlg.InitialDirectory = (Path.GetDirectoryName(fileItem.Tag) != string.Empty 
+                & !fileItem.Tag.ToLower().Contains(Path.GetTempPath().ToLower())) ? Path.GetDirectoryName(fileItem.Tag) : "";
+
+            string extension = string.IsNullOrEmpty(Path.GetExtension(fileItem.Tag)) ? ".csv" : Path.GetExtension(fileItem.Tag);
+            string fileName = Path.GetFileNameWithoutExtension(fileItem.Tag) + extension;
+
+            if (!fileName.ToLower().Contains(".filtered"))
             {
-                TabItems.Remove(tabItem);
+                fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(fileItem.Tag), extension);
+            }
+
+            dlg.FileName = fileName;
+            Nullable<bool> result = false;
+            // Show save file dialog box
+            if (silent)
+            {
+                result = true;
+                logName = (sender as string);
             }
             else
             {
-                bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
+                result = dlg.ShowDialog();
+                logName = dlg.FileName;
 
-                string logName = string.Empty;
-                Microsoft.Win32.SaveFileDialog dlg = new Microsoft.Win32.SaveFileDialog();
-
-                dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
-                dlg.InitialDirectory = Path.GetDirectoryName(tabItem.Tag) ?? "";
-
-                string extension = string.IsNullOrEmpty(Path.GetExtension(tabItem.Tag)) ? ".csv" : Path.GetExtension(tabItem.Tag);
-                string fileName = Path.GetFileNameWithoutExtension(tabItem.Tag) + extension;
-
-                if (!fileName.ToLower().Contains(".filtered"))
+                if (string.IsNullOrEmpty(logName))
                 {
-                    fileName = string.Format("{0}.filtered{1}", Path.GetFileNameWithoutExtension(tabItem.Tag), extension);
-                }
-
-                dlg.FileName = fileName;
-                Nullable<bool> result = false;
-                // Show save file dialog box
-                if (silent)
-                {
-                    result = true;
-                    logName = (sender as string);
-                }
-                else
-                {
-                    result = dlg.ShowDialog();
-                    logName = dlg.FileName;
-
-                    if (string.IsNullOrEmpty(logName))
-                    {
-                        return;
-                    }
-                }
-
-                // Process save file dialog box results
-                if (result == true)
-                {
-                    // Save document
-                    if (exportConfg)
-                    {
-                        // export configuration uses this
-                        logFile = sender as LogFile;
-                    }
-                    else
-                    {
-                        logFile.ContentItems = tabItem.ContentList;
-                    }
-
-                    tabItem.IsNew = false;
-                    ViewManager.SaveFile(logName, logFile);
-                    logFile.Modified = false;
-                    Settings.AddFilterFile(logName);
-                    UpdateRecentCollection();
-
-                    // open filtered view into new tab if not a '-new ##-' tab
-                    if (string.Compare(tabItem.Tag, logName, true) != 0
-                        && !Regex.IsMatch(tabItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
-                    {
-                        if (!exportConfg)
-                        {
-                            AddTabItem(_logFileManager.NewFile(logName, tabItem.ContentList));
-                            ((LogFile)CurrentFile()).Modified = false;
-                        }
-                    }
-                    else
-                    {
-                        RenameTabItem(logName);
-                    }
-                }
-            }
-        }
-
-        public override void SaveFileExecuted(object sender)
-        {
-            ITabViewModel<LogFileItem> tabItem;
-
-            if (sender is TabItem)
-            {
-                tabItem = (ITabViewModel<LogFileItem>)(sender as TabItem);
-            }
-            else
-            {
-                if (IsValidTabIndex())
-                {
-                    tabItem = (ITabViewModel<LogFileItem>)TabItems[SelectedIndex];
-                }
-                else
-                {
-                    // can get here by having no filters and hitting save file.
-                    // todo: disable save file if no tab items
                     return;
                 }
             }
 
-            SetStatus(string.Format("LogViewModel.SaveFileExecuted:header: {0} tag: {1}", tabItem.Header, tabItem.Tag, tabItem.Name));
+            // Process save file dialog box results
+            if (result == true)
+            {
+                fileItem.IsNew = false;
+                ViewManager.SaveFile(logName, fileItem);
+                fileItem.Modified = false;
+                Settings.AddLogFile(logName);
+                UpdateRecentCollection();
 
-            if (tabItem.IsNew)
-            {
-                // if saving new file
-                SaveFileAsExecuted(tabItem);
-            }
-            else
-            {
-                LogFile file = (LogFile)CurrentFile();
-                if (file != null)
+                // open filtered view into new tab if not a '-new ##-' tab
+                if (string.Compare(fileItem.Tag, logName, true) != 0
+                    && !Regex.IsMatch(fileItem.Tag, _tempTabNameFormatPattern, RegexOptions.IgnoreCase))
                 {
-                    tabItem.IsNew = false;
-                    file.ContentItems = tabItem.ContentList;
-                    ViewManager.SaveFile(tabItem.Tag, file);
-                    file.Modified = false;
-                    Settings.AddFilterFile(tabItem.Tag);
-                    UpdateRecentCollection();
+                    fileItem.Tag = logName;
+                    fileItem.FileName = Path.GetFileName(logName);
+                    AddTabItem(fileItem);
+                    ((LogFile)CurrentFile()).Modified = false;
+                }
+                else
+                {
+                    RenameTabItem(logName);
                 }
             }
         }
-
 
         private List<FilterFileItem> GetPreviousFilter()
         {

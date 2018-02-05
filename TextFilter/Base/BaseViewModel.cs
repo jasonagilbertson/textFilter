@@ -520,23 +520,35 @@ namespace TextFilter
 
         public void LostFocusExecuted(object sender)
         {
-            string currentFile = CurrentFile() == null ? null : CurrentFile().Tag;
-
+            IFile<T> currentFile = CurrentFile() == null ? null : CurrentFile();
+            
             if (currentFile != null && (Mouse.LeftButton == MouseButtonState.Pressed))
             {
-                SetStatus(string.Format("LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
+                SetStatus(string.Format("LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile.Tag));
+
+                if(currentFile.IsNew)
+                {
+                    // new files in temp so use temp location to save current changes for drag out
+                    currentFile.IsNew = false;
+                    SaveFileExecuted(null);
+                    currentFile.IsNew = true;
+                }
+                else if(currentFile.Modified)
+                {
+                    SaveFileExecuted(null);
+                }
 
                 if (Keyboard.Modifiers == ModifierKeys.Control)
                 {
                     // launch new instance
-                    SetStatus(string.Format("LostFocusExecuted:new instance:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
-                    NewWindow(true, currentFile);
+                    SetStatus(string.Format("LostFocusExecuted:new instance:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile.Tag));
+                    NewWindow(false, currentFile.Tag);
                 }
                 else
                 {
                     // add to clipboard for drag out
-                    SetStatus(string.Format("LostFocusExecuted:drag out:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile));
-                    DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { currentFile });
+                    SetStatus(string.Format("LostFocusExecuted:drag out:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile.Tag));
+                    DataObject ddo = new DataObject(DataFormats.FileDrop, new string[1] { currentFile.Tag });
                     DragDrop.DoDragDrop(ddo, DragDropEffects.Copy | DragDropEffects.Move);
                 }
             }
@@ -599,7 +611,24 @@ namespace TextFilter
             }
         }
 
-        public abstract void NewFileExecuted(object sender);
+        public void NewFileExecuted(object sender)
+        {
+            IFile<T> file = default(IFile<T>);
+            string tempTag = GenerateTempTagName();
+            file = (IFile<T>)ViewManager.NewFile(tempTag);
+
+            if (this is LogViewModel)
+            {
+                file = (IFile<T>)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+            }
+            else
+            {
+                file = (IFile<T>)ViewManager.NewFile(tempTag);
+            }
+
+            AddTabItem(file);
+            UpdateRecentCollection();
+        }
 
         public abstract void OpenFileExecuted(object sender);
 
@@ -706,12 +735,104 @@ namespace TextFilter
                 SetStatus("RenameFile:exit");
             }
         }
+        public void RenameTabItem(string fileName)
+        {
+            // rename tab
+            ITabViewModel<T> tabItem = TabItems[SelectedIndex];
+            if (this is FilterViewModel)
+            {
+                Settings.RemoveFilterFile(tabItem.Tag);
+            }
+            else
+            {
+                Settings.RemoveLogFile(tabItem.Tag);
+            }
 
-        public abstract void RenameTabItem(string newName);
+            if (CurrentFile() != null)
+            {
+                tabItem.Tag = CurrentFile().Tag = fileName;
+                CurrentFile().FileName = tabItem.Header = tabItem.Name = Path.GetFileName(fileName);
+            }
+            else
+            {
+                SetStatus("RenameTabItem:error: current file is null: " + fileName);
+            }
+
+            if (this is FilterViewModel)
+            {
+                Settings.AddFilterFile(fileName);
+            }
+            else
+            {
+                Settings.AddLogFile(fileName);
+            }
+        }
 
         public abstract void SaveFileAsExecuted(object sender);
 
-        public abstract void SaveFileExecuted(object sender);
+        public void SaveFileExecuted(object sender)
+        {
+            IFile<T> fileItem;
+
+            if (sender is IFile<T>)
+            {
+                fileItem = (IFile<T>)(sender);
+            }
+            else
+            {
+                fileItem = CurrentFile();
+
+                if (fileItem == null || fileItem == default(IFile<FilterFileItem>))
+                {
+                    // can get here by having no filters and hitting save file.
+                    // todo: disable save file if no tab items
+                    return;
+                }
+            }
+
+            SetStatus(string.Format("SaveFileExecuted:tag: {0} name: {1}", fileItem.Tag, fileItem.FileName));
+
+            if (fileItem.IsNew)
+            {
+                SaveFileAsExecuted(fileItem);
+            }
+            else
+            {
+                ViewManager.SaveFile(fileItem.Tag, fileItem);
+                fileItem.Modified = false;
+                if (this is FilterViewModel)
+                {
+                    Settings.AddFilterFile(fileItem.Tag);
+                }
+                else
+                {
+                    Settings.AddLogFile(fileItem.Tag);
+                }
+
+                UpdateRecentCollection();
+            }
+        }
+
+        private void UpdateRecentCollection()
+        {
+            // setting to null forces refresh
+            RecentCollection = null;
+        }
+
+        private ObservableCollection<WPFMenuItem> _recentCollection;
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+            }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+                OnPropertyChanged("RecentCollection");
+            }
+        }
 
         public void SaveModifiedFiles(object sender)
         {
