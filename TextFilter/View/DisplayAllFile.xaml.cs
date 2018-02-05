@@ -1,6 +1,6 @@
 ﻿// ************************************************************************************
 // Assembly: TextFilter
-// File: DisplayAllDialog.xaml.cs
+// File: DisplayAllFile.xaml.cs
 // Created: 2/12/2017
 // Modified: 2/12/2017
 // Copyright (c) 2017 jason gilbertson
@@ -15,30 +15,20 @@ using System.Xml.Linq;
 
 namespace TextFilter
 {
-    public partial class DisplayAllDialog : Window
+    public partial class DisplayAllFile : Window
     {
         private string _initialMessage = string.Empty;
         private string _xmlMessage = string.Empty;
 
-        public DisplayAllDialog(string message, int id, string file)
+        public DisplayAllFile(string message, string file)
         {
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             _initialMessage = message;
-            Title = string.Format("{0} - {1}", id, file);
-            textBoxTraceMessage.Text = _initialMessage.Replace(",", ",\r\n").Replace(";", ";\r\n").Replace(". ", ". \r\n").Replace("\t", "\r\n");
+            Title = string.Format("{0} - {1}", message, file);
             _xmlMessage = CheckXml(_initialMessage);
+            
 
-            if (!string.IsNullOrEmpty(_xmlMessage))
-            {
-                textBoxTraceMessage.Text = _xmlMessage;
-            }
-
-            textBoxTraceMessage.Focus();
-            textBoxTraceMessage.FontFamily = new FontFamily(TextFilterSettings.Settings.FontName);
-            textBoxTraceMessage.FontSize = TextFilterSettings.Settings.FontSize;
-            textBoxTraceMessage.Foreground = TextFilterSettings.Settings.ForegroundColor;
-            textBoxTraceMessage.Background = TextFilterSettings.Settings.BackgroundColor;
         }
 
         public void Disable()

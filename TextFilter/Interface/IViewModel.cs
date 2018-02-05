@@ -18,6 +18,8 @@ namespace TextFilter
 
         Command CloseCommand { get; set; }
 
+        Command DisplayAllDialogCommand { get; set; }
+
         Command FindNextCommand { get; set; }
 
         Command GotFocusCommand { get; set; }
@@ -51,6 +53,8 @@ namespace TextFilter
         IFile<T> CurrentFile();
 
         ITabViewModel<T> CurrentTab();
+
+        void DisplayAllDialogExecuted(object sender);
 
         void FindNextExecuted(object sender);
 

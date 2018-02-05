@@ -180,11 +180,11 @@
     <Compile Include="Parser\VirtualizingCollection.cs" />
     <Compile Include="Base\TextFilterSettings.cs" />
     <Compile Include="Log\LogViewModel.cs" />
+    <Compile Include="View\DisplayAllFile.xaml.cs">
+      <DependentUpon>DisplayAllFile.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ExportDialog.xaml.cs">
       <DependentUpon>ExportDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\DisplayAllDialog.xaml.cs">
-      <DependentUpon>DisplayAllDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TraceMessageDialog.xaml.cs">
       <DependentUpon>TraceMessageDialog.xaml</DependentUpon>
@@ -205,11 +205,11 @@
       <DependentUpon>TimedSaveDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Parser\WorkerManager.cs" />
-    <Page Include="View\ExportDialog.xaml">
+    <Page Include="View\DisplayAllFile.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\DisplayAllDialog.xaml">
+    <Page Include="View\ExportDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -29,6 +29,8 @@ namespace TextFilter
 
         private Command _copyFilePathCommand;
 
+        private Command _displayAllDialogCommand;
+
         private Command _findNextCommand;
 
         private Command _findPreviousCommand;
@@ -106,6 +108,25 @@ namespace TextFilter
                 return _copyFilePathCommand;
             }
             set { _copyFilePathCommand = value; }
+        }
+
+        public Command DisplayAllDialogCommand
+        {
+            get
+            {
+                if (_displayAllDialogCommand == null)
+                {
+                    _displayAllDialogCommand = new Command(DisplayAllDialogExecuted);
+                }
+
+                _displayAllDialogCommand.CanExecute = true;
+                return _displayAllDialogCommand;
+            }
+
+            set
+            {
+                _displayAllDialogCommand = value;
+            }
         }
 
         public Command FindNextCommand
@@ -450,6 +471,15 @@ namespace TextFilter
 
             SetStatus(string.Format("CurrentTab: warning: returning default T SelectedTab: {0}", SelectedIndex));
             return default(ITabViewModel<T>);
+        }
+
+        public void DisplayAllDialogExecuted(object sender)
+        {
+            SetStatus("DisplayAllExecuted");
+            IFile<T> file = CurrentFile();
+            DisplayAllFile dialog = new DisplayAllFile(file.FileName, file.Tag);
+            dialog.DataContext = CurrentFile(); //this
+            dialog.Show();
         }
 
         public abstract void FindNextExecuted(object sender);

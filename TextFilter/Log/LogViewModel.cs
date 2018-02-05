@@ -24,8 +24,6 @@ namespace TextFilter
     {
         public static LogFileContentItems UpdateLogFile;
 
-        private Command _displayAllDialogCommand;
-
         private Command _exportCommand;
 
         private LogFileItem _filteredSelectedItem;
@@ -61,24 +59,7 @@ namespace TextFilter
 
         public delegate void LogFileContentItems(LogFile logFile);
 
-        public Command DiplayAllDialogCommand
-        {
-            get
-            {
-                if (_displayAllDialogCommand == null)
-                {
-                    _displayAllDialogCommand = new Command(DisplayAllDialogExecuted);
-                }
-
-                _displayAllDialogCommand.CanExecute = true;
-                return _displayAllDialogCommand;
-            }
-
-            set
-            {
-                _displayAllDialogCommand = value;
-            }
-        }
+        
         public Command ExportCommand
         {
             get
@@ -209,10 +190,6 @@ namespace TextFilter
             throw new NotImplementedException();
         }
 
-        public void DisplayAllDialogExecuted(object sender)
-        {
-
-        }
         public void ExportExecuted(object sender)
         {
             try
@@ -762,7 +739,7 @@ namespace TextFilter
             dlg.Filter = "All Files (*.*)|*.*|Csv Files (*.csv)|*.csv";
 
             // set initial directory to configured directory if file is new and in temp dir
-            dlg.InitialDirectory = (Path.GetDirectoryName(fileItem.Tag) != string.Empty 
+            dlg.InitialDirectory = (Path.GetDirectoryName(fileItem.Tag) != string.Empty
                 & !fileItem.Tag.ToLower().Contains(Path.GetTempPath().ToLower())) ? Path.GetDirectoryName(fileItem.Tag) : "";
 
             string extension = string.IsNullOrEmpty(Path.GetExtension(fileItem.Tag)) ? ".csv" : Path.GetExtension(fileItem.Tag);

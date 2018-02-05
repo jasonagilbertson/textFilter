@@ -37,7 +37,7 @@
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
-                                      Path=LogViewModel.DiplayAllDialogCommand}"
+                                      Path=LogViewModel.DisplayAllDialogCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+D" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
@@ -741,8 +741,6 @@
                                     Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.NewFromTextCommand}"
                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ComboBox}}" />
-
-
                     </ComboBox.InputBindings>
                 </ComboBox>
                 <GridSplitter Grid.Column="1"
@@ -926,7 +924,6 @@
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.QuickFindTextCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
-
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
                                 <ContextMenu HasDropShadow="True">
@@ -1807,7 +1804,7 @@
                                               BorderBrush="{Binding Source={StaticResource settings},
                                                 Path=Settings.BackgroundColor}"
                                               Command="{Binding Source={StaticResource mainViewModel},
-                                            Path=LogViewModel.DisplayAllDialogCommand}"
+                                                Path=LogViewModel.DisplayAllDialogCommand}"
                                               Foreground="{Binding Source={StaticResource settings},
                                                Path=Settings.ForegroundColor}"
                                               Header="view _all dialog"
