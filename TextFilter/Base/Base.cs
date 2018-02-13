@@ -43,6 +43,7 @@ namespace TextFilter
 
         public static FilterViewModel _FilterViewModel { get; set; }
         public static LogViewModel _LogViewModel { get; set; }
+        public static MainViewModel _MainViewModel { get; set; }
         public static Parser _Parser { get; set; }
 
         public Command DuplicateWindowCommand

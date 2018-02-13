@@ -48,11 +48,26 @@ namespace TextFilter
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
+        static MainViewModel()
+        {
+
+        }
+
         public MainViewModel()
         {
             try
             {
+                if (Base._MainViewModel != null)
+                {
+                    return;
+                }
+                else
+                {
+                    Base._MainViewModel = this;
+                }
+
                 _settings = TextFilterSettings.Settings;
+
                 if (!_settings.ReadConfigFile())
                 {
                     Environment.Exit(1);

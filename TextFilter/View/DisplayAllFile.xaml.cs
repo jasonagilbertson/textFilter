@@ -20,15 +20,16 @@ namespace TextFilter
         private string _initialMessage = string.Empty;
         private string _xmlMessage = string.Empty;
 
-        public DisplayAllFile(string message, string file)
+        public DisplayAllFile(LogFile file, FilterFile filter = null)
         {
             Owner = Application.Current.MainWindow;
+            DataContext = file;
             InitializeComponent();
-            _initialMessage = message;
-            Title = string.Format("{0} - {1}", message, file);
-            _xmlMessage = CheckXml(_initialMessage);
-            
+            _initialMessage = file.FileName;
+            Title = string.Format("{0} - {1}", _initialMessage, file.Tag);
 
+            //https://wpftutorial.net/DataViews.html
+            //http://mark-dot-net.blogspot.com/2008/12/list-filtering-in-wpf-with-m-v-vm.html
         }
 
         public void Disable()

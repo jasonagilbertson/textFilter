@@ -12,10 +12,10 @@
     <Window.Resources>
         <local:TextFilterSettings x:Key="settings" />
         <local:MainViewModel x:Key="mainViewModel" />
-        <local:LogTabViewModel x:Key="logTabViewModel" />
         <local:FilterTabViewModel x:Key="filterTabViewModel" />
+        <local:LogTabViewModel x:Key="logTabViewModel" />
+        <local:LogViewModel x:Key="logViewModel" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
-        <local:LogFile x:Key="logFile" />
     </Window.Resources>
 
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
@@ -42,7 +42,7 @@
                                   Tag="{Binding}"
                                   VirtualizingStackPanel.IsVirtualizing="True"
                                   VirtualizingStackPanel.VirtualizationMode="Recycling">
-
+            <!--ItemsSource="{Binding Source=logViewModel, Path=SelectedTab.ContentList}"-->
             <DataGrid.Resources>
                 <local:BindingProxy x:Key="proxyLog"
                                                     Data="{Binding}" />

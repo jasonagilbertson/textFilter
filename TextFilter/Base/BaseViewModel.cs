@@ -476,10 +476,16 @@ namespace TextFilter
         public void DisplayAllDialogExecuted(object sender)
         {
             SetStatus("DisplayAllExecuted");
-            IFile<T> file = CurrentFile();
-            DisplayAllFile dialog = new DisplayAllFile(file.FileName, file.Tag);
-            dialog.DataContext = CurrentFile(); //this
-            dialog.Show();
+            LogFile file = (LogFile)_LogViewModel.CurrentFile();
+            if (file != null)
+            {
+                DisplayAllFile dialog = new DisplayAllFile(file);
+                dialog.Show();
+            }
+            else
+            {
+                SetStatus("DisplayAllExecuted:current file null!");
+            }
         }
 
         public abstract void FindNextExecuted(object sender);
