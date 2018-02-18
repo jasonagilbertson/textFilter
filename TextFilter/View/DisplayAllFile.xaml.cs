@@ -20,6 +20,18 @@ namespace TextFilter
         private string _initialMessage = string.Empty;
         private string _xmlMessage = string.Empty;
 
+        public DisplayAllFile()
+        {
+
+        }
+        public DisplayAllFile(LogTabViewModel tab)
+        {
+            Owner = Application.Current.MainWindow;
+            DataContext = tab;
+            InitializeComponent();
+            _initialMessage = "";// file.FileName;
+            Title = string.Format("{0} - {1}", _initialMessage, "");// file.Tag);
+        }
         public DisplayAllFile(LogFile file, FilterFile filter = null)
         {
             Owner = Application.Current.MainWindow;
@@ -28,8 +40,11 @@ namespace TextFilter
             _initialMessage = file.FileName;
             Title = string.Format("{0} - {1}", _initialMessage, file.Tag);
 
+            //https://stackoverflow.com/questions/11420500/applying-datatemplate-to-a-grid
+            //https://stackoverflow.com/questions/13246602/datatemplate-in-a-separate-resourcedictionary
             //https://wpftutorial.net/DataViews.html
             //http://mark-dot-net.blogspot.com/2008/12/list-filtering-in-wpf-with-m-v-vm.html
+            //https://stackoverflow.com/questions/20888619/proper-way-to-use-collectionviewsource-in-viewmodel
         }
 
         public void Disable()

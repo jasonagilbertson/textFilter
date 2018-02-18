@@ -476,10 +476,13 @@ namespace TextFilter
         public void DisplayAllDialogExecuted(object sender)
         {
             SetStatus("DisplayAllExecuted");
-            LogFile file = (LogFile)_LogViewModel.CurrentFile();
-            if (file != null)
+            LogFile lfile = (LogFile)_LogViewModel.CurrentFile();
+            //LogTabViewModel tab = (LogTabViewModel)CurrentTab();
+
+            if (lfile != null)
             {
-                DisplayAllFile dialog = new DisplayAllFile(file);
+                DisplayAllFile dialog = new DisplayAllFile(lfile);
+                //DisplayAllFile dialog = new DisplayAllFile(tab);
                 dialog.Show();
             }
             else
