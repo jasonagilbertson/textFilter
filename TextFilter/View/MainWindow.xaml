@@ -1512,7 +1512,10 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
                     <DataTemplate>
-                        <ContentControl Content="{Binding Path=ContentList}" ContentTemplate="{StaticResource LogFileDataTemplate}" />
+                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=ContentList}"/> <!--//works but not hiding group columns-->
+                        <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //hides columns but doesnt show items-->
+                        <!--<ContentControl Content="{Binding Path=ContentList}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //works but not hiding group columns-->
+                        <!--ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}"/>-->
                         <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" />-->
                     </DataTemplate>
                 </TabControl.ContentTemplate>

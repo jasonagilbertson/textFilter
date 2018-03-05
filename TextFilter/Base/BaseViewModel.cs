@@ -482,6 +482,7 @@ namespace TextFilter
             if (lfile != null)
             {
                 DisplayAllFile dialog = new DisplayAllFile(lfile);
+                //DisplayAllFile dialog = new DisplayAllFile(this as LogViewModel);
                 //DisplayAllFile dialog = new DisplayAllFile(tab);
                 dialog.Show();
             }

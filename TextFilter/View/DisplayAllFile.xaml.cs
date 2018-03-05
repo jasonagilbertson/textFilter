@@ -24,6 +24,14 @@ namespace TextFilter
         {
 
         }
+        public DisplayAllFile(LogViewModel view)
+        {
+            Owner = Application.Current.MainWindow;
+            DataContext = view.SelectedTab;
+            InitializeComponent();
+            _initialMessage = "";// file.FileName;
+            Title = string.Format("{0} - {1}", _initialMessage, "");// file.Tag);
+        }
         public DisplayAllFile(LogTabViewModel tab)
         {
             Owner = Application.Current.MainWindow;
