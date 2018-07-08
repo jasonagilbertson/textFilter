@@ -1,5 +1,6 @@
 ﻿<Window x:Class="TextFilter.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:TextFilter"
@@ -1512,7 +1513,13 @@
                 </TabControl.ItemTemplate>
                 <TabControl.ContentTemplate x:Uid="logFileContent">
                     <DataTemplate>
-                        <ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=ContentList}"/> <!--//works but not hiding group columns-->
+                        <ContentControl
+                            Name="LogFileContentControl"
+                            Content="{Binding}" 
+                            ContentTemplate="{StaticResource LogFileDataTemplate}" 
+                            DataContext="{Binding}">
+                        </ContentControl>
+                        <!--//works but not hiding group columns-->
                         <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //hides columns but doesnt show items-->
                         <!--<ContentControl Content="{Binding Path=ContentList}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //works but not hiding group columns-->
                         <!--ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}"/>-->

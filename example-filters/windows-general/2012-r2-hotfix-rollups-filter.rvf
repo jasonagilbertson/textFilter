@@ -1,0 +1,388 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>160515</filterversion>
+  <filternotes>use with SDP hotfixes.csv or any hotfix list.
+refer to blog about rollups and remember they are not all cumulative.
+
+http://blogs.technet.com/b/chad/archive/2015/01/21/current-windows-server-2012-r2-amp-windows-8-8-1-update-rollups.aspx
+
+ Cumulative rollups
+ 2910100            A list of monthly Update Rollups available for Windows RT 8.1, Windows 8.1 and Windows Server 2012 R2
+ https://vkbexternal.partners.extranet.microsoft.com/VKBWebService/ViewContent.aspx?scid=KB;EN-US;2910100 
+ some are cumulative
+ basically april may nov and dec 2014 is what customer should have
+
+rds specific fixes:
+Maintained current rds hotfix lists
+
+2008 http://support.microsoft.com/kb/2312539
+2008r2 http://support.microsoft.com/kb/2601888/EN-US
+2012 http://support.microsoft.com/kb/2821526/EN-US
+2012r2 http://support.microsoft.com/kb/2933664/EN-US
+</filternotes>
+  <filters>
+    <filter>
+      <filterpattern>kb2883200</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>General Availability Update Rollup - http://support2.microsoft.com/kb/2883200</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2884846</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>October 2013 - http://support2.microsoft.com/kb/2884846</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2887595</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>November 2013 - http://support2.microsoft.com/kb/2887595</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2903939</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>December 2013 - http://support2.microsoft.com/kb/2903939</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2911106</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>January 2014 - http://support2.microsoft.com/kb/2911106</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2919394</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>February 2014 - http://support2.microsoft.com/kb/2919394</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2928680</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>March 2014 - http://support2.microsoft.com/kb/2928680</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2919355</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>* April 2014 - http://support2.microsoft.com/kb/2919355   *this update includes march 2014 fixes and is also prereq for november 2014*</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2955164</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>May 2014 - http://support2.microsoft.com/kb/2955164</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2962409</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>June 2014 - http://support2.microsoft.com/kb/2962409</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2967917</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>July 2014 - http://support2.microsoft.com/kb/2967917</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2975719</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>August 2014 - http://support2.microsoft.com/kb/2975719</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2984006</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>September 2014 - http://support2.microsoft.com/kb/2984006</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2995388</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>October 2014 - http://support2.microsoft.com/kb/2995388</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3000850</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>* November 2014 - http://support2.microsoft.com/kb/3000850 </notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3013769</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>* December 2014 - http://support2.microsoft.com/kb/3013769</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3156418</filterpattern>
+      <backgroundcolor>DeepSkyBlue</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>May 2016 update rollup - https://support.microsoft.com/en-us/kb/3156418</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3172614</filterpattern>
+      <backgroundcolor>DeepSkyBlue</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>July 2016 update rollup - https://support.microsoft.com/en-us/kb/3172614</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3161606</filterpattern>
+      <backgroundcolor>DeepSkyBlue</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>June 2016 update rollup - https://support.microsoft.com/en-us/kb/3161606</notes>
+    </filter>
+    <filter>
+      <filterpattern>Kb3146978</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds general: 3146978 slow file copy slow enumeration on redirected drives</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3092688</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds general: 3092688 UPD profiles corrupted when a network connectivity issue occurs in Windows Server 2012 R2</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3091411|3134179</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>rds general: (db contention fix) 3091411 User connection fails when many connections are made to Windows Server 2012 R2-based RD Connection Broker. replaced by kb3134179 (perf counters)</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3055615</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>22</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds handle leak user logoff (printers): https://support.microsoft.com/en-us/kb/3055615</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3047296</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>23</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds general: 3047296 RDP session becomes unresponsive when you connect to a Windows Server 2012 R2-based computer</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb2959626</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>24</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds general: 2959626 Reliability improvements for Remote Desktop Session Host and RemoteApp</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3020474</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>25</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds connection broker: 3020474 Error occurs when Remote Desktop Connection Broker connects to SQL server in Windows Server 2012 R2</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3042843</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>26</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds gateway: 3042843 "Your computer can't connect to the remote computer" error because RD Gateway service freezes in Windows Server 2012 R2 </notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3069129</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>27</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds web access: 3069129 Blank page is displayed when you try to access RemoteApps on a Windows Server 2012 R2-based RD Web Access server </notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3019272</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>28</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>general: 3019272 It takes a long time to log on to a domain-joined computer that runs Windows 8.1 or Windows Server 2012 R2 </notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3080728</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>29</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>general: 3080728 Applications can't perform I/Os in Windows Server 2012 R2</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3051690</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>30</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>general: 3051690 System becomes unresponsive when file system minifilter drivers are installed in Windows 8.1 or Windows Server 2012 R2</notes>
+    </filter>
+    <filter>
+      <filterpattern>kb3103000</filterpattern>
+      <backgroundcolor>DarkSeaGreen</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>31</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>rds rail: 3103000 RemoteApp windows disappear and screen flickers when you switch between windows in Windows 8.1 or Windows Server 2012 R2</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FFF0F8FF</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>32</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

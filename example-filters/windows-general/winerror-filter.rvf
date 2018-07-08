@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>155717</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>0xc0000001</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>root</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>WINSTA: ERR::NtOpenProcess failed: .* in CProcessUtils::GetSidFromProcessId</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>fail</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(\b0x[0-9a-fA-F]{8}\b)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>WBEM_E_QUOTA_VIOLATION|0x8004106c|-2147217300</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>cimv2</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>winhttp</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>HotPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

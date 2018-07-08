@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>155909</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>The I/O operation has been aborted because of either a thread exit or an application request.</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>*** not sure if this good or bad *** [26]0870.088C::‎2015‎-‎02‎-‎25 15:32:21.578 [Microsoft-Windows-WinRM]An error was encountered while processing an operation.  Error Code: 995  Error String:&lt;f:WSManFault xmlns:f="http://schemas.microsoft.com/wbem/wsman/1/wsmanfault" Code="995" Machine="wsompahshp08.ams.bnymellon.net"&gt;&lt;f:Message&gt;&lt;f:ProviderFault provider="WMI Provider" path="C:\Windows\system32\WsmWmiPl.dll"&gt;&lt;f:WSManFault xmlns:f="http://schemas.microsoft.com/wbem/wsman/1/wsmanfault" Code="995" Machine="WSOMPAHSHP08.ams.bnymellon.net"&gt;&lt;f:Message&gt;The I/O operation has been aborted because of either a thread exit or an application request. &lt;/f:Message&gt;&lt;/f:WSManFault&gt;&lt;/f:ProviderFault&gt;&lt;/f:Message&gt;&lt;/f:WSManFault&gt; </notes>
+    </filter>
+    <filter>
+      <filterpattern>Microsoft Failover Cluster Virtual Adapter</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>false positive [25]0870.09B4::‎2015‎-‎02‎-‎25 15:32:09.908 [Microsoft-Windows-WinRM]SOAP [listener sending index 1 of 3 total chunks (3000 bytes)] &lt;s:Envelope xml:lang="en-US" xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:x="http://schemas.xmlsoap.org/ws/2004/09/transfer" xmlns:w="http://schemas.dmtf.org/wbem/wsman/1/wsman.xsd" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wsman.xsd"&gt;&lt;s:Header&gt;&lt;a:Action&gt;http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse&lt;/a:Action&gt;&lt;a:MessageID&gt;uuid:C8D62929-173A-40C7-8901-C2ADD02B0FA4&lt;/a:MessageID&gt;&lt;p:OperationID s:mustUnderstand="false"&gt;uuid:FAD1DB64-6498-4968-A08C-55B15E7AC1A7&lt;/p:OperationID&gt;&lt;p:SequenceId&gt;1&lt;/p:SequenceId&gt;&lt;p:ActivityId&gt;788BA8B0-5139-0019-CBA9-8B783951D001&lt;/p:ActivityId&gt;&lt;a:To&gt;http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous&lt;/a:To&gt;&lt;a:RelatesTo&gt;uuid:909E0515-AD6F-416D-9210-ABD292754B7D&lt;/a:RelatesTo&gt;&lt;/s:Header&gt;&lt;s:Body&gt;&lt;p:Win32_NetworkAdapterConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://schemas.microsoft.com/wbem/wsman/1/wmi/root/cimv2/Win32_NetworkAdapterConfiguration" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common" xsi:type="p:Win32_NetworkAdapterConfiguration_Type"&gt;&lt;p:ArpAlwaysSourceRoute xsi:nil="true"/&gt;&lt;p:ArpUseEtherSNAP xsi:nil="true"/&gt;&lt;p:Caption&gt;[00000022] Microsoft Failover Cluster Virtual Adapter&lt;/p:Caption&gt;&lt;p:DatabasePath&gt;%SystemRoot%\System32\drivers\etc&lt;/p:DatabasePath&gt;&lt;p:DeadGWDetectEnabled xsi:nil="true"/&gt;&lt;p:DefaultTOS xsi:nil="true"/&gt;&lt;p:DefaultTTL xsi:nil="true"/&gt;&lt;p:Description&gt;Microsoft Failover Cluster Virtual Adapter&lt; </notes>
+    </filter>
+    <filter>
+      <filterpattern>FailedOverReplicationType</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>false positive FailedOverReplicationType</notes>
+    </filter>
+    <filter>
+      <filterpattern>winrm.*soap.*fail</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>chunks</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>HandleEventIrrecoverableError</filterpattern>
+      <backgroundcolor>Blue</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>issue? [latest] robustconnection_cpp1600 RobustConnection::HandleEventIrrecoverableError() - RobustConnection::HandleEventIrrecoverableError, event = IrrecoverableError errorCode = 995 flags = 0 this = 000000001CD3E900</notes>
+    </filter>
+    <filter>
+      <filterpattern>with status code [^2]</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>[Microsoft-Windows-HttpService]Server application passed response (request ID 0xFF00002480000016, connection ID 0xFF00002460000001, method POST, header length 0, number of entity chunks 1, cache policy 0) with status code 200. </notes>
+    </filter>
+    <filter>
+      <filterpattern>ERROR: getaddrinfo failed : 11001</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Chartreuse</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>seend in good traces: [latest] wsmanutils_cpp771 ValidateIPOnlyString() - ERROR: getaddrinfo failed : 11001</notes>
+    </filter>
+    <filter>
+      <filterpattern>The WinRM Server has encountered network connectivity issues.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>known error: The WinRM Server has encountered network connectivity issues.</notes>
+    </filter>
+    <filter>
+      <filterpattern>retransmit</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>[Microsoft-Windows-TCPIP]TCP: Connection 0xFFFFE00074029530 RetransmitTimer  timer started. Scheduled to expire in 300 ms. Processor 24: LastInterruptTime 2862892772 100-ns ticks; LastMicrosecondCount 286954410 msec; CachedKQPCValue 784640391 ticks; CachedFrequencyValue 2734373. </notes>
+    </filter>
+    <filter>
+      <filterpattern>an error was encountered</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>[Microsoft-Windows-WinRM]An error was encountered while processing an operation.  Error Code: 2150859010  Error String:&lt;p:MSFT_WmiError b:IsCIM_Error="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:b="http://schemas.dmtf.org/wbem/wsman/1/cimbinding.xsd" xmlns:p="http://schemas.dmtf.org/wbem/wscim/1/cim-schema/2/MSFT_WmiError" xmlns:cim="http://schemas.dmtf.org/wbem/wscim/1/common" xsi:type="p:MSFT_WmiError_Type"&gt;&lt;p:CIMStatusCode xsi:type="cim:cimUnsignedInt"&gt;7&lt;/p:CIMStatusCode&gt;&lt;p:CIMStatusCodeDescription xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:ErrorSource xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:ErrorSourceFormat xsi:type="cim:cimUnsignedShort"&gt;0&lt;/p:ErrorSourceFormat&gt;&lt;p:ErrorType xsi:type="cim:cimUnsignedShort"&gt;0&lt;/p:ErrorType&gt;&lt;p:Message xsi:type="cim:cimString"&gt;The WS-Management service cannot process the request. The WMI service reported that the WMI provider could not perform the requested operation. &lt;/p:Message&gt;&lt;p:MessageID xsi:type="cim:cimString"&gt;HRESULT 0x80338102&lt;/p:MessageID&gt;&lt;p:OtherErrorSourceFormat xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:OtherErrorType xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:OwningEntity xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:PerceivedSeverity xsi:type="cim:cimUnsignedShort"&gt;0&lt;/p:PerceivedSeverity&gt;&lt;p:ProbableCause xsi:type="cim:cimUnsignedShort"&gt;0&lt;/p:ProbableCause&gt;&lt;p:ProbableCauseDescription xsi:type="cim:cimString" xsi:nil="true" /&gt;&lt;p:error_Category xsi:type="cim:cimUnsignedInt"&gt;11&lt;/p:error_Category&gt;&lt;p:error_Code xsi:type="cim:cimUnsignedInt"&gt;2150859010&lt;/p:error_Code&gt;&lt;p:error_Type xsi:type="cim:cimString"&gt;HRESULT&lt;/p:error_Type&gt;&lt;p:error_WindowsErrorMessage xsi:type="cim:cimString"&gt;The WS-Management service cannot process the request. The WMI service reported that the WMI provider could not perform the requested operation. &lt;/p:error_WindowsErrorMessage&gt;&lt;/p:MSFT_WmiError&gt; </notes>
+    </filter>
+    <filter>
+      <filterpattern>crequestcontext_cpp1174</filterpattern>
+      <backgroundcolor>Tomato</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>[latest] crequestcontext_cpp1174 CRequestContext::AddMessage() - CRequestContext: &lt;f:WSManFault xmlns:f="http://schemas.microsoft.com/wbem/wsman/1/wsmanfault" Code="2152992672" Machine="localhost"&gt;&lt;f:Message&gt;&lt;f:ProviderFault provider="PowerShellplugin" path="%windir%\system32\pwrshplugin.dll"&gt;PowerShell plugin operation is shutting down. This may happen if the hosting service or application is shutting down.</notes>
+    </filter>
+    <filter>
+      <filterpattern>===</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filters>
+  <filter>
+    <filterpattern>0x12f573b0</filterpattern>
+    <backgroundcolor>Yellow</backgroundcolor>
+    <foregroundcolor>Black</foregroundcolor>
+    <index>0</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes>401 failure on this request [2]0428.0A00::01/13/2015-15:34:12.121 [Microsoft-Windows-WinHttp/Diagnostic] 15:34:12.135 ::WinHttpReceiveResponse(0x12f573b0, 0x0) 15:34:12.135 ::WinHttpReceiveResponse(0x12f573b0, 0x0)</notes>
+  </filter>
+  <filter>
+    <filterpattern>error 0$|HR_Return_Failure == 0</filterpattern>
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <index>1</index>
+    <enabled>True</enabled>
+    <exclude>True</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>FASTQUAL_CPP631 CBasicQualifierSet::IsValidQualifierSet() - HR_Return_Failure == 0</filterpattern>
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <index>2</index>
+    <enabled>True</enabled>
+    <exclude>True</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>success</filterpattern>
+    <backgroundcolor>LimeGreen</backgroundcolor>
+    <foregroundcolor>Black</foregroundcolor>
+    <index>3</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>wbem|wmi</filterpattern>
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <index>4</index>
+    <enabled>True</enabled>
+    <exclude>True</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>401</filterpattern>
+    <backgroundcolor>Orange</backgroundcolor>
+    <foregroundcolor>Black</foregroundcolor>
+    <index>5</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>fail|error</filterpattern>
+    <backgroundcolor>Black</backgroundcolor>
+    <foregroundcolor>Red</foregroundcolor>
+    <index>6</index>
+    <enabled>False</enabled>
+    <exclude>False</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>rds2012.jag.lab</filterpattern>
+    <backgroundcolor>Aqua</backgroundcolor>
+    <foregroundcolor>Black</foregroundcolor>
+    <index>7</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>Starting WorkItem Thread Action</filterpattern>
+    <backgroundcolor>Chocolate</backgroundcolor>
+    <foregroundcolor>Blue</foregroundcolor>
+    <index>8</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>Stopping WorkItem Thread Action</filterpattern>
+    <backgroundcolor>Blue</backgroundcolor>
+    <foregroundcolor>Chocolate</foregroundcolor>
+    <index>9</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>http</filterpattern>
+    <backgroundcolor>Black</backgroundcolor>
+    <foregroundcolor>DeepSkyBlue</foregroundcolor>
+    <index>10</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>cred|auth</filterpattern>
+    <backgroundcolor>Black</backgroundcolor>
+    <foregroundcolor>Aquamarine</foregroundcolor>
+    <index>11</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern />
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <index>12</index>
+    <enabled>False</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+</filters>

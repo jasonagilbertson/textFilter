@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filters>
+  <filter>
+    <filterpattern>ctxtapi_cxx2462 SpInitLsaModeContext() - Client wants extended error</filterpattern>
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>0</index>
+    <enabled>True</enabled>
+    <exclude>True</exclude>
+    <regex>False</regex>
+    <notes>[winnt5] ctxtapi_cxx2462 SpInitLsaModeContext() - Client wants extended error</notes>
+  </filter>
+  <filter>
+    <filterpattern>userapi_cxx302 SpDeleteUserModeContext() - Failed to reference context</filterpattern>
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>1</index>
+    <enabled>True</enabled>
+    <exclude>True</exclude>
+    <regex>False</regex>
+    <notes>noisy, not sure if error: userapi_cxx302 SpDeleteUserModeContext() - Failed to reference context 0000006B08C884F0 by lsa handle</notes>
+  </filter>
+  <filter>
+    <filterpattern>kerb|winnt5</filterpattern>
+    <backgroundcolor>Black</backgroundcolor>
+    <foregroundcolor>Chartreuse</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>2</index>
+    <enabled>False</enabled>
+    <exclude>False</exclude>
+    <regex>True</regex>
+    <notes>noisy</notes>
+  </filter>
+  <filter>
+    <filterpattern>(winnt5|kerb).*(fail|error)</filterpattern>
+    <backgroundcolor>Black</backgroundcolor>
+    <foregroundcolor>Red</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>3</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>True</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern>mskerbtrace</filterpattern>
+    <backgroundcolor>Chartreuse</backgroundcolor>
+    <foregroundcolor>Black</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>4</index>
+    <enabled>True</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+  <filter>
+    <filterpattern />
+    <backgroundcolor>#FF696969</backgroundcolor>
+    <foregroundcolor>#FF00FFFF</foregroundcolor>
+    <casesensitive>False</casesensitive>
+    <index>5</index>
+    <enabled>False</enabled>
+    <exclude>False</exclude>
+    <regex>False</regex>
+    <notes />
+  </filter>
+</filters>

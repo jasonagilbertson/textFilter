@@ -1885,7 +1885,7 @@
                BasedOn="{x:Null}"
                TargetType="{x:Type ScrollViewer}">
                 <Setter Property="HorizontalScrollBarVisibility"
-                    Value="Hidden" />
+                    Value="Disabled" />
                 <Setter Property="VerticalScrollBarVisibility"
                     Value="Auto" />
                 <Setter Property="Template">
@@ -2720,7 +2720,7 @@
                             <ScrollViewer x:Name="PART_ContentHost"
                                       Background="Transparent"
                                       Focusable="false"
-                                      HorizontalScrollBarVisibility="Hidden"
+                                      HorizontalScrollBarVisibility="Disabled"
                                       VerticalScrollBarVisibility="Hidden" />
                         </ControlTemplate>
                     </Setter.Value>
@@ -3453,7 +3453,7 @@
                                 <DockPanel Margin="{TemplateBinding Padding}">
                                     <ScrollViewer DockPanel.Dock="Top"
                                               Focusable="false"
-                                              HorizontalScrollBarVisibility="Hidden"
+                                              HorizontalScrollBarVisibility="Disabled"
                                               VerticalScrollBarVisibility="Hidden">
                                         <GridViewHeaderRowPresenter Margin="2,0,2,0"
                                                                 AllowsColumnReorder="{Binding TemplatedParent.View.AllowsColumnReorder,

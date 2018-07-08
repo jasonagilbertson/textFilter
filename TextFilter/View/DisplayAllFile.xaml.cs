@@ -45,9 +45,12 @@ namespace TextFilter
             Owner = Application.Current.MainWindow;
             DataContext = file;
             InitializeComponent();
+            //DataContext = file;
+            
             _initialMessage = file.FileName;
             Title = string.Format("{0} - {1}", _initialMessage, file.Tag);
-
+            
+            UpdateLayout();
             //https://stackoverflow.com/questions/11420500/applying-datatemplate-to-a-grid
             //https://stackoverflow.com/questions/13246602/datatemplate-in-a-separate-resourcedictionary
             //https://wpftutorial.net/DataViews.html

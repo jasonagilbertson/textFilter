@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>160816</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>^\|\W+([0-9]+)\W+(.+?)\W+.+?\W+(.+)\|\W(.+)</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>|         1    rdpdr                WPP         0b78067d-bd31-d232-4e2f-f2e22500d443| w32scard_cpp1170</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>155510</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>Subscription::ProcessEvent().+(1116|1117)\&lt;/EventID\&gt;</filterpattern>
+      <backgroundcolor>DeepPink</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Subscription::ProcessEvent()</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>subscription manager -&gt; Subscription::ProcessEvent()</notes>
+    </filter>
+    <filter>
+      <filterpattern>BoundSubscription::OnReceiveComplete()</filterpattern>
+      <backgroundcolor>Aqua</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>subscription manager received event -&gt; BoundSubscription::OnReceiveComplete()</notes>
+    </filter>
+    <filter>
+      <filterpattern>UserBuffer.+ Exception: Error=</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>error? UserBuffer::ThrowUnexpectedEOFException() - Exception: Error= 13</notes>
+    </filter>
+    <filter>
+      <filterpattern>RemoteSubscription</filterpattern>
+      <backgroundcolor>CornflowerBlue</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>error|fail|exception</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

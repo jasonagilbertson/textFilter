@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>164502</filterversion>
+  <filternotes>filter can be used with CAPI2 event log export or CAPI ETW tracing</filternotes>
+  <filters>
+    <filter>
+      <filterpattern>sslproto AND error OR fail</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+revocationcheck.+?Result value\=\"([^0].*?)\"</filterpattern>
+      <backgroundcolor>#FFF0F8FF</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>shouldnt be error</notes>
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+CERT_TRUST_IS_UNTRUSTED.+errorStatus value\=\"([^0].*?)\" (CERT_\w+?)\=.+SELF_SIGNED\=\"true\"</filterpattern>
+      <backgroundcolor>Pink</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>this may be ok since cert is self signed</notes>
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+errorStatus value\=\"([^0].*?)\" (CERT_\w+?)\=</filterpattern>
+      <backgroundcolor>DarkOrange</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+result value\=\"([^0].*?)\"\&gt;(.+?)\&lt;</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+X509.+subjectName="(.+?)".+name="(.+?)"</filterpattern>
+      <backgroundcolor>Aqua</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>CAPI2.+section \&lt;(.+?)\&gt;.+?(CERT_\w+)</filterpattern>
+      <backgroundcolor>GreenYellow</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>#FFF0F8FF</backgroundcolor>
+      <foregroundcolor>#FF000000</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

@@ -1110,7 +1110,7 @@ namespace TextFilter
                 if (property.PropertyType.Equals(typeof(Color)))
                 {
                     Color color = (Color)property.GetValue((typeof(Color)), null);
-                    Debug.Print("GetColors():Checking color: " + property.Name);
+                    //Debug.Print("GetColors():Checking color: " + property.Name);
 
                     if (property.Name == "Transparent")
                     {
@@ -1119,7 +1119,7 @@ namespace TextFilter
 
                     if (!_webColorsPair.ContainsKey(property.Name))
                     {
-                        Debug.Print("GetColors():adding color: " + property.Name);
+                        //Debug.Print("GetColors():adding color: " + property.Name);
                         colors.Add(color);
                         _webColorsPair.Add(property.Name, color);
                     }
