@@ -1,4 +1,9 @@
-﻿// ************************************************************************************
+﻿// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+// ************************************************************************************
 // Assembly: TextFilter
 // File: TextFilterSettings.cs
 // Created: 3/19/2017
@@ -23,43 +28,6 @@ namespace TextFilter
 {
     public class TextFilterSettings : Base
     {
-        private const int ATTACH_PARENT_PROCESS = -1;
-
-        private static TextFilterSettings settings;
-
-        private KeyValueConfigurationCollection _appSettings;
-        private Configuration _Config;
-        private ExeConfigurationFileMap _ConfigFileMap;
-        private List<Color> _webColors;
-        private Dictionary<string, Color> _webColorsPair = new Dictionary<string, Color>();
-
-        static TextFilterSettings()
-        {
-            if (settings == null)
-            {
-                settings = new TextFilterSettings();
-            }
-        }
-
-        public TextFilterSettings()
-        {
-            // todo: this is getting initialized twice
-            _webColors = GetColors();
-        }
-
-        public enum ResourceType
-        {
-            Error,
-
-            Local,
-
-            Unc,
-
-            Unknown,
-
-            Url
-        }
-
         public enum AppSettingNames
         {
             AutoPopulateColors,
@@ -109,10 +77,49 @@ namespace TextFilter
             WordWrap
         }
 
+        public enum ResourceType
+        {
+            Error,
+
+            Local,
+
+            Unc,
+
+            Unknown,
+
+            Url
+        }
+
+        private const int ATTACH_PARENT_PROCESS = -1;
+
+        private static TextFilterSettings settings;
+
+        private KeyValueConfigurationCollection _appSettings;
+        private Configuration _Config;
+        private ExeConfigurationFileMap _ConfigFileMap;
+        private List<Color> _webColors;
+        private Dictionary<string, Color> _webColorsPair = new Dictionary<string, Color>();
+
         public static TextFilterSettings Settings
         {
             get { return TextFilterSettings.settings; }
             set { TextFilterSettings.settings = value; }
+        }
+
+        public bool AutoPopulateColors
+        {
+            get
+            {
+                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value));
+            }
+            set
+            {
+                if (value.ToString() != _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value.ToString())
+                {
+                    _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value = value.ToString();
+                    OnPropertyChanged((AppSettingNames.AutoPopulateColors).ToString());
+                }
+            }
         }
 
         public bool AutoSave
@@ -127,21 +134,6 @@ namespace TextFilter
                 {
                     _appSettings[(AppSettingNames.AutoSave).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.AutoSave).ToString());
-                }
-            }
-        }
-        public bool AutoPopulateColors
-        {
-            get
-            {
-                return (Convert.ToBoolean(_appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value));
-            }
-            set
-            {
-                if (value.ToString() != _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value.ToString())
-                {
-                    _appSettings[(AppSettingNames.AutoPopulateColors).ToString()].Value = value.ToString();
-                    OnPropertyChanged((AppSettingNames.AutoPopulateColors).ToString());
                 }
             }
         }
@@ -344,26 +336,6 @@ namespace TextFilter
                     _appSettings[(AppSettingNames.FilterDirectory).ToString()].Value = value.ToString();
                     OnPropertyChanged((AppSettingNames.FilterDirectory).ToString());
                 }
-            }
-        }
-
-        public bool IsDirectoryWritable(string dirPath)
-        {
-            try
-            {
-                using (FileStream fs = File.Create(
-                    Path.Combine(dirPath,
-                        Path.GetRandomFileName()),
-                        1,
-                        FileOptions.DeleteOnClose)
-                )
-                { }
-
-                return true;
-            }
-            catch
-            {
-                return false;
             }
         }
 
@@ -644,6 +616,20 @@ namespace TextFilter
             }
         }
 
+        static TextFilterSettings()
+        {
+            if (settings == null)
+            {
+                settings = new TextFilterSettings();
+            }
+        }
+
+        public TextFilterSettings()
+        {
+            // todo: this is getting initialized twice
+            _webColors = GetColors();
+        }
+
         public void AddFilterFile(string filterFile)
         {
             List<string> filterFiles = new List<string>(CurrentFilterFiles);
@@ -796,6 +782,26 @@ namespace TextFilter
             {
                 SetStatus("GetPathType:Exception" + e.ToString());
                 return ResourceType.Error;
+            }
+        }
+
+        public bool IsDirectoryWritable(string dirPath)
+        {
+            try
+            {
+                using (FileStream fs = File.Create(
+                    Path.Combine(dirPath,
+                        Path.GetRandomFileName()),
+                        1,
+                        FileOptions.DeleteOnClose)
+                )
+                { }
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -980,7 +986,7 @@ namespace TextFilter
                             }
                         case AppSettingNames.BackgroundColor:
                             {
-                                _appSettings[name].Value = "AliceBlue";
+                                _appSettings[name].Value = "Black";
                                 break;
                             }
                         case AppSettingNames.CountMaskedMatches:
@@ -1037,7 +1043,7 @@ namespace TextFilter
                             }
                         case AppSettingNames.ForegroundColor:
                             {
-                                _appSettings[name].Value = "Black";
+                                _appSettings[name].Value = "Azure";
                                 break;
                             }
                         case AppSettingNames.HelpUrl:
@@ -1140,7 +1146,7 @@ namespace TextFilter
 
             while (newList.Count >= settings.FileHistoryCount)
             {
-                newList.RemoveAt(newList.Count -1);
+                newList.RemoveAt(newList.Count - 1);
             }
 
             if (GetPathType(logFile) != ResourceType.Url)
@@ -1151,7 +1157,7 @@ namespace TextFilter
                 }
             }
 
-            newList.Insert(0,logFile);
+            newList.Insert(0, logFile);
             return newList.ToArray();
         }
 
