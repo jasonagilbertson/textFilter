@@ -1,4 +1,9 @@
-﻿// ************************************************************************************
+﻿// ------------------------------------------------------------
+// Copyright (c) Microsoft Corporation.  All rights reserved.
+// Licensed under the MIT License (MIT). See License.txt in the repo root for license information.
+// ------------------------------------------------------------
+
+// ************************************************************************************
 // Assembly: TextFilter
 // File: MainViewModel.cs
 // Created: 3/19/2017
@@ -13,6 +18,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -47,82 +53,6 @@ namespace TextFilter
         private Command _versionCheckCommand;
 
         private WorkerManager _workerManager = WorkerManager.Instance;
-
-        static MainViewModel()
-        {
-
-        }
-
-        public MainViewModel()
-        {
-            try
-            {
-                if (Base._MainViewModel != null)
-                {
-                    return;
-                }
-                else
-                {
-                    Base._MainViewModel = this;
-                }
-
-                _settings = TextFilterSettings.Settings;
-
-                if (!_settings.ReadConfigFile())
-                {
-                    Environment.Exit(1);
-                    Application.Current.Shutdown(1);
-                    return;
-                }
-
-                // clean up old log file if exists
-                if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
-                {
-                    File.Delete(Settings.DebugFile);
-                }
-
-                SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
-                Base.NewCurrentStatus += HandleNewCurrentStatus;
-
-                // Base._Parser = new Parser();
-                Base._FilterViewModel = new FilterViewModel();
-                Base._LogViewModel = new LogViewModel();
-                //_Parser.Enable(true);
-
-                App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
-                    Process.GetCurrentProcess().MainModule.ModuleName,
-                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
-
-                SetStatus(App.Current.MainWindow.Title);
-
-                // to embed external libraries
-                // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
-                AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
-                {
-                    String resourceName = "TextFilter." + new AssemblyName(args.Name).Name + ".dll";
-
-                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-                    {
-                        Byte[] assemblyData = new Byte[stream.Length];
-
-                        stream.Read(assemblyData, 0, assemblyData.Length);
-
-                        return Assembly.Load(assemblyData);
-                    }
-                };
-
-                _timer = new System.Timers.Timer(10000);
-                _timer.AutoReset = false;
-                _timer.Elapsed += _timer_Elapsed;
-                _timer.Enabled = true;
-
-                SetStatus("loaded");
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Exception:" + e.ToString());
-            }
-        }
 
         public string CurrentStatus
         {
@@ -207,6 +137,81 @@ namespace TextFilter
                 return _versionCheckCommand;
             }
             set { _versionCheckCommand = value; }
+        }
+
+        static MainViewModel()
+        {
+        }
+
+        public MainViewModel()
+        {
+            try
+            {
+                if (Base._MainViewModel != null)
+                {
+                    return;
+                }
+                else
+                {
+                    Base._MainViewModel = this;
+                }
+
+                _settings = TextFilterSettings.Settings;
+
+                if (!_settings.ReadConfigFile())
+                {
+                    Environment.Exit(1);
+                    Application.Current.Shutdown(1);
+                    return;
+                }
+
+                // clean up old log file if exists
+                if (!string.IsNullOrEmpty(Settings.DebugFile) && File.Exists(Settings.DebugFile))
+                {
+                    File.Delete(Settings.DebugFile);
+                }
+
+                SetStatus("Starting textFilter: " + Process.GetCurrentProcess().Id.ToString());
+                Base.NewCurrentStatus += HandleNewCurrentStatus;
+
+                // Base._Parser = new Parser();
+                Base._FilterViewModel = new FilterViewModel();
+                Base._LogViewModel = new LogViewModel();
+                //_Parser.Enable(true);
+
+                App.Current.MainWindow.Title = string.Format("{0} {1}", // {2}",
+                    Process.GetCurrentProcess().MainModule.ModuleName,
+                    Process.GetCurrentProcess().MainModule.FileVersionInfo.FileVersion);
+
+                SetStatus(App.Current.MainWindow.Title);
+
+                // to embed external libraries
+                // http: //blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
+                AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
+                {
+                    String resourceName = "TextFilter." + new AssemblyName(args.Name).Name + ".dll";
+
+                    using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
+                    {
+                        Byte[] assemblyData = new Byte[stream.Length];
+
+                        stream.Read(assemblyData, 0, assemblyData.Length);
+
+                        return Assembly.Load(assemblyData);
+                    }
+                };
+
+                _timer = new System.Timers.Timer(10000);
+                _timer.AutoReset = false;
+                _timer.Elapsed += _timer_Elapsed;
+                _timer.Enabled = true;
+
+                SetStatus("loaded");
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Exception:" + e.ToString());
+            }
         }
 
         public void ColorComboKeyDown(object sender, KeyEventArgs e)
@@ -432,8 +437,9 @@ namespace TextFilter
                         if (mbResult == MessageBoxResult.Yes)
                         {
                             string downloadZip = string.Format("{0}\\{1}", workingDir.TrimEnd('\\'), Path.GetFileName(downloadLocation));
-                            (new System.Net.WebClient()).DownloadFile(downloadLocation, downloadZip);
-
+                            ServicePointManager.Expect100Continue = true;
+                            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                            (new WebClient()).DownloadFile(downloadLocation, downloadZip);
                             string downloadZipDir = string.Format("{0}-{1}", Path.GetFileNameWithoutExtension(downloadZip), version);
 
                             if (Directory.Exists(downloadZipDir))
