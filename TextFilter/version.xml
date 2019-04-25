@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updateinfo>
-  <version>0.7.7054.23722</version>
+  <version>0.7.7054.24386</version>
   <download>https://aka.ms/textfilter.zip</download>
   <notes>
-    0.7.7054.23722 - add Expect100Continue / TLS 1.2 for git release download.
+    0.7.7054.24386 - add Expect100Continue / TLS 1.2 for git release download.
+    direct link: https://github.com/jasonagilbertson/textFilter/releases/download/0.7.7054.24386/textFilter.exe.zip
     0.7.0.34411 - add filterIndex in file view, f3 / shift+f3 (next / previous), autocolor selection for new filters, ctrl-m formats xml, csv, and json
     0.7.0.015 - add autocolor, hotkey add filter item, filterindex column
     0.7.0.012 - add go to filter, view message
