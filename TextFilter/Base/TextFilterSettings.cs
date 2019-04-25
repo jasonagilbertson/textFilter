@@ -927,7 +927,7 @@ namespace TextFilter
                 if (!SaveSessionInformation)
                 {
                     // set current properties back to what they were
-                    List<string> currentFilterFiles = new List<string>(CurrentLogFiles);
+                    List<string> currentFilterFiles = new List<string>(CurrentFilterFiles);
                     List<string> currentLogFiles = new List<string>(CurrentLogFiles);
                     CurrentLogFiles = new List<string>();
                     CurrentFilterFiles = new List<string>();

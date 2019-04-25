@@ -837,7 +837,7 @@ namespace TextFilter
         private void UpdateRecentCollection()
         {
             // setting to null forces refresh
-            RecentCollection = null;
+            RecentLogCollection = null;
         }
 
         private void ViewMessageExecuted(object sender)

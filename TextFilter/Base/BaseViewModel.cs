@@ -55,8 +55,11 @@ namespace TextFilter
 
         private int _previousIndex = -1;
 
-        private ObservableCollection<WPFMenuItem> _recentCollection;
         private Command _recentCommand;
+
+        private ObservableCollection<WPFMenuItem> _recentFilterCollection;
+
+        private ObservableCollection<WPFMenuItem> _recentLogCollection;
 
         private Command _reloadCommand;
 
@@ -296,24 +299,38 @@ namespace TextFilter
             }
         }
 
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
-            {
-                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-            }
-
-            set
-            {
-                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-                OnPropertyChanged("RecentCollection");
-            }
-        }
-
         public Command RecentCommand
         {
             get { return _recentCommand ?? new Command(RecentFileExecuted); }
             set { _recentCommand = value; }
+        }
+
+        public ObservableCollection<WPFMenuItem> RecentFilterCollection
+        {
+            get
+            {
+                return _recentFilterCollection ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
+            }
+
+            set
+            {
+                _recentFilterCollection = value ?? RecentCollectionBuilder(Settings.RecentFilterFiles);
+                OnPropertyChanged("RecentFilterCollection");
+            }
+        }
+
+        public ObservableCollection<WPFMenuItem> RecentLogCollection
+        {
+            get
+            {
+                return _recentLogCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+            }
+
+            set
+            {
+                _recentLogCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+                OnPropertyChanged("RecentLogCollection");
+            }
         }
 
         public Command ReloadCommand
@@ -676,14 +693,15 @@ namespace TextFilter
             if (this is LogViewModel)
             {
                 file = (IFile<T>)ViewManager.NewFile(tempTag, TabItems[SelectedIndex].ContentList);
+                RecentLogCollection = null;
             }
             else
             {
                 file = (IFile<T>)ViewManager.NewFile(tempTag);
+                RecentFilterCollection = null;
             }
 
             AddTabItem(file);
-            UpdateRecentCollection();
         }
 
         public abstract void OpenFileExecuted(object sender);
@@ -860,13 +878,13 @@ namespace TextFilter
                 if (this is FilterViewModel)
                 {
                     Settings.AddFilterFile(fileItem.Tag);
+                    RecentFilterCollection = null;
                 }
                 else
                 {
                     Settings.AddLogFile(fileItem.Tag);
+                    RecentLogCollection = null;
                 }
-
-                UpdateRecentCollection();
             }
         }
 
@@ -1011,12 +1029,6 @@ namespace TextFilter
 
             DeleteIfTempFile(item);
             return noPrompt;
-        }
-
-        private void UpdateRecentCollection()
-        {
-            // setting to null forces refresh
-            RecentCollection = null;
         }
     }
 }

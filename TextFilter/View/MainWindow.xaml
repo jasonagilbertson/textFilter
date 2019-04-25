@@ -240,7 +240,7 @@
                           Foreground="{Binding Source={StaticResource settings},
                                                Path=Settings.ForegroundColor}"
                           Header="recent files"
-                          ItemsSource="{Binding LogViewModel.RecentCollection}"
+                          ItemsSource="{Binding LogViewModel.RecentLogCollection}"
                           Style="{DynamicResource MenuItemStyle1}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
@@ -408,7 +408,7 @@
                           Foreground="{Binding Source={StaticResource settings},
                                                Path=Settings.ForegroundColor}"
                           Header="r_ecent filters"
-                          ItemsSource="{Binding FilterViewModel.RecentCollection}"
+                          ItemsSource="{Binding FilterViewModel.RecentFilterCollection}"
                           Style="{DynamicResource MenuItemStyle1}">
                     <MenuItem.ItemContainerStyle>
                         <Style TargetType="{x:Type MenuItem}">
@@ -1060,7 +1060,7 @@
                                                                    Path=Settings.ForegroundColor}"
                                               Header="r_ecent filters"
                                               ItemsSource="{Binding Source={StaticResource mainViewModel},
-                                                                    Path=FilterViewModel.RecentCollection}"
+                                                                    Path=FilterViewModel.RecentFilterCollection}"
                                               Style="{DynamicResource MenuItemStyle1}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}">
@@ -1379,7 +1379,7 @@
                                                        Path=Settings.ForegroundColor}"
                                   Header="r_ecent filters"
                                   ItemsSource="{Binding Source={StaticResource mainViewModel},
-                                                        Path=FilterViewModel.RecentCollection}"
+                                                        Path=FilterViewModel.RecentFilterCollection}"
                                   Style="{DynamicResource MenuItemStyle1}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">
@@ -1631,7 +1631,7 @@
                                   Foreground="{Binding Source={StaticResource settings},
                                                        Path=Settings.ForegroundColor}"
                                   Header="recent files"
-                                  ItemsSource="{Binding LogViewModel.RecentCollection}"
+                                  ItemsSource="{Binding LogViewModel.RecentLogCollection}"
                                   Style="{DynamicResource MenuItemStyle1}">
                             <MenuItem.ItemContainerStyle>
                                 <Style TargetType="{x:Type MenuItem}">

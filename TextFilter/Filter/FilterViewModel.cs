@@ -1193,7 +1193,7 @@ namespace TextFilter
         private void UpdateRecentCollection()
         {
             // setting to null forces refresh
-            RecentCollection = null;
+            RecentFilterCollection = null;
         }
 
         private void VerifyIndex(FilterFileItem filterFileItem = null)
