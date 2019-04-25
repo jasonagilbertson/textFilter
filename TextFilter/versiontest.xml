@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <updateinfo>
-  <version>0.7.0.013</version>
-  <download>http://github.com/jasonagilbertson/textFilter/releases/download/0.7.0.34411/textFilter.exe.zip</download>
+  <version>0.7.0.34411</version>
+  <download>https://gallery.technet.microsoft.com/TextFilterexe-gui-text-370fd88a/file/166805/4/textFilter.exe..zip</download>
   <notes>0.7.0.015 - added autocolor, hotkey add filter item, filterindex column
 0.7.0.012 - added go to filter, view message</notes>
 </updateinfo>
