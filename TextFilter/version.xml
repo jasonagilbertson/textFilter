@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <updateinfo>
-  <version>0.7.0.34411</version>
-  <download>https://github.com/jasonagilbertson/textFilter/releases/download/0.7.0.34411/textFilter.exe.zip</download>
-  <notes>0.7.0.34411 - add filterIndex in file view, f3 / shift+f3 (next / previous), autocolor selection for new filters, ctrl-m formats xml, csv, and json
-  0.7.0.015 - add autocolor, hotkey add filter item, filterindex column
-0.7.0.012 - add go to filter, view message</notes>
+  <version>0.7.0.012</version>
+  <download>https://github.com/jasonagilbertson/textFilter/releases/download/textFilter.exe.zip/textFilter.exe.zip</download>
+  <notes>0.7.0.015 - added autocolor, hotkey add filter item, filterindex column
+0.7.0.012 - added go to filter, view message</notes>
 </updateinfo>
