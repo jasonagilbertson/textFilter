@@ -24,11 +24,6 @@ namespace TextFilter
         private Thread _monitorThread;
         private WorkerFunctions _workerFunctions = new WorkerFunctions();
 
-        private WorkerManager()
-        {
-            BGWorkers = new List<WorkerItem>();
-        }
-
         public static WorkerManager Instance
         {
             get
@@ -42,6 +37,11 @@ namespace TextFilter
         }
 
         public List<WorkerItem> BGWorkers { get; set; }
+
+        private WorkerManager()
+        {
+            BGWorkers = new List<WorkerItem>();
+        }
 
         public void AddWorkersByWorkerItemFilterFile(WorkerItem workerItem)
         {

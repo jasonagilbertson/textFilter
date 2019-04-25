@@ -20,9 +20,9 @@
 
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
         <!--<ContentControl x:Name="contentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}"  >-->
-        <ContentControl Name="LogFileContentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=ContentItems}" >
-        <!--<ContentControl x:Name="contentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=SelectedTab.ContentItems}" >-->
-        <!--<ContentControl x:Name="contentControl" ContentTemplate="{StaticResource LogFileDataTemplate}" >
+        <ContentControl Name="LogFileContentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=ContentItems}">
+            <!--<ContentControl x:Name="contentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=SelectedTab.ContentItems}" >-->
+            <!--<ContentControl x:Name="contentControl" ContentTemplate="{StaticResource LogFileDataTemplate}">
             <ItemsControl ItemsSource="{Binding ContentItems}" DataContext="{Binding}" />-->
         </ContentControl>
         <!--<ItemsControl ItemsSource="{Binding ContentItems}"  />-->

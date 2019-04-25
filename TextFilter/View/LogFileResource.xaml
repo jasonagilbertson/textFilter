@@ -21,7 +21,7 @@
             <BooleanToVisibilityConverter x:Key="BoolToVis" />
             <system:Boolean x:Key="duplicateWindowR">false</system:Boolean>
         </DataTemplate.Resources>
-     
+
         <DataGrid x:Name="logFileData"
                                   Margin="0,0,0,0"
                                   HorizontalAlignment="Stretch"

@@ -17,11 +17,11 @@ namespace TextFilter
     {
         public TextFilterSettings Settings = TextFilterSettings.Settings;
 
+        public List<IFile<T>> FileManager { get; set; }
+
         public BaseFileManager()
         {
         }
-
-        public List<IFile<T>> FileManager { get; set; }
 
         public bool CloseFile(string FileName)
         {

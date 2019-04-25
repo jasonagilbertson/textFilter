@@ -19,9 +19,11 @@ namespace TextFilter
 {
     internal class DragDrop : Base
     {
+        private static DateTime dropTime = new DateTime();
+
         // todo: review once ver 0.8.x merged
-        static Point startingPoint = new Point();
-        static DateTime dropTime = new DateTime();
+        private static Point startingPoint = new Point();
+
         public static DragDropEffects DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, DragDropEffects allowedEffects)
         {
             Debug.Print("DoDragDrop:enter:");
@@ -57,6 +59,9 @@ namespace TextFilter
             public const int S_FALSE = 1;
             public const int S_OK = 0;
 
+            [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true, PreserveSig = false)]
+            public static extern void DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, IDropSource dropSource, int allowedEffects, int[] finalEffect);
+
             [ComImport]
             [Guid("00000121-0000-0000-C000-000000000046")]
             [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
@@ -68,9 +73,6 @@ namespace TextFilter
                 [PreserveSig]
                 int GiveFeedback(uint dwEffect);
             }
-
-            [DllImport("ole32.dll", CharSet = CharSet.Auto, ExactSpelling = true, PreserveSig = false)]
-            public static extern void DoDragDrop(System.Runtime.InteropServices.ComTypes.IDataObject dataObject, IDropSource dropSource, int allowedEffects, int[] finalEffect);
         }
 
         private class DropSource : NativeMethods.IDropSource
@@ -88,7 +90,7 @@ namespace TextFilter
                 bool timedOut = DateTime.Now.Subtract(dropTime).TotalSeconds > 5;
                 var keyStates = (DragDropKeyStates)grfKeyState;
 
-                if(timedOut)
+                if (timedOut)
                 {
                     Debug.Print(string.Format("QueryContinueDrag timedOut: {0}", timedOut));
                     return NativeMethods.DRAGDROP_S_CANCEL;

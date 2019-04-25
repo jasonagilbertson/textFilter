@@ -29,26 +29,6 @@ namespace TextFilter
 
         private bool _canExecute = false;
 
-        public Command(Action action, bool canExecute = true)
-        {
-            // Set the action.
-            _action = action;
-            _canExecute = canExecute;
-        }
-
-        public Command(Action<object> parameterizedAction, bool canExecute = true)
-        {
-            // Set the action.
-            _parameterizedAction = parameterizedAction;
-            _canExecute = canExecute;
-        }
-
-        public event EventHandler CanExecuteChanged;
-
-        public event CommandEventHandler Executed;
-
-        public event CancelCommandEventHandler Executing;
-
         public bool CanExecute
         {
             get { return _canExecute; }
@@ -62,6 +42,20 @@ namespace TextFilter
                         canExecuteChanged(this, EventArgs.Empty);
                 }
             }
+        }
+
+        public Command(Action action, bool canExecute = true)
+        {
+            // Set the action.
+            _action = action;
+            _canExecute = canExecute;
+        }
+
+        public Command(Action<object> parameterizedAction, bool canExecute = true)
+        {
+            // Set the action.
+            _parameterizedAction = parameterizedAction;
+            _canExecute = canExecute;
         }
 
         bool ICommand.CanExecute(object parameter)
@@ -118,6 +112,12 @@ namespace TextFilter
             if (executing != null)
                 executing(this, args);
         }
+
+        public event EventHandler CanExecuteChanged;
+
+        public event CommandEventHandler Executed;
+
+        public event CancelCommandEventHandler Executing;
     }
 
     public class CommandEventArgs : EventArgs

@@ -69,14 +69,6 @@ namespace TextFilter
         private bool _regex = false;
         private bool _stringOperators = false;
 
-        public FilterFileItem()
-        {
-            BackgroundColor = TextFilterSettings.Settings.BackgroundColor.ToString();
-            ForegroundColor = TextFilterSettings.Settings.ForegroundColor.ToString();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public new Brush Background
         {
             get
@@ -350,10 +342,15 @@ namespace TextFilter
             }
         }
 
-        // for tat 'type' text or marker
-
         public string TatType { get; set; }
 
+        public FilterFileItem()
+        {
+            BackgroundColor = TextFilterSettings.Settings.BackgroundColor.ToString();
+            ForegroundColor = TextFilterSettings.Settings.ForegroundColor.ToString();
+        }
+
+        // for tat 'type' text or marker
         public void OnPropertyChanged(string name)
         {
             PropertyChangedEventHandler handler = PropertyChanged;
@@ -363,11 +360,13 @@ namespace TextFilter
             }
         }
 
-        // public event PropertyChangedEventHandler PropertyChanged;
-
         public IFileItem ShallowCopy()
         {
             return (FilterFileItem)MemberwiseClone();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        // public event PropertyChangedEventHandler PropertyChanged;
     }
 }

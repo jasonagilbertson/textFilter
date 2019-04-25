@@ -23,11 +23,6 @@ namespace TextFilter
 {
     public class FilterFileManager : BaseFileManager<FilterFileItem>
     {
-        public FilterFileManager()
-        {
-            FileManager = new List<IFile<FilterFileItem>>();
-        }
-
         public enum FilterFileVersionResult
         {
             Version1,
@@ -35,6 +30,11 @@ namespace TextFilter
             Version2,
 
             NotAFilterFile
+        }
+
+        public FilterFileManager()
+        {
+            FileManager = new List<IFile<FilterFileItem>>();
         }
 
         public FilterFileVersionResult FilterFileVersion(string fileName)
@@ -309,10 +309,10 @@ namespace TextFilter
                     FilterFileItem fileItem = new FilterFileItem();
                     fileItem.Count = 0;
 
-                    if(string.IsNullOrEmpty(ReadStringNodeChildItem(root, "backgroundcolor", i)) 
+                    if (string.IsNullOrEmpty(ReadStringNodeChildItem(root, "backgroundcolor", i))
                         & string.IsNullOrEmpty(ReadStringNodeChildItem(root, "foregroundcolor", i)))
                     {
-                        if(_FilterViewModel != null)
+                        if (_FilterViewModel != null)
                         {
                             fileItem = SetFilterItemColors(filterFile, fileItem);
                         }
@@ -454,6 +454,83 @@ namespace TextFilter
                 SetStatus("Fatal:SaveFile:exception: " + e.ToString());
                 return false;
             }
+        }
+
+        public FilterFileItem SetFilterItemColors(FilterFile filterFile, FilterFileItem fileItem)
+        {
+            if (!Settings.AutoPopulateColors)
+            {
+                return fileItem;
+            }
+
+            // string backgroundColor = fileItem.BackgroundColor;
+            string backgroundColor = TextFilterSettings.Settings.BackgroundColorString; // Settings.GetColorNames().ElementAt(new Random().Next(Settings.WebColors.Count - 1));
+            bool preferredColors = true;
+
+            List<string> backgroundColors = new List<string>();
+
+            while (backgroundColor != null)
+            {
+                List<string> contrastColors = TextFilterSettings.Settings.GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors);
+
+                foreach (FilterFileItem item in filterFile.ContentItems)
+                {
+                    Debug.Print("SetFilterItemColors:checking background colors: filterFileItem:{0} backgroundColor:{1}", item.BackgroundColor, backgroundColor);
+                    if (item.BackgroundColor == backgroundColor)
+                    {
+                        Debug.Print("SetFilterItemColors:checking foreground colors: filterFileItem:{0} contrastColors:{1}", item.ForegroundColor, contrastColors.Contains(item.ForegroundColor));
+                        if (contrastColors.Contains(item.ForegroundColor))
+                        {
+                            contrastColors.Remove(item.ForegroundColor);
+                        }
+                    }
+                }
+
+                if (contrastColors.Count > 0)
+                {
+                    //TextFilterSettings.Settings.FilterBackgroundColorDefaultString = backgroundColor;
+                    fileItem.BackgroundColor = backgroundColor;
+                    fileItem.ForegroundColor = contrastColors
+                        .ToList()
+                        .ElementAtOrDefault((new Random()
+                        .Next(contrastColors.Count - 1)));
+                    filterFile.Modified = true;
+                    break;
+                }
+
+                backgroundColors.Add(backgroundColor);
+
+                if (!backgroundColors.Contains(TextFilterSettings.Settings.ForegroundColorString))
+                {
+                    // use foreground color after background color
+                    backgroundColor = TextFilterSettings.Settings.ForegroundColorString;
+                }
+                else
+                {
+                    // use contrasting color
+                    backgroundColor = TextFilterSettings.Settings
+                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
+                        .ToList()
+                        .Where(x => !backgroundColors.Contains(x))
+                        .FirstOrDefault();
+                }
+
+                if (backgroundColor == null && !preferredColors)
+                {
+                    break;
+                }
+                else if (backgroundColor == null && preferredColors)
+                {
+                    preferredColors = false;
+                    backgroundColor = TextFilterSettings.Settings
+                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
+                        .ToList()
+                        .Where(x => !backgroundColors.Contains(x))
+                        .FirstOrDefault();
+                }
+            }
+
+            return fileItem;
         }
 
         private void filterFile_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
@@ -744,84 +821,6 @@ namespace TextFilter
                 SetStatus("SaveAsTat exception:" + e.ToString());
                 return false;
             }
-        }
-
-        public FilterFileItem SetFilterItemColors(FilterFile filterFile, FilterFileItem fileItem)
-        {
-
-            if(!Settings.AutoPopulateColors)
-            {
-                return fileItem;
-            }
-
-            // string backgroundColor = fileItem.BackgroundColor;
-            string backgroundColor = TextFilterSettings.Settings.BackgroundColorString; // Settings.GetColorNames().ElementAt(new Random().Next(Settings.WebColors.Count - 1));
-            bool preferredColors = true;
-
-            List<string> backgroundColors = new List<string>();
-
-            while (backgroundColor != null)
-            {
-                List<string> contrastColors = TextFilterSettings.Settings.GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors);
-
-                foreach (FilterFileItem item in filterFile.ContentItems)
-                {
-                    Debug.Print("SetFilterItemColors:checking background colors: filterFileItem:{0} backgroundColor:{1}", item.BackgroundColor, backgroundColor);
-                    if (item.BackgroundColor == backgroundColor)
-                    {
-                        Debug.Print("SetFilterItemColors:checking foreground colors: filterFileItem:{0} contrastColors:{1}", item.ForegroundColor, contrastColors.Contains(item.ForegroundColor));
-                        if (contrastColors.Contains(item.ForegroundColor))
-                        {
-                            contrastColors.Remove(item.ForegroundColor);
-                        }
-                    }
-                }
-
-                if (contrastColors.Count > 0)
-                {
-                    //TextFilterSettings.Settings.FilterBackgroundColorDefaultString = backgroundColor;
-                    fileItem.BackgroundColor = backgroundColor;
-                    fileItem.ForegroundColor = contrastColors
-                        .ToList()
-                        .ElementAtOrDefault((new Random()
-                        .Next(contrastColors.Count - 1)));
-                    filterFile.Modified = true;
-                    break;
-                }
-
-                backgroundColors.Add(backgroundColor);
-
-                if (!backgroundColors.Contains(TextFilterSettings.Settings.ForegroundColorString))
-                {
-                    // use foreground color after background color
-                    backgroundColor = TextFilterSettings.Settings.ForegroundColorString;
-                }
-                else
-                {
-                    // use contrasting color
-                    backgroundColor = TextFilterSettings.Settings
-                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
-                        .ToList()
-                        .Where(x => !backgroundColors.Contains(x))
-                        .FirstOrDefault();
-                }
-
-                if (backgroundColor == null && !preferredColors)
-                {
-                    break;
-                }
-                else if (backgroundColor == null && preferredColors)
-                {
-                    preferredColors = false;
-                    backgroundColor = TextFilterSettings.Settings
-                        .GetContrastingColors(TextFilterSettings.Settings.GetColor(backgroundColor), preferredColors)
-                        .ToList()
-                        .Where(x => !backgroundColors.Contains(x))
-                        .FirstOrDefault();
-                }
-            }
-
-            return fileItem;
         }
     }
 }

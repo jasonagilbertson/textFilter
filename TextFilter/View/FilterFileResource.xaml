@@ -4,7 +4,6 @@
                     xmlns:local="clr-namespace:TextFilter">
     <DataTemplate x:Key="FilterFileDataTemplate" x:Shared="False">
         <DataGrid x:Name="FilterFileData">
-
         </DataGrid>
     </DataTemplate>
 </ResourceDictionary>

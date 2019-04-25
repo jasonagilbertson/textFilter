@@ -17,6 +17,16 @@ namespace TextFilter
 {
     public partial class TimedSaveDialog : Window, INotifyPropertyChanged
     {
+        public enum Results
+        {
+            Unknown,
+            Disable,
+            DontSave,
+            DontSaveAll,
+            Save,
+            SaveAs
+        }
+
         private const int _timerSecs = 1;
         private EventHandler _handler;
         private Results _result;
@@ -29,18 +39,6 @@ namespace TextFilter
             Owner = Application.Current.MainWindow;
             InitializeComponent();
             labelDisplay.Content = fileName;
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public enum Results
-        {
-            Unknown,
-            Disable,
-            DontSave,
-            DontSaveAll,
-            Save,
-            SaveAs
         }
 
         public void CloseDialog()
@@ -124,5 +122,7 @@ namespace TextFilter
             _timer.Interval = TimeSpan.FromSeconds(_timerSecs);
             _timer.Start();
         }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

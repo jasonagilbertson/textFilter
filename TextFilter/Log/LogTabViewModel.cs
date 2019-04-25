@@ -17,10 +17,6 @@ namespace TextFilter
             TextFilterSettings.Settings.PropertyChanged += Settings_PropertyChanged;
         }
 
-        ~LogTabViewModel()
-        {
-            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
-        }
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == (TextFilterSettings.AppSettingNames.FilterIndexVisible).ToString())
@@ -28,6 +24,10 @@ namespace TextFilter
                 FilterIndexVisibility = TextFilterSettings.Settings.FilterIndexVisible;
             }
         }
-      
+
+        ~LogTabViewModel()
+        {
+            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
+        }
     }
 }

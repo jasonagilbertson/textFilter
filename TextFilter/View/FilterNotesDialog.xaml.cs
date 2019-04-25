@@ -16,19 +16,6 @@ namespace TextFilter
     {
         private string _initialNotes;
 
-        public FilterNotesDialog(string notes)
-        {
-            Owner = Application.Current.MainWindow;
-            InitializeComponent();
-            _initialNotes = notes;
-            textBoxFilterNotes.Text = notes;
-            textBoxFilterNotes.Focus();
-            textBoxFilterNotes.FontFamily = new FontFamily(TextFilterSettings.Settings.FontName);
-            textBoxFilterNotes.FontSize = TextFilterSettings.Settings.FontSize;
-            textBoxFilterNotes.Foreground = TextFilterSettings.Settings.ForegroundColor;
-            textBoxFilterNotes.Background = TextFilterSettings.Settings.BackgroundColor;
-        }
-
         public bool DialogCanSave
         {
             get
@@ -41,6 +28,19 @@ namespace TextFilter
                 textBoxFilterNotes.IsEnabled = value;
                 buttonSave.IsEnabled = value;
             }
+        }
+
+        public FilterNotesDialog(string notes)
+        {
+            Owner = Application.Current.MainWindow;
+            InitializeComponent();
+            _initialNotes = notes;
+            textBoxFilterNotes.Text = notes;
+            textBoxFilterNotes.Focus();
+            textBoxFilterNotes.FontFamily = new FontFamily(TextFilterSettings.Settings.FontName);
+            textBoxFilterNotes.FontSize = TextFilterSettings.Settings.FontSize;
+            textBoxFilterNotes.Foreground = TextFilterSettings.Settings.ForegroundColor;
+            textBoxFilterNotes.Background = TextFilterSettings.Settings.BackgroundColor;
         }
 
         public void Disable()

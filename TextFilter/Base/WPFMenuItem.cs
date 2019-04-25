@@ -13,14 +13,14 @@ namespace TextFilter
 {
     public class WPFMenuItem
     {
-        public WPFMenuItem()
-        {
-        }
-
         public Command Command { get; set; }
 
         public String IconUrl { get; set; }
 
         public String Text { get; set; }
+
+        public WPFMenuItem()
+        {
+        }
     }
 }

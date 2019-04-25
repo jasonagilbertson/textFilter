@@ -47,11 +47,6 @@ namespace TextFilter
 
         private object _viewer;
 
-        public BaseTabViewModel()
-        {
-            //IsNew = true;
-        }
-
         public string Background
         {
             get
@@ -249,6 +244,11 @@ namespace TextFilter
             {
                 _viewer = value;
             }
+        }
+
+        public BaseTabViewModel()
+        {
+            //IsNew = true;
         }
 
         public void CopyExecuted(object sender)

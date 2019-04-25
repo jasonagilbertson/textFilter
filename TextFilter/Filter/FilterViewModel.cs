@@ -47,20 +47,6 @@ namespace TextFilter
         private ObservableCollection<MenuItem> _sharedCollection;
         private SpinLock _spinLock = new SpinLock();
 
-        public FilterViewModel()
-        {
-            TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
-
-            ViewManager = new FilterFileManager();
-
-            // load tabs from last session
-            AddTabItems(ViewManager.OpenFiles(Settings.CurrentFilterFiles.ToArray()));
-
-            TabItems.CollectionChanged += TabItems_CollectionChanged;
-            ViewManager.PropertyChanged += ViewManager_PropertyChanged;
-            ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
-        }
-
         public string FilterHide
         {
             get
@@ -403,6 +389,20 @@ namespace TextFilter
 
         public TabControl TabControl { get; set; }
 
+        public FilterViewModel()
+        {
+            TabItems = new ObservableCollection<ITabViewModel<FilterFileItem>>();
+
+            ViewManager = new FilterFileManager();
+
+            // load tabs from last session
+            AddTabItems(ViewManager.OpenFiles(Settings.CurrentFilterFiles.ToArray()));
+
+            TabItems.CollectionChanged += TabItems_CollectionChanged;
+            ViewManager.PropertyChanged += ViewManager_PropertyChanged;
+            ViewManager_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
+        }
+
         public override void AddTabItem(IFile<FilterFileItem> filterFile)
         {
             if (!TabItems.Any(x => String.Compare((string)x.Tag, filterFile.Tag, true) == 0))
@@ -644,6 +644,7 @@ namespace TextFilter
                 SetStatus("findPreviousexecuted:exception" + e.ToString());
             }
         }
+
         public override void GotoLineExecuted(object sender)
         {
             FilterTabViewModel filterTab = (FilterTabViewModel)CurrentTab();
@@ -966,7 +967,6 @@ namespace TextFilter
             }
 
             QuickFindChangedExecuted(textBox);
-
         }
 
         public override void SaveFileAsExecuted(object sender)
@@ -982,11 +982,11 @@ namespace TextFilter
                 fileItem = CurrentFile();
 
                 if (fileItem == null || fileItem == default(IFile<FilterFileItem>))
-                { 
+                {
                     return;
                 }
             }
-            
+
             bool silent = (sender is string && !String.IsNullOrEmpty(sender as string)) ? true : false;
 
             string logName = string.Empty;
@@ -997,7 +997,7 @@ namespace TextFilter
             // set initial directory to configured directory if file is new and in temp dir and if filter dir is writable
             dlg.InitialDirectory = (Path.GetDirectoryName(fileItem.Tag) != string.Empty
                     & !fileItem.Tag.ToLower().Contains(Path.GetTempPath().ToLower()))
-                    && Settings.IsDirectoryWritable(Settings.FilterDirectory) ? Path.GetDirectoryName(fileItem.Tag): Settings.FilterDirectory;
+                    && Settings.IsDirectoryWritable(Settings.FilterDirectory) ? Path.GetDirectoryName(fileItem.Tag) : Settings.FilterDirectory;
 
             string extension = string.IsNullOrEmpty(Path.GetExtension(fileItem.Tag)) ? ".rvf" : Path.GetExtension(fileItem.Tag);
             string fileName = Path.GetFileNameWithoutExtension(fileItem.Tag) + extension;
@@ -1113,6 +1113,7 @@ namespace TextFilter
             VerifyIndex();
             InsertFilterItemExecuted(textBox);
         }
+
         private void QuickFindKeyPressExecuted(object sender)
         {
             SetStatus(string.Format("quickfindKeyPressexecuted:enter: {0}", (sender is ComboBox)));
@@ -1188,6 +1189,7 @@ namespace TextFilter
 
             return textBox;
         }
+
         private void UpdateRecentCollection()
         {
             // setting to null forces refresh

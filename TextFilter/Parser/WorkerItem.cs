@@ -14,30 +14,6 @@ namespace TextFilter
 {
     public class WorkerItem
     {
-        public BackgroundWorker BackGroundWorker = new BackgroundWorker();
-
-        public int FilteredLineCount;
-
-        public ObservableCollection<LogFileItem> FilteredList;
-
-        public FilterFile FilterFile;
-
-        public FilterNeed FilterNeed;
-
-        public LogFile LogFile;
-
-        public int TotalLineCount;
-
-        public Modification WorkerModification;
-
-        public State WorkerState;
-
-        public WorkerItem()
-        {
-            WorkerModification = Modification.Unknown;
-            BackGroundWorker.WorkerSupportsCancellation = true;
-        }
-
         public enum Modification
         {
             Unknown,
@@ -70,6 +46,30 @@ namespace TextFilter
             Ready,
 
             Completed,
+        }
+
+        public BackgroundWorker BackGroundWorker = new BackgroundWorker();
+
+        public int FilteredLineCount;
+
+        public ObservableCollection<LogFileItem> FilteredList;
+
+        public FilterFile FilterFile;
+
+        public FilterNeed FilterNeed;
+
+        public LogFile LogFile;
+
+        public int TotalLineCount;
+
+        public Modification WorkerModification;
+
+        public State WorkerState;
+
+        public WorkerItem()
+        {
+            WorkerModification = Modification.Unknown;
+            BackGroundWorker.WorkerSupportsCancellation = true;
         }
     }
 }

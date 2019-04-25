@@ -15,18 +15,6 @@ namespace TextFilter
 {
     public partial class OptionsDialog : Window
     {
-        private StringBuilder _color = new StringBuilder();
-
-        private List<string> _colorNames = new List<string>();
-
-        private OptionsDialogResult _dialogResult;
-
-        public OptionsDialog()
-        {
-            Owner = Application.Current.MainWindow;
-            InitializeComponent();
-        }
-
         public enum OptionsDialogResult
         {
             unknown,
@@ -37,6 +25,18 @@ namespace TextFilter
             reset,
             save,
             unregister
+        }
+
+        private StringBuilder _color = new StringBuilder();
+
+        private List<string> _colorNames = new List<string>();
+
+        private OptionsDialogResult _dialogResult;
+
+        public OptionsDialog()
+        {
+            Owner = Application.Current.MainWindow;
+            InitializeComponent();
         }
 
         public void Disable()

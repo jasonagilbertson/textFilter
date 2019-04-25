@@ -29,7 +29,6 @@
         <ObjectDataProvider x:Key="colorPropertiesOdp"
                             MethodName="GetProperties"
                             ObjectInstance="{StaticResource colorsTypeOdp}" />
-
     </Window.Resources>
 
     <Window.InputBindings>
@@ -1515,14 +1514,14 @@
                     <DataTemplate>
                         <ContentControl
                             Name="LogFileContentControl"
-                            Content="{Binding}" 
-                            ContentTemplate="{StaticResource LogFileDataTemplate}" 
+                            Content="{Binding}"
+                            ContentTemplate="{StaticResource LogFileDataTemplate}"
                             DataContext="{Binding}">
                         </ContentControl>
                         <!--//works but not hiding group columns-->
                         <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //hides columns but doesnt show items-->
                         <!--<ContentControl Content="{Binding Path=ContentList}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //works but not hiding group columns-->
-                        <!--ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}"/>-->
+                        <!--ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}" />-->
                         <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" />-->
                     </DataTemplate>
                 </TabControl.ContentTemplate>

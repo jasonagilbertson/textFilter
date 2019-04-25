@@ -43,18 +43,6 @@ namespace TextFilter
 
         private StringBuilder textClipBuilder;
 
-        public HtmlFragment()
-        {
-            htmlClipBuilder = new StringBuilder();
-            textClipBuilder = new StringBuilder();
-            Clipboard.Clear();
-        }
-
-        public HtmlFragment(string rawClipboardText)
-        {
-            ProcessFragment(rawClipboardText);
-        }
-
         public string Context
         {
             get { return m_fullText; }
@@ -73,6 +61,18 @@ namespace TextFilter
         public string Version
         {
             get { return m_version; }
+        }
+
+        public HtmlFragment()
+        {
+            htmlClipBuilder = new StringBuilder();
+            textClipBuilder = new StringBuilder();
+            Clipboard.Clear();
+        }
+
+        public HtmlFragment(string rawClipboardText)
+        {
+            ProcessFragment(rawClipboardText);
         }
 
         public static void CopyToClipboard(string htmlFragment, string textFragment)

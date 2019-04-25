@@ -13,16 +13,6 @@ namespace TextFilter
     {
         private bool _maskedVisibility = TextFilterSettings.Settings.CountMaskedMatches;
 
-        public FilterTabViewModel()
-        {
-            TextFilterSettings.Settings.PropertyChanged += Settings_PropertyChanged;
-        }
-
-        ~FilterTabViewModel()
-        {
-            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
-        }
-
         public bool MaskedVisibility
         {
             get
@@ -39,12 +29,22 @@ namespace TextFilter
             }
         }
 
+        public FilterTabViewModel()
+        {
+            TextFilterSettings.Settings.PropertyChanged += Settings_PropertyChanged;
+        }
+
         private void Settings_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == (TextFilterSettings.AppSettingNames.CountMaskedMatches).ToString())
             {
                 MaskedVisibility = TextFilterSettings.Settings.CountMaskedMatches;
             }
+        }
+
+        ~FilterTabViewModel()
+        {
+            TextFilterSettings.Settings.PropertyChanged -= Settings_PropertyChanged;
         }
     }
 }

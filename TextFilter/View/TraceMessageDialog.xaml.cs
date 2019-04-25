@@ -7,15 +7,14 @@
 //
 // ************************************************************************************
 
+using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Media;
 using System.Xml.Linq;
-using System.Runtime.Serialization.Json;
-using System.IO;
+
 using System;
-using System.Web.Script.Serialization;
 
 namespace TextFilter
 {
@@ -24,6 +23,7 @@ namespace TextFilter
         private string _initialMessage = string.Empty;
         private string _jsonMessage = string.Empty;
         private string _xmlMessage = string.Empty;
+
         public TraceMessageDialog(string message, int id, string file)
         {
             Owner = Application.Current.MainWindow;
@@ -100,6 +100,7 @@ namespace TextFilter
         {
             return initialMessage.Replace(",", ",\r\n").Replace(";", ";\r\n").Replace(". ", ". \r\n").Replace("\t", "\r\n");
         }
+
         private string JsonFormat(string text)
         {
             try
@@ -169,7 +170,6 @@ namespace TextFilter
                         output.Append(System.Environment.NewLine);
                         tabs(output, offset);
                         output.Append(chr);
-
                     }
                     else if (chr.ToString() == ",")
                     {

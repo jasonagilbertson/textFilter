@@ -55,6 +55,7 @@ namespace TextFilter
 
         private int _previousIndex = -1;
 
+        private ObservableCollection<WPFMenuItem> _recentCollection;
         private Command _recentCommand;
 
         private Command _reloadCommand;
@@ -72,10 +73,6 @@ namespace TextFilter
         private TextFilterSettings settings = TextFilterSettings.Settings;
 
         private ObservableCollection<ITabViewModel<T>> tabItems;
-
-        public BaseViewModel()
-        {
-        }
 
         public Command ClearRecentCommand
         {
@@ -299,6 +296,20 @@ namespace TextFilter
             }
         }
 
+        public ObservableCollection<WPFMenuItem> RecentCollection
+        {
+            get
+            {
+                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+            }
+
+            set
+            {
+                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
+                OnPropertyChanged("RecentCollection");
+            }
+        }
+
         public Command RecentCommand
         {
             get { return _recentCommand ?? new Command(RecentFileExecuted); }
@@ -390,6 +401,10 @@ namespace TextFilter
         }
 
         public IFileManager<T> ViewManager { get; set; }
+
+        public BaseViewModel()
+        {
+        }
 
         public void AddTabItem(ITabViewModel<T> tabItem)
         {
@@ -521,7 +536,7 @@ namespace TextFilter
         {
             IFile<T> file = default(IFile<T>);
 
-            file =  ViewManager.FileManager.FirstOrDefault(x => x.Tag == tag);
+            file = ViewManager.FileManager.FirstOrDefault(x => x.Tag == tag);
             if (file == null)
             {
                 SetStatus(string.Format("GetFile: warning: returning default T tag: {0}", tag));
@@ -529,6 +544,7 @@ namespace TextFilter
 
             return file;
         }
+
         public void GotFocusExecuted(object sender)
         {
             if (CurrentFile() != null)
@@ -561,19 +577,19 @@ namespace TextFilter
         public void LostFocusExecuted(object sender)
         {
             IFile<T> currentFile = CurrentFile() == null ? null : CurrentFile();
-            
+
             if (currentFile != null && (Mouse.LeftButton == MouseButtonState.Pressed))
             {
                 SetStatus(string.Format("LostFocusExecuted:drag:{0} {1}", (Mouse.LeftButton == MouseButtonState.Pressed), currentFile.Tag));
 
-                if(currentFile.IsNew)
+                if (currentFile.IsNew)
                 {
                     // new files in temp so use temp location to save current changes for drag out
                     currentFile.IsNew = false;
                     SaveFileExecuted(null);
                     currentFile.IsNew = true;
                 }
-                else if(currentFile.Modified)
+                else if (currentFile.Modified)
                 {
                     SaveFileExecuted(null);
                 }
@@ -775,6 +791,7 @@ namespace TextFilter
                 SetStatus("RenameFile:exit");
             }
         }
+
         public void RenameTabItem(string fileName)
         {
             // rename tab
@@ -853,24 +870,12 @@ namespace TextFilter
             }
         }
 
-        private void UpdateRecentCollection()
+        public void SaveModifiedFile(object sender)
         {
-            // setting to null forces refresh
-            RecentCollection = null;
-        }
-
-        private ObservableCollection<WPFMenuItem> _recentCollection;
-        public ObservableCollection<WPFMenuItem> RecentCollection
-        {
-            get
+            if (sender is string)
             {
-                return _recentCollection ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-            }
-
-            set
-            {
-                _recentCollection = value ?? RecentCollectionBuilder(Settings.RecentLogFiles);
-                OnPropertyChanged("RecentCollection");
+                IFile<T> item = ViewManager.FileManager.FirstOrDefault(x => x.Tag.ToLower() == (sender as string).ToLower());
+                SaveModifiedFile(false, item);
             }
         }
 
@@ -899,14 +904,60 @@ namespace TextFilter
             }
         }
 
-        public void SaveModifiedFile(object sender)
+        public void SharedFileExecuted(object sender)
         {
-            if (sender is string)
+            SetStatus("SharedFile:enter");
+            OpenFileExecuted(sender);
+        }
+
+        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
+        {
+            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
+
+            if (row != null)
             {
-                IFile<T> item = ViewManager.FileManager.FirstOrDefault(x => x.Tag.ToLower() == (sender as string).ToLower());
-                SaveModifiedFile(false, item);
+                return FindVisualChild<TextBox>(row);
+            }
+
+            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
+            return new TextBox();
+        }
+
+        private bool DeleteIfTempFile(IFile<T> item)
+        {
+            try
+            {
+                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp") && Path.GetFileName(item.Tag).ToLower().StartsWith("tmp"))
+                {
+                    Settings.RemoveLogFile(item.Tag);
+                    Settings.RemoveFilterFile(item.Tag);
+                    if (File.Exists(item.Tag))
+                    {
+                        SetStatus("DeleteTempFile: deleting temporary file:" + item.Tag);
+                        File.Delete(item.Tag);
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+            catch (Exception e)
+            {
+                SetStatus("DeleteTempFile: exception:" + e.ToString());
+                return false;
             }
         }
+
+        private void OpenFolderExecuted()
+        {
+            if (IsValidTabIndex())
+            {
+                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
+                CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
+            }
+        }
+
         private bool SaveModifiedFile(bool noPrompt, IFile<T> item)
         {
             if (item == default(IFile<T>) || item.Modified == false)
@@ -962,57 +1013,10 @@ namespace TextFilter
             return noPrompt;
         }
 
-        public void SharedFileExecuted(object sender)
+        private void UpdateRecentCollection()
         {
-            SetStatus("SharedFile:enter");
-            OpenFileExecuted(sender);
-        }
-
-        public TextBox TextBoxFromDataGrid(DataGrid dataGrid)
-        {
-            DataGridRow row = (DataGridRow)dataGrid.ItemContainerGenerator.ContainerFromIndex(dataGrid.SelectedIndex);
-
-            if (row != null)
-            {
-                return FindVisualChild<TextBox>(row);
-            }
-
-            SetStatus("TextBoxFromDataGrid:error: unable to find datgrid row");
-            return new TextBox();
-        }
-        private bool DeleteIfTempFile(IFile<T> item)
-        {
-            try
-            {
-                if (item.IsNew && item.Tag.ToLower().EndsWith(".tmp") && Path.GetFileName(item.Tag).ToLower().StartsWith("tmp"))
-                {
-                    Settings.RemoveLogFile(item.Tag);
-                    Settings.RemoveFilterFile(item.Tag);
-                    if (File.Exists(item.Tag))
-                    {
-                        SetStatus("DeleteTempFile: deleting temporary file:" + item.Tag);
-                        File.Delete(item.Tag);
-                    }
-
-                    return true;
-                }
-
-                return false;
-            }
-            catch (Exception e)
-            {
-                SetStatus("DeleteTempFile: exception:" + e.ToString());
-                return false;
-            }
-        }
-
-        private void OpenFolderExecuted()
-        {
-            if (IsValidTabIndex())
-            {
-                ITabViewModel<T> tabItem = tabItems[_selectedIndex];
-                CreateProcess("explorer.exe", string.Format("\"{0}\"", Path.GetDirectoryName(tabItem.Tag)));
-            }
+            // setting to null forces refresh
+            RecentCollection = null;
         }
     }
 }

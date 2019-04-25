@@ -28,28 +28,6 @@ namespace TextFilter
 
         private bool _isLoading;
 
-        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
-            : base(itemsProvider)
-        {
-            _synchronizationContext = SynchronizationContext.Current;
-        }
-
-        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
-            : base(itemsProvider, pageSize)
-        {
-            _synchronizationContext = SynchronizationContext.Current;
-        }
-
-        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
-            : base(itemsProvider, pageSize, pageTimeout)
-        {
-            _synchronizationContext = SynchronizationContext.Current;
-        }
-
-        public event NotifyCollectionChangedEventHandler CollectionChanged;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public bool IsLoading
         {
             get
@@ -69,6 +47,24 @@ namespace TextFilter
         protected SynchronizationContext SynchronizationContext
         {
             get { return _synchronizationContext; }
+        }
+
+        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider)
+                            : base(itemsProvider)
+        {
+            _synchronizationContext = SynchronizationContext.Current;
+        }
+
+        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
+            : base(itemsProvider, pageSize)
+        {
+            _synchronizationContext = SynchronizationContext.Current;
+        }
+
+        public AsyncVirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
+            : base(itemsProvider, pageSize, pageTimeout)
+        {
+            _synchronizationContext = SynchronizationContext.Current;
         }
 
         protected override void LoadCount()
@@ -139,5 +135,9 @@ namespace TextFilter
             IList<T> page = FetchPage(pageIndex);
             SynchronizationContext.Send(LoadPageCompleted, new object[] { pageIndex, page });
         }
+
+        public event NotifyCollectionChangedEventHandler CollectionChanged;
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -10,7 +10,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Media;
 using System.Xml.Linq;
 
 namespace TextFilter
@@ -22,8 +21,8 @@ namespace TextFilter
 
         public DisplayAllFile()
         {
-
         }
+
         public DisplayAllFile(LogViewModel view)
         {
             Owner = Application.Current.MainWindow;
@@ -32,6 +31,7 @@ namespace TextFilter
             _initialMessage = "";// file.FileName;
             Title = string.Format("{0} - {1}", _initialMessage, "");// file.Tag);
         }
+
         public DisplayAllFile(LogTabViewModel tab)
         {
             Owner = Application.Current.MainWindow;
@@ -40,16 +40,17 @@ namespace TextFilter
             _initialMessage = "";// file.FileName;
             Title = string.Format("{0} - {1}", _initialMessage, "");// file.Tag);
         }
+
         public DisplayAllFile(LogFile file, FilterFile filter = null)
         {
             Owner = Application.Current.MainWindow;
             DataContext = file;
             InitializeComponent();
             //DataContext = file;
-            
+
             _initialMessage = file.FileName;
             Title = string.Format("{0} - {1}", _initialMessage, file.Tag);
-            
+
             UpdateLayout();
             //https://stackoverflow.com/questions/11420500/applying-datatemplate-to-a-grid
             //https://stackoverflow.com/questions/13246602/datatemplate-in-a-separate-resourcedictionary

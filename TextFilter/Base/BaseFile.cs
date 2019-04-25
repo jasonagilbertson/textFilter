@@ -14,14 +14,7 @@ namespace TextFilter
 {
     public abstract class BaseFile<T> : Base, IFile<T>, INotifyPropertyChanged
     {
-        bool _modified = false;
-
-        public BaseFile()
-        {
-            Modified = false;
-            IsNew = true;
-            IsReadOnly = false;
-        }
+        private bool _modified = false;
 
         public abstract ObservableCollection<T> ContentItems { get; set; }
 
@@ -46,5 +39,12 @@ namespace TextFilter
         }
 
         public string Tag { get; set; }
+
+        public BaseFile()
+        {
+            Modified = false;
+            IsNew = true;
+            IsReadOnly = false;
+        }
     }
 }

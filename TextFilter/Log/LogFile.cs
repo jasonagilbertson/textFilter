@@ -13,12 +13,6 @@ namespace TextFilter
 {
     public class LogFile : BaseFile<LogFileItem>
     {
-        public LogFile()
-        {
-            ContentItems = new ObservableCollection<LogFileItem>();
-            ExportConfiguration = new ExportConfigurationInfo();
-        }
-
         public override ObservableCollection<LogFileItem> ContentItems { get; set; }
 
         public System.Text.Encoding Encoding { get; set; }
@@ -26,6 +20,12 @@ namespace TextFilter
         public ExportConfigurationInfo ExportConfiguration { get; set; }
 
         public bool HasBom { get; set; }
+
+        public LogFile()
+        {
+            ContentItems = new ObservableCollection<LogFileItem>();
+            ExportConfiguration = new ExportConfigurationInfo();
+        }
 
         public class ExportConfigurationInfo
         {

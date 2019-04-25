@@ -17,10 +17,6 @@ namespace TextFilter
 
         private bool _patternNotifications;
 
-        public FilterFile()
-        {
-        }
-
         public override ObservableCollection<FilterFileItem> ContentItems
         {
             get
@@ -38,6 +34,10 @@ namespace TextFilter
         public string FilterNotes { get; set; }
 
         public string FilterVersion { get; set; }
+
+        public FilterFile()
+        {
+        }
 
         public void AddPatternNotification(FilterFileItem filterFileItem, bool enable)
         {

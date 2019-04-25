@@ -42,24 +42,6 @@ namespace TextFilter
 
         private Command _viewMessageCommand;
 
-        public LogViewModel()
-        {
-            SetStatus("LogViewModel.ctor");
-
-            TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
-            ViewManager = new LogFileManager();
-            _logFileManager = (LogFileManager)ViewManager;
-
-            // load tabs from last session
-            AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
-            _FilterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
-            PropertyChanged += LogViewModel_PropertyChanged;
-            LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
-        }
-
-        public delegate void LogFileContentItems(LogFile logFile);
-
-        
         public Command ExportCommand
         {
             get
@@ -140,6 +122,21 @@ namespace TextFilter
                 return _viewMessageCommand;
             }
             set { _viewMessageCommand = value; }
+        }
+
+        public LogViewModel()
+        {
+            SetStatus("LogViewModel.ctor");
+
+            TabItems = new ObservableCollection<ITabViewModel<LogFileItem>>();
+            ViewManager = new LogFileManager();
+            _logFileManager = (LogFileManager)ViewManager;
+
+            // load tabs from last session
+            AddTabItems(ViewManager.OpenFiles(Settings.CurrentLogFiles.ToArray()));
+            _FilterViewModel.PropertyChanged += _FilterViewModel_PropertyChanged;
+            PropertyChanged += LogViewModel_PropertyChanged;
+            LogViewModel_PropertyChanged(this, new PropertyChangedEventArgs("Tab"));
         }
 
         public void _FilterViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -872,6 +869,8 @@ namespace TextFilter
                 SetStatus("viewmessageexecuted:exception: " + e.ToString());
             }
         }
+
+        public delegate void LogFileContentItems(LogFile logFile);
 
         public struct LogViewModelEvents
         {

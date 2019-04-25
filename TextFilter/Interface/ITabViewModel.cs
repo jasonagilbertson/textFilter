@@ -13,17 +13,14 @@ namespace TextFilter
 {
     public interface ITabViewModel<T>
     {
-        event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
         string Background { get; set; }
 
         ObservableCollection<T> ContentList { get; set; }
 
-        //bool Group1Visibility { get; set; }
-        //bool Group2Visibility { get; set; }
-
         Command CopyCommand { get; set; }
 
+        //bool Group1Visibility { get; set; }
+        //bool Group2Visibility { get; set; }
         string Header { get; set; }
 
         bool IsNew { get; set; }
@@ -41,5 +38,7 @@ namespace TextFilter
         void OnPropertyChanged(string name);
 
         void SelectionChangedExecuted(object target);
+
+        event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
     }
 }

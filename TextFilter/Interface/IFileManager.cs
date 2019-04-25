@@ -15,8 +15,6 @@ namespace TextFilter
 {
     public interface IFileManager<T>
     {
-        event PropertyChangedEventHandler PropertyChanged;
-
         List<IFile<T>> FileManager { get; set; }
 
         bool CloseFile(string LogName);
@@ -32,5 +30,7 @@ namespace TextFilter
         IFile<T> ReadFile(string LogName);
 
         bool SaveFile(string FileName, IFile<T> file);
+
+        event PropertyChangedEventHandler PropertyChanged;
     }
 }

@@ -26,6 +26,11 @@ namespace TextFilter
 
         private string _openWith = Process.GetCurrentProcess().MainModule.FileName;
 
+        public static FileTypeAssociation Instance
+        {
+            get { return _fileTypeAssociation; }
+        }
+
         static FileTypeAssociation()
         {
             if (_fileTypeAssociation == null)
@@ -36,11 +41,6 @@ namespace TextFilter
 
         public FileTypeAssociation()
         {
-        }
-
-        public static FileTypeAssociation Instance
-        {
-            get { return _fileTypeAssociation; }
         }
 
         public static bool IsAdministrator()

@@ -1,0 +1,19 @@
+﻿    UpdateLayout();
+    https://stackoverflow.com/questions/11420500/applying-datatemplate-to-a-grid
+    https://stackoverflow.com/questions/13246602/datatemplate-in-a-separate-resourcedictionary
+    https://wpftutorial.net/DataViews.html
+    http://mark-dot-net.blogspot.com/2008/12/list-filtering-in-wpf-with-m-v-vm.html
+    https://stackoverflow.com/questions/20888619/proper-way-to-use-collectionviewsource-in-viewmodel
+
+    ** https://stackoverflow.com/questions/1424554/how-do-i-use-the-datatype-property-on-a-wpf-datatemplate?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    HierarchicalDataTemplate
+	https://blogs.msdn.microsoft.com/mikehillberg/2009/10/30/treeview-and-hierarchicaldatatemplate-step-by-step/
+	https://wpf.2000things.com/tag/hierarchicaldatatemplate/
+	https://documentation.devexpress.com/WPF/10470/Controls-and-Libraries/Data-Grid/Examples/Hierarchical-Data-Presentation/How-to-Build-a-Tree-via-HierarchicalDataTemplate
+
+	http://www.technical-recipes.com/2017/binding-the-visibility-of-datagridcolumn-in-wpf-mvvm/
+
+    https://stackoverflow.com/questions/36912216/binding-as-a-resource?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+    https://social.msdn.microsoft.com/Forums/vstudio/en-US/f0a4a66c-a06c-4413-93db-c0b8a7ba191d/itemscontrolitemtemplate-and-multiple-datatemplate?forum=wpf
+
+

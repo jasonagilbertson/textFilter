@@ -18,9 +18,21 @@ namespace TextFilter
 {
     public class Base : INotifyPropertyChanged
     {
+        public enum CurrentStatusSetting
+        {
+            enter_to_filter,
+            filtered,
+            quick_filtered,
+            showing_all,
+            filtering,
+        }
 
+        public string _tempTabNameFormat = "-new {0}-";
+        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
+        public bool _transitioning;
         public int MaxGroupCount = 4;
 
+        private Command _duplicateWindowCommand;
         private bool _filterIndexVisibility = false;//todo fix: TextFilterSettings.Settings.FilterIndexVisible;
 
         private bool _group1Visibility = false;
@@ -30,15 +42,29 @@ namespace TextFilter
         private bool _group3Visibility = false;
 
         private bool _group4Visibility = false;
-        public struct LogTabViewModelEvents
+        private Command _newWindowCommand;
+
+        public static FilterViewModel _FilterViewModel { get; set; }
+
+        public static LogViewModel _LogViewModel { get; set; }
+
+        public static MainViewModel _MainViewModel { get; set; }
+
+        public static Parser _Parser { get; set; }
+
+        public Command DuplicateWindowCommand
         {
-            public static string Group1Visibility = "Group1Visibility";
+            get
+            {
+                if (_duplicateWindowCommand == null)
+                {
+                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
+                }
+                _duplicateWindowCommand.CanExecute = true;
 
-            public static string Group2Visibility = "Group2Visibility";
-
-            public static string Group3Visibility = "Group3Visibility";
-
-            public static string Group4Visibility = "Group4Visibility";
+                return _duplicateWindowCommand;
+            }
+            set { _duplicateWindowCommand = value; }
         }
 
         public bool FilterIndexVisibility
@@ -123,95 +149,6 @@ namespace TextFilter
 
         public int GroupCount { get; private set; }
 
-        public void SetGroupCount(int count)
-        {
-            GroupCount = count;
-
-            if (count > 0)
-            {
-                Group1Visibility = true;
-            }
-            else
-            {
-                Group1Visibility = false;
-            }
-
-            if (count > 1)
-            {
-                Group2Visibility = true;
-            }
-            else
-            {
-                Group2Visibility = false;
-            }
-
-            if (count > 2)
-            {
-                Group3Visibility = true;
-            }
-            else
-            {
-                Group3Visibility = false;
-            }
-
-            if (count > 3)
-            {
-                Group4Visibility = true;
-            }
-            else
-            {
-                Group4Visibility = false;
-            }
-
-            if (count > MaxGroupCount)
-            {
-                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}", MaxGroupCount, count));
-            }
-        }
-
-        public string _tempTabNameFormat = "-new {0}-";
-
-        public string _tempTabNameFormatPattern = @"\-new [0-9]{1,2}\-";
-
-        public bool _transitioning;
-
-        private Command _duplicateWindowCommand;
-
-        private Command _newWindowCommand;
-
-        public static event EventHandler<string> NewCurrentStatus;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public enum CurrentStatusSetting
-        {
-            enter_to_filter,
-            filtered,
-            quick_filtered,
-            showing_all,
-            filtering,
-        }
-
-        public static FilterViewModel _FilterViewModel { get; set; }
-        public static LogViewModel _LogViewModel { get; set; }
-        public static MainViewModel _MainViewModel { get; set; }
-        public static Parser _Parser { get; set; }
-
-        public Command DuplicateWindowCommand
-        {
-            get
-            {
-                if (_duplicateWindowCommand == null)
-                {
-                    _duplicateWindowCommand = new Command(DuplicateWindowExecuted);
-                }
-                _duplicateWindowCommand.CanExecute = true;
-
-                return _duplicateWindowCommand;
-            }
-            set { _duplicateWindowCommand = value; }
-        }
-
         public Command NewWindowCommand
         {
             get
@@ -226,6 +163,7 @@ namespace TextFilter
             }
             set { _newWindowCommand = value; }
         }
+
         public void CreateProcess(string process, string arguments = null)
         {
             try
@@ -251,10 +189,6 @@ namespace TextFilter
             NewWindow(true);
         }
 
-        public void NewWindowExecuted(object sender)
-        {
-            NewWindow(false);
-        }
         public void ExecuteAsAdmin(string fileName, string arguments)
         {
             Process proc = new Process();
@@ -269,7 +203,7 @@ namespace TextFilter
         public T FindVisualChild<T>(UIElement element) where T : UIElement
         {
             var parent = element;
-            if(parent == null)
+            if (parent == null)
             {
                 SetStatus("findvisualchild: error: no parent");
                 return default(T);
@@ -376,7 +310,7 @@ namespace TextFilter
                     args.Append(string.Format("/log: \"{0}\"", file));
                 }
             }
-            else if(withTabs)
+            else if (withTabs)
             {
                 if (TextFilterSettings.Settings.CurrentFilterFiles.Count > 0)
                 {
@@ -397,6 +331,11 @@ namespace TextFilter
             TextFilterSettings.Settings.Save();
             CreateProcess(Process.GetCurrentProcess().MainModule.FileName, args.ToString());
             Debug.Print(args.ToString());
+        }
+
+        public void NewWindowExecuted(object sender)
+        {
+            NewWindow(false);
         }
 
         public void OnPropertyChanged(string name)
@@ -427,6 +366,52 @@ namespace TextFilter
             }
         }
 
+        public void SetGroupCount(int count)
+        {
+            GroupCount = count;
+
+            if (count > 0)
+            {
+                Group1Visibility = true;
+            }
+            else
+            {
+                Group1Visibility = false;
+            }
+
+            if (count > 1)
+            {
+                Group2Visibility = true;
+            }
+            else
+            {
+                Group2Visibility = false;
+            }
+
+            if (count > 2)
+            {
+                Group3Visibility = true;
+            }
+            else
+            {
+                Group3Visibility = false;
+            }
+
+            if (count > 3)
+            {
+                Group4Visibility = true;
+            }
+            else
+            {
+                Group4Visibility = false;
+            }
+
+            if (count > MaxGroupCount)
+            {
+                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}", MaxGroupCount, count));
+            }
+        }
+
         public void SetStatus(string status)
         {
             if (status.ToLower().StartsWith("fatal:"))
@@ -450,6 +435,21 @@ namespace TextFilter
             {
                 Debug.Print(string.Format("SetStatus:exception: {0}: {1}", status, e));
             }
+        }
+
+        public static event EventHandler<string> NewCurrentStatus;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public struct LogTabViewModelEvents
+        {
+            public static string Group1Visibility = "Group1Visibility";
+
+            public static string Group2Visibility = "Group2Visibility";
+
+            public static string Group3Visibility = "Group3Visibility";
+
+            public static string Group4Visibility = "Group4Visibility";
         }
     }
 }

@@ -36,24 +36,6 @@ namespace TextFilter
 
         private int _count = -1;
 
-        public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
-        {
-            _itemsProvider = itemsProvider;
-            _pageSize = pageSize;
-            _pageTimeout = pageTimeout;
-        }
-
-        public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
-        {
-            _itemsProvider = itemsProvider;
-            _pageSize = pageSize;
-        }
-
-        public VirtualizingCollection(IItemsProvider<T> itemsProvider)
-        {
-            _itemsProvider = itemsProvider;
-        }
-
         public virtual int Count
         {
             get
@@ -105,42 +87,22 @@ namespace TextFilter
             get { return this; }
         }
 
-        object IList.this[int index]
+        public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize, int pageTimeout)
         {
-            get { return this[index]; }
-            set { throw new NotSupportedException(); }
+            _itemsProvider = itemsProvider;
+            _pageSize = pageSize;
+            _pageTimeout = pageTimeout;
         }
 
-        public T this[int index]
+        public VirtualizingCollection(IItemsProvider<T> itemsProvider, int pageSize)
         {
-            get
-            {
-                // determine which page and offset within page
-                int pageIndex = index / PageSize;
-                int pageOffset = index % PageSize;
+            _itemsProvider = itemsProvider;
+            _pageSize = pageSize;
+        }
 
-                // request primary page
-                RequestPage(pageIndex);
-
-                // if accessing upper 50% then request next page
-                if (pageOffset > PageSize / 2 && pageIndex < Count / PageSize)
-                    RequestPage(pageIndex + 1);
-
-                // if accessing lower 50% then request prev page
-                if (pageOffset < PageSize / 2 && pageIndex > 0)
-                    RequestPage(pageIndex - 1);
-
-                // remove stale pages
-                CleanUpPages();
-
-                // defensive check in case of async load
-                if (_pages[pageIndex] == null)
-                    return default(T);
-
-                // return requested item
-                return _pages[pageIndex][pageOffset];
-            }
-            set { throw new NotSupportedException(); }
+        public VirtualizingCollection(IItemsProvider<T> itemsProvider)
+        {
+            _itemsProvider = itemsProvider;
         }
 
         public void Add(T item)
@@ -281,6 +243,44 @@ namespace TextFilter
             {
                 _pageTouchTimes[pageIndex] = DateTime.Now;
             }
+        }
+
+        object IList.this[int index]
+        {
+            get { return this[index]; }
+            set { throw new NotSupportedException(); }
+        }
+
+        public T this[int index]
+        {
+            get
+            {
+                // determine which page and offset within page
+                int pageIndex = index / PageSize;
+                int pageOffset = index % PageSize;
+
+                // request primary page
+                RequestPage(pageIndex);
+
+                // if accessing upper 50% then request next page
+                if (pageOffset > PageSize / 2 && pageIndex < Count / PageSize)
+                    RequestPage(pageIndex + 1);
+
+                // if accessing lower 50% then request prev page
+                if (pageOffset < PageSize / 2 && pageIndex > 0)
+                    RequestPage(pageIndex - 1);
+
+                // remove stale pages
+                CleanUpPages();
+
+                // defensive check in case of async load
+                if (_pages[pageIndex] == null)
+                    return default(T);
+
+                // return requested item
+                return _pages[pageIndex][pageOffset];
+            }
+            set { throw new NotSupportedException(); }
         }
     }
 }

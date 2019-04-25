@@ -56,19 +56,6 @@ namespace TextFilter
 
         private WorkerManager _workerManager = WorkerManager.Instance;
 
-        public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
-        {
-            SetStatus("Parser:ctor");
-            // TODO: Complete member initialization
-            _FilterViewModel = filterViewModel;
-            _logViewModel = logViewModel;
-            Enable(true);
-
-            // sync existing information filterviewmodel initialized before parser
-            SyncFilterFiles();
-            SyncLogFiles();
-        }
-
         public int FilteredLinesCount
         {
             get
@@ -99,6 +86,19 @@ namespace TextFilter
                     OnPropertyChanged("TotalLinesCount");
                 }
             }
+        }
+
+        public Parser(FilterViewModel filterViewModel, LogViewModel logViewModel)
+        {
+            SetStatus("Parser:ctor");
+            // TODO: Complete member initialization
+            _FilterViewModel = filterViewModel;
+            _logViewModel = logViewModel;
+            Enable(true);
+
+            // sync existing information filterviewmodel initialized before parser
+            SyncFilterFiles();
+            SyncLogFiles();
         }
 
         public void Enable(bool enable)

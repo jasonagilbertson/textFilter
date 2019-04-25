@@ -11,9 +11,6 @@ namespace TextFilter
 {
     public interface IViewModel<T>
     {
-        // ITabViewModel<T> SelectedTabItem { get; set; }
-        event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
         Command ClearRecentCommand { get; set; }
 
         Command CloseCommand { get; set; }
@@ -85,6 +82,10 @@ namespace TextFilter
         void SaveFileAsExecuted(object sender);
 
         void SaveFileExecuted(object sender);
+
         void SaveModifiedFile(object sender);
+
+        // ITabViewModel<T> SelectedTabItem { get; set; }
+        event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
     }
 }
