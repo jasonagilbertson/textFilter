@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-10-19-11-13-21</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,PLB.SchedulerActionSkip</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:37.945,Informational,12664,520,PLB.SchedulerActionSkip@083b6878-2ed5-476b-90ea-6bd3b16f01ed___FaultAnalysisServicePrimaryCount__,Action Placement for domain 083b6878-2ed5-476b-90ea-6bd3b16f01ed___FaultAnalysisServicePrimaryCount__ is skipped because it is not needed</notes>
+    </filter>
+    <filter>
+      <filterpattern>PLB.SchedulerAction</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.SchedulerAction@bb37cab9-c2e4-4287-9e9a-8790586f653a___ClusterManagerServicePrimaryCount__,ServiceDomainId: bb37cab9-c2e4-4287-9e9a-8790586f653a___ClusterManagerServicePrimaryCount__</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.NodeLoads</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.NodeLoads@e9fa3ac3-9276-42ac-8c7c-487d2edfb883___NamingServicePrimaryCount__,NodeId NodeName Loads/DisappearingLoads/TotalCapacities:(__NamingServicePrimaryCount__ __NamingServiceReplicaCount__)</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.SnapshotStart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PeachPuff</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.SnapshotStart,Taking snapshot begin.</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.SnapshotEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGoldenrodYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.SnapshotEnd,Taking snapshot end. Total ms: 0</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBPrepareEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cornsilk</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.PLBPrepareEnd,PLB Prepare end. Total ms: 2</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBStart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:14.574,Informational,2740,520,PLB.PLBStart,PLB started with nodeCount:3 serviceCount:21 failoverUnitCount:41(inTransition:0) existingReplicaCount:123(movable:123) partitionsWithNewReplica:13 partitionsWithInstanceOnEveryNode:13 randomSeed:-2111598210</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.DecisionToken</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.DecisionToken,DecisionId: f04b2913-0a12-49c6-be15-dd30df588e89</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBDomainStart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.PLBDomainStart@294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount,PLB for domain 294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount running Creation/0/false</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.Searcher</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.Searcher,Start searching for initial creation actions</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBDomainEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.PLBDomainEnd@294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount,PLB for domain 294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount generated 0 Creation/0/false</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBDomainSkip</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.PLBDomainSkip@e9fa3ac3-9276-42ac-8c7c-487d2edfb883___NamingServicePrimaryCount__,PLB for domain e9fa3ac3-9276-42ac-8c7c-487d2edfb883___NamingServicePrimaryCount__ is skipped because current action is NoActionNeeded ConstraintCheckEnabled:true BalancingEnabled:true ConfigLoadBalancingEnabled:true HasMovableReplica:true</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBRefreshTiming</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:34.722,Informational,4052,520,PLB.PLBRefreshTiming,Timing for phases of refresh: total=2 processingUpdates=0 beginRefresh=1 endRefresh=0 snapshot=0 engine=0 remainder=1</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBPrepareStart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:35.719,Informational,4052,520,PLB.PLBPrepareStart,PLB Prepare start, Processing Pending Update and taking snapshot.</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.Scheduler</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Turquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:35.719,Informational,4052,520,PLB.Scheduler@294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount,There are no action eligible for execution in service domain 294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:35.720,Informational,4052,520,PLB.PLBEnd,PLB generated 0 actions, 1 ms used (0 ms used for engine run.)</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.ApplicationLoads</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:53.842,Informational,2740,520,PLB.ApplicationLoads@294245ef-db1a-43f1-9c2b-f347216d67db_PrimaryCount,ApplicationName {Metric:Load}:()</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.PLBPeriodicalTrace</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GhostWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:54.853,Informational,4052,520,PLB.PLBPeriodicalTrace,NodeId:NodeInstance (NodeProperties) FaultDomainId UpgradeDomainId State DeactivationIntent DeactivationStatus CapacityRatios Capacities</notes>
+    </filter>
+    <filter>
+      <filterpattern>,PLB.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:55.626,Informational,12664,520,PLB.SchedulerActionSkip@bb37cab9-c2e4-4287-9e9a-8790586f653a___ClusterManagerServicePrimaryCount__,Action Placement for domain bb37cab9-c2e4-4287-9e9a-8790586f653a___ClusterManagerServicePrimaryCount__ is skipped because it is not needed</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>NavajoWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

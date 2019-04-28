@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-08-11-01-38-16</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>PrintRepairTasks,TasksID = (.+?),.+?Description = (.+?),</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>PrintRepairTasks,TasksID = (.+?), State = (.+?), Action = (.+?),.+?Description = (.+?),</notes>
+    </filter>
+    <filter>
+      <filterpattern>aka.ms/POA</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-8-7 17:48:31.740,Informational,6192,2940,InfrastructureService.ApplicationTypeClient,CreateAsync: Provisioning application package. Uri: https://aka.ms/POA/POA_v1.2.1.sfpkg. Timeout: 00:02:00</notes>
+    </filter>
+    <filter>
+      <filterpattern>dispatching url.+/PatchOrchestrationApp</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>systemError=0</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2018-8-7 17:14:36.254,Informational,6444,1188,HM.HealthEntity@8ccecfa4-bdc9-4bb9-98c8-1758dd58d01c+131781337696895947,3c7ff2b6-4706-41e0-98df-c951f3adaa9b:0: Entity is cleaned up, hasPendingWork=false: ReplicaHealthAttributes(8ccecfa4-bdc9-4bb9-98c8-1758dd58d01c+131781337696895947:nodeId='ea568ea07a274711fe61bd6c0e5be91',instanceId=-2,nodeInstance=131778308487384945,cleanedUp,deleted@2018-08-07 16:43:29.190 Stale=false/systemReport=false/systemError=0), state PendingFirstReport, noChildren true</notes>
+    </filter>
+    <filter>
+      <filterpattern>,hm. AND error OR warn</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>,hm. AND error OR warn</notes>
+    </filter>
+    <filter>
+      <filterpattern>poa AND WarningMessage</filterpattern>
+      <backgroundcolor>Coral</backgroundcolor>
+      <foregroundcolor>Honeydew</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>poa AND ErrorMessage</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>SeaShell</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>poa AND VerboseMessage</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>poa AND exception</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>poa AND wu</filterpattern>
+      <backgroundcolor>Blue</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>healthclient.+coordinator</filterpattern>
+      <backgroundcolor>Cyan</backgroundcolor>
+      <foregroundcolor>RoyalBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>fabricdca.+coordinator</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>coordinatorservice AND error OR warn OR fail OR exception</filterpattern>
+      <backgroundcolor>OrangeRed</backgroundcolor>
+      <foregroundcolor>PaleTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>coordinatorservice</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumSpringGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>nodeagent AND error OR warn OR fail OR exception</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>Navy</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>nodeagentntservice</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>nodeagentsfutility</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>poa</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Violet</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

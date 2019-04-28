@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-10-30-03-20-56</filterversion>
+  <filternotes></filternotes>
+  <filters>
+    <filter>
+      <filterpattern>FM.ReconfigurationStarted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FM.ReconfigurationCompleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>RA.ReconfigurationCompleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLB.UpdateFailoverUnitDeleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Beige</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLB.UpdateFailoverUnit</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lavender</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLB.UpdateLoadOrMoveCost</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Bisque</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLB.UpdateService</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLB.FailoverUnitNot</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Crimson</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>PLBPeriodicalTrace</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>doreconfiguration</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightCyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

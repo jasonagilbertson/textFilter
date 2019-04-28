@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-10-19-11-13-26</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,EseStore.EseInstance</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:26:22.343,Informational,25512,6540,EseStore.EseInstance,(00000000-0000-0000-0000-000000000001:131497235723823431) (97384275232) closed: error=S_OK elapsed=00.491</notes>
+    </filter>
+    <filter>
+      <filterpattern>,EseStore.Defragmenter</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>FloralWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:26:22.026,Informational,13868,16956,EseStore.Defragmenter,(cd1f45ac-4751-4e13-9941-4916cfc8bd5a:131497584716144991) defragmenter canceled</notes>
+    </filter>
+    <filter>
+      <filterpattern>,EseStore.Store</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Silver</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:34:26.242,Informational,660,2744,EseStore.Store, settings=[LogFileSizeInKB=5120 LogBufferSizeInKB=1024 MaxCursors=16384 MaxVerPages=16384 MaxAsyncCommitDelay=00.200 EnableIncrementalBackup=false MaxCacheSizeInMB=1024 OptimizeTableScans=false MaxDefragFrequency=1:0:00:00.000 DefragThresholdInMB=500 DatabasePageSizeInKB=8 CompactionThresholdInMB=0 IntrinsicValueThresholdInBytes=0 AssertOnFatalError=true EnableOverwriteOnUpdate=false ]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,EseStore.check</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Wheat</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:34:43.834,Informational,1936,2744,EseStore.check,ESE call: '((JetUpdate( session_-&gt;SessionId, tableId_, 0, 0, 0)))' returned '-1605': </notes>
+    </filter>
+    <filter>
+      <filterpattern>,EseStore.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:26:21.851,Informational,10344,6540,EseStore.EseInstance,(00000000-0000-0000-0000-000000001000:131497236088100593) (97384277088) aborting backups</notes>
+    </filter>
+    <filter>
+      <filterpattern>jet</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumOrchid</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

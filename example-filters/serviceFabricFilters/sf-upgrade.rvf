@@ -1,0 +1,359 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-03-27-10-21-11</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>ClusterManifestValidationException</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FabricInstallerService.FabricUpgradeManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(0x[8cC]{1}[A-Fa-f0-9]{7})\W</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>possible error codes</notes>
+    </filter>
+    <filter>
+      <filterpattern>rollingback</filterpattern>
+      <backgroundcolor>OrangeRed</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>fm.nodecounts</filterpattern>
+      <backgroundcolor>Fuchsia</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>FM.NodeCounts,Nodes=12 &lt;---- look for changes in count to see scale out</notes>
+    </filter>
+    <filter>
+      <filterpattern>cm.upgradestart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Chartreuse</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>service fabric app or cluster upgrade start</notes>
+    </filter>
+    <filter>
+      <filterpattern>cm.upgradecomplete</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>CornflowerBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>service fabric app or cluster upgrade complete</notes>
+    </filter>
+    <filter>
+      <filterpattern>cm.upgraderequest</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>request for status of update</notes>
+    </filter>
+    <filter>
+      <filterpattern>cm.upgradereply</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>reply to upgrade request status</notes>
+    </filter>
+    <filter>
+      <filterpattern>Pending = [ OR Completed = [ OR Skipped = [ OR CurrentUpgradeDomain=</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>when displayed below above filter, is the list of pending upgrade domains to complete ex: Pending = [ 0 1 2 3 4 5 ... ]</notes>
+    </filter>
+    <filter>
+      <filterpattern>cm.upgrade</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Snow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>cm.rollback</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OrangeRed</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>failed upgrade</notes>
+    </filter>
+    <filter>
+      <filterpattern>CM.Application</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>DarkGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy</notes>
+    </filter>
+    <filter>
+      <filterpattern>CM.ImageBuilder</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 15:45:15.647,Informational,65256,8268,CM.ImageBuilderCreated,[949005ac8b9606dbbb30c69f8c71a80:131505528359344877] handle = 2904 process id = 54564</notes>
+    </filter>
+    <filter>
+      <filterpattern>CM.Replica</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Wheat</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 15:45:16.198,Informational,65256,8268,CM.Replica,(00000000-0000-0000-0000-000000002000:131498228145967437) application type (smAdminType,1.0.0.053) not found</notes>
+    </filter>
+    <filter>
+      <filterpattern>,cm.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Violet</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Constraintviolation</filterpattern>
+      <backgroundcolor>Brown</backgroundcolor>
+      <foregroundcolor>NavajoWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-17 08:26:47.020,Informational,3968,2804,PLB.SearcherConstraintViolationNotCorrected,Constraint violations are not corrected. Remaining violations: [UpgradeDomain:1-(partition:00000000-0000-0000-0000-000000001002)]</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricNode.State</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Fuchsia</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes></notes>
+    </filter>
+    <filter>
+      <filterpattern>Upgrades temporarily paused balancing.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Azure</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>updatenode</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Navy</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>updatenode</notes>
+    </filter>
+    <filter>
+      <filterpattern>There were no new replicas, upgrades, or extra replicas that needed to be dropped. </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>UpgradeDomain False OR UpgradeHealthReports OR PendingFabricUpgrade=0 OR UpgradeDomainId State OR UpgradeDomain: OR ApplicationUpgradeContexts=0 OR ApplicationUpgrades=0</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>22</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>(FABRIC_E_[A-Z_]+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>23</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>pendingfabricupgrade=0</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Turquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>24</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>fabricupgrade</filterpattern>
+      <backgroundcolor>Blue</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>25</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>fabricdeployer</filterpattern>
+      <backgroundcolor>Blue</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>26</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Upgrades temporarily paused checking for constraint violations.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>27</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>receive message GetUpgradeStatusAction</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>28</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy</notes>
+    </filter>
+    <filter>
+      <filterpattern>upgrade</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGoldenrod</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>29</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>rollingforward</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>YellowGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>30</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>White</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>31</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

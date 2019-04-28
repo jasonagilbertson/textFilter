@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-11-07-05-28-23</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,VoteManager.Store</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SpringGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 09:56:20.935,Informational,1888,1760,VoteManager.Store@8d32f842d7284b30b71517094c1176f9,S 131497271370394988:600000014 seq=25/0, leader=a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:0</notes>
+    </filter>
+    <filter>
+      <filterpattern>,VoteManager.GlobalTime</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:05.140,Informational,4052,520,VoteManager.GlobalTime@a940ffa1f03b1551e24b27e54754b5bd,Updated to 17:-994638664/-994638664 A with 17:131523636099618089,-1043032475,-994315189, now=131523636051302605</notes>
+    </filter>
+    <filter>
+      <filterpattern>,VoteManager.UpdateGlobalTickets</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>FloralWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:20.148,Informational,12664,520,VoteManager.UpdateGlobalTickets_Tickets,a940ffa1f03b1551e24b27e54754b5bd updated global tickets: </notes>
+    </filter>
+    <filter>
+      <filterpattern>,VoteManager.Update</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Pink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,VoteManager.VoteManager_TTL</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 09:57:11.482,Informational,3728,1760,VoteManager.VoteManager_TTL,8d32f842d7284b30b71517094c1176f9: globalLeaseExpiration_ updated to 2017-10-13 10:02:07.153, quorumCount_ = 2, ticket total = 3</notes>
+    </filter>
+    <filter>
+      <filterpattern>,VoteManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:15:09.103,Informational,3660,520,VoteManager.VoteManager_TTL,a940ffa1f03b1551e24b27e54754b5bd: globalLeaseExpiration_ updated to 2017-10-13 10:20:06.780, quorumCount_ = 2, ticket total = 3</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Wheat</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

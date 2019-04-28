@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-11-16-04-06-59</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>fabricDCA AND fail OR error OR exception OR terminate OR false OR warning</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.EtlToCsvPerformance</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.221,Informational,9632,2708,FabricDCA.EtlToCsvPerformance,ETLPassInfo - WindowsFabric_AzureBlobServiceFabricEtw:0.90624,50015,50015</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.EtlPassPerformance</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGoldenrodYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.122,Informational,9632,2708,FabricDCA.EtlPassPerformance,TraceType Fabric, PassTimeInSeconds 0.8124499, EtwEventsProcessed 50322</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.TraceSessionStats</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:12.771,Informational,3428,2708,FabricDCA.TraceSessionStats,Trace session name: appinfo, Events lost: 43307, Trace session start time: 2017-10-31 04:42:04.025, Trace session end time: 2017-11-16 17:24:17.422</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.AppInstanceEtlFileDataReader</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:12.770,Informational,3428,2708,FabricDCA.AppInstanceEtlFileDataReader,Searching for ETL files whose names match '*.etl' in directory 'D:\SvcFab\Log\AppInstanceData\Etl'.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.DiskSpaceManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Bisque</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:50:31.878,Informational,8680,2708,FabricDCA.DiskSpaceManager,Local policy deleted 2 of 2 attempted files from the directory.</notes>
+    </filter>
+    <filter>
+      <filterpattern>upload</filterpattern>
+      <backgroundcolor>Cyan</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.WindowsFabric_AzureBlobServiceFabricEtw</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.219,Informational,10968,2708,FabricDCA.WindowsFabric_AzureBlobServiceFabricEtw,Found file to copy Lease\f12c39f21cf14c93cf62d9adf84a295a_lease_traces_6.0.219.9494_131538985240148210_101_00636464513089431921_0000000000.dtr.zip.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.Performance</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.122,Informational,9632,2708,FabricDCA.Performance,ETLPassMoreInfo - Fabric:0</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.WindowsFabric_ServiceFabricEtlFile</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.117,Informational,9632,2708,FabricDCA.WindowsFabric_ServiceFabricEtlFile,Finished reading Fabric ETW events up to 11/16/2017 17:48:28.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.EtlPassBacklogPerformance</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Ivory</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:38.117,Informational,9632,2708,FabricDCA.EtlPassBacklogPerformance,TraceType Fabric, BacklogSize 0</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.WindowsFabric_</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>NavajoWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:37.304,Informational,9632,2708,FabricDCA.WindowsFabric_ServiceFabricEtlFile,Reading Fabric ETW events after 11/16/2017 17:43:27.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.Timer</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Wheat</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:15.089,Informational,3428,2708,FabricDCA.Timer,The AppInstanceEtlReadTimer timer is being started for 180000 milliseconds...</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.ServiceConfig</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:15.075,Informational,3428,2708,FabricDCA.ServiceConfig,ETW element is not present in manifest D:\SvcFab\_App\CeresAppCluster_App4\ParcaePkg.Package.1.27.xml</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.ServicePackageTableManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:15.075,Informational,3428,2708,FabricDCA.ServicePackageTableManager,Service package activation did not require the data collector to be restarted. Node name: _public_0, application instance ID: CeresAppCluster_App4, app rollout version: 1.0, service package name: ParcaePkg, service rollout version: 1.27.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.ServicePackageTableBackup</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SeaShell</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:15.076,Informational,3428,2708,FabricDCA.ServicePackageTableBackup,Backup file D:\SvcFab\Log\AppInstanceData\Table\ServicePackageTable_05248150530172562294_0000000000.dat created. The backup file is valid up to timestamp 11/16/2017 17:46:14 (636464511745174390, 0).</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDCA.AppInstanceEtwDataReader</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-16 17:49:15.076,Informational,3428,2708,FabricDCA.AppInstanceEtwDataReader,The latest timestamp upto which we have processed ETW events is 11/16/2017 17:46:14 (636464511745174390, 0).</notes>
+    </filter>
+    <filter>
+      <filterpattern>fabricdca</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>YellowGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>fabricdca catch all</notes>
+    </filter>
+    <filter>
+      <filterpattern>ETW </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>ETW catch all</notes>
+    </filter>
+    <filter>
+      <filterpattern>sflogs</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>DarkOrange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>storage table for sf logs</notes>
+    </filter>
+    <filter>
+      <filterpattern>sfdg</filterpattern>
+      <backgroundcolor>DarkOrange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>storage table for sf diags</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

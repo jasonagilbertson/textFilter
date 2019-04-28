@@ -1,0 +1,436 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-12-20-10-54-00</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>Unable to decode ETW event. The event will be skipped.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2018-5-23 10:59:42.782,Error,57616,8836,FabricDCA.WindowsFabric_ServiceFabricEtlFile,Unable to decode ETW event. The event will be skipped. Event ID: 65026, Task: 254, Level: 4.</notes>
+    </filter>
+    <filter>
+      <filterpattern>FABRIC_E_INVALID_SUBJECT_NAME, Will try as CommonName...</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Silver</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>most likely noise assuming common name works</notes>
+    </filter>
+    <filter>
+      <filterpattern>cert chain trust status: info = 100, error = 20, chainSize = 1, SelfSigned = true</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGoldenrodYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>FM service not created</filterpattern>
+      <backgroundcolor>DarkOrange</backgroundcolor>
+      <foregroundcolor>RoyalBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>could be issue</notes>
+    </filter>
+    <filter>
+      <filterpattern>loaded property</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>property configuration</notes>
+    </filter>
+    <filter>
+      <filterpattern>CommonQueue is full</filterpattern>
+      <backgroundcolor>Blue</backgroundcolor>
+      <foregroundcolor>Tomato</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>you may need to restart failovermanager service on primary if this is logged.</notes>
+    </filter>
+    <filter>
+      <filterpattern>unhealthy </filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>detected a constraint violation</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>####HealthEvent####</filterpattern>
+      <backgroundcolor>Orange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>certChain-&gt;rgpChain[0]-&gt;rgpElement[0]-&gt;TrustStatus.dwInfoStatus = 2</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cornsilk</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>OK if self signed cert</notes>
+    </filter>
+    <filter>
+      <filterpattern>certChainErrorStatus=0x800b0109</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>OK if self signed cert</notes>
+    </filter>
+    <filter>
+      <filterpattern>failed with policy status: 0x800b0109</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>OK if self signed cert</notes>
+    </filter>
+    <filter>
+      <filterpattern>cert chain trust status: info = 0, error = 1010040</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>OK if self signed cert</notes>
+    </filter>
+    <filter>
+      <filterpattern>\,([a-zA-Z]+?)\.([a-zA-Z]+?)\.(.+?)\,</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>\,([a-zA-Z]+?)\.([a-zA-Z]+?)\.(.+?)\,</notes>
+    </filter>
+    <filter>
+      <filterpattern>0x80070070</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>PaleTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>0x80070070 = ERROR_DISK_FULL </notes>
+    </filter>
+    <filter>
+      <filterpattern>enable TCP fast loopback</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>0x80070040</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Moccasin</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy: net_name_deleted 0x80070040</notes>
+    </filter>
+    <filter>
+      <filterpattern>(0x(?:8|C|c)00[a-zA-Z0-9]{5})</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>error codes</notes>
+    </filter>
+    <filter>
+      <filterpattern>undefinedmetric</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an issue</notes>
+    </filter>
+    <filter>
+      <filterpattern>,warning,</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy</notes>
+    </filter>
+    <filter>
+      <filterpattern>--- End of stack trace from previous location where exception was thrown --- OR --- End of inner exception stack trace ---</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy</notes>
+    </filter>
+    <filter>
+      <filterpattern>3221225786</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>22</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>normal process exit ctrl-c</notes>
+    </filter>
+    <filter>
+      <filterpattern>exitcode (7147|7148)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>23</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>service fabric initiated exit (normal)</notes>
+    </filter>
+    <filter>
+      <filterpattern>exception|terminate</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>24</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Turquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>25</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>(FABRIC_E\w+)</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>26</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>error code = 0$|"</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BlanchedAlmond</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>27</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>error = 0, OR Error: 0. OR Error 0</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>28</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>s_OK</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Azure</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>29</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>error code 0  OR no fatal error OR error=0)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>30</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>certChainErrorStatus=0x0</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Bisque</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>31</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>InfrastructureService.WrpPackageRetriever AND "upgradeState":"RollingForwardCompleted"</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Snow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>32</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>completed</notes>
+    </filter>
+    <filter>
+      <filterpattern>ErrorCheckingEnabled|ErrorLogPkg|ErrorListPkg|error code = 0,</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightCyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>33</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>True</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>error</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>34</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>sequencenumber=(\d+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>35</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>was scheduled</filterpattern>
+      <backgroundcolor>White</backgroundcolor>
+      <foregroundcolor>Navy</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>36</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>was scheduled</notes>
+    </filter>
+    <filter>
+      <filterpattern>chaos</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>37</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>38</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-05-19-02-08-50</filterversion>
+  <filternotes>ddd</filternotes>
+  <filters>
+    <filter>
+      <filterpattern>VerifyCertificate: complete</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>credential for certificate AND loaded successfully</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>MediumBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>cert was read successfully </notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricDeployer.FabricDeployer,AclClusterLevelCerts: Enter</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>cert update start?</notes>
+    </filter>
+    <filter>
+      <filterpattern>FabricNode_CertificateOk</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes></notes>
+    </filter>
+    <filter>
+      <filterpattern>Common.CryptoUtility</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes></notes>
+    </filter>
+    <filter>
+      <filterpattern>Transport.SecurityCredentials</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-6 14:22:20.871,Informational,2660,1708,Transport.SecurityCredentials,credential for certificate loaded successfully</notes>
+    </filter>
+    <filter>
+      <filterpattern>verifycertificate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Transport.SecurityContextSsl</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-6 14:22:29.959,Informational,3228,3168,Transport.SecurityContextSsl@9db9569e50,OnInitialize: credentials_</notes>
+    </filter>
+    <filter>
+      <filterpattern>Transport.SecurityContext</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Transport.Security</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lime</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>thumbprint AND fail OR error</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OrangeRed</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>thumbprint</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>cert</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Coral</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>ssl</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumOrchid</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>exception</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>SlateGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>0x509</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PeachPuff</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>false positive</notes>
+    </filter>
+    <filter>
+      <filterpattern>x509</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

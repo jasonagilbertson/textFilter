@@ -1,0 +1,568 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-11-09-05-35-50</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,fm. AND warning OR exception</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,Error, AND ,fm.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>QuorumLoss=[^0]</filterpattern>
+      <backgroundcolor>OrangeRed</backgroundcolor>
+      <foregroundcolor>White</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>	  QuorumLoss=1</notes>
+    </filter>
+    <filter>
+      <filterpattern>Deleting=[^0]</filterpattern>
+      <backgroundcolor>OrangeRed</backgroundcolor>
+      <foregroundcolor>Maroon</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>FM._Partitions_ReconfigurationStarted</filterpattern>
+      <backgroundcolor>Brown</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-17 08:32:20.835,Informational,3692,2804,FM._Partitions_ReconfigurationStarted@6a6f373e-6361-4b08-bfa5-d685bfc469a5,Reconfiguration started for 6a6f373e-6361-4b08-bfa5-d685bfc469a5/257698037874. Primary: 7f2980fae0b250741749a8d58200867b, Secondaries: bac74f3268362fe66fb545ec07ff6eb3 d6d556d2587b403d6376750b0490a759 </notes>
+    </filter>
+    <filter>
+      <filterpattern>Sending message DoReconfiguration</filterpattern>
+      <backgroundcolor>Brown</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>Sending message DoReconfiguration</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.ReplicaSet</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:26:22.344,Informational,25512,6540,FM.ReplicaSet,FailoverManagerService::~dtor: trace ID = 7124f1d558aad485816c5b5539e94010:131504401577324369</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Factory</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 03:34:26.859,Informational,660,2744,FM.Factory,FailoverManagerServiceFactory::ctor: node instance = 7124f1d558aad485816c5b5539e94010:131522528647651170</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.LifeCycle</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:58.385,Informational,3660,520,FM.LifeCycle,a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137 created</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.ServiceCounts</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:21:31.902,Informational,2740,520,FM.ServiceCounts,Services=22</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Nodes</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:21:31.902,Informational,2740,520,FM.Nodes,Up Nodes: 7124f1d558aad485816c5b5539e94010:131522528647651170, 8d32f842d7284b30b71517094c1176f9:131522616645691111, a940ffa1f03b1551e24b27e54754b5bd:131521642067206521 1-3 of 3</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FTState</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>White</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:21:31.903,Informational,2740,520,FM.FTState@00000000-0000-0000-0000-000000005000,FaultAnalysisService 3 3 00000000-0000-0000-0000-000000005000 0:0/131497235768493820:70000000f SP 55 2144 356 5435 2017-10-12 06:01:41.490</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Request_Resolution</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:00.324,Informational,2740,520,FM.Request_Resolution,[b871ff05-6987-4678-a21a-853017e0d18e:0] Processing ServiceTableRequest: 131497235714743461:8d32f842d7284b30b71517094c1176f9 [ [1, 2176) ]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Reply_Resolution</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Bisque</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:00.324,Informational,2740,520,FM.Reply_Resolution,[b871ff05-6987-4678-a21a-853017e0d18e:0] Sending versions  (0 entries) [[ ]]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Ranges_LookupTable</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BlanchedAlmond</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:01.769,Informational,4052,520,FM.Ranges_LookupTable,Current VersionRangeCollection: [[1, 2176)], broadcast excluding ranges: [[1, 2176)]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Broadcast_LookupTable</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:01.769,Informational,4052,520,FM.Broadcast_LookupTable,Broadcasting ServiceTableUpdate: 131497235714743461:8d32f842d7284b30b71517094c1176f9 0 [] 2176 False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.TaskBegin</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PapayaWhip</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:01.769,Informational,2740,520,FM.TaskBegin_BG,a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137: FTBackgroundManager periodic task started</notes>
+    </filter>
+    <filter>
+      <filterpattern>,fmm.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>WhiteSmoke</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,FM.NodeCounts</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,2740,520,FM.NodeCounts,Nodes=3</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BGTaskEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,2740,520,FM.BGTaskEnd_BGEndNode,a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137: Node periodic task ended in 0ms:</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.QueueCounts</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cornsilk</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,2740,520,FM.QueueCounts,CommonQueue=0/34091</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BGThreadStart</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,2740,520,FM.BGThreadStart_BG,Background thread started</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BGThreadEndStat</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>22</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,4052,520,FM.BGThreadEndStat_BG,Background thread ended: Enumerated=20, Unprocessed=0, AsyncCommits=0, AsyncCompleted=0, IsEnumerationCompleted=True, IsThrottledThread=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BGThreadIterationEnd</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>23</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:11.783,Informational,2740,520,FM.BGThreadIterationEnd_BG,Background iteration completed: Enumerated=41, Unprocessed=0, AsyncCommits=0, IsEnumerationAborted=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Request_Query</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Azure</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>24</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:23.656,Informational,3660,520,FM.Request_Query,[99632a4b-b4c5-4ed5-85e5-c25620d9c51d:0] Processing Query</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Query</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Snow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>25</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:23.656,Informational,3660,520,FM.Query,99632a4b-b4c5-4ed5-85e5-c25620d9c51d:0: Cache nodes: continuation token=, count=3</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Reply_Query</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>26</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:23.656,Informational,3660,520,FM.Reply_Query,[99632a4b-b4c5-4ed5-85e5-c25620d9c51d:0] Query completed with error S_OK.</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BGThreadContextCompleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Ivory</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>27</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:23:47.118,Informational,4052,520,FM.BGThreadContextCompleted_BG,Context FailoverUnitCountsContext: Unprocessed=(): IsCompleted=True</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FailoverUnitCounts</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>28</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:23:47.118,Informational,4052,520,FM.FailoverUnitCounts,FailoverUnits=41</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Ready</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>29</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:59.401,Informational,3660,520,FM.Ready@a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137,FM a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137 is Ready on node a940ffa1f03b1551e24b27e54754b5bd:131521642067206521. 1016ms</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FTCache</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>NavajoWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>30</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:59.401,Informational,3660,520,FM.FTCache,Loaded health sequence: 358</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.LookupTable</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lavender</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>31</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:59.401,Informational,3660,520,FM.LookupTable,a940ffa1f03b1551e24b27e54754b5bd:131521642067206521:131522612425173137 restored lookup version 2059</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.ServiceState</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>32</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:59.401,Informational,12664,520,FM.ServiceState@ClusterManagerServiceName,ClusterManagerServiceName ():ClusterManagerServiceType@ (SharedProcess) [1:0:1:0:0] [1]/3/3  SP 131497235767868692:0 30:00.000 Infinite 7:0:00:00.000 () NodeTypeName==prodaic32 0 (__ClusterManagerServicePrimaryCount__ 3 1 0 __ClusterManagerServiceReplicaCount__ 2 1 1) 1 () false  - 2 328526324376 2017-9-12 20:59:36.849</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Admin</filterpattern>
+      <backgroundcolor>Cyan</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>33</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:53:59.402,Informational,12664,520,FM.Admin_FTState@00000000-0000-0000-0000-000000001001,NamingService 3 3 00000000-0000-0000-0000-000000001001 0:0/131497235767868692:50000000f SP 53 2026 318 5164 2017-10-12 03:34:46.020</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Update_LookupTable</filterpattern>
+      <backgroundcolor>Brown</backgroundcolor>
+      <foregroundcolor>Honeydew</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>34</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:54:00.475,Informational,12664,520,FM.Update_LookupTable@2f9ff126-a05d-4315-9ec1-c71047cfed23,Lookup version for FT 2f9ff126-a05d-4315-9ec1-c71047cfed23 updated to 2060</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FTMessage</filterpattern>
+      <backgroundcolor>DarkGoldenrod</backgroundcolor>
+      <foregroundcolor>White</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>35</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:54:00.207,Informational,12664,520,FM.FTMessage@2f9ff126-a05d-4315-9ec1-c71047cfed23,FM processing message DoReconfigurationReply: 2f9ff126-a05d-4315-9ec1-c71047cfed23 0:0/131497584710044945:900000011</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FTAction</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>36</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:55:59.650,Informational,3660,520,FM.FTAction@97d779a8-7f61-4e4d-8b62-6e47ca2b3a05,FT:  3 3 97d779a8-7f61-4e4d-8b62-6e47ca2b3a05 0:0/131497584710044945:900000020 S 84 2083 336 5279 2017-10-12 05:55:49.508</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.EndpointUpdate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>37</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:57:49.074,Informational,3660,520,FM.EndpointUpdate_Endpoint@2f9ff126-a05d-4315-9ec1-c71047cfed23,Replica on node a940ffa1f03b1551e24b27e54754b5bd:131521642067206521 updated endpoints for 131497584716144991:131497584716144994 at ReconfigurationReply</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM._Partitions</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>38</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:57:49.137,Informational,13460,520,FM._Partitions_ReconfigurationCompleted@2f9ff126-a05d-4315-9ec1-c71047cfed23,Reconfiguration completed for 2f9ff126-a05d-4315-9ec1-c71047cfed23/42949672978. Primary: 7124f1d558aad485816c5b5539e94010, Secondaries: a940ffa1f03b1551e24b27e54754b5bd 8d32f842d7284b30b71517094c1176f9 </notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Background</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>FloralWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>39</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:03.824,Informational,13460,520,FM.Background_FTUpdate@02e6b997-4f32-421d-9a3a-a3f8f281c722,Updated:  3 3 02e6b997-4f32-421d-9a3a-a3f8f281c722 0:0/131497584710044945:600000025 S 92 2085 335 5346 2017-10-12 06:01:07.909</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Movement</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightCyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>40</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:03.892,Informational,4052,520,FM.Movement@34781502-1220-420e-814e-b380d57f3832,Adding movement 34781502-1220-420e-814e-b380d57f3832:fabric:/Apttus.Harbor/StorageWorker:1818 false 1 actions (AddSecondary:0=&gt;8d32f842d7284b30b71517094c1176f9)</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Request_ServiceTypeNotification</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Pink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>41</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:06.642,Informational,4052,520,FM.Request_ServiceTypeNotification,[e24f06a9-1c50-491d-87da-e79cb74d5667:1072] Processing ServiceTypeNotification message from 8d32f842d7284b30b71517094c1176f9:131522616645691111:</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Reply_ServiceTypeNotification</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>42</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:06.643,Informational,4052,520,FM.Reply_ServiceTypeNotification,[e24f06a9-1c50-491d-87da-e79cb74d5667:1072] Sending ServiceTypeNotificationReply message to 8d32f842d7284b30b71517094c1176f9:131522616645691111:</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.BuildReplicaSuccess</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>43</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:07.975,Informational,3660,520,FM.BuildReplicaSuccess@76846d2b-4077-42b2-87d1-05e5c30e7065,Replica 131522616692342858 on node 8d32f842d7284b30b71517094c1176f9 for FT 76846d2b-4077-42b2-87d1-05e5c30e7065 built successfully</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.ReplicaUp</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGoldenrod</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>44</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:35.489,Informational,4052,520,FM.ReplicaUp@8d32f842d7284b30b71517094c1176f9,Processing ReplicaUp message from 8d32f842d7284b30b71517094c1176f9:131522616645691111: isLastReplicaUpMessage=true, isFromFMM=false </notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.FTSend</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>45</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:05.152,Informational,12664,520,FM.FTSend@3eab384b-45a2-4eac-86e2-18516fc42cc5,Sending message DoReconfiguration to 7124f1d558aad485816c5b5539e94010:131522528647651170: 3eab384b-45a2-4eac-86e2-18516fc42cc5 131497584710044945:700000028/131497584710044945:700000029 0</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Receive_ReplicaUpdate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SeaShell</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>46</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 06:01:35.489,Informational,4052,520,FM.Receive_ReplicaUpdate@00000000-0000-0000-0000-000000005000,Receiving 00000000-0000-0000-0000-000000005000 3 3 0:0/0:0/131497235768493820:60000000e False </notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.NodeCache</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>47</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:56:14.682,Informational,4052,520,FM.NodeCache,HealthGetProgress: 23</notes>
+    </filter>
+    <filter>
+      <filterpattern>,FM.Service</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AntiqueWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>48</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-12 05:56:14.682,Informational,4052,520,FM.Service,HealthGetProgress: 31</notes>
+    </filter>
+    <filter>
+      <filterpattern>,fm.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>49</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>50</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

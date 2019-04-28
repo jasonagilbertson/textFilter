@@ -1,0 +1,535 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>19-02-04-05-18-54</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>Can't get private key filename for certificate. Error: 0x80090014</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise bug to be fixed in 6.5?</notes>
+    </filter>
+    <filter>
+      <filterpattern>Error at AclConfiguredCertificates, ErrorCode E_FAIL</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise bug to be fixed in 6.5?</notes>
+    </filter>
+    <filter>
+      <filterpattern>SetCertificateAcls failed. ErrorCode: E_FAIL OR Can't ACL AND E_FAIL</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AntiqueWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise bug to be fixed in 6.5?</notes>
+    </filter>
+    <filter>
+      <filterpattern>privatekey fail</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise bug to be fixed in 6.5?</notes>
+    </filter>
+    <filter>
+      <filterpattern>Cant OR fail AND private key</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise bug to be fixed in 6.5?</notes>
+    </filter>
+    <filter>
+      <filterpattern>VaultOperationLimitReached</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>SpringGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>access to key vault being throttled</notes>
+    </filter>
+    <filter>
+      <filterpattern>guestagent</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noisy</notes>
+    </filter>
+    <filter>
+      <filterpattern>cluster manifest:</filterpattern>
+      <backgroundcolor>CornflowerBlue</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>copy of cluster manifest</notes>
+    </filter>
+    <filter>
+      <filterpattern>terminated unexpectedly AND 3221225786</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cornsilk</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>normal sf process terminate</notes>
+    </filter>
+    <filter>
+      <filterpattern>terminated unexpectedly OR Name='UnexpectedTermination'&gt;true&lt;/Data&gt;</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>LightCyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>3221225786 is ntstatus Control-C exit and IS OK / NORMAL for SF</notes>
+    </filter>
+    <filter>
+      <filterpattern>Cluster upgrade</filterpattern>
+      <backgroundcolor>DodgerBlue</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Cluster rollback</filterpattern>
+      <backgroundcolor>Crimson</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Application rollback</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Blue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>Microsoft-ServiceFabric%4Operational.csv, 10/28/2017,08:14:10.425049 AM,29623,Information,Microsoft-ServiceFabric,6436,4048,Application rollback start: Application = fabric:/LiveOP24.Api.Authorization, Application Type = LiveOP24.Api.AuthorizationType, Target Application Type Version = 1.0.40, Failure Reason = Interrupted, Overall Elapsed Time = 420668ms</notes>
+    </filter>
+    <filter>
+      <filterpattern>Application upgrade started</filterpattern>
+      <backgroundcolor>Cyan</backgroundcolor>
+      <foregroundcolor>Navy</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>Microsoft-ServiceFabric%4Operational.csv, 10/31/2017,06:20:18.325640 PM,29621,Information,Microsoft-ServiceFabric,6436,12560,Application upgrade started: Application = fabric:/LiveOP24.Api.Document, Application Type = LiveOP24.Api.DocumentType, Target Application Type Version = 1.0.8, Upgrade Type = Rolling, Rolling Upgrade Mode = Monitored, Failure Action = Rollback</notes>
+    </filter>
+    <filter>
+      <filterpattern>CopyDatalossWarningReadme</filterpattern>
+      <backgroundcolor>DarkOrchid</backgroundcolor>
+      <foregroundcolor>LemonChiffon</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>hint that its new image? or scale up?</notes>
+    </filter>
+    <filter>
+      <filterpattern>Microsoft-Windows-HttpEvent</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>System.csv, 11/14/2017,01:00:58.182616 PM,15008,Information,Microsoft-Windows-HttpEvent,4,464,Reservation for namespace identified by URL prefix http://+:80/ was successfully deleted.</notes>
+    </filter>
+    <filter>
+      <filterpattern>,1074,Information, AND has initiated the</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>System.csv, 08/11/2017,12:40:41.409368 AM,1074,Information,User32,532,568,The process C:\Windows\system32\svchost.exe (vmt1000008) has initiated the restart of computer vmt1000008 on behalf of user NT AUTHORITY\SYSTEM for the following reason: Operating System: Recovery (Planned); Reason Code: 0x80020002; Shutdown Type: restart; Comment: </notes>
+    </filter>
+    <filter>
+      <filterpattern>error status: 0. OR error: S_OK</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>information</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Chartreuse</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>False</enabled>
+      <exclude>True</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>error AND service control manager</filterpattern>
+      <backgroundcolor>DarkOrange</backgroundcolor>
+      <foregroundcolor>DarkBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>if timing out, may cause system hang</notes>
+    </filter>
+    <filter>
+      <filterpattern>a rule has been added</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>20</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>firewall rule has been added</notes>
+    </filter>
+    <filter>
+      <filterpattern>a rule has been deleted</filterpattern>
+      <backgroundcolor>Magenta</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>21</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>firewall rule has been deleted</notes>
+    </filter>
+    <filter>
+      <filterpattern>Microsoft-Windows-Perflib</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GhostWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>22</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>Windows Error Reporting</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Blue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>23</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>could be indicator of process crashing.... Information,13/01/2015 17:53:56,Service Control Manager,7036,None,The Windows Error Reporting Service service entered the running state.</notes>
+    </filter>
+    <filter>
+      <filterpattern>is equal to the disk signature of disk OR has the same disk identifiers</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>24</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an issue accordding to search for KB2983588 to resolve the issue.</notes>
+    </filter>
+    <filter>
+      <filterpattern>none of the configured DNS servers responded OR DnsServerIPAddressNotFound</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>25</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>possible dns issue</notes>
+    </filter>
+    <filter>
+      <filterpattern>0x80070070</filterpattern>
+      <backgroundcolor>Cyan</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>26</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>disk full</notes>
+    </filter>
+    <filter>
+      <filterpattern>A request to allocate an ephemeral port number from the global TCP port space has failed due to all such ports being in use.</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>27</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>out of rpc ports. this is an issue. firewall?</notes>
+    </filter>
+    <filter>
+      <filterpattern>warning</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>28</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>a rule has been modified AND exception</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>29</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>'CollectGuestLogs' does not exist in the specified Category.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Azure</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>30</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>faulting application AND 0xc0000142</filterpattern>
+      <backgroundcolor>DarkOrchid</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>31</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes> 0xc0000142 can indicate non-interactive heap resource exhaustion. see sf tsg</notes>
+    </filter>
+    <filter>
+      <filterpattern>exception</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>32</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,critical,</filterpattern>
+      <backgroundcolor>OrangeRed</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>33</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>needs to be researched</notes>
+    </filter>
+    <filter>
+      <filterpattern>no error</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>34</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>The volume AND was not optimized</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Beige</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>35</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>noise</notes>
+    </filter>
+    <filter>
+      <filterpattern>,information, AND failoverunit</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>36</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>error|fail</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>37</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>600[5,6,9].+EventLog</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>38</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>system start and stop: 6005,EventLog stop and start entries for os </notes>
+    </filter>
+    <filter>
+      <filterpattern>EventLog.+600[5,6,9]</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>39</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>2k8?</notes>
+    </filter>
+    <filter>
+      <filterpattern>Error OR Warning AND ServiceFabricNodeBootstrap</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Violet</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>40</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>ServiceFabricNodeBootstrap</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>41</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>ServiceFabric</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>42</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(FABRIC_E[A-Z_]+)</filterpattern>
+      <backgroundcolor>#FF696969</backgroundcolor>
+      <foregroundcolor>#FF00FFFF</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>43</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Windows Update successfully found</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Honeydew</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>44</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>windowsupdateclient</filterpattern>
+      <backgroundcolor>CornflowerBlue</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>45</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>windows update service</filterpattern>
+      <backgroundcolor>Fuchsia</backgroundcolor>
+      <foregroundcolor>Beige</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>46</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PapayaWhip</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>47</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

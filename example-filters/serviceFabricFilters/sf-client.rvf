@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-10-19-11-13-13</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,Client.EndResolveServiceSuccess</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Silver</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:00.471,Informational,14232,4296,Client.EndResolveServiceSuccess@8369c3ca-f0e8-4648-afdc-8dbed5425af7,de732639-c4d8-4371-b373-8309080b10d5:0: gen=131497235714743461:8d32f842d7284b30b71517094c1176f9 fmVer=2150 psdVer=25</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.BeginResolveService</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lavender</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:00.471,Informational,14232,4296,Client.BeginResolveService@8369c3ca-f0e8-4648-afdc-8dbed5425af7,de732639-c4d8-4371-b373-8309080b10d5:0: name=fabric:/commonservices/SessionActorService partition=2431772166492552069 prefix=False !cached=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.RspCacheInvalidation</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:08.128,Informational,16968,4296,Client.RspCacheInvalidation@8369c3ca-f0e8-4648-afdc-8dbed5425af7,ec3cbced-4101-42a5-a317-679ae8c3c5de:0: cache(cuid=bcdff4f2-79a3-43fd-92df-c8b66f751f0d, gen=131497235714743461:8d32f842d7284b30b71517094c1176f9, fmVer=2118, psdVer=22) request(key=5534023222112865486, ServiceLocationVersion(generation=131497235714743461, fmVer=2118, psdVer=22))</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.RspCacheMiss</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:08.128,Informational,16968,4296,Client.RspCacheMiss@8369c3ca-f0e8-4648-afdc-8dbed5425af7,ec3cbced-4101-42a5-a317-679ae8c3c5de:0: fabric:/commonservices/RequestContextActorService request(key=5534023222112865486, ServiceLocationVersion(generation=131497235714743461, fmVer=2118, psdVer=22))</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.BeginInternalQuery</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PeachPuff</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:13.235,Informational,4048,3048,Client.BeginInternalQuery@bf26512b-ec95-4707-83e8-c7bcf7a8712c,59984dc1-8179-4df7-9df5-ead1634dbc4d:0: Query Name: GetServiceReplicaListDeployedOnNode, Arguments: ApplicationName:fabric:/commonservices NodeName:_usw1-prod-aic-ss-32_1 PartitionId:1dd45744-81c2-47cf-8f7b-18d3b0f8a122 ServiceManifestName:Apttus.ApiRouterPkg </notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.BeginGetFabricUpgradeProgress</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:22:23.797,Informational,12012,1620,Client.BeginGetFabricUpgradeProgress@7dad497f-976c-4621-b1f5-f7dac4781680,d26489e9-3ccb-456e-81b5-881304d5dc60:0: BeginGetFabricUpgradeProgress</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Client.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Bisque</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:20:00.471,Informational,14232,4296,Client.EndResolveServiceSuccess@8369c3ca-f0e8-4648-afdc-8dbed5425af7,de732639-c4d8-4371-b373-8309080b10d5:0: gen=131497235714743461:8d32f842d7284b30b71517094c1176f9 fmVer=2150 psdVer=25</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>AliceBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

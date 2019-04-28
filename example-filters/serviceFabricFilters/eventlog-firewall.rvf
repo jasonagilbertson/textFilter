@@ -1,0 +1,139 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-07-18-11-39-38</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>firewall AND modified</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall AND deleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Coral</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>firewall AND deleted</notes>
+    </filter>
+    <filter>
+      <filterpattern>firewall AND added</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Chartreuse</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>firewall AND added</notes>
+    </filter>
+    <filter>
+      <filterpattern>Modifying Application:	(.+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PeachPuff</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>Microsoft-Windows-Windows-Firewall-With-Advanced-Security%4Firewall.csv, 05/22/2018,01:34:11.367724 PM,2004,Information,Microsoft-Windows-Windows Firewall With Advanced Security,1008,18456,A rule has been added to the Windows Firewall exception list.;;Added Rule:;</notes>
+    </filter>
+    <filter>
+      <filterpattern>firewall</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Azure</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>firewall</notes>
+    </filter>
+    <filter>
+      <filterpattern>Protocol: (.+) </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall.*(OUT)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cornsilk</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall.*(_in)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gainsboro</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall.*(domain|public|private)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall.*(udp|tcp)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>firewall.*()Rule ID:.+?\{(.+?)\}\;</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SeaShell</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

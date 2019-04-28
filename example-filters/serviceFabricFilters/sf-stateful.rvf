@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-12-18-11-06-23</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>StateMachine@(.+?),Transition: Target=(.+?), Before:.+?, After=.+?, AfterRefCount=\d+?, Error=(.+?), CallAbort=(.+?)\.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>StateMachine@(.+?),Transition: Target=(.+?), Before:.+?, After=.+?, AfterRefCount=\d+?, Error=(.+?), CallAbort=(.+?)\.</notes>
+    </filter>
+    <filter>
+      <filterpattern>Creating Client</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Fuchsia</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-30 17:05:31.770,Informational,13500,13968,ServiceFramework.CommunicationClientFactoryBase,e6a6f77f-eb99-4c56-8fef-c7ca56259e26 Creating Client for connecting to ListenerName :  Address : 10.0.1.17:20015+e2507945-9a27-40df-8f27-0367bd75ca6f-131563759047345706-4dbef040-db5d-45c3-b226-10cdbcb33bef Role : StatefulPrimary</notes>
+    </filter>
+    <filter>
+      <filterpattern>Changerole</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>stateful:false</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>stateful</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SpringGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>[^u^n]reliable</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Silver</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

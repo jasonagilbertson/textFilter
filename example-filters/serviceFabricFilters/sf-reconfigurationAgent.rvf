@@ -1,0 +1,172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-11-07-05-16-29</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,RA.UpgradeMessage</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumSpringGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:52.696,Informational,3992,2760,RA.UpgradeMessageProcessorAction_Upgrade@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,RA on node 97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456 Request Type: Upgrade. Action: Start </notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.UpgradeAsync</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Pink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:54.054,Informational,3992,2760,RA.UpgradeAsyncOperationStateChange_Upgrade@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,RA on node 97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456 Upgrade has Completed async operation in state FabricUpgrade_Validate op=d64d912c40 Error = S_OK.</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.FabricUpgradeValidate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Ivory</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:54.056,Informational,3992,2760,RA.FabricUpgradeValidateDecision_Upgrade@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,RA on node 97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456 Validate Decision: shouldCloseReplicas = True [Activity: 8d158f5e-2f76-45c4-834f-348178e353d5:3149615]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.LifeCycleNodeUpgrad</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BurlyWood</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:54.056,Informational,3992,2760,RA.LifeCycleNodeUpgradingStateChange_LifeCycle@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,RA on node 97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456 Node Upgrading State Change. New = True</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.MultipleFTWorkCompletionCallback</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:56.452,Informational,3992,2760,RA.MultipleFTWorkCompletionCallbackEnqueued_MultipleFT@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,Multiple FT Work Callback Enqueued [Activity: ReplicaDown:10]</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.ReconfigurationCompleted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,RA.SendMessage.+sending message (update.+?) to host (.+?) </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lime</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,RA.SendMessage.+sending message (remove.+?) to (.+?) </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OrangeRed</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,RA.SendMessage.+sending message (.+?) to node (.+?) </filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>DeepPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>2017-10-17 07:54:16.992,Informational,7188,4548,RA.SendMessageToRAP_SendRAP@272a4fc8-1327-465e-b4df-8edffb793070,RA on node 94b79d780c671ff7ed11c59b68237f4a:131524180000939854 sending message StatefulServiceReopen to host 7d84757e-e7cc-4038-871a-a204da274153 [PID = 3548], body:</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.MessageAction.+processed (.+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>2017-10-17 07:53:12.730,Informational,9160,4548,RA.MessageAction_Message_FTInput@332b2c0f-854a-4ffb-8dc5-b0faf01b33e9,RA on node 94b79d780c671ff7ed11c59b68237f4a:131524180000939854 processed AddReplica</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA..+@([a-fA-F:0-9]+?),.+messageretry:(\d+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,RA._Reconfig_ReconfigurationCompleted</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-17 08:35:10.216,Informational,3676,2804,RA._Reconfig_ReconfigurationCompleted@a5dc9b8f-a0da-447d-b12d-ec66b26c0436,RA on node 408d888dd36b65e83ae93e0af013be7b completed reconfiguration. PartitionId = a5dc9b8f-a0da-447d-b12d-ec66b26c0436. ServiceType = DispatcherServiceType. Epoch = 131406424988761230:380000008c. Type = SwapPrimary. Result = Completed. Phase0Duration: 216.1417ms. Phase1Duration: 292.205ms. Phase2Duration: 205.7366ms. Phase3Duration: 0ms. Phase4Duration: 404.0817ms. TotalDuration: 1118.165ms. </notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.ServiceType</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-17 07:53:46.985,Informational,4592,4548,RA.ServiceType_ServiceType@Processing_App3:AzThings.Processing.ActorServicePkg:PlayerDeviceActorServiceType,RA on node 94b79d780c671ff7ed11c59b68237f4a:131524180000939854 updated service type Processing_App3:AzThings.Processing.ActorServicePkg:PlayerDeviceActorServiceType. Version = 1:0:1:0:131406424992318297. CodePackage = Code. Count = 14. RetryPending = False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,RA.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-20 10:43:52.698,Informational,3992,2760,RA.UpgradeAsyncOperationStateChange_Upgrade@97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456,RA on node 97c1bef6f56d3f49f267a731cdd0d30b:131524281431958456 Upgrade has Started async operation in state FabricUpgrade_Download op=d64da81d30 Error = S_OK.</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

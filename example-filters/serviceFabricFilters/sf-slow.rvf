@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-12-15-07-51-53</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>TimeoutException</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>SlowApiMonitoringInterval OR EnableSlowIdleRestart OR SlowIdleRestartAtQueueUsagePercent OR SlowActiveSecondaryRestartFor OR SlowActiveSecondaryRestartAt</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MintCream</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>configuration traces</notes>
+    </filter>
+    <filter>
+      <filterpattern>AvgReceiveDur=(\d{5,})ms</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>over 10 seconds</notes>
+    </filter>
+    <filter>
+      <filterpattern>AvgApplyDur=(\d{5,})ms</filterpattern>
+      <backgroundcolor>LightSteelBlue</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>over 10 seconds</notes>
+    </filter>
+    <filter>
+      <filterpattern>Avg (\d{5,})ms</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GhostWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>	AvgReceiveDur=11ms (SD=2ms), AvgApplyDur=86ms (SD=54ms) </notes>
+    </filter>
+    <filter>
+      <filterpattern>DueToSlowProgress=False</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes></notes>
+    </filter>
+    <filter>
+      <filterpattern>PrimaryCommitSlow.+cost = (\d{5,}) ms</filterpattern>
+      <backgroundcolor>Orchid</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>at least 10 seconds slow</notes>
+    </filter>
+    <filter>
+      <filterpattern>SecondaryCommitSlow.+cost = (\d{5,}) ms</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orchid</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-11-30 16:57:52.575,Informational,12972,11764,REStore.SecondaryCommitSlow,(88eab4a8-c34a-4d4b-8dd2-5ccb2ecf7c81:131563494077242878) LSN = 31698736 cost = 1564 ms</notes>
+    </filter>
+    <filter>
+      <filterpattern>slow</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Coral</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>slow</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-12-04-12-34-52</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,warning,</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,error,</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>slow send</filterpattern>
+      <backgroundcolor>Coral</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,LeaseLayer.GetContainerLeasing</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Turquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:28:14.665,Informational,2740,520,LeaseLayer.GetContainerLeasingTTL,Get TTL for Leasing application 131521642069237790 with request TTL 1000</notes>
+    </filter>
+    <filter>
+      <filterpattern>,LeaseLayer</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LemonChiffon</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:59.664,Informational,4052,520,LeaseLayer.GetContainerLeasingTTL,Get TTL for Leasing application 131521642069237790 with request TTL 1000</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Lease AND exception OR terminate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,Lease AND cannot be failed</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>DarkOrange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>LEASING_APPLICATION_EXPIRATION_TIME OR LEASE_EXPIRATION_TIME</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>GET_LEASING_APPLICATION_EXPIRATION_TIME</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Lease AND fail OR error</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Crimson</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(\w+_LEAS\w+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightSkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,Lease</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>ForestGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(c0000[0-9A-Fa-f]{3})</filterpattern>
+      <backgroundcolor>DarkOrange</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>(c0000[0-9A-Fa-f]{3})</notes>
+    </filter>
+    <filter>
+      <filterpattern>Lease.ProcessStale</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Brown</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>_prcvmss_5.Lease.000000.00-00-00_171710.08-50-07.001.csv, 2017-10-17 08:32:34.454,Informational,6520,4,Lease.ProcessStaleResponse,Lease relationship (10.0.0.21:1026/131524269246751634, subject = 131524269246751639, monitor = 131524269254218921) in state (INACTIVE-INACTIVE) received stale response with message ID 131527027585445824 and lease instance 131524269246751639, subject ID is 131524269246751639</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

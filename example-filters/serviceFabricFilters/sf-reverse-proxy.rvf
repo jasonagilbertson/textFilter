@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-12-14-09-56-55</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>ReverseProxy.ForwardRequestErrorRetrying</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OrangeRed</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 16:05:16.444,Informational,3128,660,ReverseProxy.ForwardRequestErrorRetrying,59e8315f-0f25-488a-a2cf-6b8f468456e5 Forwarding request to service failed, retrying with re-resolve: phase = SendRequestHeaders, error = 3489661157, internal error = ERROR_WINHTTP_TIMEOUT</notes>
+    </filter>
+    <filter>
+      <filterpattern>reverse</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>reverse</notes>
+    </filter>
+    <filter>
+      <filterpattern>dns OR naming</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>(10\.0\.1\.[0-9]{1})</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Lime</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Error:S_OK OR ErrorCode=S_OK</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>White</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>proxy AND request AND error OR fail</filterpattern>
+      <backgroundcolor>DarkRed</backgroundcolor>
+      <foregroundcolor>LightSteelBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>request AND error OR fail</notes>
+    </filter>
+    <filter>
+      <filterpattern>FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GhostWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 15:37:04.896,Informational,2564,1184,Transport.ConnectionFaulted@9a3d0b0030,10.0.1.8:19000-168.63.129.16:49457 faulted: FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</notes>
+    </filter>
+    <filter>
+      <filterpattern>(FABRIC_E\w+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>exception</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightGray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

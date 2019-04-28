@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>17-10-19-11-13-18</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>,ServiceFramework.CommunicationClientCache</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GhostWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:27:09.805,Informational,8828,4296,ServiceFramework.CommunicationClientCache,15de8ff9-4ff2-4934-856e-dbd57469344e CacheCleanupTimerCallback</notes>
+    </filter>
+    <filter>
+      <filterpattern>,ServiceFramework.CommunicationClientFactoryBase</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>FloralWhite</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:23:36.200,Informational,14092,5636,ServiceFramework.CommunicationClientFactoryBase,28a98a68-dd59-4953-b27e-52a5a0268ab3 Creating Client for connecting to ListenerName : ServiceEndpoint Address</notes>
+    </filter>
+    <filter>
+      <filterpattern>,ServiceFramework.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Wheat</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:26:34.947,Informational,14448,4440,ServiceFramework.CommunicationClientCache,e7ccaa0c-52eb-46a5-8c98-48fac5f6c85b CacheCleanupTimerCallback</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

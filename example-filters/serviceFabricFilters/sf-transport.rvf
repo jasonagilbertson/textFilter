@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-03-06-06-31-20</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGreen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>not an error</notes>
+    </filter>
+    <filter>
+      <filterpattern>(FABRIC_E[A-Z_]+)</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aqua</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Transport.+error = [^0]</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Tomato</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Transport AND terminate</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Transport AND exception</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,Transport.Enqueue</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightCyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:25:49.606,Informational,8152,4296,Transport.Enqueue@612f9f27f0,5c0ae46f-fc4b-4a27-b5b8-8a1132bbc3f9:1081102 False  1000B @ qsize 0/0B</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.Msg_Dispatch</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>WhiteSmoke</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.328,Informational,4548,4296,Transport.Msg_Dispatch@612f9f67b0,5c0ae46f-fc4b-4a27-b5b8-8a1132bbc3f9:1081166 True 1 78781B</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.Stopped</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PaleGoldenrod</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.Stopped@61332b8d90-a2a76566-e368-465f-8906-ee647f8b884a,listen address = ''</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.TargetClose</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>BlanchedAlmond</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.TargetClose@612d6e9dd0-a2a76566-e368-465f-8906-ee647f8b884a,-10.32.1.6:20002+e1b3c83a-ea4a-4a05-81b7-63ea96eef137-131522528796282844: target close, abort = False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.TargetConnectionsChanged</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LavenderBlush</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.TargetConnectionsChanged@612d6e9dd0-a2a76566-e368-465f-8906-ee647f8b884a,-10.32.1.6:20002+e1b3c83a-ea4a-4a05-81b7-63ea96eef137-131522528796282844: anonymous=False, instance=0, 0 connections: </notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.CloseConnection</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>PowderBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.CloseConnection@612d6e9dd0-a2a76566-e368-465f-8906-ee647f8b884a,-10.32.1.6:20002+e1b3c83a-ea4a-4a05-81b7-63ea96eef137-131522528796282844 closing 612f9f1d50: abort=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.ConnectionClose</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LightYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.ConnectionClose@612f9f1d50,client-10.32.1.6:20002+e1b3c83a-ea4a-4a05-81b7-63ea96eef137-131522528796282844 abort=False, state=Connected, sendDrained=True, receiveDrained=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.ConnectionStateTransit</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.ConnectionStateTransit@612f9f1d50,client-10.32.1.6:20002+e1b3c83a-ea4a-4a05-81b7-63ea96eef137-131522528796282844 Connected -&gt; CloseDraining, sendDrained=True, receiveDrained=False</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.ConnectionState</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Magenta</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.332,Informational,5232,4296,Transport.ConnectionState@612f9f27f0,client-10.32.1.5:20004+cf6d69f5-1125-40f2-801f-a48811975b34-131497584791125414 at CloseDraining: receive drained, sendDrained=True, receiveDrained=True</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.ConnectionFaulted</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OrangeRed</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:57.098,Informational,4048,3048,Transport.ConnectionFaulted@62a3b9f980,10.32.1.4:19000-168.63.129.16:59347 faulted: FABRIC_E_CONNECTION_CLOSED_BY_REMOTE_END</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.Connection</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gray</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.Connection@612f9f5d10,client-10.32.1.5:20002+fab433cd-f090-41ad-ad4b-75a58d1ecc2f-131522616692342858 shut down socket send to notify remote side of closing: S_OK</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.Demuxer</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>HotPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.331,Informational,4372,4296,Transport.Demuxer,Demuxer:613372ed90: close called</notes>
+    </filter>
+    <filter>
+      <filterpattern>,Transport.TransportCreated</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Navy</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,Transport.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>OldLace</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2017-10-13 10:29:41.332,Informational,4548,4296,Transport.ConnectionState@612f9f5d10,client-10.32.1.5:20002+fab433cd-f090-41ad-ad4b-75a58d1ecc2f-131522616692342858 at CloseDraining: receive drained, sendDrained=True, receiveDrained=True</notes>
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>

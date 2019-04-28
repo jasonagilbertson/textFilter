@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<filterinfo>
+  <filterversion>18-08-19-11-07-38</filterversion>
+  <filternotes />
+  <filters>
+    <filter>
+      <filterpattern>Hosting.ActivateContainer</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Khaki</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>0</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:28:03.987,Informational,1564,3924,ManagedHosting.ActivateContainerOperation,Creating container=sf-8-c1ba5fab-f021-4672-b21a-d6f362670a56_93340df6-433e-4434-8737-e44a2e107e33 for AppId=OrderManagerType_App8 with PortBindings=| ContainerPort=80/tcp, HostPort=8000 |.</notes>
+    </filter>
+    <filter>
+      <filterpattern>hosting\..+error\w*.S_OK</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>1</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>True</regex>
+      <notes>any hosting. events with error of s_ok</notes>
+    </filter>
+    <filter>
+      <filterpattern>failure count 0</filterpattern>
+      <backgroundcolor>Chartreuse</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>2</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Gold</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>3</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>hosting. AND error OR fail</filterpattern>
+      <backgroundcolor>Red</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>4</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Hosting.ProcessActivationManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MediumTurquoise</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>5</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:27:44.806,Informational,20244,1876,Hosting.ProcessActivationManager,Sending ApplicationService host down notification for apphost 5b8edb7e-9450-4e6c-9cfd-2f5cb9856f51, node 3b293ae0eeebcf23176ba251399cbb40, activityDescription 8d1778d7-bbc4-4177-acec-5fe23a4df200:0:ServicePackageEvent</notes>
+    </filter>
+    <filter>
+      <filterpattern>hosting. AND terminat</filterpattern>
+      <backgroundcolor>Yellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>6</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>hosting._Container</filterpattern>
+      <backgroundcolor>GreenYellow</backgroundcolor>
+      <foregroundcolor>Black</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>7</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>Hosting.Container</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>GreenYellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>8</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 22:55:30.284,Informational,20928,3924,ManagedHosting.ContainerActivatorService,PruneContainers finished successfully. ContainersDeletedCount=0, SpaceReclaimed=0 bytes.</notes>
+    </filter>
+    <filter>
+      <filterpattern>Hosting.DeletionManager</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Orange</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>9</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 22:48:02.524,Informational,6228,4908,Hosting.DeletionManager@3b293ae0eeebcf23176ba251399cbb40:131708193210152076,Begin(CleanupAsyncOperation)</notes>
+    </filter>
+    <filter>
+      <filterpattern>Hosting.CodePackage</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Linen</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>10</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:27:44.808,Informational,13800,4908,Hosting.CodePackage@3b293ae0eeebcf23176ba251399cbb40:131708193210152076,MainEntryPoint:EntryPointDescription { EntryPointType = ContainerHostContainerHost = ContainerEntryPointDescription { ImageName = slcontainers.azurecr.io/order-manager/web:1.0.278, Commands = , EntryPoint = FromSource = }} terminated with exitcode 7147. CodePackageInstanceIdentifier { ServicePackageInstanceId = OrderManagerType_App8:WebPkg@be5a5ae4-d469-42e5-ae4f-1b33516a276c@93340df6-433e-4434-8737-e44a2e107e33, CodePackageName = Web.Code }:131708193223548479</notes>
+    </filter>
+    <filter>
+      <filterpattern>Hosting.ApplicationService</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Aquamarine</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>11</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:27:44.806,Informational,20244,1876,Hosting.ApplicationService@3b293ae0eeebcf23176ba251399cbb40,ApplicationService deactivated appService 5b8edb7e-9450-4e6c-9cfd-2f5cb9856f51 exeName 1.0.278</notes>
+    </filter>
+    <filter>
+      <filterpattern>Hosting.SingleCodePackage</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>MistyRose</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>12</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:27:44.807,Informational,13988,4908,Hosting.SingleCodePackageApplicationHostProxy@3b293ae0eeebcf23176ba251399cbb40:131708193210152076,OnApplicationHostTerminated called for HostId=5b8edb7e-9450-4e6c-9cfd-2f5cb9856f51, ServicePackageInstanceId=OrderManagerType_App8:WebPkg@be5a5ae4-d469-42e5-ae4f-1b33516a276c@93340df6-433e-4434-8737-e44a2e107e33 with ExitCode=7147. Current state is Closing.</notes>
+    </filter>
+    <filter>
+      <filterpattern>Hosting.Application</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Cyan</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>13</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes>2018-5-16 23:27:44.807,Informational,13988,4908,Hosting.ApplicationHostClosed@3b293ae0eeebcf23176ba251399cbb40:131708193210152076,2825: ApplicationHost 5b8edb7e-9450-4e6c-9cfd-2f5cb9856f51 with ActivationContext  and PublicActivationId  was closed.</notes>
+    </filter>
+    <filter>
+      <filterpattern>hosting.cert</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>LemonChiffon</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>14</index>
+      <enabled>True</enabled>
+      <exclude>True</exclude>
+      <regex>False</regex>
+      <notes>hosting.cert</notes>
+    </filter>
+    <filter>
+      <filterpattern>,warning, AND hosting.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Yellow</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>15</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>,error, AND hosting.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Red</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>16</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>hosting.</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>SkyBlue</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>17</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern>container AND error OR warn OR fail OR term</filterpattern>
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>HotPink</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>18</index>
+      <enabled>True</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+    <filter>
+      <filterpattern />
+      <backgroundcolor>Black</backgroundcolor>
+      <foregroundcolor>Thistle</foregroundcolor>
+      <casesensitive>False</casesensitive>
+      <index>19</index>
+      <enabled>False</enabled>
+      <exclude>False</exclude>
+      <regex>False</regex>
+      <notes />
+    </filter>
+  </filters>
+</filterinfo>
