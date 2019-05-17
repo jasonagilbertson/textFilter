@@ -35,6 +35,13 @@ namespace TextFilter
         private Command _duplicateWindowCommand;
         private bool _filterIndexVisibility = false;//todo fix: TextFilterSettings.Settings.FilterIndexVisible;
 
+        private bool _group1Visibility = false;
+
+        private bool _group2Visibility = false;
+
+        private bool _group3Visibility = false;
+
+        private bool _group4Visibility = false;
         private Command _newWindowCommand;
 
         public static FilterViewModel _FilterViewModel { get; set; }
@@ -75,6 +82,72 @@ namespace TextFilter
                 }
             }
         }
+
+        public bool Group1Visibility
+        {
+            get
+            {
+                return _group1Visibility;
+            }
+            private set
+            {
+                if (_group1Visibility != value)
+                {
+                    _group1Visibility = value;
+                    OnPropertyChanged(LogTabViewModelEvents.Group1Visibility);
+                }
+            }
+        }
+
+        public bool Group2Visibility
+        {
+            get
+            {
+                return _group2Visibility;
+            }
+            private set
+            {
+                if (_group2Visibility != value)
+                {
+                    _group2Visibility = value;
+                    OnPropertyChanged(LogTabViewModelEvents.Group2Visibility);
+                }
+            }
+        }
+
+        public bool Group3Visibility
+        {
+            get
+            {
+                return _group3Visibility;
+            }
+            private set
+            {
+                if (_group3Visibility != value)
+                {
+                    _group3Visibility = value;
+                    OnPropertyChanged(LogTabViewModelEvents.Group3Visibility);
+                }
+            }
+        }
+
+        public bool Group4Visibility
+        {
+            get
+            {
+                return _group4Visibility;
+            }
+            private set
+            {
+                if (_group4Visibility != value)
+                {
+                    _group4Visibility = value;
+                    OnPropertyChanged(LogTabViewModelEvents.Group4Visibility);
+                }
+            }
+        }
+
+        public int GroupCount { get; private set; }
 
         public Command NewWindowCommand
         {
@@ -290,6 +363,52 @@ namespace TextFilter
             if (newCurrentStatus != null)
             {
                 newCurrentStatus(this, Enum.GetName(typeof(CurrentStatusSetting), status).Replace("_", " ").ToUpper());
+            }
+        }
+
+        public void SetGroupCount(int count)
+        {
+            GroupCount = count;
+
+            if (count > 0)
+            {
+                Group1Visibility = true;
+            }
+            else
+            {
+                Group1Visibility = false;
+            }
+
+            if (count > 1)
+            {
+                Group2Visibility = true;
+            }
+            else
+            {
+                Group2Visibility = false;
+            }
+
+            if (count > 2)
+            {
+                Group3Visibility = true;
+            }
+            else
+            {
+                Group3Visibility = false;
+            }
+
+            if (count > 3)
+            {
+                Group4Visibility = true;
+            }
+            else
+            {
+                Group4Visibility = false;
+            }
+
+            if (count > MaxGroupCount)
+            {
+                SetStatus(string.Format("Warning: max group count is {0}. only {0} groups will be displayed. current group count: {1}", MaxGroupCount, count));
             }
         }
 

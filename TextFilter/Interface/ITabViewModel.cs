@@ -19,10 +19,8 @@ namespace TextFilter
 
         Command CopyCommand { get; set; }
 
-        bool Group1Visibility { get; set; }
-        bool Group2Visibility { get; set; }
-        bool Group3Visibility { get; set; }
-        bool Group4Visibility { get; set; }
+        //bool Group1Visibility { get; set; }
+        //bool Group2Visibility { get; set; }
         string Header { get; set; }
 
         bool IsNew { get; set; }

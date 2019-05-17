@@ -1514,15 +1514,10 @@
                     <DataTemplate>
                         <ContentControl
                             Name="LogFileContentControl"
-                            Content="{Binding}"
+                            Content="{Binding ContentList}"
                             ContentTemplate="{StaticResource LogFileDataTemplate}"
                             DataContext="{Binding}">
                         </ContentControl>
-                        <!--//works but not hiding group columns-->
-                        <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //hides columns but doesnt show items-->
-                        <!--<ContentControl Content="{Binding Path=ContentList}" ContentTemplate="{StaticResource LogFileDataTemplate}" /> //works but not hiding group columns-->
-                        <!--ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}" />-->
-                        <!--<ContentControl Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" />-->
                     </DataTemplate>
                 </TabControl.ContentTemplate>
                 <TabControl.ContextMenu>

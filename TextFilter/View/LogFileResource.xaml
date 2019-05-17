@@ -36,7 +36,7 @@
                                   CanUserReorderColumns="True"
                                   GridLinesVisibility="None"
                                   IsReadOnly="False"
-                                  ItemsSource="{Binding ContentList}"
+                                  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Content}"
                                   ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
                                   SelectionMode="Extended"
@@ -47,7 +47,7 @@
 
             <DataGrid.Resources>
                 <local:BindingProxy x:Key="proxyLog"
-                                                    Data="{Binding }" />
+                                                    Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=DataContext}" />
             </DataGrid.Resources>
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
