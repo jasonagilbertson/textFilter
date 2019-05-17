@@ -715,9 +715,7 @@ namespace TextFilter
 
             if (getGroups)
             {
-                //logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
-                //SetGroupCount(Math.Max(groupCount, groupNames.Count));
-                _MainViewModel.SetGroupCount(Math.Max(groupCount, groupNames.Count));
+                logTab.SetGroupCount(Math.Max(groupCount, groupNames.Count));
             }
 
             return filterItems;

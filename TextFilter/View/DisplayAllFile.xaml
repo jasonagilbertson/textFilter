@@ -19,6 +19,10 @@
     </Window.Resources>
 
     <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+        <Grid.Resources>
+            <local:LogTabViewModel x:Key="MyList" ContentList="{Binding Path=ContentItems}" />
+        </Grid.Resources>
+        <!--<ContentControl Name="LogFileContentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Source={StaticResource MyList}}">-->
         <!--<ContentControl x:Name="contentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}"  >-->
         <ContentControl Name="LogFileContentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=ContentItems}">
             <!--<ContentControl x:Name="contentControl" Content="{Binding}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding Path=SelectedTab.ContentItems}" >-->

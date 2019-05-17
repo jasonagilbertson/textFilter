@@ -47,7 +47,7 @@
 
             <DataGrid.Resources>
                 <local:BindingProxy x:Key="proxyLog"
-                                                    Data="{Binding}" />
+                                                    Data="{Binding }" />
             </DataGrid.Resources>
             <DataGrid.CellStyle>
                 <Style TargetType="DataGridCell">
@@ -498,3 +498,8 @@
         </DataGrid>
     </DataTemplate>
 </ResourceDictionary>
+
+<!--<DataGrid.Resources>
+    <local:BindingProxy x:Key="proxyLog"
+                                                    Data="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Path=Content}" />
+</DataGrid.Resources>-->
