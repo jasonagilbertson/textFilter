@@ -33,7 +33,7 @@ namespace TextFilter
         public int MaxGroupCount = 4;
 
         private Command _duplicateWindowCommand;
-        private bool _filterIndexVisibility = false;//todo fix: TextFilterSettings.Settings.FilterIndexVisible;
+        private bool _filterIndexVisibility = true; //todo: fix TextFilterSettings.Settings.FilterIndexVisible;
 
         private bool _group1Visibility = false;
 

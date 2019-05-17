@@ -1022,7 +1022,7 @@ namespace TextFilter
                             }
                         case AppSettingNames.FilterIndexVisible:
                             {
-                                _appSettings[name].Value = "False";
+                                _appSettings[name].Value = "True";
                                 break;
                             }
 
