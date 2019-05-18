@@ -986,7 +986,7 @@ namespace TextFilter
                             }
                         case AppSettingNames.CountMaskedMatches:
                             {
-                                _appSettings[name].Value = "False";
+                                _appSettings[name].Value = "True";
                                 break;
                             }
                         case AppSettingNames.CurrentFilterFiles:

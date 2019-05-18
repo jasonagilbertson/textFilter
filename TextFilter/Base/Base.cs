@@ -33,7 +33,8 @@ namespace TextFilter
         public int MaxGroupCount = 4;
 
         private Command _duplicateWindowCommand;
-        private bool _filterIndexVisibility = true; //todo: fix TextFilterSettings.Settings.FilterIndexVisible;
+
+        private bool _filterIndexVisibility = false;
 
         private bool _group1Visibility = false;
 
@@ -42,6 +43,7 @@ namespace TextFilter
         private bool _group3Visibility = false;
 
         private bool _group4Visibility = false;
+
         private Command _newWindowCommand;
 
         public static FilterViewModel _FilterViewModel { get; set; }
@@ -71,7 +73,7 @@ namespace TextFilter
         {
             get
             {
-                return _filterIndexVisibility;
+                return TextFilterSettings.Settings.FilterIndexVisible;// _filterIndexVisibility;
             }
             set
             {

@@ -7,17 +7,64 @@
 //
 // ************************************************************************************
 
+using System;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Xml.Linq;
 
+using System;
+
 namespace TextFilter
 {
-    public partial class DisplayAllFile : Window
+    public partial class DisplayAllFile : Window, INotifyPropertyChanged
     {
+        private ObservableCollection<string> _filterFileIndex = new ObservableCollection<string>();
+
+        // { "0" };
         private string _initialMessage = string.Empty;
+
+        private ObservableCollection<LogFileItem> _items = new ObservableCollection<LogFileItem>();
         private string _xmlMessage = string.Empty;
+
+        public FilterFile FilterFile { get; set; }
+
+        public ObservableCollection<string> FilterFileIndex
+        {
+            get
+            {
+                return _filterFileIndex;
+            }
+            set
+            {
+                //if (_filterFileIndex != value)
+                //{
+                _filterFileIndex = value;
+                OnPropertyChanged("FilterFileIndex");
+                //}
+            }
+        }
+
+        public ObservableCollection<LogFileItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                //if (_items != value)
+                //{
+                _items = value;
+                OnPropertyChanged("Items");
+                //}
+            }
+        }
+
+        public LogFile LogFile { get; set; }
 
         public DisplayAllFile()
         {
@@ -41,15 +88,20 @@ namespace TextFilter
             Title = string.Format("{0} - {1}", _initialMessage, "");// file.Tag);
         }
 
-        public DisplayAllFile(LogFile file, FilterFile filter = null)
+        public DisplayAllFile(LogFile logFile, FilterFile filterFile = null, string selectedIndex = "0")
         {
-            Owner = Application.Current.MainWindow;
-            DataContext = file;
-            InitializeComponent();
-            //DataContext = file;
+            LogFile = logFile;
+            FilterFile = filterFile;
 
-            _initialMessage = file.FileName;
-            Title = string.Format("{0} - {1}", _initialMessage, file.Tag);
+            Items = new ObservableCollection<LogFileItem>(logFile.ContentItems.Where(x => x.FilterIndex == Convert.ToInt32(selectedIndex)));
+            //FilterFileIndex = new ObservableCollection<string>() { "0", "1" };
+            FilterFileIndex.Add(selectedIndex);
+            Owner = Application.Current.MainWindow;
+            DataContext = this;
+            InitializeComponent();
+
+            _initialMessage = logFile.FileName;
+            Title = string.Format("{0} - {1}", _initialMessage, logFile.Tag);
 
             UpdateLayout();
             //https://stackoverflow.com/questions/11420500/applying-datatemplate-to-a-grid
@@ -63,6 +115,20 @@ namespace TextFilter
         {
             this.Hide();
             this.Close();
+        }
+
+        public void OnPropertyChanged(string name)
+        {
+            OnPropertyChanged(this, new PropertyChangedEventArgs(name));
+        }
+
+        public void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChangedEventHandler handler = PropertyChanged;
+            if (handler != null)
+            {
+                handler(sender, e);
+            }
         }
 
         //    set
@@ -129,5 +195,6 @@ namespace TextFilter
         //{
         //    Disable();
         //}
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

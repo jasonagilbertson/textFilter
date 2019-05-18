@@ -11,7 +11,7 @@
     https://social.msdn.microsoft.com/Forums/vstudio/en-US/f0a4a66c-a06c-4413-93db-c0b8a7ba191d/itemscontrolitemtemplate-and-multiple-datatemplate?forum=wpf
     -->
     <system:Boolean x:Key="duplicateWindow">false</system:Boolean>
-    <DataTemplate x:Key="LogFileDataTemplate">
+    <DataTemplate x:Key="DisplayAllDataTemplate">
         <DataTemplate.Resources>
             <local:MainViewModel x:Key="mainViewModel" />
             <local:TextFilterSettings x:Key="settings" />
@@ -22,7 +22,7 @@
             <system:Boolean x:Key="duplicateWindow">false</system:Boolean>
         </DataTemplate.Resources>
 
-        <DataGrid x:Name="logFileData"
+        <DataGrid x:Name="displayAllData"
                                   Margin="0,0,0,0"
                                   HorizontalAlignment="Stretch"
                                   VerticalAlignment="Stretch"
@@ -218,15 +218,15 @@
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="SourceUpdated">
                     <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SourceUpdatedCommand}"
-                                                           CommandParameter="{Binding ElementName=logFileData}" />
+                                                           CommandParameter="{Binding ElementName=displayAllData}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="SelectionChanged">
                     <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SelectionChangedCommand}"
-                                                           CommandParameter="{Binding ElementName=logFileData}" />
+                                                           CommandParameter="{Binding ElementName=displayAllData}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="LayoutUpdated">
                     <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SetViewerCommand}"
-                                                           CommandParameter="{Binding ElementName=logFileData}" />
+                                                           CommandParameter="{Binding ElementName=displayAllData}" />
                 </i:EventTrigger>
                 <i:EventTrigger EventName="PreviewKeyDown">
                     <i:InvokeCommandAction Command="{Binding KeyDownCommand}"

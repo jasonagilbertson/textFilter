@@ -17,8 +17,39 @@
         <local:LogViewModel x:Key="logViewModel" />
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Window.Resources>
-
-    <Grid Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
-        <ContentControl Name="LogFileContentControl" Content="{Binding ContentItems}" ContentTemplate="{StaticResource LogFileDataTemplate}" DataContext="{Binding}" />
+    <Grid Margin="0,0,0,0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  Background="{Binding Source={StaticResource settings}, Path=Settings.BackgroundColor}">
+        <Grid Margin="0,0,0,0"
+                  Grid.Row="0"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Top">
+            <Label Margin="0,5,0,0" Height="25" Width="75"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                       Background="{Binding Source={StaticResource settings},
+                                            Path=Settings.BackgroundColor}"
+                       BorderBrush="{Binding Source={StaticResource settings},
+                                             Path=Settings.BackgroundColor}"
+                       Content="filter index:"
+                       Foreground="{Binding Source={StaticResource settings},
+                                            Path=Settings.ForegroundColor}"
+                       Style="{DynamicResource LabelStyle1}" />
+            <ListBox Name="listBoxFilterIndex"
+                     IsSynchronizedWithCurrentItem="True"
+                        Margin="70,5,0,0" Height="25" Width="50"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Top"
+                     ItemsSource="{Binding FilterFileIndex}"
+                       Background="{Binding Source={StaticResource settings},
+                                            Path=Settings.BackgroundColor}"
+                       BorderBrush="{Binding Source={StaticResource settings},
+                                             Path=Settings.BackgroundColor}"
+                       Foreground="{Binding Source={StaticResource settings},
+                                            Path=Settings.ForegroundColor}"
+                       Style="{DynamicResource ListBoxStyle1}" />
+            <ContentControl Margin="0,30,0,0" Name="DisplayAllContentControl" Content="{Binding Items}" ContentTemplate="{StaticResource DisplayAllDataTemplate}" DataContext="{Binding}" />
+        </Grid>
     </Grid>
 </Window>

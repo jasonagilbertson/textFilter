@@ -15,6 +15,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 
 namespace TextFilter
@@ -508,11 +509,30 @@ namespace TextFilter
         public void DisplayAllDialogExecuted(object sender)
         {
             SetStatus("DisplayAllExecuted");
-            LogFile lfile = (LogFile)_LogViewModel.CurrentFile();
+            LogFile lFile = ((LogFile)_LogViewModel.CurrentFile());
+            FilterFile fFile = null;
+            int index = 0;
 
-            if (lfile != null)
+            if (((Selector)CurrentTab().Viewer).SelectedItem != null)
             {
-                DisplayAllFile dialog = new DisplayAllFile(lfile);
+                if (typeof(T) == typeof(LogFileItem))
+                {
+                    index = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).FilterIndex ?? 0;
+                }
+                else
+                {
+                    index = (int?)((FilterFileItem)((Selector)CurrentTab().Viewer).SelectedItem).Index ?? 0;
+                }
+            }
+
+            if (_FilterViewModel.CurrentFile() != null)
+            {
+                fFile = ((FilterFile)_FilterViewModel.CurrentFile());
+            }
+
+            if (lFile != null)
+            {
+                DisplayAllFile dialog = new DisplayAllFile(lFile, fFile, index.ToString());
                 dialog.Show();
             }
             else

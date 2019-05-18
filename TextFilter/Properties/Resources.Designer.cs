@@ -19,7 +19,7 @@ namespace TextFilter.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -74,7 +74,7 @@ namespace TextFilter.Properties {
         ///
         ///Example 1: open a specified filter file and specified log file
         ///    - C:\temp\TextFilter&gt;TextFilter.exe /filter: eventlog-filter.rvf /log: ascii.txt
-        ///    - For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: &quot;i love folder spaces\even [rest of string was truncated]&quot;;.
+        ///    - For folders with spaces: C:\temp\TextFilter&gt;TextFilter.exe /filter: &quot;i love folder space [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string DisplayHelp {
             get {
