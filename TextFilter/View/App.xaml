@@ -6,9 +6,6 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="LogFileResource.xaml" />
-                <ResourceDictionary Source="DisplayAllResource.xaml" />
-                <ResourceDictionary Source="FilterFileResource.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
             <!--  GroupBox  -->

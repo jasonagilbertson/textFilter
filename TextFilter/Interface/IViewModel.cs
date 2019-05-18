@@ -35,6 +35,7 @@ namespace TextFilter
 
         int SelectedIndex { get; set; }
 
+        ITabViewModel<T> SelectedTab { get; }
         System.Collections.ObjectModel.ObservableCollection<ITabViewModel<T>> TabItems { get; set; }
 
         IFileManager<T> ViewManager { get; set; }

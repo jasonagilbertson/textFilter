@@ -394,6 +394,14 @@ namespace TextFilter
             }
         }
 
+        public ITabViewModel<T> SelectedTab
+        {
+            get
+            {
+                return TabItems[SelectedIndex];
+            }
+        }
+
         public TextFilterSettings Settings
         {
             get { return settings; }
@@ -508,36 +516,43 @@ namespace TextFilter
 
         public void DisplayAllDialogExecuted(object sender)
         {
-            SetStatus("DisplayAllExecuted");
-            LogFile lFile = ((LogFile)_LogViewModel.CurrentFile());
-            FilterFile fFile = null;
-            int index = 0;
-
-            if (((Selector)CurrentTab().Viewer).SelectedItem != null)
+            SetStatus("DisplayAllDialogExecuted");
+            try
             {
-                if (typeof(T) == typeof(LogFileItem))
+                LogFile lFile = ((LogFile)_LogViewModel.CurrentFile());
+                FilterFile fFile = null;
+                int index = 0;
+
+                if (((Selector)CurrentTab().Viewer).SelectedItem != null)
                 {
-                    index = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).FilterIndex ?? 0;
+                    if (typeof(T) == typeof(LogFileItem))
+                    {
+                        index = (int?)((LogFileItem)((Selector)CurrentTab().Viewer).SelectedItem).FilterIndex ?? 0;
+                    }
+                    else
+                    {
+                        index = (int?)((FilterFileItem)((Selector)CurrentTab().Viewer).SelectedItem).Index ?? 0;
+                    }
+                }
+
+                if (_FilterViewModel.CurrentFile() != null)
+                {
+                    fFile = ((FilterFile)_FilterViewModel.CurrentFile());
+                }
+
+                if (lFile != null)
+                {
+                    DisplayAllFile dialog = new DisplayAllFile(lFile, fFile, index.ToString());
+                    dialog.Show();
                 }
                 else
                 {
-                    index = (int?)((FilterFileItem)((Selector)CurrentTab().Viewer).SelectedItem).Index ?? 0;
+                    SetStatus("DisplayAllExecuted:current file null!");
                 }
             }
-
-            if (_FilterViewModel.CurrentFile() != null)
+            catch (Exception e)
             {
-                fFile = ((FilterFile)_FilterViewModel.CurrentFile());
-            }
-
-            if (lFile != null)
-            {
-                DisplayAllFile dialog = new DisplayAllFile(lFile, fFile, index.ToString());
-                dialog.Show();
-            }
-            else
-            {
-                SetStatus("DisplayAllExecuted:current file null!");
+                SetStatus("Exception:DisplayAllDialogExecuted: " + e.ToString());
             }
         }
 

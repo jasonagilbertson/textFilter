@@ -101,14 +101,6 @@ namespace TextFilter
             }
         }
 
-        public LogTabViewModel SelectedTab
-        {
-            get
-            {
-                return (LogTabViewModel)TabItems[SelectedIndex];
-            }
-        }
-
         public Command ViewMessageCommand
         {
             get
@@ -480,7 +472,7 @@ namespace TextFilter
 
                 if (index == 0)
                 {
-                    index = SelectedTab.SelectedIndex;
+                    index = ((LogTabViewModel)SelectedTab).SelectedIndex;
                 }
 
                 if (sender == null)
