@@ -440,7 +440,6 @@ namespace TextFilter
         public void SetViewerExecuted(object sender)
         {
             // cant setstatus here due to recursion? cant set when only null should be listbox for logfileData
-
             if (sender is DataGrid && _viewer != sender)
             {
                 SetStatus(string.Format("tab viewer set: {0}", sender.GetType()));

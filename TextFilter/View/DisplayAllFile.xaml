@@ -188,26 +188,6 @@
                         </DataGridTextColumn.EditingElementStyle>
                     </DataGridTextColumn>
                 </DataGrid.Columns>
-
-                <i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SourceUpdated">
-                        <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SourceUpdatedCommand}"
-                                                           CommandParameter="{Binding ElementName=displayAllData}" />
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SelectionChangedCommand}"
-                                                           CommandParameter="{Binding ElementName=displayAllData}" />
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="LayoutUpdated">
-                        <i:InvokeCommandAction Command="{Binding Source={StaticResource mainViewModel}, Path=LogViewModel.SelectedTab.SetViewerCommand}"
-                                                           CommandParameter="{Binding ElementName=displayAllData}" />
-                    </i:EventTrigger>
-                    <i:EventTrigger EventName="PreviewKeyDown">
-                        <i:InvokeCommandAction Command="{Binding KeyDownCommand}"
-                                                           CommandParameter="{Binding}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>
-
                 <DataGrid.InputBindings>
                     <KeyBinding Key="C"
                                             Command="{Binding CopyCommand}"

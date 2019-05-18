@@ -38,10 +38,6 @@
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+F4" />
         <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
-                                      Path=LogViewModel.DisplayAllDialogCommand}"
-                    CommandParameter="{Binding}"
-                    Gesture="Ctrl+D" />
-        <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                       Path=LogViewModel.ExportCommand}"
                     CommandParameter="{Binding}"
                     Gesture="Ctrl+E" />
@@ -905,7 +901,7 @@
                                 <KeyBinding Key="C"
                                             Command="{Binding CopyCommand}"
                                             CommandParameter="{Binding Path=ContentList}"
-                                            Modifiers="Control" />
+                                            Modifiers="Ctrl" />
                                 <KeyBinding Command="{Binding Source={StaticResource mainViewModel},
                                                               Path=FilterViewModel.FindNextCommand}"
                                             CommandParameter="{Binding}"
@@ -915,14 +911,19 @@
                                             CommandParameter="{Binding}"
                                             Gesture="Shift+F3" />
                                 <KeyBinding Key="N"
-                                            Modifiers="Control+Shift"
+                                            Modifiers="Ctrl+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.NewFromTextCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                                 <KeyBinding Key="Q"
-                                            Modifiers="Control+Shift"
+                                            Modifiers="Ctrl+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.QuickFindTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                <KeyBinding Key="D"
+                                            Modifiers="Ctrl"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=FilterViewModel.DisplayAllDialogCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
@@ -1307,6 +1308,17 @@
                                                        Path=Settings.ForegroundColor}"
                                   Header="copy file path"
                                   Style="{DynamicResource MenuItemStyle1}" />
+                        <MenuItem Background="{Binding Source={StaticResource settings},
+                                               Path=Settings.BackgroundColor}"
+                                              BorderBrush="{Binding Source={StaticResource settings},
+                                                Path=Settings.BackgroundColor}"
+                                              Command="{Binding Source={StaticResource mainViewModel},
+                                                Path=FilterViewModel.DisplayAllDialogCommand}"
+                                              Foreground="{Binding Source={StaticResource settings},
+                                               Path=Settings.ForegroundColor}"
+                                              Header="view _all dialog"
+                                              InputGestureText="Ctrl+D"
+                                              Style="{DynamicResource MenuItemStyle1}" />
                         <MenuItem Background="{Binding Source={StaticResource settings},
                                                        Path=Settings.BackgroundColor}"
                                   BorderBrush="{Binding Source={StaticResource settings},
@@ -1752,6 +1764,11 @@
                                             Modifiers="Control+Shift"
                                             Command="{Binding Source={StaticResource mainViewModel},
                                                                 Path=FilterViewModel.QuickFindTextCommand}"
+                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
+                                <KeyBinding Key="D"
+                                            Modifiers="Ctrl"
+                                            Command="{Binding Source={StaticResource mainViewModel},
+                                                                Path=LogViewModel.DisplayAllDialogCommand}"
                                             CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}" />
                             </DataGrid.InputBindings>
                             <DataGrid.ContextMenu>
