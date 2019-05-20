@@ -1935,7 +1935,7 @@
                                                                    Path=Settings.ForegroundColor}"
                                               Header="recent files"
                                               ItemsSource="{Binding Source={StaticResource mainViewModel},
-                                                                    Path=LogViewModel.RecentCollection}"
+                                                                    Path=LogViewModel.RecentLogCollection}"
                                               Style="{DynamicResource MenuItemStyle1}">
                                         <MenuItem.ItemContainerStyle>
                                             <Style TargetType="{x:Type MenuItem}">
