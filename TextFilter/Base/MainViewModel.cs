@@ -29,10 +29,6 @@ namespace TextFilter
         public System.Timers.Timer _timer;
         private StringBuilder _color = new StringBuilder();
 
-        private Command _controlGotFocusCommand;
-
-        private Command _controlLostFocusCommand;
-
         private string _currentStatus;
 
         private Command _helpCommand;
@@ -447,10 +443,8 @@ namespace TextFilter
                             File.Delete(downloadZip);
 
                             string currentExe = Process.GetCurrentProcess().MainModule.FileName;
-                            //string currentConfig = currentExe + ".config";
                             string currentProcessName = Process.GetCurrentProcess().MainModule.ModuleName;
                             string newExe = string.Format("{0}\\{1}", downloadZipDir, currentProcessName);
-                            //string newConfig = newExe + ".config";
 
                             // overwrite exe
                             if (File.Exists(currentExe + ".old"))
@@ -491,8 +485,6 @@ namespace TextFilter
                         MessageBox.Show(message);
                     }
                 }
-
-                return;
             }
             catch (Exception e)
             {
@@ -504,8 +496,6 @@ namespace TextFilter
                 {
                     MessageBox.Show(string.Format("Unable to read version info from {0}.\n\nerror: {1}", Settings.VersionCheckFile, e.ToString()), "update error");
                 }
-
-                return;
             }
         }
     }
